@@ -2,93 +2,107 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-        <meta charset="utf-8">
-        <meta http-equiv="x-ua-compatible" content="ie=edge">
-        <title>{% block title %}web{% endblock title %}</title>
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <meta name="description" content="">
-        <meta name="author" content="">
+    <meta charset="utf-8">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <title>{% block title %}Strains Web{% endblock title %}</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="">
+    <meta name="author" content="">
 
-        <!-- HTML5 shim, for IE6-8 support of HTML5 elements -->
-        <!--[if lt IE 9]>
+    <!-- HTML5 shim, for IE6-8 support of HTML5 elements -->
+    <!--[if lt IE 9]>
       <script src="https://html5shim.googlecode.com/svn/trunk/html5.js"></script>
     <![endif]-->
 
-        {% block css %}
-                <!-- Your stuff: Third-party CSS libraries go here -->
+    {% block css %}
+        <!-- Your stuff: Third-party CSS libraries go here -->
 
-                <!-- This file stores project-specific CSS -->
-                <link href="{% static 'css/pages/base.css' %}" rel="stylesheet">
-
-        {% endblock %}
-
+        <!-- This file stores project-specific CSS -->
+        <link href="{% static 'css/pages/base.css' %}" rel="stylesheet">
+    {% endblock %}
 </head>
 
 <body>
+<div class="strains-wrapper">
+    <nav class="nav-region navbar">
+        <div class="container nav-container">
+            <a class="navbar-brand logo" href="{% url 'home' %}">Strains</a>
 
-<nav class="navbar">
-        <div class="container">
-                <a class="navbar-brand" href="/">web</a>
-
-                <!-- Collect the nav links, forms, and other content for toggling -->
-                <div class="user-menu-container">
-                        <ul class="user-menu">
-                                {% if request.user.is_authenticated %}
-                                        <li class="nav-item">
-                                                <a class="nav-link"
-                                                   href="{% url 'users:detail' request.user.username %}">{% trans "My Profile" %}</a>
-                                        </li>
-                                        <li class="nav-item">
-                                                <a class="nav-link"
-                                                   href="{% url 'account_logout' %}">{% trans "Sign out" %}</a>
-                                        </li>
-                                {% else %}
-                                        <li class="nav-item">
-                                                <a id="sign-up-link" class="nav-link"
-                                                   href="{% url 'account_signup' %}">{% trans "Sign Up" %}</a>
-                                        </li>
-                                        <li class="nav-item">
-                                                <a id="log-in-link" class="nav-link"
-                                                   href="{% url 'account_login' %}">{% trans "Sign In" %}</a>
-                                        </li>
-                                {% endif %}
-                        </ul>
-                </div>
+            <ul class="nav-list pull-right">
+                {% if request.user.is_authenticated %}
+                    <li class="nav-list-item">
+                        <a class="nav-link"
+                           href="{% url 'users:detail' request.user.username %}">{% trans "My Profile" %}</a>
+                    </li>
+                    <li class="nav-list-item">
+                        <a class="nav-link"
+                           href="{% url 'account_logout' %}">{% trans "Sign out" %}</a>
+                    </li>
+                {% else %}
+                    <li class="nav-list-item">
+                        <a class="nav-link sign-up-link"
+                           href="{% url 'account_signup' %}">{% trans "Sign Up" %}</a>
+                        <span class="separator"></span>
+                    </li>
+                    <li class="nav-list-item">
+                        <a class="nav-link log-in-link"
+                           href="{% url 'account_login' %}">{% trans "Sign In" %}</a>
+                    </li>
+                {% endif %}
+            </ul>
         </div>
-</nav>
-
-<div id="container">
+    </nav>
+    <main class="main-region">
         {% if messages %}
-                {% for message in messages %}
-                        <div class="alert {% if message.tags %}alert-{{ message.tags }}{% endif %}"><p>{{ message }}</p>
-                        </div>
-                {% endfor %}
+            {% for message in messages %}
+                <div class="alert {% if message.tags %}alert-{{ message.tags }}{% endif %}"><p>{{ message }}</p>
+                </div>
+            {% endfor %}
         {% endif %}
-        {% block content %}{% endblock content %}
-</div> <!-- /container -->
+        {% block content %}
+            <p>Use this document as a way to quick start any new project.</p>
+        {% endblock content %}
+    </main>
+    <div class="push"></div>
+</div>
+
+<footer class="footer-region">
+    <div class="container">
+        <div class="links-wrapper">
+            <ul class="links">
+                <li><a href="{% url 'home' %}">Home</a><span class="separator"></span></li>
+                <li><a href="#">Strains Tech</a><span class="separator"></span></li>
+                <li><a href="#">Strains RX</a><span class="separator"></span></li>
+                <li><a href="{% url 'about' %}">About Us</a><span class="separator"></span></li>
+                <li><a href="{% url 'privacy' %}">Privacy Policy</a><span class="separator"></span></li>
+                <li><a href="{% url 'terms' %}">Terms of Use</a><span class="separator"></span></li>
+                <li><a href="{% url 'contact' %}">Contact Us</a></li>
+            </ul>
+        </div>
+        <div class="copyright-wrapper">
+            <span class="copyrights">&copy; 2016 Strains, All rights reserved.</span>
+        </div>
+    </div>
+</footer>
 
 <div id="loading-spinner">
-        <i class="fa fa-spinner fa-pulse"></i>
+    <i class="fa fa-spinner fa-pulse"></i>
 </div>
 
 {% block modal %}{% endblock modal %}
 
 <!-- JS Placed at the end of the document so the pages load faster -->
 {% block javascript %}
-
-        <script src="{% static 'js/vendor/jquery.min.js' %}"></script>
-        <script src="{% static 'js/vendor/jquery.validate.min.js' %}"></script>
-        <script src="{% static 'js/vendor/lodash.min.js' %}"></script>
-        <script src="{% static 'js/vendor/class.js' %}"></script>
-        <script src="{% static 'js/pages/common.js' %}"></script>
-        <script src="{% static 'js/views/base_view.js' %}"></script>
-        <script src="{% static 'js/pages/base.js' %}"></script>
-        <script type="text/javascript">
-                W.Base.init();
-        </script>
-
-
-
+    <script src="{% static 'js/vendor/jquery.min.js' %}"></script>
+    <script src="{% static 'js/vendor/jquery.validate.min.js' %}"></script>
+    <script src="{% static 'js/vendor/lodash.min.js' %}"></script>
+    <script src="{% static 'js/vendor/class.js' %}"></script>
+    <script src="{% static 'js/pages/common.js' %}"></script>
+    <script src="{% static 'js/views/base_view.js' %}"></script>
+    <script src="{% static 'js/pages/base.js' %}"></script>
+    <script type="text/javascript">
+        W.Base.init();
+    </script>
 {% endblock javascript %}
 </body>
 </html>

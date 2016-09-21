@@ -1,4 +1,4 @@
-# Thr Strain RX project.
+# The Strain RX project
 
 ### Local install guide
 1. Fork and then clone your fork.  
