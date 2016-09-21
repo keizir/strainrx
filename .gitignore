@@ -104,3 +104,6 @@ Session.vim
 
 ### Node
 node_modules
+
+### Project related
+/config/settings/local.py
