@@ -1,0 +1,148 @@
+@import 'variables';
+@import '../vendor/normalize';
+@import '../vendor/font-awesome/font-awesome';
+
+//
+// General Mixins
+// --------------------------------------------------
+
+@mixin clearfix {
+    &:before, &:after {
+        content: " ";
+        display: table;
+    }
+    &:after {
+        clear: both;
+    }
+}
+
+// active or hover state of elements
+@mixin active {
+    cursor: pointer;
+    font-weight: 400;
+}
+
+//
+// Fonts
+// --------------------------------------------------
+// example
+//@font-face {
+//    font-family: 'Roboto';
+//    font-style: normal;
+//    font-weight: 100;
+//    src: url('#{$font-path}Roboto-Thin-webfont.eot'); /* IE9 Compat Modes */
+//    src: url('#{$font-path}Roboto-Thin-webfont.eot?#iefix') format('embedded-opentype'), /* IE6-IE8 */
+//    url('#{$font-path}Roboto-Thin-webfont.woff') format('woff'), /* Pretty Modern Browsers */
+//    url('#{$font-path}Roboto-Thin-webfont.ttf')  format('truetype'), /* Safari, Android, iOS */
+//    url('#{$font-path}Roboto-Thin-webfont.svg#robotothin') format('svg'); /* Legacy iOS */
+//}
+
+//
+// Global Styles
+// --------------------------------------------------
+
+body {
+    font-size: 12px;
+}
+
+* {
+    box-sizing: border-box;
+}
+
+a {
+    &:hover {
+        @include active;
+        text-decoration: none;
+    }
+}
+
+#container {
+    padding: $base-padding;
+}
+
+.error-container {
+    text-align: center;
+}
+
+#loading-spinner {
+    display: none;
+    color: $black;
+    position: fixed;
+    font-size: 90px;
+    top: calc(50% - #{$nav-height});
+    left: calc(50%);
+    text-align: center;
+    z-index: $zindex-spinner;
+
+    .fa {
+        position: absolute;
+        top: calc(50% - #{$nav-height});
+        left: calc(50% - #{$nav-height});
+    }
+}
+
+// bootstrap alert CSS, translated to the django-standard levels of
+// debug, info, success, warning, error
+//
+// Django messages
+// --------------------------------------------------
+.alert-debug {
+    background-color: $white;
+    border-color: $mint-green;
+    color: $black;
+}
+
+.alert-info {
+    background-color: $white;
+    border-color: $mint-green;
+    color: $black;
+}
+
+.alert-success {
+    background-color: $mint-green;
+    border-color: $mint-green;
+    color: $black;
+}
+
+.alert-warning {
+    background-color: $white;
+    border-color: $dark-pink;
+    color: $red;
+}
+
+.alert-error {
+    background-color: $pink;
+    border-color: $dark-pink;
+    color: $red;
+}
+
+/*
+*   Body font size changes below will cascade to all em units to effectively scale our pages
+*   in a nice, responsive way (everything should be ems unless it is a purposely fixed element
+*/
+@media (max-width: $screen-xs-min) {
+
+}
+
+@media (min-width: $screen-sm-min) {
+    body {
+        font-size: 14px;
+    }
+}
+
+@media (min-width: $screen-md-min) {
+
+}
+
+@media (min-width: $screen-lg-min) {
+    body {
+        font-size: 15px;
+    }
+
+}
+
+@media (min-width: $screen-xl-min) {
+    body {
+        font-size: 16px;
+    }
+}
