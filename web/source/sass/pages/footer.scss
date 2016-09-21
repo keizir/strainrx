@@ -1,0 +1,36 @@
+@import '../mixins/variables';
+
+footer, .push {
+    height: 8em;
+    width: 100%;
+}
+
+.footer-region {
+    background: $black;
+    z-index: 100;
+    padding: 2em 10em;
+    font-size: 0.75em;
+    height: 11em;
+}
+
+.footer-region .separator:after {
+    color: $white;
+}
+
+.footer-region a {
+    color: $white;
+}
+
+.footer-region .links-wrapper .links {
+    margin-bottom: 5px;
+    color: $white;
+}
+
+.footer-region .links-wrapper .links > li {
+    display: inline-block;
+}
+
+.footer-region .copyright-wrapper {
+    color: $white;
+    padding-top: 1em;
+}

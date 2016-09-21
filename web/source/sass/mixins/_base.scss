@@ -1,3 +1,4 @@
+@import 'fonts';
 @import 'variables';
 @import '../vendor/normalize';
 @import '../vendor/font-awesome/font-awesome';
@@ -5,7 +6,6 @@
 //
 // General Mixins
 // --------------------------------------------------
-
 @mixin clearfix {
     &:before, &:after {
         content: " ";
@@ -23,41 +23,57 @@
 }
 
 //
-// Fonts
-// --------------------------------------------------
-// example
-//@font-face {
-//    font-family: 'Roboto';
-//    font-style: normal;
-//    font-weight: 100;
-//    src: url('#{$font-path}Roboto-Thin-webfont.eot'); /* IE9 Compat Modes */
-//    src: url('#{$font-path}Roboto-Thin-webfont.eot?#iefix') format('embedded-opentype'), /* IE6-IE8 */
-//    url('#{$font-path}Roboto-Thin-webfont.woff') format('woff'), /* Pretty Modern Browsers */
-//    url('#{$font-path}Roboto-Thin-webfont.ttf')  format('truetype'), /* Safari, Android, iOS */
-//    url('#{$font-path}Roboto-Thin-webfont.svg#robotothin') format('svg'); /* Legacy iOS */
-//}
-
-//
 // Global Styles
 // --------------------------------------------------
-
-body {
+html, body {
+    background-color: $white;
+    position: relative;
+    font-family: 'gotham_bookregular', sans-serif;
     font-size: 12px;
+    height: 100%;
+    -webkit-text-size-adjust: 100%;
+    -ms-text-size-adjust: 100%;
 }
 
 * {
     box-sizing: border-box;
+    margin: 0;
+    padding: 0;
 }
 
 a {
+    color: $blue;
+    text-decoration: none;
+
     &:hover {
         @include active;
         text-decoration: none;
     }
 }
 
-#container {
+/*#container {
     padding: $base-padding;
+}*/
+
+.strains-wrapper {
+    min-height: 100%;
+    margin-bottom: -8em;
+}
+
+.container {
+    width: 100%;
+    max-width: 1200px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.separator:after {
+    content: "|";
+    padding: 0 0.75em 0 1.25em;
+}
+
+.pull-right {
+    float: right !important;
 }
 
 .error-container {
@@ -80,6 +96,16 @@ a {
         left: calc(50% - #{$nav-height});
     }
 }
+
+.btn-primary {
+    background-color: $blue;
+    border-radius: 0.5em;
+    color: $white;
+    padding: 0.75em 3.5em;
+    border: none;
+    width: 14em;
+}
+
 
 // bootstrap alert CSS, translated to the django-standard levels of
 // debug, info, success, warning, error
@@ -121,7 +147,9 @@ a {
 *   in a nice, responsive way (everything should be ems unless it is a purposely fixed element
 */
 @media (max-width: $screen-xs-min) {
-
+    body {
+        font-size: 12px;
+    }
 }
 
 @media (min-width: $screen-sm-min) {

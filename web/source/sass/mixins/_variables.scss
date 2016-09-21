@@ -11,12 +11,16 @@ $image-path: $static-path + '/images/';
 $nav-height: 50px;
 
 //== Colors
-$white: #fff;
-$black: #000;
+$black: #1e1e1e;
+$blue: #10B3DC;
+$dark-pink: #eed3d7;
+$grey: #71757a;
+$dark-grey: #2f3f4c;
+$sea-green: #508484;
 $mint-green: #d6e9c6;
 $pink: #f2dede;
-$dark-pink: #eed3d7;
 $red: #b94a48;
+$white: #fff;
 
 //== Responsive Breakpoints
 $screen-xs-min: 480px;
