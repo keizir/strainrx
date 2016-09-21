@@ -1,0 +1,42 @@
+//
+// Variables
+// --------------------------------------------------
+
+//== Paths
+$static-path: '/static/';
+$font-path: $static-path + '/fonts/';
+$image-path: $static-path + '/images/';
+
+//== Nav
+$nav-height: 50px;
+
+//== Colors
+$white: #fff;
+$black: #000;
+$mint-green: #d6e9c6;
+$pink: #f2dede;
+$dark-pink: #eed3d7;
+$red: #b94a48;
+
+//== Responsive Breakpoints
+$screen-xs-min: 480px;
+$screen-sm-min: 768px;
+$screen-md-min: 1024px;
+$screen-lg-min: 1200px;
+$screen-xl-min: 1500px;
+$screen-xxl-min: 2000px;
+
+//== Make sure there is a space between the `-` and the `1` with out the space SASS will produce the wrong css
+$screen-xs-max: ($screen-xs-min - 1);
+$screen-sm-max: ($screen-sm-min - 1);
+$screen-md-max: ($screen-md-min - 1);
+$screen-lg-max: ($screen-lg-min - 1);
+$screen-xl-max: ($screen-xl-min - 1);
+$screen-xxl-max: ($screen-xxl-min - 1);
+
+//== Z-Index
+$zindex-nav: 1000;
+$zindex-spinner: 1010;
+
+// padding to match outer wrapper of site
+$base-padding: 0 1.5em;

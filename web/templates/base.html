@@ -1,0 +1,95 @@
+{% load staticfiles i18n %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+        <meta charset="utf-8">
+        <meta http-equiv="x-ua-compatible" content="ie=edge">
+        <title>{% block title %}web{% endblock title %}</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta name="description" content="">
+        <meta name="author" content="">
+
+        <!-- HTML5 shim, for IE6-8 support of HTML5 elements -->
+        <!--[if lt IE 9]>
+      <script src="https://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+
+        {% block css %}
+                <!-- Your stuff: Third-party CSS libraries go here -->
+
+                <!-- This file stores project-specific CSS -->
+                <link href="{% static 'css/pages/base.css' %}" rel="stylesheet">
+
+        {% endblock %}
+
+</head>
+
+<body>
+
+<nav class="navbar">
+        <div class="container">
+                <a class="navbar-brand" href="/">web</a>
+
+                <!-- Collect the nav links, forms, and other content for toggling -->
+                <div class="user-menu-container">
+                        <ul class="user-menu">
+                                {% if request.user.is_authenticated %}
+                                        <li class="nav-item">
+                                                <a class="nav-link"
+                                                   href="{% url 'users:detail' request.user.username %}">{% trans "My Profile" %}</a>
+                                        </li>
+                                        <li class="nav-item">
+                                                <a class="nav-link"
+                                                   href="{% url 'account_logout' %}">{% trans "Sign out" %}</a>
+                                        </li>
+                                {% else %}
+                                        <li class="nav-item">
+                                                <a id="sign-up-link" class="nav-link"
+                                                   href="{% url 'account_signup' %}">{% trans "Sign Up" %}</a>
+                                        </li>
+                                        <li class="nav-item">
+                                                <a id="log-in-link" class="nav-link"
+                                                   href="{% url 'account_login' %}">{% trans "Sign In" %}</a>
+                                        </li>
+                                {% endif %}
+                        </ul>
+                </div>
+        </div>
+</nav>
+
+<div id="container">
+        {% if messages %}
+                {% for message in messages %}
+                        <div class="alert {% if message.tags %}alert-{{ message.tags }}{% endif %}"><p>{{ message }}</p>
+                        </div>
+                {% endfor %}
+        {% endif %}
+        {% block content %}{% endblock content %}
+</div> <!-- /container -->
+
+<div id="loading-spinner">
+        <i class="fa fa-spinner fa-pulse"></i>
+</div>
+
+{% block modal %}{% endblock modal %}
+
+<!-- JS Placed at the end of the document so the pages load faster -->
+{% block javascript %}
+
+        <script src="{% static 'js/vendor/jquery.min.js' %}"></script>
+        <script src="{% static 'js/vendor/jquery.validate.min.js' %}"></script>
+        <script src="{% static 'js/vendor/lodash.min.js' %}"></script>
+        <script src="{% static 'js/vendor/class.js' %}"></script>
+        <script src="{% static 'js/pages/common.js' %}"></script>
+        <script src="{% static 'js/views/base_view.js' %}"></script>
+        <script src="{% static 'js/pages/base.js' %}"></script>
+        <script type="text/javascript">
+                W.Base.init();
+        </script>
+
+
+
+{% endblock javascript %}
+</body>
+</html>
+

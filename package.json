@@ -1,0 +1,27 @@
+{
+    "name": "web",
+    "version": "1.0.0",
+    "description": "The Strain RX project.",
+    "author": "Kostiantyn Noha",
+    "private": true,
+    "dependencies": {},
+    "devDependencies": {
+        "browser-sync": "2.14.3",
+        "del": "2.2.2",
+        "gulp": "3.9.1",
+        "gulp-autoprefixer": "3.1.1",
+        "gulp-changed": "1.3.2",
+        "gulp-cssnano": "2.1.2",
+        "gulp-notify": "2.2.0",
+        "gulp-plumber": "1.1.0",
+        "gulp-sass": "2.3.2",
+        "gulp-sequence": "0.4.6",
+        "gulp-uglify": "2.0.0",
+        "gulp-util": "3.0.7",
+        "lodash": "4.15.0",
+        "require-dir": "0.3.0"
+    },
+    "engines": {
+        "node": ">=4.0.0"
+    }
+}
