@@ -26,7 +26,7 @@
 // Global Styles
 // --------------------------------------------------
 html, body {
-    background-color: $white;
+    background-color: $light-grey;
     position: relative;
     font-family: 'gotham_bookregular', sans-serif;
     font-size: 12px;
@@ -150,16 +150,26 @@ a {
     body {
         font-size: 12px;
     }
+
+    .container {
+        max-width: 450px;
+    }
 }
 
 @media (min-width: $screen-sm-min) {
     body {
         font-size: 14px;
     }
+
+    .container {
+        max-width: 758px;
+    }
 }
 
 @media (min-width: $screen-md-min) {
-
+    .container {
+        max-width: 1014px;
+    }
 }
 
 @media (min-width: $screen-lg-min) {

@@ -24,6 +24,7 @@ urlpatterns = [
 
                   # Your stuff: custom urls includes go here
                   url(r'^api-auth/', include('rest_framework.urls', namespace='rest_framework')),
+
                   # API
                   url(r'^api/v1/users/', include('web.users.api.urls', namespace='users_api', app_name='users_api')),
 
