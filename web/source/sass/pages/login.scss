@@ -1,0 +1,28 @@
+@import '../mixins/variables';
+
+.login-block-wrapper {
+    text-align: center;
+    color: $normal-grey;
+    padding: 4em 1em 6em;
+}
+
+.login-block-wrapper .login fieldset {
+    border: none;
+    margin: 0;
+    padding: 2em 1em 1.5em;
+}
+
+.login-block-wrapper .login fieldset input {
+    border: 1px solid $normal-grey;
+    border-radius: 0.5em;
+    padding: 1.2em 2em;
+    color: $normal-grey;
+    margin-bottom: 1em;
+    width: 30em
+}
+
+.login-block-wrapper .login .forgot-password-link {
+    display: block;
+    margin-top: 3em;
+}
+

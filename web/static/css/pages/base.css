@@ -5449,7 +5449,7 @@ template {
   clip: auto; }
 
 html, body {
-  background-color: #fff;
+  background-color: #fdfdfd;
   position: relative;
   font-family: 'gotham_bookregular', sans-serif;
   font-size: 12px;
@@ -5560,11 +5560,27 @@ a:hover {
   body {
     font-size: 12px;
   }
+
+  .container {
+    max-width: 450px;
+  }
 }
 
 @media (min-width: 768px) {
   body {
-    font-size: 14px; } }
+    font-size: 14px;
+  }
+
+  .container {
+    max-width: 758px;
+  }
+}
+
+@media (min-width: 1024px) {
+  .container {
+    max-width: 1014px;
+  }
+}
 
 @media (min-width: 1200px) {
   body {
@@ -5580,7 +5596,7 @@ a:hover {
   height: 4em;
   position: relative;
   z-index: 100;
-  background-color: #fff;
+  background-color: #fdfdfd;
 }
 
 .nav-container {
@@ -5606,6 +5622,7 @@ footer, .push {
   padding: 2em 10em;
   font-size: 0.75em;
   height: 11em;
+  border-top: 1px solid #2f3f4c;
 }
 
 .footer-region .separator:after {
