@@ -15,9 +15,6 @@
     <![endif]-->
 
     {% block css %}
-        <!-- Your stuff: Third-party CSS libraries go here -->
-
-        <!-- This file stores project-specific CSS -->
         <link href="{% static 'css/pages/base.css' %}" rel="stylesheet">
     {% endblock %}
 </head>
@@ -72,15 +69,15 @@
             <ul class="links">
                 <li><a href="{% url 'home' %}">Home</a><span class="separator"></span></li>
                 <li><a href="#">Strains Tech</a><span class="separator"></span></li>
-                <li><a href="#">Strains RX</a><span class="separator"></span></li>
                 <li><a href="{% url 'about' %}">About Us</a><span class="separator"></span></li>
                 <li><a href="{% url 'privacy' %}">Privacy Policy</a><span class="separator"></span></li>
                 <li><a href="{% url 'terms' %}">Terms of Use</a><span class="separator"></span></li>
-                <li><a href="{% url 'contact' %}">Contact Us</a></li>
+                <li><a href="{% url 'contact' %}">Contact Us</a><span class="separator"></span></li>
+                <li><a href="{% url 'home' %}">Dispensary Login</a></li>
             </ul>
         </div>
         <div class="copyright-wrapper">
-            <span class="copyrights">&copy; 2016 Strains, All rights reserved.</span>
+            <span class="copyrights">&copy; 2016 Strains. All rights reserved.</span>
         </div>
     </div>
 </footer>
@@ -91,19 +88,19 @@
 
 {% block modal %}{% endblock modal %}
 
-<!-- JS Placed at the end of the document so the pages load faster -->
-{% block javascript %}
-    <script src="{% static 'js/vendor/jquery.min.js' %}"></script>
-    <script src="{% static 'js/vendor/jquery.validate.min.js' %}"></script>
-    <script src="{% static 'js/vendor/lodash.min.js' %}"></script>
-    <script src="{% static 'js/vendor/class.js' %}"></script>
-    <script src="{% static 'js/pages/common.js' %}"></script>
-    <script src="{% static 'js/views/base_view.js' %}"></script>
-    <script src="{% static 'js/pages/base.js' %}"></script>
-    <script type="text/javascript">
-        W.Base.init();
-    </script>
-{% endblock javascript %}
+<script src="{% static 'js/vendor/jquery.min.js' %}"></script>
+<script src="{% static 'js/vendor/jquery.validate.min.js' %}"></script>
+<script src="{% static 'js/vendor/lodash.min.js' %}"></script>
+<script src="{% static 'js/vendor/class.js' %}"></script>
+<script src="{% static 'js/pages/common.js' %}"></script>
+<script src="{% static 'js/views/base_view.js' %}"></script>
+<script src="{% static 'js/pages/base.js' %}"></script>
+<script type="text/javascript">
+    W.Base.init();
+</script>
+
+{% block javascript %}{% endblock javascript %}
+
 </body>
 </html>
 

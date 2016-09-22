@@ -1,16 +1,44 @@
 {% extends "base.html" %}
 
+{% load staticfiles i18n %}
+
 {% block title %}HOME PAGE{% endblock %}
+
+{% block css %}
+    <link href="{% static 'css/pages/base.css' %}" rel="stylesheet">
+    <style>
+        /* This overrides needs only on home page */
+        .nav-region {
+            background-color: #2f3f4c; /* dark-grey */
+        }
+
+        .footer-region {
+            background: #1e1e1e; /* black */
+        }
+
+        .footer-region a,
+        .footer-region .separator:after,
+        .footer-region .copyright-wrapper,
+        .footer-region .links-wrapper .links {
+            color: #fff;
+        }
+    </style>
+{% endblock %}
 
 {% block content %}
     <div class="home-row-01">
         <div class="home-sub-row-01">
             <div class="location-holder">
-                <span class="your-location">
-                    <i class="fa fa-dot-circle-o" aria-hidden="true"></i> Your Location:
-                </span>
-                <input type="text" class="your-location-value" placeholder="Enter your address below"/>
-                <i class="fa fa-check check" aria-hidden="true"></i>
+                <form method="post">
+                    {% csrf_token %}
+                    <fieldset>
+                        <label for="location" class="your-location">
+                            <i class="fa fa-dot-circle-o" aria-hidden="true"></i> Your Location:</label>
+                        <input id="location" type="text" class="your-location-value"
+                               placeholder="Enter your address below"/>
+                        <i class="fa fa-check check" aria-hidden="true"></i>
+                    </fieldset>
+                </form>
             </div>
             <div class="favourites-holder">
                 <span class="favourites">

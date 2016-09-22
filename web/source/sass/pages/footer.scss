@@ -6,7 +6,7 @@ footer, .push {
 }
 
 .footer-region {
-    background: $black;
+    background: $white;
     z-index: 100;
     padding: 2em 10em;
     font-size: 0.75em;
@@ -14,16 +14,16 @@ footer, .push {
 }
 
 .footer-region .separator:after {
-    color: $white;
+    color: $black;
 }
 
 .footer-region a {
-    color: $white;
+    color: $black;
 }
 
 .footer-region .links-wrapper .links {
     margin-bottom: 5px;
-    color: $white;
+    color: $black;
 }
 
 .footer-region .links-wrapper .links > li {
@@ -31,6 +31,6 @@ footer, .push {
 }
 
 .footer-region .copyright-wrapper {
-    color: $white;
+    color: $black;
     padding-top: 1em;
 }
