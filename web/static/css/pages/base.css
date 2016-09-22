@@ -5577,14 +5577,14 @@ a:hover {
 .nav-region {
   border-radius: 0;
   display: block;
-  height: 3em;
+  height: 4em;
   position: relative;
   z-index: 100;
-  background-color: #2f3f4c;
+  background-color: #fff;
 }
 
 .nav-container {
-  padding-top: 1em;
+  padding-top: 1.3em;
 }
 
 .nav-list {
@@ -5601,7 +5601,7 @@ footer, .push {
 }
 
 .footer-region {
-  background: #1e1e1e;
+  background: #fff;
   z-index: 100;
   padding: 2em 10em;
   font-size: 0.75em;
@@ -5609,16 +5609,16 @@ footer, .push {
 }
 
 .footer-region .separator:after {
-  color: #fff;
+  color: #1e1e1e;
 }
 
 .footer-region a {
-  color: #fff;
+  color: #1e1e1e;
 }
 
 .footer-region .links-wrapper .links {
   margin-bottom: 5px;
-  color: #fff;
+  color: #1e1e1e;
 }
 
 .footer-region .links-wrapper .links > li {
@@ -5626,7 +5626,7 @@ footer, .push {
 }
 
 .footer-region .copyright-wrapper {
-  color: #fff;
+  color: #1e1e1e;
   padding-top: 1em;
 }
 
@@ -5704,6 +5704,12 @@ footer, .push {
   line-height: 3em;
 }
 
+.home-sub-row-01 .location-holder > form > fieldset {
+  border: none;
+  padding-top: 0.35em;
+  margin: 0;
+}
+
 .home-sub-row-01 .location-holder .check {
   margin-left: -30px;
 }
@@ -5713,7 +5719,7 @@ footer, .push {
   padding: 0.75em;
   border-bottom-left-radius: 0.5em;
   border-top-left-radius: 0.5em;
-  margin-right: -1px;
+  margin-right: -5px;
   color: #fff;
   background: #71757a;
 }

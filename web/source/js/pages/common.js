@@ -188,3 +188,7 @@ $(document).on('ajaxComplete', function () {
         $('#loadingSpinner').hide();
     }
 });
+
+$(window).on('change', function (e) {
+    alert('asd');
+});

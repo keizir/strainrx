@@ -78,6 +78,12 @@
     line-height: 3em;
 }
 
+.home-sub-row-01 .location-holder > form > fieldset {
+    border: none;
+    padding-top: 0.35em;
+    margin: 0;
+}
+
 .home-sub-row-01 .location-holder .check {
     margin-left: -30px;
 }
@@ -87,7 +93,7 @@
     padding: 0.75em;
     border-bottom-left-radius: 0.5em;
     border-top-left-radius: 0.5em;
-    margin-right: -1px;
+    margin-right: -5px;
     color: $white;
     background: $grey;
 }
