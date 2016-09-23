@@ -111,6 +111,7 @@
     float: right;
     margin: 2em 6em 0 0;
     line-height: 3em;
+    padding: 0.35em;
 }
 
 .home-sub-row-01 .favourites-holder .favourites {
@@ -124,4 +125,37 @@
 .home-sub-row-02 {
     display: block;
     width: 100%;
+}
+
+@media (max-width: $screen-md-min) {
+    .home-sub-row-01 .location-holder {
+        margin: 0.5em 0 0 0.5em;
+    }
+
+    .home-sub-row-01 .favourites-holder {
+        margin: 0.5em -2em 0 0;
+    }
+
+    .home-sub-row-01 .location-holder .your-location {
+        padding: 0.75em;
+        border-radius: 0.5em;
+        margin-right: 0;
+    }
+
+    .home-sub-row-01 .location-holder .your-location-value {
+        display: none;
+    }
+
+    .home-sub-row-01 .location-holder .check {
+        display: none;
+    }
+
+    .home-sub-row-01 {
+        height: 6em;
+    }
+
+    .home-row-02 .search-box {
+        width: 30em;
+        padding: 0 2em;
+    }
 }

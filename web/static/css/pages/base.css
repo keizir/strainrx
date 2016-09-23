@@ -5526,7 +5526,7 @@ a:hover {
   width: 14em;
 }
 
-.login-block-wrapper .login fieldset input {
+input {
   border: 1px solid #8e8e93;
   border-radius: 0.5em;
   padding: 1.2em 2em;
@@ -5576,26 +5576,31 @@ a:hover {
   }
 }
 
-@media (min-width: 768px) {
+@media (max-width: 768px) {
   body {
     font-size: 14px;
   }
   .container {
     max-width: 758px;
   }
+
+  input {
+    padding: 1em 1.5em;
+    width: 24em;
+  }
 }
 
-@media (min-width: 1024px) {
+@media (max-width: 1024px) {
   .container {
     max-width: 1014px;
   }
 }
 
-@media (min-width: 1200px) {
+@media (max-width: 1200px) {
   body {
     font-size: 15px; } }
 
-@media (min-width: 1500px) {
+@media (max-width: 1500px) {
   body {
     font-size: 16px; } }
 
@@ -5609,7 +5614,8 @@ a:hover {
 }
 
 .nav-container {
-  padding-top: 1.3em;
+  padding: 0 1.3em;
+  line-height: 4em;
 }
 
 .nav-list {
@@ -5618,6 +5624,61 @@ a:hover {
 
 .nav-list .nav-list-item {
   display: inline-block;
+}
+
+.nav-region .mobile-menu {
+  display: none;
+  text-align: center;
+  vertical-align: middle;
+  float: right;
+}
+
+.nav-region a:hover.mobile-menu {
+  cursor: pointer;
+}
+
+.nav-region .nav-region ul {
+  list-style: none;
+}
+
+@media (max-width: 1024px) {
+  body {
+    font-size: 14px;
+  }
+
+  .container {
+    max-width: 758px;
+  }
+
+  .mobile-menu {
+    display: inline-block !important;
+  }
+
+  .mobile-menu i {
+    padding-top: 0.44em;
+  }
+
+  nav ul, nav:active ul {
+    display: none;
+    position: absolute;
+    background: #fff;
+    border: 0.4em solid #444;
+    right: 1em;
+    top: 4em;
+    width: 50%;
+    border-radius: 4px 0 4px 4px;
+  }
+
+  nav li {
+    text-align: center;
+    width: 100%;
+    padding: 10px 0;
+    margin: 0;
+  }
+
+  nav:hover ul {
+    display: block;
+  }
 }
 
 footer, .push {
@@ -5763,6 +5824,7 @@ footer, .push {
   float: right;
   margin: 2em 6em 0 0;
   line-height: 3em;
+  padding: 0.35em;
 }
 
 .home-sub-row-01 .favourites-holder .favourites {
@@ -5776,4 +5838,37 @@ footer, .push {
 .home-sub-row-02 {
   display: block;
   width: 100%;
+}
+
+@media (max-width: 1024px) {
+  .home-sub-row-01 .location-holder {
+    margin: 0.5em 0 0 0.5em;
+  }
+
+  .home-sub-row-01 .favourites-holder {
+    margin: 0.5em -2em 0 0;
+  }
+
+  .home-sub-row-01 .location-holder .your-location {
+    padding: 0.75em;
+    border-radius: 0.5em;
+    margin-right: 0;
+  }
+
+  .home-sub-row-01 .location-holder .your-location-value {
+    display: none;
+  }
+
+  .home-sub-row-01 .location-holder .check {
+    display: none;
+  }
+
+  .home-sub-row-01 {
+    height: 6em;
+  }
+
+  .home-row-02 .search-box {
+    width: 30em;
+    padding: 0 2em;
+  }
 }

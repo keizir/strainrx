@@ -5,7 +5,7 @@
     <meta charset="utf-8">
     <meta http-equiv="x-ua-compatible" content="ie=edge">
     <title>{% block title %}Strains Web{% endblock title %}</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1; maximum-scale=1">
     <meta name="description" content="">
     <meta name="author" content="">
 
@@ -21,34 +21,39 @@
 
 <body>
 <div class="strains-wrapper">
-    <nav class="nav-region navbar">
-        <div class="container nav-container">
-            <a class="navbar-brand logo" href="{% url 'home' %}">Strains</a>
+    <header>
+        <nav class="nav-region navbar">
+            <div class="container nav-container">
+                <a class="navbar-brand logo" href="{% url 'home' %}">Strains</a>
 
-            <ul class="nav-list pull-right">
-                {% if request.user.is_authenticated %}
-                    <li class="nav-list-item">
-                        <a class="nav-link"
-                           href="{% url 'users:detail' request.user.username %}">{% trans "My Profile" %}</a>
-                    </li>
-                    <li class="nav-list-item">
-                        <a class="nav-link"
-                           href="{% url 'account_logout' %}">{% trans "Sign out" %}</a>
-                    </li>
-                {% else %}
-                    <li class="nav-list-item">
-                        <a class="nav-link sign-up-link"
-                           href="{% url 'account_signup' %}">{% trans "Sign Up" %}</a>
-                        <span class="separator"></span>
-                    </li>
-                    <li class="nav-list-item">
-                        <a class="nav-link log-in-link"
-                           href="{% url 'account_login' %}">{% trans "Sign In" %}</a>
-                    </li>
-                {% endif %}
-            </ul>
-        </div>
-    </nav>
+                <a href="#" class="mobile-menu">
+                    <i class="fa fa-align-justify fa-2x" aria-hidden="true"></i>
+                </a>
+                <ul class="nav-list pull-right">
+                    {% if request.user.is_authenticated %}
+                        <li class="nav-list-item">
+                            <a class="nav-link"
+                               href="{% url 'users:detail' request.user.username %}">{% trans "My Profile" %}</a>
+                        </li>
+                        <li class="nav-list-item">
+                            <a class="nav-link"
+                               href="{% url 'account_logout' %}">{% trans "Sign out" %}</a>
+                        </li>
+                    {% else %}
+                        <li class="nav-list-item">
+                            <a class="nav-link sign-up-link"
+                               href="{% url 'account_signup' %}">{% trans "Sign Up" %}</a>
+                            <span class="separator"></span>
+                        </li>
+                        <li class="nav-list-item">
+                            <a class="nav-link log-in-link"
+                               href="{% url 'account_login' %}">{% trans "Sign In" %}</a>
+                        </li>
+                    {% endif %}
+                </ul>
+            </div>
+        </nav>
+    </header>
     <main class="main-region">
         {% if messages %}
             {% for message in messages %}

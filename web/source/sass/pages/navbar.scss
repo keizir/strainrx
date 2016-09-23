@@ -10,7 +10,8 @@
 }
 
 .nav-container {
-    padding-top: 1.3em;
+    padding: 0 1.3em;
+    line-height: 4em;
 }
 
 .nav-list {
@@ -19,4 +20,59 @@
 
 .nav-list .nav-list-item {
     display: inline-block;
+}
+
+.nav-region .mobile-menu {
+    display: none;
+    text-align: center;
+    vertical-align: middle;
+    float: right;
+}
+
+.nav-region a:hover.mobile-menu {
+    cursor: pointer;
+}
+
+.nav-region .nav-region ul {
+    list-style: none;
+}
+
+@media (max-width: $screen-md-min) {
+    body {
+        font-size: 14px;
+    }
+
+    .container {
+        max-width: 758px;
+    }
+
+    .mobile-menu {
+        display: inline-block !important;
+    }
+
+    .mobile-menu i {
+        padding-top: 0.44em;
+    }
+
+    nav ul, nav:active ul {
+        display: none;
+        position: absolute;
+        background: $white;
+        border: 0.4em solid #444;
+        right: 1em;
+        top: 4em;
+        width: 50%;
+        border-radius: 4px 0 4px 4px;
+    }
+
+    nav li {
+        text-align: center;
+        width: 100%;
+        padding: 10px 0;
+        margin: 0;
+    }
+
+    nav:hover ul {
+        display: block;
+    }
 }
