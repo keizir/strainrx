@@ -76,8 +76,9 @@ a {
     float: right !important;
 }
 
-.error-container {
-    text-align: center;
+.error-message {
+    display: block;
+    color: $red;
 }
 
 #loading-spinner {
@@ -104,6 +105,15 @@ a {
     padding: 0.75em 3.5em;
     border: none;
     width: 14em;
+}
+
+.login-block-wrapper .login fieldset input {
+    border: 1px solid $normal-grey;
+    border-radius: 0.5em;
+    padding: 1.2em 2em;
+    color: $normal-grey;
+    margin-bottom: 1em;
+    width: 30em
 }
 
 
