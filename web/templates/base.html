@@ -24,43 +24,55 @@
     <header>
         <nav class="nav-region navbar">
             <div class="container nav-container">
-                <a class="navbar-brand logo" href="{% url 'home' %}">Strains</a>
-
-                <a href="#" class="mobile-menu">
-                    <i class="fa fa-align-justify fa-2x" aria-hidden="true"></i>
-                </a>
-                <ul class="nav-list pull-right">
-                    {% if request.user.is_authenticated %}
-                        <li class="nav-list-item">
-                            <a class="nav-link"
-                               href="{% url 'users:detail' request.user.username %}">{% trans "My Profile" %}</a>
-                        </li>
-                        <li class="nav-list-item">
-                            <a class="nav-link"
-                               href="{% url 'account_logout' %}">{% trans "Sign out" %}</a>
-                        </li>
-                    {% else %}
-                        <li class="nav-list-item">
-                            <a class="nav-link sign-up-link"
-                               href="{% url 'account_signup' %}">{% trans "Sign Up" %}</a>
-                            <span class="separator"></span>
-                        </li>
-                        <li class="nav-list-item">
-                            <a class="nav-link log-in-link"
-                               href="{% url 'account_login' %}">{% trans "Sign In" %}</a>
-                        </li>
-                    {% endif %}
-                </ul>
+                <div class="nav-brand-wrapper">
+                    <a class="navbar-brand logo" href="{% url 'home' %}">Strains</a>
+                </div>
+                <div class="nav-list-wrapper">
+                    <a href="#" class="mobile-menu hidden">
+                        <i class="fa fa-align-justify fa-2x" aria-hidden="true"></i>
+                    </a>
+                    <div class="nav-list">
+                        {% if request.user.is_authenticated %}
+                            <div class="auth-menu">
+                                <div class="nav-menu-btn-wrapper">
+                                    <a class="nav-menu-btn">
+                                        <i class="fa fa-user" aria-hidden="true"></i>
+                                        Welcome {{ request.user.first_name }}
+                                    </a>
+                                </div>
+                                <div class="nav-menu-content">
+                                    <div class="action">
+                                        <a class="nav-link" href="{% url 'users:detail' request.user.username %}">My
+                                            Account</a>
+                                    </div>
+                                    <div class="action">
+                                        <a class="nav-link" href="{% url 'account_logout' %}">Sign out</a>
+                                    </div>
+                                    <div class="action location">
+                                        <span><i class="fa fa-dot-circle-o"
+                                                 aria-hidden="true"></i> UPDATE LOCATION</span>
+                                        <span>12345, Santa Monica, LA</span>
+                                        <a class="update-location-href" href="#">Update location</a>
+                                    </div>
+                                </div>
+                            </div>
+                        {% else %}
+                            <ul class="pull-right">
+                                <li class="nav-list-item">
+                                    <a class="nav-link sign-up-link" href="{% url 'account_signup' %}">Sign Up</a>
+                                    <span class="separator"></span>
+                                </li>
+                                <li class="nav-list-item">
+                                    <a class="nav-link log-in-link" href="{% url 'account_login' %}">Sign In</a>
+                                </li>
+                            </ul>
+                        {% endif %}
+                    </div>
+                </div>
             </div>
         </nav>
     </header>
     <main class="main-region">
-        {% if messages %}
-            {% for message in messages %}
-                <div class="alert {% if message.tags %}alert-{{ message.tags }}{% endif %}"><p>{{ message }}</p>
-                </div>
-            {% endfor %}
-        {% endif %}
         {% block content %}
             <p>Use this document as a way to quick start any new project.</p>
         {% endblock content %}

@@ -5517,6 +5517,14 @@ a:hover {
     top: calc(50% - 50px);
     left: calc(50% - 50px); }
 
+.hidden {
+  display: none !important;
+}
+
+.visible {
+  display: block !important;
+}
+
 .btn-primary {
   background-color: #10B3DC;
   border-radius: 0.5em;
@@ -5583,7 +5591,6 @@ input {
   .container {
     max-width: 758px;
   }
-
   input {
     padding: 1em 1.5em;
     width: 24em;
@@ -5618,6 +5625,16 @@ input {
   line-height: 4em;
 }
 
+.nav-container .nav-brand-wrapper {
+  display: inline-block;
+  float: left;
+}
+
+.nav-container .nav-list-wrapper {
+  display: inline-block;
+  float: right;
+}
+
 .nav-list {
   list-style: none;
 }
@@ -5626,11 +5643,64 @@ input {
   display: inline-block;
 }
 
+.nav-list .nav-list-item {
+  display: inline-block;
+}
+
+.nav-list .nav-menu-btn-wrapper {
+  right: 1em;
+}
+
+.nav-list .auth-menu {
+  right: 1em;
+}
+
+.nav-list .nav-menu-btn-wrapper .nav-menu-btn {
+  color: #fff;
+}
+
+.nav-list .auth-menu .nav-menu-content {
+  display: none;
+  background: #2f3f4c;
+  color: #fff;
+  width: 18em;
+  right: 1em;
+  text-align: right;
+}
+
+.nav-list .auth-menu .nav-menu-content a {
+  color: #fff;
+}
+
+.nav-list .auth-menu .nav-menu-content .action {
+  display: block;
+  line-height: 2em;
+  padding: 0.5em 1.5em;
+}
+
+.nav-list .auth-menu .nav-menu-content .location {
+  background: #1e1e1e;
+}
+
+.nav-list .auth-menu .nav-menu-content .location span {
+  display: block;
+}
+
+.nav-list .auth-menu .nav-menu-content .location .update-location-href {
+  color: #10B3DC;
+}
+
+.nav-container .nav-list-wrapper:hover .nav-list .auth-menu .nav-menu-content {
+  display: block;
+  position: absolute;
+}
+
 .nav-region .mobile-menu {
   display: none;
   text-align: center;
   vertical-align: middle;
   float: right;
+  width: 3em;
 }
 
 .nav-region a:hover.mobile-menu {
@@ -5645,39 +5715,60 @@ input {
   body {
     font-size: 14px;
   }
-
   .container {
     max-width: 758px;
   }
-
   .mobile-menu {
     display: inline-block !important;
   }
-
   .mobile-menu i {
     padding-top: 0.44em;
   }
 
-  nav ul, nav:active ul {
+  .nav-list, .nav-list ul, nav:active ul {
     display: none;
     position: absolute;
     background: #fff;
-    border: 0.4em solid #444;
     right: 1em;
-    top: 4em;
+    top: 2em;
     width: 50%;
-    border-radius: 4px 0 4px 4px;
   }
 
-  nav li {
+  .nav-list ul li {
     text-align: center;
     width: 100%;
     padding: 10px 0;
     margin: 0;
   }
 
-  nav:hover ul {
+  .nav-list .nav-menu-btn {
+    color: #2f3f4c;
+  }
+
+  .nav-list .nav-menu-btn-wrapper {
+    width: 18em;
+  }
+
+  .nav-container .nav-list-wrapper:hover .nav-list,
+  .nav-container .nav-list-wrapper:hover .nav-list ul,
+  .nav-container .nav-list-wrapper:hover .nav-list .auth-menu .nav-menu-content {
     display: block;
+  }
+
+  .nav-list, .nav-list ul,
+  .nav-container .nav-list-wrapper .nav-list .auth-menu {
+    background: #2f3f4c;
+  }
+
+  .nav-container .nav-list-wrapper .nav-list .auth-menu {
+    background: #2f3f4c;
+    display: block;
+    position: absolute;
+  }
+
+  .nav-list, .nav-list ul li a,
+  .nav-container .nav-list-wrapper .nav-list .auth-menu a {
+    color: #fff;
   }
 }
 
@@ -5809,14 +5900,15 @@ footer, .push {
   margin-right: -5px;
   color: #fff;
   background: #71757a;
+  opacity: 0.8;
 }
 
 .home-sub-row-01 .location-holder .your-location-value {
   border: 1px solid #71757a;
   padding: 0.75em;
-  border-bottom-right-radius: 0.5em;
-  border-top-right-radius: 0.5em;
+  border-radius: 0 0.5em 0.5em 0;
   width: 30em;
+  opacity: 0.8;
 }
 
 .home-sub-row-01 .favourites-holder {
@@ -5825,6 +5917,7 @@ footer, .push {
   margin: 2em 6em 0 0;
   line-height: 3em;
   padding: 0.35em;
+  opacity: 0.8;
 }
 
 .home-sub-row-01 .favourites-holder .favourites {
@@ -5844,29 +5937,23 @@ footer, .push {
   .home-sub-row-01 .location-holder {
     margin: 0.5em 0 0 0.5em;
   }
-
   .home-sub-row-01 .favourites-holder {
     margin: 0.5em -2em 0 0;
   }
-
   .home-sub-row-01 .location-holder .your-location {
     padding: 0.75em;
     border-radius: 0.5em;
     margin-right: 0;
   }
-
   .home-sub-row-01 .location-holder .your-location-value {
     display: none;
   }
-
   .home-sub-row-01 .location-holder .check {
     display: none;
   }
-
   .home-sub-row-01 {
     height: 6em;
   }
-
   .home-row-02 .search-box {
     width: 30em;
     padding: 0 2em;

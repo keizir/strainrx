@@ -98,6 +98,14 @@ a {
     }
 }
 
+.hidden {
+    display: none !important;
+}
+
+.visible {
+    display: block !important;
+}
+
 .btn-primary {
     background-color: $blue;
     border-radius: 0.5em;

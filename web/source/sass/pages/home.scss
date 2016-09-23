@@ -96,14 +96,15 @@
     margin-right: -5px;
     color: $white;
     background: $grey;
+    opacity: 0.8;
 }
 
 .home-sub-row-01 .location-holder .your-location-value {
     border: 1px solid $grey;
     padding: 0.75em;
-    border-bottom-right-radius: 0.5em;
-    border-top-right-radius: 0.5em;
+    border-radius: 0 0.5em 0.5em 0;
     width: 30em;
+    opacity: 0.8;
 }
 
 .home-sub-row-01 .favourites-holder {
@@ -112,6 +113,7 @@
     margin: 2em 6em 0 0;
     line-height: 3em;
     padding: 0.35em;
+    opacity: 0.8;
 }
 
 .home-sub-row-01 .favourites-holder .favourites {
