@@ -5498,8 +5498,10 @@ a:hover {
   float: right !important;
 }
 
-.error-container {
-  text-align: center; }
+.error-message {
+  display: block;
+  color: #b94a48;
+}
 
 #loading-spinner {
   display: none;
@@ -5522,6 +5524,15 @@ a:hover {
   padding: 0.75em 3.5em;
   border: none;
   width: 14em;
+}
+
+.login-block-wrapper .login fieldset input {
+  border: 1px solid #8e8e93;
+  border-radius: 0.5em;
+  padding: 1.2em 2em;
+  color: #8e8e93;
+  margin-bottom: 1em;
+  width: 30em;
 }
 
 .alert-debug {
@@ -5560,7 +5571,6 @@ a:hover {
   body {
     font-size: 12px;
   }
-
   .container {
     max-width: 450px;
   }
@@ -5570,7 +5580,6 @@ a:hover {
   body {
     font-size: 14px;
   }
-
   .container {
     max-width: 758px;
   }

@@ -5,7 +5,7 @@
 {% load account socialaccount %}
 {% load crispy_forms_tags %}
 
-{% block head_title %}{% trans "Sign In" %}{% endblock %}
+{% block head_title %}Sign In{% endblock %}
 
 {% block css %}
     <link href="{% static 'css/pages/base.css' %}" rel="stylesheet">
@@ -14,7 +14,7 @@
 
 {% block content %}
     <div class="login-block-wrapper">
-        <h1>{% trans "Sign In" %}</h1>
+        <h1>Sign In</h1>
 
         <form class="login">
             <fieldset>
@@ -25,6 +25,7 @@
                 <div class="form-group row">
                     <input id="password" name="password" placeholder="Enter password" type="password">
                 </div>
+                <span class="error-message"></span>
             </fieldset>
 
             <button class="btn-primary send-login" type="submit">Next</button>

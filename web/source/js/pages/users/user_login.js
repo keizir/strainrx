@@ -13,13 +13,13 @@ $(document).ready(function () {
                 url: '/api/v1/users/login',
                 dataType: 'json',
                 data: JSON.stringify({email: email, password: password}),
-                success: function (data) {
-                    console.log(data);
+                success: function () {
+                    window.location.href = '/';
                 },
-                error: function (e, e1, e2) {
-                    console.log(e);
-                    console.log(e1);
-                    console.log(e2);
+                error: function (error) {
+                    if (error.status === 400) {
+                        $('.error-message').text(JSON.parse(error.responseText).error);
+                    }
                 }
             });
         });

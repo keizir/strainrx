@@ -1,5 +1,5 @@
 import logging
-from django.contrib.auth import authenticate
+from django.contrib.auth import authenticate, login
 from django.contrib.auth.mixins import LoginRequiredMixin
 from rest_framework import permissions
 from rest_framework import status
@@ -32,18 +32,27 @@ class UserLoginView(APIView):
     permission_classes = (permissions.AllowAny,)
 
     def post(self, request):
-        # serializer = UserLoginSerializer(data=request.data)
         email = request.data.get('email')
         pwd = request.data.get('password')
+
         try:
             user = User.objects.get(email=email)
         except User.DoesNotExist:
-            user = None
-
-        if user is not None and user.check_password(pwd):
-            authenticate(email=user.email, password=user.password)
-            return Response({}, status=status.HTTP_200_OK)
-        else:
             return Response({
-                'error': 'Invalid credentials'
-            }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+                'error': 'Email or password does not match'
+            }, status=status.HTTP_400_BAD_REQUEST)
+
+        does_match = user.check_password(pwd)
+        if not does_match:
+            return Response({
+                'error': 'Email or password does not match'
+            }, status=status.HTTP_400_BAD_REQUEST)
+
+        authenticated = authenticate(email=user.email, password=user.password)
+        if authenticated is None:
+            return Response({
+                'error': 'Cannot authenticate'
+            }, status=status.HTTP_400_BAD_REQUEST)
+
+        login(request, authenticated)
+        return Response({}, status=status.HTTP_200_OK)
