@@ -98,6 +98,14 @@ a {
     }
 }
 
+.hidden {
+    display: none !important;
+}
+
+.visible {
+    display: block !important;
+}
+
 .btn-primary {
     background-color: $blue;
     border-radius: 0.5em;
@@ -107,7 +115,7 @@ a {
     width: 14em;
 }
 
-.login-block-wrapper .login fieldset input {
+input {
     border: 1px solid $normal-grey;
     border-radius: 0.5em;
     padding: 1.2em 2em;
@@ -115,7 +123,6 @@ a {
     margin-bottom: 1em;
     width: 30em
 }
-
 
 // bootstrap alert CSS, translated to the django-standard levels of
 // debug, info, success, warning, error
@@ -166,7 +173,7 @@ a {
     }
 }
 
-@media (min-width: $screen-sm-min) {
+@media (max-width: $screen-sm-min) {
     body {
         font-size: 14px;
     }
@@ -174,22 +181,27 @@ a {
     .container {
         max-width: 758px;
     }
+
+    input {
+        padding: 1em 1.5em;
+        width: 24em
+    }
 }
 
-@media (min-width: $screen-md-min) {
+@media (max-width: $screen-md-min) {
     .container {
         max-width: 1014px;
     }
 }
 
-@media (min-width: $screen-lg-min) {
+@media (max-width: $screen-lg-min) {
     body {
         font-size: 15px;
     }
 
 }
 
-@media (min-width: $screen-xl-min) {
+@media (max-width: $screen-xl-min) {
     body {
         font-size: 16px;
     }

@@ -48,10 +48,10 @@ class UserLoginView(APIView):
                 'error': 'Email or password does not match'
             }, status=status.HTTP_400_BAD_REQUEST)
 
-        authenticated = authenticate(email=user.email, password=user.password)
+        authenticated = authenticate(username=user.email, password=pwd)
         if authenticated is None:
             return Response({
-                'error': 'Cannot authenticate'
+                'error': 'Email or password does not match'
             }, status=status.HTTP_400_BAD_REQUEST)
 
         login(request, authenticated)
