@@ -11,3 +11,5 @@
 6. In parallel run `python manage.py createsuperuser` and `python manage.py runserver`.  
 7. Ping http://127.0.0.1:8000/.  
 
+### Sending emails  
+1. Install `pip install sendgrid`  

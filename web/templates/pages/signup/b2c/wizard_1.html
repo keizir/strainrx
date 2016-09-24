@@ -1,0 +1,20 @@
+{% extends "pages/signup/b2c/wizard.html" %}
+
+{% block wizard-content %}
+    <div class="sign-up-form-wrapper">
+        <h1>Tells us who you are</h1>
+        <form method="post">
+            {% csrf_token %}
+            <fieldset>
+                <input type="hidden" name="token" value="{{ token }}">
+                <input type="text" name="firstName" placeholder="First Name"/>
+                <input type="text" name="lastName" placeholder="Last Name"/>
+                <span class="error-message"></span>
+            </fieldset>
+            <button class="btn-primary btn-step-1" type="submit">Next</button>
+        </form>
+    </div>
+    <div class="sign-up-b2b-wrapper">
+        <a href="#">Sign Up For Collectives</a>
+    </div>
+{% endblock %}

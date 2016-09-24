@@ -1,0 +1,20 @@
+{% extends "pages/signup/b2c/wizard.html" %}
+
+{% block wizard-content %}
+    <div class="sign-up-form-wrapper">
+        <h1>Age Verification</h1>
+        <form method="post">
+            {% csrf_token %}
+            <fieldset>
+                <input type="hidden" name="token" value="{{ token }}">
+                <label>
+                    <input id="age" type="checkbox" name="age"/>
+                    <span class="check"></span>
+                    I verify that I am at least 21 years of age.
+                </label>
+                <span class="error-message"></span>
+            </fieldset>
+            <button class="btn-primary btn-step-2" type="submit">Next</button>
+        </form>
+    </div>
+{% endblock %}

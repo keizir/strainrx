@@ -1,9 +1,11 @@
 # -*- coding: utf-8 -*-
 from __future__ import absolute_import, unicode_literals
 
+import uuid
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.core.urlresolvers import reverse
 from django.views.generic import DetailView, ListView, RedirectView, UpdateView
+from django.views.generic import TemplateView
 
 from .models import User
 
@@ -44,3 +46,72 @@ class UserListView(LoginRequiredMixin, ListView):
     # These next two lines tell the view to index lookups by username
     slug_field = 'username'
     slug_url_kwarg = 'username'
+
+
+class UserSignUpWizard1View(TemplateView):
+    template_name = 'pages/signup/b2c/wizard_1.html'
+
+    def get_context_data(self, **kwargs):
+        context = super(UserSignUpWizard1View, self).get_context_data(**kwargs)
+        token = str(uuid.uuid1())
+        context['token'] = token
+        context['step'] = 1
+        self.request.session['t_val'] = token
+        return context
+
+
+class UserSignUpWizard2View(TemplateView):
+    template_name = 'pages/signup/b2c/wizard_2.html'
+
+    def get_context_data(self, **kwargs):
+        token = self.request.session['t_val']
+        context = super(UserSignUpWizard2View, self).get_context_data(**kwargs)
+        context['token'] = token
+        context['step'] = 2
+        self.request.session['t_val'] = token
+        return context
+
+
+class UserSignUpWizard3View(TemplateView):
+    template_name = 'pages/signup/b2c/wizard_3.html'
+
+    def get_context_data(self, **kwargs):
+        token = self.request.session['t_val']
+        context = super(UserSignUpWizard3View, self).get_context_data(**kwargs)
+        context['token'] = token
+        context['step'] = 3
+        self.request.session['t_val'] = token
+        return context
+
+
+class UserSignUpWizard4View(TemplateView):
+    template_name = 'pages/signup/b2c/wizard_4.html'
+
+    def get_context_data(self, **kwargs):
+        token = self.request.session['t_val']
+        context = super(UserSignUpWizard4View, self).get_context_data(**kwargs)
+        context['token'] = token
+        context['step'] = 4
+        self.request.session['t_val'] = token
+        return context
+
+
+class UserSignUpWizard5View(TemplateView):
+    template_name = 'pages/signup/b2c/wizard_5.html'
+
+    def get_context_data(self, **kwargs):
+        token = self.request.session['t_val']
+        context = super(UserSignUpWizard5View, self).get_context_data(**kwargs)
+        context['token'] = token
+        context['step'] = 5
+        self.request.session['t_val'] = token
+        return context
+
+
+class UserSignUpWizard6View(TemplateView):
+    template_name = 'pages/signup/b2c/wizard_6.html'
+
+    def get_context_data(self, **kwargs):
+        context = super(UserSignUpWizard6View, self).get_context_data(**kwargs)
+        context['step'] = 6
+        return context

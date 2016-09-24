@@ -6,7 +6,7 @@
     height: 4em;
     position: relative;
     z-index: 100;
-    background-color: $light-grey;
+    background-color: $almost-white;
 }
 
 .nav-container {
@@ -36,6 +36,12 @@
     display: inline-block;
 }
 
+.nav-list .nav-list-item .separator:after {
+    content: "|";
+    padding: 0 0.5em 0 0.5em;
+    color: $blue;
+}
+
 .nav-list .nav-menu-btn-wrapper {
     right: 1em;
 }
@@ -44,8 +50,9 @@
     right: 1em;
 }
 
+.nav-list .nav-menu-btn-wrapper .nav-menu-btn a,
 .nav-list .nav-menu-btn-wrapper .nav-menu-btn {
-    color: $white;
+    color: $black;
 }
 
 .nav-list .auth-menu .nav-menu-content {

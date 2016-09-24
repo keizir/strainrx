@@ -1,0 +1,22 @@
+{% extends "pages/signup/b2c/wizard.html" %}
+
+{% block wizard-content %}
+    <div class="sign-up-form-wrapper">
+        <h1>Terms of use and our privacy policy</h1>
+        <form method="post">
+            {% csrf_token %}
+            <fieldset>
+                <input type="hidden" name="token" value="{{ token }}">
+                <label>
+                    <input id="terms" type="checkbox" name="terms"/>
+                    <span class="check"></span>
+                    I agree to the
+                    <a href="{% url 'terms' %}">terms of use</a> and
+                    <a href="{% url 'privacy' %}">privacy policy</a>
+                </label>
+                <span class="error-message"></span>
+            </fieldset>
+            <button class="btn-primary btn-step-5" type="submit">Next</button>
+        </form>
+    </div>
+{% endblock %}
