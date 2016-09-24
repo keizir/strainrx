@@ -1,0 +1,16 @@
+{% extends "pages/signup/b2c/wizard.html" %}
+
+{% block wizard-content %}
+    <div class="sign-up-form-wrapper">
+        <h1>Tells us your email</h1>
+        <form method="post">
+            {% csrf_token %}
+            <fieldset>
+                <input type="hidden" name="token" value="{{ token }}">
+                <input type="text" name="email" placeholder="Enter valid email address"/>
+                <span class="error-message"></span>
+            </fieldset>
+            <button class="btn-primary btn-step-3" type="submit">Next</button>
+        </form>
+    </div>
+{% endblock %}

@@ -33,4 +33,36 @@ urlpatterns = [
             view=views.UserUpdateView.as_view(),
             name='update'
     ),
+
+    # TODO maybe these 6 views can be merged into one
+    url(
+            regex=r'^signup/wizard/1/$',
+            view=views.UserSignUpWizard1View.as_view(),
+            name='signup1'
+    ),
+    url(
+            regex=r'^signup/wizard/2/$',
+            view=views.UserSignUpWizard2View.as_view(),
+            name='signup2'
+    ),
+    url(
+            regex=r'^signup/wizard/3/$',
+            view=views.UserSignUpWizard3View.as_view(),
+            name='signup3'
+    ),
+    url(
+            regex=r'^signup/wizard/4/$',
+            view=views.UserSignUpWizard4View.as_view(),
+            name='signup4'
+    ),
+    url(
+            regex=r'^signup/wizard/5/$',
+            view=views.UserSignUpWizard5View.as_view(),
+            name='signup5'
+    ),
+    url(
+            regex=r'^signup/wizard/6/$',
+            view=views.UserSignUpWizard6View.as_view(),
+            name='signup6'
+    ),
 ]

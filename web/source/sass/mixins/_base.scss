@@ -26,7 +26,7 @@
 // Global Styles
 // --------------------------------------------------
 html, body {
-    background-color: $light-grey;
+    background-color: $almost-white;
     position: relative;
     font-family: 'gotham_bookregular', sans-serif;
     font-size: 12px;
@@ -50,10 +50,6 @@ a {
         text-decoration: none;
     }
 }
-
-/*#container {
-    padding: $base-padding;
-}*/
 
 .strains-wrapper {
     min-height: 100%;
@@ -106,6 +102,16 @@ a {
     display: block !important;
 }
 
+.disabled {
+    pointer-events: none;
+    cursor: default;
+}
+
+.bold {
+    font-weight: bold;
+    color: $dark-grey;
+}
+
 .btn-primary {
     background-color: $blue;
     border-radius: 0.5em;
@@ -122,6 +128,10 @@ input {
     color: $normal-grey;
     margin-bottom: 1em;
     width: 30em
+}
+
+fieldset {
+    border: none
 }
 
 // bootstrap alert CSS, translated to the django-standard levels of

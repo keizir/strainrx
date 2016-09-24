@@ -1,0 +1,18 @@
+{% extends "pages/signup/b2c/wizard.html" %}
+
+{% block wizard-content %}
+    <div class="sign-up-form-wrapper">
+        <h1>Create your password</h1>
+        <span class="pwd-req">(Pasword must be at least 6 characters. Please, use at least 1 special character)</span>
+        <form method="post">
+            {% csrf_token %}
+            <fieldset>
+                <input type="hidden" name="token" value="{{ token }}">
+                <input type="password" name="pwd" placeholder="Enter password"/>
+                <input type="password" name="pwd2" placeholder="Confirm password"/>
+                <span class="error-message"></span>
+            </fieldset>
+            <button class="btn-primary btn-step-4" type="submit">Next</button>
+        </form>
+    </div>
+{% endblock %}

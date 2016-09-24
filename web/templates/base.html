@@ -37,7 +37,11 @@
                                 <div class="nav-menu-btn-wrapper">
                                     <a class="nav-menu-btn">
                                         <i class="fa fa-user" aria-hidden="true"></i>
-                                        Welcome {{ request.user.first_name }}
+                                        Welcome <span class="user-name">{{ request.user.first_name }}</span>
+                                        {% if not request.user.is_email_verified %}
+                                            <span class="separator"></span>
+                                            <a class="resend-email-link" href="#">Verify Email</a>
+                                        {% endif %}
                                     </a>
                                 </div>
                                 <div class="nav-menu-content">
@@ -59,7 +63,7 @@
                         {% else %}
                             <ul class="pull-right">
                                 <li class="nav-list-item">
-                                    <a class="nav-link sign-up-link" href="{% url 'account_signup' %}">Sign Up</a>
+                                    <a class="nav-link sign-up-link" href="{% url 'users:signup1' %}">Sign Up</a>
                                     <span class="separator"></span>
                                 </li>
                                 <li class="nav-list-item">

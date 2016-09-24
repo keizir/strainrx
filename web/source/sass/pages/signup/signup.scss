@@ -1,0 +1,143 @@
+@import '../../mixins/variables';
+
+.sign-up-wrapper {
+    text-align: center;
+    color: $normal-grey;
+}
+
+.sign-up-wrapper input {
+    display: block;
+    margin: 0 auto 1em;
+}
+
+.sign-up-form-wrapper {
+    margin-top: 2em;
+    padding-bottom: 6em;
+}
+
+.sign-up-form-wrapper fieldset {
+    padding-bottom: 2em;
+}
+
+.sign-up-form-wrapper label {
+    display: inline-block;
+}
+
+.sign-up-form-wrapper label > input + span.check {
+    cursor: pointer;
+}
+
+.sign-up-form-wrapper span.check {
+    display: inline-block;
+    margin-right: 0.5em;
+}
+
+.sign-up-form-wrapper label > span.check {
+    width: 2em;
+    height: 2em;
+    border: 1px solid $light-grey;
+    border-radius: 1em;
+    vertical-align: middle;
+}
+
+.sign-up-form-wrapper label > input {
+    position: absolute;
+    visibility: hidden;
+    width: 2em;
+    height: 2em;
+    padding: 0.35em 0;
+}
+
+.sign-up-form-wrapper label > input:checked + span:before {
+    content: '\2713';
+    display: block;
+    width: 2em;
+    height: 2em;
+    padding: 0.35em 0;
+    color: $blue;
+}
+
+.sign-up-form-wrapper .pwd-req {
+    display: block;
+    margin: 1em auto 3em;
+}
+
+.sign-up-form-wrapper .message-1 {
+    display: block;
+    margin: 3em auto;
+    width: 50em;
+    line-height: 2em;
+}
+
+.sign-up-form-wrapper .message-2 {
+    display: block;
+    margin: 3em auto;
+    width: 50em;
+    line-height: 2em;
+}
+
+.wizard-wrapper {
+    padding: 2em 1em;
+    width: 30em;
+    margin: 0 auto;
+}
+
+.wizard-wrapper hr {
+    z-index: 1;
+    width: 22em;
+    margin: -1em auto 0 auto;
+}
+
+.wizard-step {
+    border: 1px solid $light-grey;
+    background: $white;
+    width: 2em;
+    height: 2em;
+    border-radius: 1em;
+    display: inline-block;
+    text-align: center;
+    vertical-align: middle;
+    padding: 0.4em;
+    margin: 0 1.5em;
+    z-index: 2;
+}
+
+.wizard-step a {
+    color: $light-grey;
+}
+
+.wizard-step.active {
+    border: 2px solid $normal-grey;
+}
+
+.wizard-step.finished,
+.wizard-step.passed {
+    border: 2px solid $normal-grey;
+    background: $avocado-green;
+}
+
+.wizard-step.finished {
+    pointer-events: none;
+    cursor: default;
+}
+
+.wizard-step.finished a,
+.wizard-step.passed a {
+    color: $white;
+}
+
+.wizard-step.active a {
+    color: $black;
+}
+
+.sign-up-b2b-wrapper {
+    padding: 0 1em 3em;
+    margin-top: -2em;
+}
+
+@media (max-width: $screen-md-min) {
+    .sign-up-form-wrapper .message-1,
+    .sign-up-form-wrapper .message-2 {
+        width: 22em;
+    }
+}
