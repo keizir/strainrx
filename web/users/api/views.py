@@ -21,6 +21,39 @@ def bad_request(error_message):
     }, status=status.HTTP_400_BAD_REQUEST)
 
 
+def validate_pwd(pwd, pwd2):
+    if not pwd or not pwd2:
+        return bad_request('Password is required')
+
+    if len(pwd) < 6:
+        return bad_request('Password should be at least 6 characters')
+
+    if not set('[~!@#$%^&*()_-+={}":;\',.<>\|/?]+$').intersection(pwd):
+        return bad_request('Password should contain at least 1 special character')
+
+    if pwd != pwd2:
+        return bad_request('Passwords don\'t match')
+
+
+def validate_email(email):
+    if not email:
+        return bad_request('Email is required')
+
+    try:
+        validator = EmailValidator()
+        validator.__call__(email)
+    except ValidationError:
+        return bad_request('Invalid email format')
+
+    try:
+        user = User.objects.get(email=email)
+    except User.DoesNotExist:
+        user = None
+
+    if user is not None:
+        return bad_request('That email address is already registered')
+
+
 class UserDetailView(LoginRequiredMixin, APIView):
     def put(self, request, user_id):
         if request.user.id != int(user_id):
@@ -29,9 +62,32 @@ class UserDetailView(LoginRequiredMixin, APIView):
 
         serializer = UserDetailSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
-        user = request.user
 
+        valid_email = validate_email(serializer.validated_data.get('email'))
+        if isinstance(valid_email, Response):
+            return valid_email
+
+        user = User.objects.get(pk=user_id)
         user.name = serializer.validated_data.get('name')
+        user.first_name = serializer.validated_data.get('first_name')
+        user.last_name = serializer.validated_data.get('last_name')
+        user.email = serializer.validated_data.get('email')
+        user.city = serializer.validated_data.get('city')
+        user.state = serializer.validated_data.get('state')
+        user.zipcode = serializer.validated_data.get('zipcode')
+        user.birth_month = serializer.validated_data.get('birth_month')
+        user.birth_day = serializer.validated_data.get('birth_day')
+        user.birth_year = serializer.validated_data.get('birth_year')
+        user.gender = serializer.validated_data.get('gender')
+
+        pwd = request.data.get('pwd')
+        pwd2 = request.data.get('pwd2')
+        if pwd and pwd2:
+            pwd_valid = validate_pwd(pwd, pwd2)
+            if isinstance(pwd_valid, Response):
+                return pwd_valid
+            user.set_password(pwd)
+
         user.save()
 
         return Response({}, status=status.HTTP_200_OK)
@@ -131,22 +187,9 @@ class UserSignUpWizardView(APIView):
 
     def process_step_3(self, request):
         email = request.data.get('email')
-        if not email:
-            return bad_request('Email is required')
-
-        try:
-            validator = EmailValidator()
-            validator.__call__(email)
-        except ValidationError:
-            return bad_request('Invalid email format')
-
-        try:
-            user = User.objects.get(email=email)
-        except User.DoesNotExist:
-            user = None
-
-        if user is not None:
-            return bad_request('That email address is already registered')
+        valid_email = validate_email(email)
+        if isinstance(valid_email, Response):
+            return valid_email
 
         token = self.check_enrollment_token(request)
         if isinstance(token, Response):
@@ -167,17 +210,9 @@ class UserSignUpWizardView(APIView):
         pwd = request.data.get('pwd')
         pwd2 = request.data.get('pwd2')
 
-        if not pwd or not pwd2:
-            return bad_request('Password is required')
-
-        if len(pwd) < 6:
-            return bad_request('Password should be at least 6 characters')
-
-        if not set('[~!@#$%^&*()_-+={}":;\',.<>\|/?]+$').intersection(pwd):
-            return bad_request('Password should contain at least 1 special character')
-
-        if pwd != pwd2:
-            return bad_request('Passwords don\'t match')
+        pwd_valid = validate_pwd(pwd, pwd2)
+        if isinstance(pwd_valid, Response):
+            return pwd_valid
 
         token = self.check_enrollment_token(request)
         if isinstance(token, Response):

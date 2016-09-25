@@ -61,11 +61,12 @@ a {
     max-width: 1200px;
     margin-left: auto;
     margin-right: auto;
+    padding: 0 1em;
 }
 
 .separator:after {
     content: "|";
-    padding: 0 0.75em 0 1.25em;
+    padding: 0 0.5em 0 0.5em;
 }
 
 .pull-right {
@@ -75,6 +76,11 @@ a {
 .error-message {
     display: block;
     color: $red;
+}
+
+.success-message {
+    display: block;
+    color: $avocado-green;
 }
 
 #loading-spinner {
@@ -121,7 +127,7 @@ a {
     width: 14em;
 }
 
-input {
+input, select {
     border: 1px solid $normal-grey;
     border-radius: 0.5em;
     padding: 1.2em 2em;
@@ -132,6 +138,44 @@ input {
 
 fieldset {
     border: none
+
+}
+
+.form {
+
+}
+
+.form .form-field-group {
+    display: block;
+    margin-bottom: 1em;
+    float: left;
+}
+
+.form .form-field {
+    display: inline-block;
+    margin: 0 1em;
+}
+
+.form .form-field label {
+    display: block;
+    text-align: left;
+    margin-bottom: 0.5em;
+    color: $dark-grey;
+}
+
+.form .form-field input,
+.form .form-field select {
+    display: block;
+    width: 18em;
+    padding: 1em;
+    border-radius: 0;
+    border-color: $light-grey;
+    color: $light-grey;
+}
+
+.form .form-field select {
+    -webkit-appearance: none;
+    background-color: $white;
 }
 
 // bootstrap alert CSS, translated to the django-standard levels of
@@ -179,7 +223,7 @@ fieldset {
     }
 
     .container {
-        max-width: 450px;
+        max-width: 460px;
     }
 }
 
