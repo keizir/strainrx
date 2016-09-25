@@ -4799,11 +4799,14 @@ a {
   width: 100%;
   max-width: 1200px;
   margin-left: auto;
-  margin-right: auto; }
+  margin-right: auto;
+  padding: 0 1em;
+}
 
 .separator:after {
   content: "|";
-  padding: 0 0.75em 0 1.25em; }
+  padding: 0 0.5em 0 0.5em;
+}
 
 .pull-right {
   float: right !important; }
@@ -4811,6 +4814,11 @@ a {
 .error-message {
   display: block;
   color: #b94a48; }
+
+.success-message {
+  display: block;
+  color: #6bc331;
+}
 
 #loading-spinner {
   display: none;
@@ -4848,7 +4856,7 @@ a {
   border: none;
   width: 14em; }
 
-input {
+input, select {
   border: 1px solid #8e8e93;
   border-radius: 0.5em;
   padding: 1.2em 2em;
@@ -4858,6 +4866,39 @@ input {
 
 fieldset {
   border: none; }
+
+.form .form-field-group {
+  display: block;
+  margin-bottom: 1em;
+  float: left;
+}
+
+.form .form-field {
+  display: inline-block;
+  margin: 0 1em;
+}
+
+.form .form-field label {
+  display: block;
+  text-align: left;
+  margin-bottom: 0.5em;
+  color: #2f3f4c;
+}
+
+.form .form-field input,
+.form .form-field select {
+  display: block;
+  width: 18em;
+  padding: 1em;
+  border-radius: 0;
+  border-color: #aaa8a8;
+  color: #aaa8a8;
+}
+
+.form .form-field select {
+  -webkit-appearance: none;
+  background-color: #fff;
+}
 
 .alert-debug {
   background-color: #fff;
@@ -4892,7 +4933,9 @@ fieldset {
   body {
     font-size: 12px; }
   .container {
-    max-width: 450px; } }
+    max-width: 460px;
+  }
+}
 
 @media (max-width: 768px) {
   body {
@@ -5071,14 +5114,16 @@ footer, .push {
   padding-top: 1em; }
 
 .home-row-01 {
-  background-image: url(../../images/home_background.jpg);
+  background: #aaa8a8 url(../../images/weed_dark.jpg) no-repeat fixed center center;
+  -webkit-background-size: cover;
   text-align: center;
   height: 26em;
   display: block;
   z-index: 1; }
 
 .home-row-01 h1 {
-  margin: 0; }
+  margin: 0.5em;
+}
 
 .home-row-01 p {
   width: 34em;
@@ -5174,9 +5219,15 @@ footer, .push {
 
 .home-sub-row-02 {
   display: block;
-  width: 100%; }
+  width: 100%;
+  color: #fff;
+  line-height: 2.5em;
+}
 
 @media (max-width: 1024px) {
+  .home-row-01 p {
+    width: 22em;
+  }
   .home-sub-row-01 .location-holder {
     margin: 0.5em 0 0 0.5em; }
   .home-sub-row-01 .favourites-holder {
@@ -5193,4 +5244,11 @@ footer, .push {
     height: 6em; }
   .home-row-02 .search-box {
     width: 30em;
-    padding: 0 2em; } }
+    padding: 0 2em;
+  }
+
+  .footer-region {
+    padding: 2em 4em;
+    line-height: 2em;
+  }
+}

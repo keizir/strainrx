@@ -34,6 +34,34 @@ urlpatterns = [
             name='detail'
     ),
 
+    # URL pattern for the UserFavouritesDetailView
+    url(
+            regex=r'^(?P<username>[\w.@+-]+)/favourites$',
+            view=views.UserFavouritesView.as_view(),
+            name='favourites'
+    ),
+
+    # URL pattern for the UserReviewsView
+    url(
+            regex=r'^(?P<username>[\w.@+-]+)/reviews',
+            view=views.UserReviewsView.as_view(),
+            name='reviews'
+    ),
+
+    # URL pattern for the UserSubscriptionsView
+    url(
+            regex=r'^(?P<username>[\w.@+-]+)/subscriptions',
+            view=views.UserSubscriptionsView.as_view(),
+            name='subscriptions'
+    ),
+
+    # URL pattern for the UserProximitySettingsView
+    url(
+            regex=r'^(?P<username>[\w.@+-]+)/proximity',
+            view=views.UserProximitySettingsView.as_view(),
+            name='proximity'
+    ),
+
     # URL pattern for the UserUpdateView
     url(
             regex=r'^~update/$',

@@ -1,0 +1,66 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}User Profile{% endblock %}
+
+{% block css %}
+    <link href="{% static 'css/pages/base.css' %}" rel="stylesheet">
+    <link href="{% static 'css/users/user_detail.css' %}" rel="stylesheet">
+{% endblock %}
+
+{% block content %}
+    <div class="container user-profile">
+        <div class="profile-header">
+            <div class="row">
+                <div class="user-image-wrapper">
+                    <div class="user-image">
+                        {% if request.user.user_image_path %}
+                            <img src="{{ request.user.user_image_path }}" alt="User Image"/>
+                        {% else %}
+                            <img src="{% static 'images/default-profile-image.png' %}" alt="User Image"/>
+                        {% endif %}
+                    </div>
+                    <div class="user-image-actions">
+                        <a href="#" class="edit-photo">+ Edit Photo</a>
+                    </div>
+                </div>
+                <div class="active-since">
+                    {% if request.user.date_joined %}
+                        <span>Active since {{ request.user.date_joined|date:"F Y" }}</span>
+                    {% endif %}
+                </div>
+                <div class="profile-tabs">
+                    <span class="profile-tab user-profile-tab {% if tab == 'info' %}active{% endif %}">
+                        <a href="{% url 'users:detail' request.user.username %}">User Information</a>
+                    </span>
+                    <span class="separator"></span>
+                    <span class="profile-tab favourites-tab {% if tab == 'favourites' %}active{% endif %}">
+                        <a href="{% url 'users:favourites' request.user.username %}">Favourites</a>
+                    </span>
+                    <span class="separator"></span>
+                    <span class="profile-tab my-reviews-tab {% if tab == 'reviews' %}active{% endif %}">
+                        <a href="{% url 'users:reviews' request.user.username %}">My Reviews</a>
+                    </span>
+                    <span class="separator"></span>
+                    <span class="profile-tab subscriptions-tab {% if tab == 'subscriptions' %}active{% endif %}">
+                        <a href="{% url 'users:subscriptions' request.user.username %}">Subscriptions</a>
+                    </span>
+                    <span class="separator"></span>
+                    <span class="profile-tab proximity-settings-tab {% if tab == 'proximity' %}active{% endif %}">
+                        <a href="{% url 'users:proximity' request.user.username %}">Proximity Settings</a>
+                    </span>
+                </div>
+            </div>
+        </div>
+        <div class="profile-content">
+            {% block profile-tab %}{% endblock %}
+        </div>
+    </div>
+{% endblock content %}
+
+{% block javascript %}
+    <script src="{% static 'js/users/user_detail.js' %}"></script>
+    <script type="text/javascript">
+        new W.users.DetailPage();
+    </script>
+{% endblock %}

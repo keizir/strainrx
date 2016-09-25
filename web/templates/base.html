@@ -41,14 +41,14 @@
                                         {% if not request.user.is_email_verified %}
                                             <span class="separator"></span>
                                             <a class="resend-email-link" href="#">Verify Email</a>
+                                        {% else %}
+                                            <span class="separator"></span>
+                                            <a class="nav-link" href="{% url 'users:detail' request.user.username %}">
+                                                My Account</a>
                                         {% endif %}
                                     </a>
                                 </div>
                                 <div class="nav-menu-content">
-                                    <div class="action">
-                                        <a class="nav-link" href="{% url 'users:detail' request.user.username %}">My
-                                            Account</a>
-                                    </div>
                                     <div class="action">
                                         <a class="nav-link" href="{% url 'account_logout' %}">Sign out</a>
                                     </div>

@@ -1,0 +1,9 @@
+{% extends "users/base_profile.html" %}
+
+{% block profile-tab %}
+    <div class="user-favourites">
+        {% if object == request.user %}
+            <h1>Favourites</h1>
+        {% endif %}
+    </div>
+{% endblock %}
