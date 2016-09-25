@@ -115,3 +115,18 @@ class UserSignUpWizard6View(TemplateView):
         context = super(UserSignUpWizard6View, self).get_context_data(**kwargs)
         context['step'] = 6
         return context
+
+
+class ConfirmEmailView(TemplateView):
+    template_name = 'pages/signup/b2c/wizard_7.html'
+
+    def get_context_data(self, **kwargs):
+        uid = kwargs.get('uid')
+
+        user = User.objects.get(pk=uid)
+        user.is_email_verified = True
+        user.save()
+
+        context = super(ConfirmEmailView, self).get_context_data(**kwargs)
+        context['step'] = 7
+        return context
