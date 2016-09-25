@@ -1,18 +1,15 @@
 import logging
-import os
-import sendgrid
 from django.contrib.auth import authenticate, login
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.core.exceptions import ValidationError
-from django.core.mail import send_mail
 from django.core.validators import EmailValidator
 from rest_framework import permissions
 from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.views import APIView
-from sendgrid.helpers.mail import *
 
 from web.users.api.serializers import (UserDetailSerializer)
+from web.users.emails import EmailService
 from web.users.models import User
 
 logger = logging.getLogger(__name__)
@@ -176,6 +173,9 @@ class UserSignUpWizardView(APIView):
         if len(pwd) < 6:
             return bad_request('Password should be at least 6 characters')
 
+        if not set('[~!@#$%^&*()_-+={}":;\',.<>\|/?]+$').intersection(pwd):
+            return bad_request('Password should contain at least 1 special character')
+
         if pwd != pwd2:
             return bad_request('Passwords don\'t match')
 
@@ -227,11 +227,7 @@ class UserSignUpWizardView(APIView):
         user.type = 'consumer'
         user.save()
 
-        send_mail('StrainsRX: Verify Your Email',
-                  'To verify your email click this link.',
-                  'support@strainrx.co',
-                  [user.email],
-                  fail_silently=False)
+        EmailService().send_confirmation_email(user)
 
         authenticated = authenticate(username=user.email, password=user_data.get('pwd'))
         if authenticated is None:
@@ -262,22 +258,7 @@ class UserSignUpWizardView(APIView):
 
 
 class ResendConfirmationEmailView(LoginRequiredMixin, APIView):
-    permission_classes = (permissions.AllowAny,)
-
     def get(self, request):
         authenticated_user = request.user
-
-        sg = sendgrid.SendGridAPIClient(apikey=os.environ.get('SENDGRID_API_KEY'))
-        from_email = Email('support@strainrx.co')
-        subject = 'StrainsRX: Verify Your Email'
-        to_email = Email('kostiantyn.noha@gmail.com')
-        content = Content("text/html",
-                          "<html><body>To verify your email click this <a href='http://127.0.0.1:8000/'>link</a>.</body></html>")
-        mail = Mail(from_email, subject, to_email, content)
-        response = sg.client.mail.send.post(request_body=mail.get())
-
-        print(response.status_code)
-        print(response.body)
-        print(response.headers)
-
+        EmailService().send_confirmation_email(authenticated_user)
         return Response({}, status=status.HTTP_200_OK)

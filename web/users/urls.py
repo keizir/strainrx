@@ -20,6 +20,13 @@ urlpatterns = [
             name='redirect'
     ),
 
+    # URL pattern for the ConfirmEmailView
+    url(
+            regex=r'^confirm_email/(?P<uid>[0-9]{1,})/$',
+            view=views.ConfirmEmailView.as_view(),
+            name='confirm_email'
+    ),
+
     # URL pattern for the UserDetailView
     url(
             regex=r'^(?P<username>[\w.@+-]+)/$',
