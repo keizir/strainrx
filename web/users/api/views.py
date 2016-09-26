@@ -279,7 +279,10 @@ class UserSignUpWizardView(APIView):
         user.type = 'consumer'
         user.save()
 
-        EmailService().send_confirmation_email(user)
+        try:
+            EmailService().send_confirmation_email(user)
+        except Exception as e:
+            print('Cannot send an email to ' + user.email)
 
         authenticated = authenticate(username=user.email, password=user_data.get('pwd'))
         if authenticated is None:
