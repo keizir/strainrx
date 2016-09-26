@@ -81,4 +81,4 @@ DATABASES = {
     }
 }
 
-HOST = 'http://ec2-54-70-213-66.us-west-2.compute.amazonaws.com:8000'
+HOST = 'http://ec2-54-70-213-66.us-west-2.compute.amazonaws.com'
