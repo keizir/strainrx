@@ -1,35 +1,35 @@
 footer, .push {
-    height: 8em;
-    width: 100%;
+  height: 8em;
+  width: 100%;
 }
 
 .footer-region {
-    background: #fff;
-    z-index: 100;
-    padding: 2em 10em;
-    font-size: 0.75em;
-    height: 11em;
-    border-top: 1px solid #2f3f4c;
+  background: #fff;
+  z-index: 100;
+  padding: 2em 10em;
+  font-size: 0.75em;
+  height: 11em;
+  border-top: 1px solid #2f3f4c;
 }
 
 .footer-region .separator:after {
-    color: #1e1e1e;
+  color: #1e1e1e;
 }
 
 .footer-region a {
-    color: #1e1e1e;
+  color: #1e1e1e;
 }
 
 .footer-region .links-wrapper .links {
-    margin-bottom: 5px;
-    color: #1e1e1e;
+  margin-bottom: 5px;
+  color: #1e1e1e;
 }
 
 .footer-region .links-wrapper .links > li {
-    display: inline-block;
+  display: inline-block;
 }
 
 .footer-region .copyright-wrapper {
-    color: #1e1e1e;
-    padding-top: 1em;
+  color: #1e1e1e;
+  padding-top: 1em;
 }

@@ -1,170 +1,170 @@
 .nav-region {
-    border-radius: 0;
-    display: block;
-    height: 4em;
-    position: relative;
-    z-index: 100;
-    background-color: #fdfdfd;
+  border-radius: 0;
+  display: block;
+  height: 4em;
+  position: relative;
+  z-index: 100;
+  background-color: #fdfdfd;
 }
 
 .nav-container {
-    padding: 0 1.3em;
-    line-height: 4em;
+  padding: 0 1.3em;
+  line-height: 4em;
 }
 
 .nav-container .nav-brand-wrapper {
-    display: inline-block;
-    float: left;
+  display: inline-block;
+  float: left;
 }
 
 .nav-container .nav-list-wrapper {
-    display: inline-block;
-    float: right;
+  display: inline-block;
+  float: right;
 }
 
 .nav-list {
-    list-style: none;
+  list-style: none;
 }
 
 .nav-list .nav-list-item {
-    display: inline-block;
+  display: inline-block;
 }
 
 .nav-list .nav-list-item {
-    display: inline-block;
+  display: inline-block;
 }
 
 .nav-list .nav-list-item .separator:after {
-    content: "|";
-    padding: 0 0.5em 0 0.5em;
-    color: #10b3dc;
+  content: "|";
+  padding: 0 0.5em 0 0.5em;
+  color: #10b3dc;
 }
 
 .nav-list .nav-menu-btn-wrapper {
-    right: 1em;
+  right: 1em;
 }
 
 .nav-list .auth-menu {
-    right: 1em;
+  right: 1em;
 }
 
 .nav-list .nav-menu-btn-wrapper .nav-menu-btn a,
 .nav-list .nav-menu-btn-wrapper .nav-menu-btn {
-    color: #1e1e1e;
+  color: #1e1e1e;
 }
 
 .nav-list .auth-menu .nav-menu-content {
-    display: none;
-    background: #2f3f4c;
-    color: #fff;
-    width: 18em;
-    right: 1em;
-    text-align: right;
+  display: none;
+  background: #2f3f4c;
+  color: #fff;
+  width: 18em;
+  right: 1em;
+  text-align: right;
 }
 
 .nav-list .auth-menu .nav-menu-content a {
-    color: #fff;
+  color: #fff;
 }
 
 .nav-list .auth-menu .nav-menu-content .action {
-    display: block;
-    line-height: 2em;
-    padding: 0.5em 1.5em;
+  display: block;
+  line-height: 2em;
+  padding: 0.5em 1.5em;
 }
 
 .nav-list .auth-menu .nav-menu-content .location {
-    background: #1e1e1e;
+  background: #1e1e1e;
 }
 
 .nav-list .auth-menu .nav-menu-content .location span {
-    display: block;
+  display: block;
 }
 
 .nav-list .auth-menu .nav-menu-content .location .update-location-href {
-    color: #10b3dc;
+  color: #10b3dc;
 }
 
 .nav-container .nav-list-wrapper:hover .nav-list .auth-menu .nav-menu-content {
-    display: block;
-    position: absolute;
+  display: block;
+  position: absolute;
 }
 
 .nav-region .mobile-menu {
-    display: none;
-    text-align: center;
-    vertical-align: middle;
-    float: right;
-    width: 3em;
+  display: none;
+  text-align: center;
+  vertical-align: middle;
+  float: right;
+  width: 3em;
 }
 
 .nav-region a:hover.mobile-menu {
-    cursor: pointer;
+  cursor: pointer;
 }
 
 .nav-region .nav-region ul {
-    list-style: none;
+  list-style: none;
 }
 
 @media (max-width: 1024px) {
-    body {
-        font-size: 14px;
-    }
+  body {
+    font-size: 14px;
+  }
 
-    .container {
-        max-width: 758px;
-    }
+  .container {
+    max-width: 758px;
+  }
 
-    .mobile-menu {
-        display: inline-block !important;
-    }
+  .mobile-menu {
+    display: inline-block !important;
+  }
 
-    .mobile-menu i {
-        padding-top: 0.44em;
-    }
+  .mobile-menu i {
+    padding-top: 0.44em;
+  }
 
-    .nav-list, .nav-list ul, nav:active ul {
-        display: none;
-        position: absolute;
-        background: #fff;
-        right: 1em;
-        top: 2em;
-        width: 50%;
-    }
+  .nav-list, .nav-list ul, nav:active ul {
+    display: none;
+    position: absolute;
+    background: #fff;
+    right: 1em;
+    top: 2em;
+    width: 50%;
+  }
 
-    .nav-list ul li {
-        text-align: center;
-        width: 100%;
-        padding: 10px 0;
-        margin: 0;
-    }
+  .nav-list ul li {
+    text-align: center;
+    width: 100%;
+    padding: 10px 0;
+    margin: 0;
+  }
 
-    .nav-list .nav-menu-btn {
-        color: #2f3f4c;
-    }
+  .nav-list .nav-menu-btn {
+    color: #2f3f4c;
+  }
 
-    .nav-list .nav-menu-btn-wrapper {
-        width: 18em;
-    }
+  .nav-list .nav-menu-btn-wrapper {
+    width: 18em;
+  }
 
-    .nav-container .nav-list-wrapper:hover .nav-list,
-    .nav-container .nav-list-wrapper:hover .nav-list ul,
-    .nav-container .nav-list-wrapper:hover .nav-list .auth-menu .nav-menu-content {
-        display: block;
-    }
+  .nav-container .nav-list-wrapper:hover .nav-list,
+  .nav-container .nav-list-wrapper:hover .nav-list ul,
+  .nav-container .nav-list-wrapper:hover .nav-list .auth-menu .nav-menu-content {
+    display: block;
+  }
 
-    .nav-list, .nav-list ul,
-    .nav-container .nav-list-wrapper .nav-list .auth-menu {
-        background: #2f3f4c;
-    }
+  .nav-list, .nav-list ul,
+  .nav-container .nav-list-wrapper .nav-list .auth-menu {
+    background: #2f3f4c;
+  }
 
-    .nav-container .nav-list-wrapper .nav-list .auth-menu {
-        background: #2f3f4c;
-        display: block;
-        position: absolute;
-    }
+  .nav-container .nav-list-wrapper .nav-list .auth-menu {
+    background: #2f3f4c;
+    display: block;
+    position: absolute;
+  }
 
-    .nav-list, .nav-list ul li a,
-    .nav-container .nav-list-wrapper .nav-list .auth-menu a {
-        color: #fff;
-    }
+  .nav-list, .nav-list ul li a,
+  .nav-container .nav-list-wrapper .nav-list .auth-menu a {
+    color: #fff;
+  }
 }

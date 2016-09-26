@@ -6,9 +6,12 @@ W.users.DetailPage = Class.extend({
 
     init: function () {
         this.registerUpdateUserInfoClickListener();
+        this.registerChangePasswordClickListener();
     },
 
     registerUpdateUserInfoClickListener: function () {
+        var that = this;
+
         $('.btn-update-user-info').on('click', function (e) {
             e.preventDefault();
 
@@ -18,10 +21,10 @@ W.users.DetailPage = Class.extend({
                 dataType: 'json',
                 data: JSON.stringify(collectUserData()),
                 success: function () {
-                    handleSuccess();
+                    that.showSuccessMessage('You profile information has been successfully updated');
                 },
                 error: function (error) {
-                    handleError(error);
+                    that.showErrorMessage(error);
                 }
             });
 
@@ -42,37 +45,61 @@ W.users.DetailPage = Class.extend({
                     'birth_month': birthMonth !== defaultSelectValue ? birthMonth : null,
                     'birth_day': birthDay !== defaultSelectValue ? birthDay : null,
                     'birth_year': birthYear !== defaultSelectValue ? birthYear : null,
-                    'gender': gender !== defaultSelectValue ? gender : null,
-                    'pwd': $('input[name="pwd"]').val(),
-                    'pwd2': $('input[name="pwd2"]').val()
+                    'gender': gender !== defaultSelectValue ? gender : null
                 };
             }
-
-            function handleSuccess() {
-                var $messages = $('.messages');
-                $messages.text('You profile information has been successfully updated');
-                $messages.removeClass('error-message');
-                $messages.addClass('success-message');
-
-                setTimeout(function () {
-                    $messages.text('');
-                }, 3000);
-            }
-
-            function handleError(error) {
-                if (error.status === 400) {
-                    var $messages = $('.messages');
-
-                    var errorText = JSON.parse(error.responseText);
-                    $messages.text(errorText.error ?
-                        errorText.error : errorText.zipcode ?
-                        'Zip Code may contain max 10 characters' : errorText.email ?
-                        'Email format is invalid' : 'Exception');
-
-                    $messages.removeClass('success-message');
-                    $messages.addClass('error-message');
-                }
-            }
         });
+    },
+
+    registerChangePasswordClickListener: function () {
+        var that = this;
+
+        $('.btn-update-pwd').on('click', function (e) {
+            e.preventDefault();
+
+            var data = {
+                'curPwd': $('input[name="cur_pwd"]').val(),
+                'pwd': $('input[name="pwd"]').val(),
+                'pwd2': $('input[name="pwd2"]').val()
+            };
+
+            $.ajax({
+                method: 'POST',
+                url: '/api/v1/users/' + $('input[name="uid"]').val() + '/change-pwd',
+                dataType: 'json',
+                data: JSON.stringify(data),
+                success: function () {
+                    that.showSuccessMessage('Your password has been changed')
+                },
+                error: function (error) {
+                    that.showErrorMessage(error);
+                }
+            });
+        });
+    },
+
+    showSuccessMessage: function (message) {
+        var $messages = $('.messages');
+        $messages.text(message);
+        $messages.removeClass('error-message');
+        $messages.addClass('success-message');
+        setTimeout(function () {
+            $messages.text('');
+        }, 3000);
+    },
+
+    showErrorMessage: function (error) {
+        if (error.status === 400) {
+            var $messages = $('.messages'),
+                errorText = JSON.parse(error.responseText);
+
+            $messages.text(errorText.error ?
+                errorText.error : errorText.zipcode ?
+                'Zip Code may contain max 10 characters' : errorText.email ?
+                'Email format is invalid' : 'Exception');
+
+            $messages.removeClass('success-message');
+            $messages.addClass('error-message');
+        }
     }
 });

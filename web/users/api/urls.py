@@ -1,17 +1,17 @@
 from django.conf.urls import url
 
-from web.users.api.views import (
-    UserDetailView,
-    UserLoginView,
-    UserSignUpWizardView,
-    ResendConfirmationEmailView,
-)
+from web.users.api.views import *
 
 urlpatterns = [
     url(
             regex=r'^(?P<user_id>\d+)/$',
             view=UserDetailView.as_view(),
             name='user-detail'
+    ),
+    url(
+            regex=r'^(?P<user_id>\d+)/change-pwd$',
+            view=UserChangePwdView.as_view(),
+            name='user_change_pwd'
     ),
     url(
             regex=r'^login',
