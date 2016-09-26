@@ -73,7 +73,7 @@ TEST_RUNNER = 'django.test.runner.DiscoverRunner'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'strainrx-ds-oltp',
+        'NAME': 'stage_ds_oltp',
         'USER': 'strains_admin',
         'PASSWORD': '0180c348-6dc6-42f0-9ff9-43cd02162a02',
         'HOST': 'strainrx-ds-oltp.cpdsc6jugpam.us-west-2.rds.amazonaws.com',
