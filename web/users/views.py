@@ -70,6 +70,18 @@ class UserProximitySettingsView(LoginRequiredMixin, DetailView):
         return context
 
 
+class UserChangePwdView(LoginRequiredMixin, DetailView):
+    model = User
+    slug_field = 'username'
+    slug_url_kwarg = 'username'
+    template_name_suffix = '_change_pwd'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['tab'] = 'pwd'
+        return context
+
+
 class UserRedirectView(LoginRequiredMixin, RedirectView):
     permanent = False
 

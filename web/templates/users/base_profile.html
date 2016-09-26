@@ -47,7 +47,11 @@
                     </span>
                     <span class="separator"></span>
                     <span class="profile-tab proximity-settings-tab {% if tab == 'proximity' %}active{% endif %}">
-                        <a href="{% url 'users:proximity' request.user.username %}">Proximity Settings</a>
+                        <a href="{% url 'users:proximity' request.user.username %}">Proximity</a>
+                    </span>
+                    <span class="separator"></span>
+                    <span class="profile-tab change-pwd-tab {% if tab == 'pwd' %}active{% endif %}">
+                        <a href="{% url 'users:change_pwd' request.user.username %}">Password</a>
                     </span>
                 </div>
             </div>

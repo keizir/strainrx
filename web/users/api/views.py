@@ -79,6 +79,23 @@ class UserDetailView(LoginRequiredMixin, APIView):
         user.birth_day = serializer.validated_data.get('birth_day')
         user.birth_year = serializer.validated_data.get('birth_year')
         user.gender = serializer.validated_data.get('gender')
+        user.save()
+
+        return Response({}, status=status.HTTP_200_OK)
+
+
+class UserChangePwdView(LoginRequiredMixin, APIView):
+    def post(self, request, user_id):
+        if request.user.id != int(user_id):
+            return Response({'error': 'You are not authorized to perform this action'},
+                            status=status.HTTP_403_FORBIDDEN)
+
+        user = User.objects.get(pk=user_id)
+        current_pwd = request.data.get('curPwd')
+
+        does_match = user.check_password(current_pwd)
+        if not does_match:
+            return bad_request('Current password you entered does not match our entry')
 
         pwd = request.data.get('pwd')
         pwd2 = request.data.get('pwd2')

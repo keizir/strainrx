@@ -62,6 +62,13 @@ urlpatterns = [
             name='proximity'
     ),
 
+    # URL pattern for the UserChangePwdView
+    url(
+            regex=r'^(?P<username>[\w.@+-]+)/pwd',
+            view=views.UserChangePwdView.as_view(),
+            name='change_pwd'
+    ),
+
     # URL pattern for the UserUpdateView
     url(
             regex=r'^~update/$',
