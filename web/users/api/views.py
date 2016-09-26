@@ -63,11 +63,13 @@ class UserDetailView(LoginRequiredMixin, APIView):
         serializer = UserDetailSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
 
-        valid_email = validate_email(serializer.validated_data.get('email'))
-        if isinstance(valid_email, Response):
-            return valid_email
-
         user = User.objects.get(pk=user_id)
+
+        if user.email != serializer.validated_data.get('email'):
+            valid_email = validate_email(serializer.validated_data.get('email'))
+            if isinstance(valid_email, Response):
+                return valid_email
+
         user.name = serializer.validated_data.get('name')
         user.first_name = serializer.validated_data.get('first_name')
         user.last_name = serializer.validated_data.get('last_name')
