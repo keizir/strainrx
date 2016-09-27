@@ -10,6 +10,7 @@ footer, .push {
   font-size: 0.75em;
   height: 11em;
   border-top: 1px solid #2f3f4c;
+  text-align: center;
 }
 
 .footer-region .separator:after {
@@ -17,7 +18,7 @@ footer, .push {
 }
 
 .footer-region a {
-  color: #1e1e1e;
+  color: #10b3dc;
 }
 
 .footer-region .links-wrapper .links {

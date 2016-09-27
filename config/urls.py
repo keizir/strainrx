@@ -20,6 +20,7 @@ urlpatterns = [
 
                   # User management
                   url(r'^users/', include('web.users.urls', namespace='users')),
+                  url(r'^search/', include('web.search.urls', namespace='search')),
                   url(r'^accounts/', include('allauth.urls')),
 
                   # Your stuff: custom urls includes go here
@@ -27,6 +28,8 @@ urlpatterns = [
 
                   # API
                   url(r'^api/v1/users/', include('web.users.api.urls', namespace='users_api', app_name='users_api')),
+                  url(r'^api/v1/search/',
+                      include('web.search.api.urls', namespace='search_api', app_name='search_api')),
 
               ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 

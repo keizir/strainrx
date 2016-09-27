@@ -4854,7 +4854,19 @@ a {
   color: #fff;
   padding: 0.75em 3.5em;
   border: none;
-  width: 14em; }
+  width: 14em;
+  margin: 0.15em;
+}
+
+.btn-secondary {
+  background-color: #fff;
+  border-radius: 0.5em;
+  color: #10b3dc;
+  padding: 0.75em 3.5em;
+  border: 1px solid #10b3dc;
+  width: 14em;
+  margin: 0.15em;
+}
 
 input, select {
   border: 1px solid #8e8e93;
@@ -4957,6 +4969,48 @@ fieldset {
 @media (max-width: 1500px) {
   body {
     font-size: 16px; } }
+
+.wizard-step {
+  border: 1px solid #aaa8a8;
+  background: #fff;
+  width: 2em;
+  height: 2em;
+  border-radius: 1em;
+  display: inline-block;
+  text-align: center;
+  vertical-align: middle;
+  padding: 0.4em;
+  margin: 0 1.5em;
+  z-index: 2;
+}
+
+.wizard-step a {
+  color: #aaa8a8;
+}
+
+.wizard-step.active {
+  border: 2px solid #8e8e93;
+}
+
+.wizard-step.finished,
+.wizard-step.passed {
+  border: 2px solid #8e8e93;
+  background: #6bc331;
+}
+
+.wizard-step.finished {
+  pointer-events: none;
+  cursor: default;
+}
+
+.wizard-step.finished a,
+.wizard-step.passed a {
+  color: #fff;
+}
+
+.wizard-step.active a {
+  color: #1e1e1e;
+}
 
 .nav-region {
   border-radius: 0;
@@ -5094,13 +5148,16 @@ footer, .push {
   padding: 2em 10em;
   font-size: 0.75em;
   height: 11em;
-  border-top: 1px solid #2f3f4c; }
+  border-top: 1px solid #2f3f4c;
+  text-align: center;
+}
 
 .footer-region .separator:after {
   color: #1e1e1e; }
 
 .footer-region a {
-  color: #1e1e1e; }
+  color: #10b3dc;
+}
 
 .footer-region .links-wrapper .links {
   margin-bottom: 5px;

@@ -1,0 +1,39 @@
+{% extends "pages/search/strain/wizard.html" %}
+
+{% block wizard-content %}
+    <h1>Do you with to minimize any possible side effects?</h1>
+    <div class="form effects-form">
+        <form method="post">
+            {% csrf_token %}
+            <fieldset>
+                <div class="form-field-group">
+                    <div class="form-field">
+                        <span class="strain-effect">Anxiety</span>
+                    </div>
+                    <div class="form-field">
+                        <span class="strain-effect">Paranoia</span>
+                    </div>
+                    <div class="form-field">
+                        <span class="strain-effect">Headache</span>
+                    </div>
+                    <div class="form-field">
+                        <span class="strain-effect">Dizziness</span>
+                    </div>
+                    <div class="form-field">
+                        <span class="strain-effect">Dry Eyes</span>
+                    </div>
+                </div>
+                <div class="form-field-group">
+                    <div class="form-field">
+                        <span class="strain-effect">Dry Mouth</span>
+                    </div>
+                </div>
+            </fieldset>
+            <span class="error-message"></span>
+            <div class="form-actions">
+                <button class="btn-secondary btn-skip-4" type="submit">Skip</button>
+                <button class="btn-primary btn-step-4" type="submit">Next</button>
+            </div>
+        </form>
+    </div>
+{% endblock %}

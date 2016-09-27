@@ -111,42 +111,34 @@
   .user-profile .profile-header {
     height: 16em;
   }
-
   .user-profile .profile-header .active-since {
     left: 1em;
   }
-
   .user-profile .profile-header .profile-tabs {
     left: 5em;
     width: 14em;
     bottom: 5em;
     line-height: 1.4em;
   }
-
   .user-profile .profile-header .profile-tabs span {
     display: block;
   }
-
   .user-profile .profile-header .profile-tabs span.separator {
     display: none;
   }
-
   .user-profile .form fieldset {
     width: 25em;
     margin: 0 auto;
   }
-
   .user-profile .user-info .form .form-field.date-field {
     display: inline-block;
     width: 18em;
   }
-
   .user-profile .user-info .form .form-field.date-field select {
     display: inline-block;
     width: 18em;
     margin-right: 1em;
   }
-
   .user-profile .user-info .form .form-field.gender-field {
     margin: 0;
   }
@@ -157,7 +149,6 @@
     right: 12em;
     width: 18em;
   }
-
   .user-profile .form fieldset {
     width: 25em;
     margin: 0 auto;

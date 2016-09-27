@@ -1,0 +1,175 @@
+@import '../../../mixins/variables';
+
+.strain-search-wrapper {
+    text-align: center;
+    color: $normal-grey;
+}
+
+.strain-search-wrapper input {
+    display: block;
+    margin: 0 auto 1em;
+}
+
+.search-form-wrapper {
+    margin: 2em auto 0;
+    padding-bottom: 6em;
+    display: block;
+    width: 100%;
+    text-align: center;
+}
+
+.search-form-wrapper .form {
+    padding-top: 2em;
+}
+
+.search-form-wrapper .form-actions {
+    margin: 1em 0;
+    text-align: center;
+}
+
+.search-form-wrapper .form-field-group {
+    float: none;
+    margin: 1em auto;
+    width: 40em;
+}
+
+.search-form-wrapper .form-field-group .strain-check {
+    width: 10em;
+    height: 6em;
+    text-align: center;
+    padding: 1em 2em;
+    border: 1px solid $light-grey;
+    border-radius: 0.5em;
+    margin: 0 0.2em;
+}
+
+.search-form-wrapper .form-field-group .strain-check label {
+    text-align: center;
+}
+
+.search-form-wrapper .form-field-group .strain-check .type {
+    font-weight: bold;
+    color: $dark-grey;
+    margin-bottom: 0.5em;
+    display: block;
+}
+
+.search-form-wrapper .form-field-group .form-field span.strain-effect {
+    border: 1px solid $blue;
+    color: $blue;
+    border-radius: 0.3em;
+    padding: 0.4em;
+    width: 12em;
+    line-height: 1.3em;
+    display: block;
+    text-align: center;
+    cursor: pointer;
+}
+
+.search-form-wrapper .form-field-group .form-field span.strain-effect.active {
+    border: 3px solid $avocado-green;
+}
+
+.search-form-wrapper fieldset {
+    padding-bottom: 2em;
+}
+
+.search-form-wrapper label {
+    display: inline-block;
+}
+
+.search-form-wrapper label > input + span.check {
+    cursor: pointer;
+}
+
+.search-form-wrapper span.check {
+    display: inline-block;
+    margin: 0;
+}
+
+.search-form-wrapper label > span.check {
+    width: 2em;
+    height: 2em;
+    border: 1px solid $light-grey;
+    border-radius: 1em;
+    vertical-align: middle;
+}
+
+.search-form-wrapper label > input {
+    position: absolute;
+    visibility: hidden;
+    width: 2em;
+    height: 2em;
+    padding: 0.35em 0;
+}
+
+.search-form-wrapper label > input:checked + span:before {
+    content: '\2713';
+    display: block;
+    width: 2em;
+    height: 2em;
+    padding: 0.35em 0;
+    color: $blue;
+    text-align: center;
+}
+
+.strain-search-wrapper .wizard-wrapper {
+    padding: 2em 0;
+    width: 30em;
+    height: 10em;
+    margin: 0 auto;
+}
+
+.strain-search-wrapper .wizard-wrapper hr {
+    z-index: 1;
+    width: 22em;
+    margin: -4em auto 0 auto;
+}
+
+.strain-search-wrapper .wizard-wrapper .step-wrapper {
+    display: inline-block;
+    width: 7em;
+    height: 5em;
+    text-align: center;
+    vertical-align: top;
+}
+
+.strain-search-wrapper .wizard-wrapper .step-wrapper .title {
+    display: inline-block;
+    padding-top: 1em;
+}
+
+.strain-search-wrapper .effects-form {
+    display: inline-block;
+    text-align: left;
+}
+
+.strain-search-wrapper .effects-form .form-field-group {
+    width: 100%;
+    margin: 0 auto;
+    line-height: 3em;
+}
+
+.strain-search-wrapper .effects-form .form-field {
+    margin: 0 0.3em;
+}
+
+@media (max-width: $screen-xs-min) {
+    .search-form-wrapper {
+        width: 26em;
+    }
+
+    .strain-search-wrapper .wizard-wrapper .step-wrapper .title {
+        width: 5em;
+    }
+
+    .search-form-wrapper .form-field-group {
+        width: 25em;
+    }
+
+    .search-form-wrapper .form-field-group .strain-check {
+        display: block;
+        width: 14em;
+        margin: 1em auto;
+    }
+}
