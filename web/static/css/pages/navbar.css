@@ -109,19 +109,15 @@
   body {
     font-size: 14px;
   }
-
   .container {
     max-width: 758px;
   }
-
   .mobile-menu {
     display: inline-block !important;
   }
-
   .mobile-menu i {
     padding-top: 0.44em;
   }
-
   .nav-list, .nav-list ul, nav:active ul {
     display: none;
     position: absolute;
@@ -130,39 +126,32 @@
     top: 2em;
     width: 50%;
   }
-
   .nav-list ul li {
     text-align: center;
     width: 100%;
     padding: 10px 0;
     margin: 0;
   }
-
   .nav-list .nav-menu-btn {
     color: #2f3f4c;
   }
-
   .nav-list .nav-menu-btn-wrapper {
     width: 18em;
   }
-
   .nav-container .nav-list-wrapper:hover .nav-list,
   .nav-container .nav-list-wrapper:hover .nav-list ul,
   .nav-container .nav-list-wrapper:hover .nav-list .auth-menu .nav-menu-content {
     display: block;
   }
-
   .nav-list, .nav-list ul,
   .nav-container .nav-list-wrapper .nav-list .auth-menu {
     background: #2f3f4c;
   }
-
   .nav-container .nav-list-wrapper .nav-list .auth-menu {
     background: #2f3f4c;
     display: block;
     position: absolute;
   }
-
   .nav-list, .nav-list ul li a,
   .nav-container .nav-list-wrapper .nav-list .auth-menu a {
     color: #fff;

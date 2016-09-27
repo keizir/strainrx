@@ -1,0 +1,63 @@
+{% extends "pages/search/strain/wizard.html" %}
+
+{% block wizard-content %}
+    <h1>What type of ailments do you want to alleviate?</h1>
+    <h3>(Choose up to 5 Effects)</h3>
+    <div class="form effects-form">
+        <form method="post">
+            {% csrf_token %}
+            <fieldset>
+                <div class="form-field-group">
+                    <div class="form-field">
+                        <span class="strain-effect">Reduce Stress</span>
+                    </div>
+                    <div class="form-field">
+                        <span class="strain-effect">Help Depression</span>
+                    </div>
+                    <div class="form-field">
+                        <span class="strain-effect">Relieve Pain</span>
+                    </div>
+                    <div class="form-field">
+                        <span class="strain-effect">Reduce Fatigue</span>
+                    </div>
+                    <div class="form-field">
+                        <span class="strain-effect">Reduce Headaches</span>
+                    </div>
+                </div>
+                <div class="form-field-group">
+                    <div class="form-field">
+                        <span class="strain-effect">Help Muscles Spasms</span>
+                    </div>
+                    <div class="form-field">
+                        <span class="strain-effect">Lower Eye Pressure</span>
+                    </div>
+                    <div class="form-field">
+                        <span class="strain-effect">Reduce Nausea</span>
+                    </div>
+                    <div class="form-field">
+                        <span class="strain-effect">Reduce Inflamation</span>
+                    </div>
+                    <div class="form-field">
+                        <span class="strain-effect">Relieve Cramps</span>
+                    </div>
+                </div>
+                <div class="form-field-group">
+                    <div class="form-field">
+                        <span class="strain-effect">Resture Appetite</span>
+                    </div>
+                    <div class="form-field">
+                        <span class="strain-effect">Help With Insomnia</span>
+                    </div>
+                    <div class="form-field">
+                        <span class="strain-effect">Help With Seuzeres</span>
+                    </div>
+                </div>
+            </fieldset>
+            <span class="error-message"></span>
+            <div class="form-actions">
+                <button class="btn-secondary btn-skip-3" type="submit">Skip</button>
+                <button class="btn-primary btn-step-3" type="submit">Next</button>
+            </div>
+        </form>
+    </div>
+{% endblock %}

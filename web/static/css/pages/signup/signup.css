@@ -86,48 +86,6 @@
   margin: -1em auto 0 auto;
 }
 
-.wizard-step {
-  border: 1px solid #aaa8a8;
-  background: #fff;
-  width: 2em;
-  height: 2em;
-  border-radius: 1em;
-  display: inline-block;
-  text-align: center;
-  vertical-align: middle;
-  padding: 0.4em;
-  margin: 0 1.5em;
-  z-index: 2;
-}
-
-.wizard-step a {
-  color: #aaa8a8;
-}
-
-.wizard-step.active {
-  border: 2px solid #8e8e93;
-}
-
-.wizard-step.finished,
-.wizard-step.passed {
-  border: 2px solid #8e8e93;
-  background: #6bc331;
-}
-
-.wizard-step.finished {
-  pointer-events: none;
-  cursor: default;
-}
-
-.wizard-step.finished a,
-.wizard-step.passed a {
-  color: #fff;
-}
-
-.wizard-step.active a {
-  color: #1e1e1e;
-}
-
 .sign-up-b2b-wrapper {
   padding: 0 1em 3em;
   margin-top: -2em;

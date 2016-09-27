@@ -1,0 +1,56 @@
+{% extends "base.html" %}
+
+{% load staticfiles i18n %}
+
+{% block title %}Strain Search{% endblock %}
+
+{% block css %}
+    <link href="{% static 'css/pages/base.css' %}" rel="stylesheet">
+    <link href="{% static 'css/pages/search/strain/search.css' %}" rel="stylesheet">
+{% endblock %}
+
+{% block content %}
+    <div class="strain-search-wrapper">
+        <div class="wizard-wrapper">
+            <div class="step-wrapper">
+                <span
+                    class="wizard-step step-1 {% if step == 1 %}active{% elif step == 6 %}finished{% else %}passed{% endif %}">
+                    <a href="{% url 'search:strain1' %}">1</a>
+                </span>
+                <span class="title">Classification</span>
+            </div>
+            <div class="step-wrapper">
+                <span
+                    class="wizard-step step-2 {% if step == 2 %}active{% elif step == 6 %}finished{% elif step > 2 %}passed{% else %}disabled{% endif %}">
+                    <a href="{% url 'search:strain2' %}">2</a>
+                </span>
+                <span class="title">Effects</span>
+            </div>
+            <div class="step-wrapper">
+                <span
+                    class="wizard-step step-3 {% if step == 3 %}active{% elif step == 6 %}finished{% elif step > 3 %}passed{% else %}disabled{% endif %}">
+                    <a href="{% url 'search:strain3' %}">3</a>
+                </span>
+                <span class="title">Medical benefits</span>
+            </div>
+            <div class="step-wrapper">
+                <span
+                    class="wizard-step step-4 {% if step == 4 %}active{% elif step == 6 %}finished{% elif step > 4 %}passed{% else %}disabled{% endif %}">
+                    <a href="{% url 'search:strain4' %}">4</a>
+                </span>
+                <span class="title">Side effects</span>
+            </div>
+            <hr/>
+        </div>
+        <div class="search-form-wrapper">
+            {% block wizard-content %}{% endblock %}
+        </div>
+    </div>
+{% endblock %}
+
+{% block javascript %}
+    <script src="{% static 'js/pages/search/strain/search.js' %}"></script>
+    <script type="text/javascript">
+        new W.pages.StrainSearchPage();
+    </script>
+{% endblock %}

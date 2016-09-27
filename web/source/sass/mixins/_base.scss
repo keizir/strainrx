@@ -125,6 +125,17 @@ a {
     padding: 0.75em 3.5em;
     border: none;
     width: 14em;
+    margin: 0.15em;
+}
+
+.btn-secondary {
+    background-color: $white;
+    border-radius: 0.5em;
+    color: $blue;
+    padding: 0.75em 3.5em;
+    border: 1px solid $blue;
+    width: 14em;
+    margin: 0.15em;
 }
 
 input, select {

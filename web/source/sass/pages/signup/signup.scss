@@ -88,48 +88,6 @@
     margin: -1em auto 0 auto;
 }
 
-.wizard-step {
-    border: 1px solid $light-grey;
-    background: $white;
-    width: 2em;
-    height: 2em;
-    border-radius: 1em;
-    display: inline-block;
-    text-align: center;
-    vertical-align: middle;
-    padding: 0.4em;
-    margin: 0 1.5em;
-    z-index: 2;
-}
-
-.wizard-step a {
-    color: $light-grey;
-}
-
-.wizard-step.active {
-    border: 2px solid $normal-grey;
-}
-
-.wizard-step.finished,
-.wizard-step.passed {
-    border: 2px solid $normal-grey;
-    background: $avocado-green;
-}
-
-.wizard-step.finished {
-    pointer-events: none;
-    cursor: default;
-}
-
-.wizard-step.finished a,
-.wizard-step.passed a {
-    color: $white;
-}
-
-.wizard-step.active a {
-    color: $black;
-}
-
 .sign-up-b2b-wrapper {
     padding: 0 1em 3em;
     margin-top: -2em;
