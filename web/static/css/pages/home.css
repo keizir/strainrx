@@ -4,16 +4,16 @@
   text-align: center;
   height: 26em;
   display: block;
-  z-index: 1;
+    z-index: 1;
 }
 
 .home-row-01 h1 {
-  margin: 0.5em;
+    margin: 0.5em;
 }
 
 .home-row-01 p {
   width: 34em;
-  margin: 0 auto 2em auto;
+    margin: 0 auto 2em auto;
 }
 
 .home-row-02 {
@@ -21,7 +21,7 @@
   background: #508484;
   position: absolute;
   top: 30em;
-  width: 100%;
+    width: 100%;
 }
 
 .home-row-02 .search-box {
@@ -31,18 +31,18 @@
   color: #fff;
   margin: 0 auto 0 auto;
   padding: 0 5em;
-  text-align: center;
+    text-align: center;
 }
 
 .home-row-02 .search-box i {
-  padding: 0.75em 0;
+    padding: 0.75em 0;
 }
 
 .home-row-02 .search-box .search-form button[type="submit"] {
   margin-top: 1em;
   border: 1px #fff solid;
   background-color: #508484;
-  font-size: 1em;
+    font-size: 1em;
 }
 
 .home-row-02 .search-box .search-form input[type="text"] {
@@ -51,39 +51,39 @@
   font-size: 0.7em;
   border: none;
   border-radius: 0.5em;
-  margin-top: 1.5em;
+    margin-top: 1.5em;
 }
 
 .home-row-02 .search-box p {
   font-size: 0.8em;
-  margin-top: 2em;
+    margin-top: 2em;
 }
 
 .home-row-02 .search-box h2 {
-  font-weight: 300;
+    font-weight: 300;
 }
 
 .home-sub-row-01 {
   display: block;
   width: 100%;
-  height: 8em;
+    height: 8em;
 }
 
 .home-sub-row-01 .location-holder {
   display: inline-block;
   float: left;
   margin: 2em 0 0 6em;
-  line-height: 3em;
+    line-height: 3em;
 }
 
 .home-sub-row-01 .location-holder > form > fieldset {
   border: none;
   padding-top: 0.35em;
-  margin: 0;
+    margin: 0;
 }
 
 .home-sub-row-01 .location-holder .check {
-  margin-left: -30px;
+    margin-left: -30px;
 }
 
 .home-sub-row-01 .location-holder .your-location {
@@ -94,7 +94,7 @@
   margin-right: -5px;
   color: #fff;
   background: #71757a;
-  opacity: 0.8;
+    opacity: 0.8;
 }
 
 .home-sub-row-01 .location-holder .your-location-value {
@@ -102,7 +102,7 @@
   padding: 0.75em;
   border-radius: 0 0.5em 0.5em 0;
   width: 30em;
-  opacity: 0.8;
+    opacity: 0.8;
 }
 
 .home-sub-row-01 .favourites-holder {
@@ -111,7 +111,7 @@
   margin: 2em 6em 0 0;
   line-height: 3em;
   padding: 0.35em;
-  opacity: 0.8;
+    opacity: 0.8;
 }
 
 .home-sub-row-01 .favourites-holder .favourites {
@@ -119,46 +119,46 @@
   padding: 0.75em 1em;
   border-radius: 0.5em;
   background: #71757a;
-  color: #fff;
+    color: #fff;
 }
 
 .home-sub-row-02 {
   display: block;
   width: 100%;
   color: #fff;
-  line-height: 2.5em;
+    line-height: 2.5em;
 }
 
 @media (max-width: 1024px) {
   .home-row-01 p {
-    width: 22em;
+      width: 22em;
   }
   .home-sub-row-01 .location-holder {
-    margin: 0.5em 0 0 0.5em;
+      margin: 0.5em 0 0 0.5em;
   }
   .home-sub-row-01 .favourites-holder {
-    margin: 0.5em -2em 0 0;
+      margin: 0.5em -2em 0 0;
   }
   .home-sub-row-01 .location-holder .your-location {
     padding: 0.75em;
     border-radius: 0.5em;
-    margin-right: 0;
+      margin-right: 0;
   }
   .home-sub-row-01 .location-holder .your-location-value {
-    display: none;
+      display: none;
   }
   .home-sub-row-01 .location-holder .check {
-    display: none;
+      display: none;
   }
   .home-sub-row-01 {
-    height: 6em;
+      height: 6em;
   }
   .home-row-02 .search-box {
     width: 30em;
-    padding: 0 2em;
+      padding: 0 2em;
   }
   .footer-region {
     padding: 2em 4em;
-    line-height: 2em;
+      line-height: 2em;
   }
 }

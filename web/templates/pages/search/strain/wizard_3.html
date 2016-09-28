@@ -4,60 +4,78 @@
     <h1>What type of ailments do you want to alleviate?</h1>
     <h3>(Choose up to 5 Effects)</h3>
     <div class="form effects-form">
-        <form method="post">
-            {% csrf_token %}
-            <fieldset>
-                <div class="form-field-group">
-                    <div class="form-field">
-                        <span class="strain-effect">Reduce Stress</span>
-                    </div>
-                    <div class="form-field">
-                        <span class="strain-effect">Help Depression</span>
-                    </div>
-                    <div class="form-field">
-                        <span class="strain-effect">Relieve Pain</span>
-                    </div>
-                    <div class="form-field">
-                        <span class="strain-effect">Reduce Fatigue</span>
-                    </div>
-                    <div class="form-field">
-                        <span class="strain-effect">Reduce Headaches</span>
-                    </div>
+        <div class="fields effects">
+            <div class="form-field-group">
+                <div class="form-field">
+                    <span class="strain-effect" id="reduce-stress">Reduce Stress</span>
+                    <span class="removable hidden"></span>
                 </div>
-                <div class="form-field-group">
-                    <div class="form-field">
-                        <span class="strain-effect">Help Muscles Spasms</span>
-                    </div>
-                    <div class="form-field">
-                        <span class="strain-effect">Lower Eye Pressure</span>
-                    </div>
-                    <div class="form-field">
-                        <span class="strain-effect">Reduce Nausea</span>
-                    </div>
-                    <div class="form-field">
-                        <span class="strain-effect">Reduce Inflamation</span>
-                    </div>
-                    <div class="form-field">
-                        <span class="strain-effect">Relieve Cramps</span>
-                    </div>
+                <div class="form-field">
+                    <span class="strain-effect" id="help-depression">Help Depression</span>
+                    <span class="removable hidden"></span>
                 </div>
-                <div class="form-field-group">
-                    <div class="form-field">
-                        <span class="strain-effect">Resture Appetite</span>
-                    </div>
-                    <div class="form-field">
-                        <span class="strain-effect">Help With Insomnia</span>
-                    </div>
-                    <div class="form-field">
-                        <span class="strain-effect">Help With Seuzeres</span>
-                    </div>
+                <div class="form-field">
+                    <span class="strain-effect" id="relieve-pain">Relieve Pain</span>
+                    <span class="removable hidden"></span>
                 </div>
-            </fieldset>
-            <span class="error-message"></span>
-            <div class="form-actions">
-                <button class="btn-secondary btn-skip-3" type="submit">Skip</button>
-                <button class="btn-primary btn-step-3" type="submit">Next</button>
+                <div class="form-field">
+                    <span class="strain-effect" id="reduce-fatigue">Reduce Fatigue</span>
+                    <span class="removable hidden"></span>
+                </div>
+                <div class="form-field">
+                    <span class="strain-effect" id="reduce-headaches">Reduce Headaches</span>
+                    <span class="removable hidden"></span>
+                </div>
             </div>
-        </form>
+            <div class="form-field-group">
+                <div class="form-field">
+                    <span class="strain-effect" id="help-muscles-spasms">Help Muscles Spasms</span>
+                    <span class="removable hidden"></span>
+                </div>
+                <div class="form-field">
+                    <span class="strain-effect" id="lower-eye-pressure">Lower Eye Pressure</span>
+                    <span class="removable hidden"></span>
+                </div>
+                <div class="form-field">
+                    <span class="strain-effect" id="reduce-nausea">Reduce Nausea</span>
+                    <span class="removable hidden"></span>
+                </div>
+                <div class="form-field">
+                    <span class="strain-effect" id="reduce-inflamation">Reduce Inflamation</span>
+                    <span class="removable hidden"></span>
+                </div>
+                <div class="form-field">
+                    <span class="strain-effect" id="relieve-cramps">Relieve Cramps</span>
+                    <span class="removable hidden"></span>
+                </div>
+            </div>
+            <div class="form-field-group">
+                <div class="form-field">
+                    <span class="strain-effect" id="resture-appetite">Resture Appetite</span>
+                    <span class="removable hidden"></span>
+                </div>
+                <div class="form-field">
+                    <span class="strain-effect" id="help-with-insomnia">Help With Insomnia</span>
+                    <span class="removable hidden"></span>
+                </div>
+                <div class="form-field">
+                    <span class="strain-effect" id="help-with-seuzeres">Help With Seuzeres</span>
+                    <span class="removable hidden"></span>
+                </div>
+            </div>
+        </div>
+        <div class="slider-wrapper hidden">
+            <span class="slider-step-label">Marginally Important</span>
+            <span class="slider-step-label">Somewhat Important</span>
+            <span class="slider-step-label">Important</span>
+            <span class="slider-step-label">Very Important</span>
+            <span class="slider-step-label">Must Have</span>
+            <div class="slider"></div>
+        </div>
+        <span class="error-message"></span>
+        <div class="form-actions">
+            <button class="btn-secondary btn-skip-3" type="submit">Skip</button>
+            <button class="btn-primary btn-step-3" type="submit">Next</button>
+        </div>
     </div>
 {% endblock %}

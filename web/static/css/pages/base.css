@@ -4769,12 +4769,15 @@ template {
   overflow: visible;
   clip: auto; }
 
+html {
+    height: 100%;
+}
+
 html, body {
   background-color: #fdfdfd;
   position: relative;
   font-family: 'gotham_bookregular', sans-serif;
   font-size: 12px;
-  height: 100%;
   -webkit-text-size-adjust: 100%;
   -ms-text-size-adjust: 100%; }
 
@@ -4792,20 +4795,20 @@ a {
     text-decoration: none; }
 
 .strains-wrapper {
-  height: 63em;
-  margin-bottom: -8em; }
+    height: 100%;
+}
 
 .container {
   width: 100%;
   max-width: 1200px;
   margin-left: auto;
   margin-right: auto;
-  padding: 0 1em;
+    padding: 0 1em;
 }
 
 .separator:after {
   content: "|";
-  padding: 0 0.5em 0 0.5em;
+    padding: 0 0.5em 0 0.5em;
 }
 
 .pull-right {
@@ -4817,7 +4820,7 @@ a {
 
 .success-message {
   display: block;
-  color: #6bc331;
+    color: #6bc331;
 }
 
 #loading-spinner {
@@ -4855,7 +4858,7 @@ a {
   padding: 0.75em 3.5em;
   border: none;
   width: 14em;
-  margin: 0.15em;
+    margin: 0.15em;
 }
 
 .btn-secondary {
@@ -4865,7 +4868,7 @@ a {
   padding: 0.75em 3.5em;
   border: 1px solid #10b3dc;
   width: 14em;
-  margin: 0.15em;
+    margin: 0.15em;
 }
 
 input, select {
@@ -4882,19 +4885,19 @@ fieldset {
 .form .form-field-group {
   display: block;
   margin-bottom: 1em;
-  float: left;
+    float: left;
 }
 
 .form .form-field {
   display: inline-block;
-  margin: 0 1em;
+    margin: 0 1em;
 }
 
 .form .form-field label {
   display: block;
   text-align: left;
   margin-bottom: 0.5em;
-  color: #2f3f4c;
+    color: #2f3f4c;
 }
 
 .form .form-field input,
@@ -4904,12 +4907,31 @@ fieldset {
   padding: 1em;
   border-radius: 0;
   border-color: #aaa8a8;
-  color: #aaa8a8;
+    color: #aaa8a8;
 }
 
 .form .form-field select {
   -webkit-appearance: none;
-  background-color: #fff;
+    background-color: #fff;
+}
+
+.slider {
+    height: 4px;
+}
+
+.slider span {
+    border-radius: 1em;
+    display: inline-block;
+    margin-top: -4px;
+}
+
+.form .removable {
+    background: url(../../images/close_icon.png) no-repeat;
+    background-size: 1.5em 1.5em;
+    display: inline-block;
+    width: 1.5em;
+    height: 1.5em;
+    content: '';
 }
 
 .alert-debug {
@@ -4945,7 +4967,7 @@ fieldset {
   html, body {
     font-size: 12px; }
   .container {
-    max-width: 460px;
+      max-width: 460px;
   }
 }
 
@@ -4968,7 +4990,7 @@ fieldset {
 
 @media (min-width: 1500px) {
   html, body {
-    font-size: 19px;
+      font-size: 19px;
   }
 }
 
@@ -4983,35 +5005,35 @@ fieldset {
   vertical-align: middle;
   padding: 0.4em;
   margin: 0 1.5em;
-  z-index: 2;
+    z-index: 2;
 }
 
 .wizard-step a {
-  color: #aaa8a8;
+    color: #aaa8a8;
 }
 
 .wizard-step.active {
-  border: 2px solid #8e8e93;
+    border: 2px solid #8e8e93;
 }
 
 .wizard-step.finished,
 .wizard-step.passed {
   border: 2px solid #8e8e93;
-  background: #6bc331;
+    background: #6bc331;
 }
 
 .wizard-step.finished {
   pointer-events: none;
-  cursor: default;
+    cursor: default;
 }
 
 .wizard-step.finished a,
 .wizard-step.passed a {
-  color: #fff;
+    color: #fff;
 }
 
 .wizard-step.active a {
-  color: #1e1e1e;
+    color: #1e1e1e;
 }
 
 .nav-region {
@@ -5151,14 +5173,14 @@ footer, .push {
   font-size: 0.75em;
   height: 11em;
   border-top: 1px solid #2f3f4c;
-  text-align: center;
+    text-align: center;
 }
 
 .footer-region .separator:after {
   color: #1e1e1e; }
 
 .footer-region a {
-  color: #10b3dc;
+    color: #10b3dc;
 }
 
 .footer-region .links-wrapper .links {
@@ -5181,7 +5203,7 @@ footer, .push {
   z-index: 1; }
 
 .home-row-01 h1 {
-  margin: 0.5em;
+    margin: 0.5em;
 }
 
 .home-row-01 p {
@@ -5193,7 +5215,7 @@ footer, .push {
   background: #508484;
   position: absolute;
   top: 30em;
-  width: 100%;
+    width: 100%;
 }
 
 .home-row-02 .search-box {
@@ -5284,12 +5306,12 @@ footer, .push {
   display: block;
   width: 100%;
   color: #fff;
-  line-height: 2.5em;
+    line-height: 2.5em;
 }
 
 @media (max-width: 1024px) {
   .home-row-01 p {
-    width: 22em;
+      width: 22em;
   }
   .home-sub-row-01 .location-holder {
     margin: 0.5em 0 0 0.5em; }
@@ -5307,10 +5329,10 @@ footer, .push {
     height: 6em; }
   .home-row-02 .search-box {
     width: 30em;
-    padding: 0 2em;
+      padding: 0 2em;
   }
   .footer-region {
     padding: 2em 4em;
-    line-height: 2em;
+      line-height: 2em;
   }
 }
