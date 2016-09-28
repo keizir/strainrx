@@ -23,8 +23,11 @@
 }
 
 .home-row-02 {
-    height: 24em;
+    height: 25em;
     background: $sea-green;
+    position: absolute;
+    top: 30em;
+    width: 100%;
 }
 
 .home-row-02 .search-box {

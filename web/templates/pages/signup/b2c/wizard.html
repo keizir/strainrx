@@ -13,15 +13,15 @@
     <div class="sign-up-wrapper">
         <div class="wizard-wrapper">
             <span
-                class="wizard-step step-1 {% if step == 1 %}active{% elif step == 6 %}finished{% else %}passed{% endif %}">
+                class="wizard-step step-1 {% if passed %}passed{% elif step == 1 %}active{% elif step == 6 %}finished{% else %}passed{% endif %}">
                 <a href="{% url 'users:signup1' %}">1</a>
             </span>
             <span
-                class="wizard-step step-2 {% if step == 2 %}active{% elif step == 6 %}finished{% elif step > 2 %}passed{% else %}disabled{% endif %}">
+                class="wizard-step step-2 {% if passed %}passed{% elif step == 2 %}active{% elif step == 6 %}finished{% elif step > 2 %}passed{% else %}disabled{% endif %}">
                 <a href="{% url 'users:signup2' %}">2</a>
             </span>
             <span
-                class="wizard-step step-3 {% if step == 3 %}active{% elif step == 6 %}finished{% elif step > 3 %}passed{% else %}disabled{% endif %}">
+                class="wizard-step step-3 {% if passed %}passed{% elif step == 3 %}active{% elif step == 6 %}finished{% elif step > 3 %}passed{% else %}disabled{% endif %}">
                 <a href="{% url 'users:signup3' %}">3</a>
             </span>
             <span

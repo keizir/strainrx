@@ -17,8 +17,11 @@
 }
 
 .home-row-02 {
-  height: 24em;
+  height: 25em;
   background: #508484;
+  position: absolute;
+  top: 30em;
+  width: 100%;
 }
 
 .home-row-02 .search-box {

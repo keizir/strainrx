@@ -177,7 +177,14 @@ class UserSignUpWizardView(APIView):
         if not last_name:
             return bad_request('Last Name is required')
 
-        request.session[str(token)] = {'first_name': first_name, 'last_name': last_name}
+        user_data = self.get_user_data(request, token)
+        if isinstance(user_data, Response):
+            user_data = {}
+
+        user_data['first_name'] = first_name
+        user_data['last_name'] = last_name
+
+        request.session[str(token)] = user_data
 
         return Response({
             'token': token

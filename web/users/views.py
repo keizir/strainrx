@@ -118,7 +118,19 @@ class UserSignUpWizard1View(TemplateView):
 
     def get_context_data(self, **kwargs):
         context = super(UserSignUpWizard1View, self).get_context_data(**kwargs)
-        token = str(uuid.uuid1())
+        context['passed'] = False
+
+        if self.request.session.get('t_val') is not None:
+            token = self.request.session.get('t_val')
+            user_info = self.request.session.get(str(token))
+
+            if user_info is not None:
+                context['first_name'] = user_info.get('first_name')
+                context['last_name'] = user_info.get('last_name')
+                context['passed'] = True
+        else:
+            token = str(uuid.uuid1())
+
         context['token'] = token
         context['step'] = 1
         self.request.session['t_val'] = token
@@ -129,10 +141,18 @@ class UserSignUpWizard2View(TemplateView):
     template_name = 'pages/signup/b2c/wizard_2.html'
 
     def get_context_data(self, **kwargs):
-        token = self.request.session['t_val']
         context = super(UserSignUpWizard2View, self).get_context_data(**kwargs)
+        token = self.request.session['t_val']
+        user_info = self.request.session[str(token)]
         context['token'] = token
         context['step'] = 2
+        context['passed'] = False
+        is_age_verified = user_info.get('is_age_verified')
+
+        if is_age_verified is not None:
+            context['is_age_verified'] = is_age_verified
+            context['passed'] = True
+
         self.request.session['t_val'] = token
         return context
 
@@ -141,10 +161,18 @@ class UserSignUpWizard3View(TemplateView):
     template_name = 'pages/signup/b2c/wizard_3.html'
 
     def get_context_data(self, **kwargs):
-        token = self.request.session['t_val']
         context = super(UserSignUpWizard3View, self).get_context_data(**kwargs)
+        token = self.request.session['t_val']
+        user_info = self.request.session[str(token)]
         context['token'] = token
         context['step'] = 3
+        context['passed'] = False
+
+        email = user_info.get('email')
+        if email is not None:
+            context['email'] = email
+            context['passed'] = True
+
         self.request.session['t_val'] = token
         return context
 
