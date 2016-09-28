@@ -4,7 +4,34 @@ W.ns('W.pages');
 
 W.pages.StrainSearchPage = Class.extend({
 
+    /**
+     * Container for effect objects in format:
+     * {
+     *  name: 'happy',
+     *  value: 3
+     * }
+     */
+    selectedEffects: [],
+
+    /**
+     * The last selected effect on
+     */
+    currentEffectName: '',
+
+    ui: {
+        $slider: $('.slider'),
+        $strainEffect: $('.strain-effect'),
+        $removeEffect: $('.removable')
+    },
+
+    regions: {
+        $sliderWrapper: $('.slider-wrapper')
+    },
+
     init: function () {
+        this.clickStrainEffectListener();
+        this.clickRemoveEffectListener();
+
         this.registerStep1ClickListener();
         this.registerStep1SkipClickListener();
 
@@ -16,9 +43,81 @@ W.pages.StrainSearchPage = Class.extend({
 
         this.registerStep4ClickListener();
         this.registerStep4SkipClickListener();
+    },
 
-        $('.strain-effect').on('click', function () {
-            $(this).toggleClass('active');
+    clickStrainEffectListener: function () {
+        var that = this;
+
+        that.ui.$strainEffect.on('click', function () {
+            var $effect = $(this),
+                effectName = $effect.attr('id'),
+                presentEffect = that.selectedEffects.filter(function (effect) {
+                    return effect.name === effectName;
+                });
+
+            if (presentEffect.length > 0) {
+                that.currentEffectName = effectName;
+                return;
+            }
+
+            $effect.addClass('active');
+            $effect.parent().find('.removable').removeClass('hidden');
+            that.currentEffectName = effectName;
+            that.selectedEffects.push({
+                name: $effect.attr('id'),
+                value: 1
+            });
+
+            if (that.selectedEffects.length > 0) {
+                that.activateSlider();
+            } else {
+                that.regions.$sliderWrapper.addClass('hidden');
+            }
+        });
+    },
+
+    clickRemoveEffectListener: function () {
+        var that = this;
+
+        that.ui.$removeEffect.on('click', function () {
+            var $effectCloseBtn = $(this),
+                $effect = $effectCloseBtn.parent().find('.strain-effect'),
+                effectName = $effect.attr('id');
+
+            $effect.removeClass('active');
+            $effectCloseBtn.addClass('hidden');
+
+            for (var i = 0; i < that.selectedEffects.length; i++) {
+                if (that.selectedEffects[i].name === effectName) {
+                    that.selectedEffects.splice(i, 1);
+                    break;
+                }
+            }
+
+
+            if (that.selectedEffects.length === 0) {
+                that.regions.$sliderWrapper.addClass('hidden');
+                that.currentEffectName = '';
+            }
+        });
+    },
+
+    activateSlider: function () {
+        var that = this;
+
+        this.regions.$sliderWrapper.removeClass('hidden');
+        this.ui.$slider.slider({
+            value: 1,
+            min: 1,
+            max: 5,
+            step: 1,
+            slide: function (event, ui) {
+                that.selectedEffects.forEach(function (effect) {
+                    if (effect.name === that.currentEffectName) {
+                        effect.value = ui.value;
+                    }
+                });
+            }
         });
     },
 

@@ -1,33 +1,33 @@
 .sign-up-wrapper {
   text-align: center;
-  color: #8e8e93;
+    color: #8e8e93;
 }
 
 .sign-up-wrapper input {
   display: block;
-  margin: 0 auto 1em;
+    margin: 0 auto 1em;
 }
 
 .sign-up-form-wrapper {
   margin-top: 2em;
-  padding-bottom: 6em;
+    padding-bottom: 6em;
 }
 
 .sign-up-form-wrapper fieldset {
-  padding-bottom: 2em;
+    padding-bottom: 2em;
 }
 
 .sign-up-form-wrapper label {
-  display: inline-block;
+    display: inline-block;
 }
 
 .sign-up-form-wrapper label > input + span.check {
-  cursor: pointer;
+    cursor: pointer;
 }
 
 .sign-up-form-wrapper span.check {
   display: inline-block;
-  margin-right: 0.5em;
+    margin-right: 0.5em;
 }
 
 .sign-up-form-wrapper label > span.check {
@@ -35,7 +35,7 @@
   height: 2em;
   border: 1px solid #aaa8a8;
   border-radius: 1em;
-  vertical-align: middle;
+    vertical-align: middle;
 }
 
 .sign-up-form-wrapper label > input {
@@ -43,7 +43,7 @@
   visibility: hidden;
   width: 2em;
   height: 2em;
-  padding: 0.35em 0;
+    padding: 0.35em 0;
 }
 
 .sign-up-form-wrapper label > input:checked + span:before {
@@ -52,48 +52,48 @@
   width: 2em;
   height: 2em;
   padding: 0.35em 0;
-  color: #10b3dc;
+    color: #10b3dc;
 }
 
 .sign-up-form-wrapper .pwd-req {
   display: block;
-  margin: 1em auto 3em;
+    margin: 1em auto 3em;
 }
 
 .sign-up-form-wrapper .message-1 {
   display: block;
   margin: 3em auto;
   width: 50em;
-  line-height: 2em;
+    line-height: 2em;
 }
 
 .sign-up-form-wrapper .message-2 {
   display: block;
   margin: 3em auto;
   width: 50em;
-  line-height: 2em;
+    line-height: 2em;
 }
 
 .wizard-wrapper {
   padding: 2em 1em;
   width: 30em;
-  margin: 0 auto;
+    margin: 0 auto;
 }
 
 .wizard-wrapper hr {
   z-index: 1;
   width: 22em;
-  margin: -1em auto 0 auto;
+    margin: -1em auto 0 auto;
 }
 
 .sign-up-b2b-wrapper {
   padding: 0 1em 3em;
-  margin-top: -2em;
+    margin-top: -2em;
 }
 
 @media (max-width: 1024px) {
   .sign-up-form-wrapper .message-1,
   .sign-up-form-wrapper .message-2 {
-    width: 22em;
+      width: 22em;
   }
 }

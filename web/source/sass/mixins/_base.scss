@@ -7,148 +7,151 @@
 // General Mixins
 // --------------------------------------------------
 @mixin clearfix {
-    &:before, &:after {
-        content: " ";
-        display: table;
-    }
-    &:after {
-        clear: both;
-    }
+  &:before, &:after {
+    content: " ";
+    display: table;
+  }
+  &:after {
+    clear: both;
+  }
 }
 
 // active or hover state of elements
 @mixin active {
-    cursor: pointer;
-    font-weight: 400;
+  cursor: pointer;
+  font-weight: 400;
 }
 
 //
 // Global Styles
 // --------------------------------------------------
+html {
+  height: 100%;
+  //margin-bottom: 8em;
+}
+
 html, body {
-    background-color: $almost-white;
-    position: relative;
-    font-family: 'gotham_bookregular', sans-serif;
-    font-size: 12px;
-    height: 100%;
-    -webkit-text-size-adjust: 100%;
-    -ms-text-size-adjust: 100%;
+  background-color: $almost-white;
+  position: relative;
+  font-family: 'gotham_bookregular', sans-serif;
+  font-size: 12px;
+  -webkit-text-size-adjust: 100%;
+  -ms-text-size-adjust: 100%;
 }
 
 * {
-    box-sizing: border-box;
-    margin: 0;
-    padding: 0;
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
 }
 
 a {
-    color: $blue;
-    text-decoration: none;
+  color: $blue;
+  text-decoration: none;
 
-    &:hover {
-        @include active;
-        text-decoration: none;
-    }
+  &:hover {
+    @include active;
+    text-decoration: none;
+  }
 }
 
 .strains-wrapper {
-    height: 63em;
-    margin-bottom: -8em;
+  height: 100%;
 }
 
 .container {
-    width: 100%;
-    max-width: 1200px;
-    margin-left: auto;
-    margin-right: auto;
-    padding: 0 1em;
+  width: 100%;
+  max-width: 1200px;
+  margin-left: auto;
+  margin-right: auto;
+  padding: 0 1em;
 }
 
 .separator:after {
-    content: "|";
-    padding: 0 0.5em 0 0.5em;
+  content: "|";
+  padding: 0 0.5em 0 0.5em;
 }
 
 .pull-right {
-    float: right !important;
+  float: right !important;
 }
 
 .error-message {
-    display: block;
-    color: $red;
+  display: block;
+  color: $red;
 }
 
 .success-message {
-    display: block;
-    color: $avocado-green;
+  display: block;
+  color: $avocado-green;
 }
 
 #loading-spinner {
-    display: none;
-    color: $black;
-    position: fixed;
-    font-size: 90px;
-    top: calc(50% - #{$nav-height});
-    left: calc(50%);
-    text-align: center;
-    z-index: $zindex-spinner;
+  display: none;
+  color: $black;
+  position: fixed;
+  font-size: 90px;
+  top: calc(50% - #{$nav-height});
+  left: calc(50%);
+  text-align: center;
+  z-index: $zindex-spinner;
 
-    .fa {
-        position: absolute;
-        top: calc(50% - #{$nav-height});
-        left: calc(50% - #{$nav-height});
-    }
+  .fa {
+    position: absolute;
+    top: calc(50% - #{$nav-height});
+    left: calc(50% - #{$nav-height});
+  }
 }
 
 .hidden {
-    display: none !important;
+  display: none !important;
 }
 
 .visible {
-    display: block !important;
+  display: block !important;
 }
 
 .disabled {
-    pointer-events: none;
-    cursor: default;
+  pointer-events: none;
+  cursor: default;
 }
 
 .bold {
-    font-weight: bold;
-    color: $dark-grey;
+  font-weight: bold;
+  color: $dark-grey;
 }
 
 .btn-primary {
-    background-color: $blue;
-    border-radius: 0.5em;
-    color: $white;
-    padding: 0.75em 3.5em;
-    border: none;
-    width: 14em;
-    margin: 0.15em;
+  background-color: $blue;
+  border-radius: 0.5em;
+  color: $white;
+  padding: 0.75em 3.5em;
+  border: none;
+  width: 14em;
+  margin: 0.15em;
 }
 
 .btn-secondary {
-    background-color: $white;
-    border-radius: 0.5em;
-    color: $blue;
-    padding: 0.75em 3.5em;
-    border: 1px solid $blue;
-    width: 14em;
-    margin: 0.15em;
+  background-color: $white;
+  border-radius: 0.5em;
+  color: $blue;
+  padding: 0.75em 3.5em;
+  border: 1px solid $blue;
+  width: 14em;
+  margin: 0.15em;
 }
 
 input, select {
-    border: 1px solid $normal-grey;
-    border-radius: 0.5em;
-    padding: 1.2em 2em;
-    color: $normal-grey;
-    margin-bottom: 1em;
-    width: 30em
+  border: 1px solid $normal-grey;
+  border-radius: 0.5em;
+  padding: 1.2em 2em;
+  color: $normal-grey;
+  margin-bottom: 1em;
+  width: 30em
 }
 
 fieldset {
-    border: none
+  border: none
 
 }
 
@@ -157,36 +160,55 @@ fieldset {
 }
 
 .form .form-field-group {
-    display: block;
-    margin-bottom: 1em;
-    float: left;
+  display: block;
+  margin-bottom: 1em;
+  float: left;
 }
 
 .form .form-field {
-    display: inline-block;
-    margin: 0 1em;
+  display: inline-block;
+  margin: 0 1em;
 }
 
 .form .form-field label {
-    display: block;
-    text-align: left;
-    margin-bottom: 0.5em;
-    color: $dark-grey;
+  display: block;
+  text-align: left;
+  margin-bottom: 0.5em;
+  color: $dark-grey;
 }
 
 .form .form-field input,
 .form .form-field select {
-    display: block;
-    width: 18em;
-    padding: 1em;
-    border-radius: 0;
-    border-color: $light-grey;
-    color: $light-grey;
+  display: block;
+  width: 18em;
+  padding: 1em;
+  border-radius: 0;
+  border-color: $light-grey;
+  color: $light-grey;
 }
 
 .form .form-field select {
-    -webkit-appearance: none;
-    background-color: $white;
+  -webkit-appearance: none;
+  background-color: $white;
+}
+
+.slider {
+  height: 4px;
+}
+
+.slider span {
+  border-radius: 1em;
+  display: inline-block;
+  margin-top: -4px;
+}
+
+.form .removable {
+  background: url(../../images/close_icon.png) no-repeat;
+  background-size: 1.5em 1.5em;
+  display: inline-block;
+  width: 1.5em;
+  height: 1.5em;
+  content: '';
 }
 
 // bootstrap alert CSS, translated to the django-standard levels of
@@ -195,33 +217,33 @@ fieldset {
 // Django messages
 // --------------------------------------------------
 .alert-debug {
-    background-color: $white;
-    border-color: $mint-green;
-    color: $black;
+  background-color: $white;
+  border-color: $mint-green;
+  color: $black;
 }
 
 .alert-info {
-    background-color: $white;
-    border-color: $mint-green;
-    color: $black;
+  background-color: $white;
+  border-color: $mint-green;
+  color: $black;
 }
 
 .alert-success {
-    background-color: $mint-green;
-    border-color: $mint-green;
-    color: $black;
+  background-color: $mint-green;
+  border-color: $mint-green;
+  color: $black;
 }
 
 .alert-warning {
-    background-color: $white;
-    border-color: $dark-pink;
-    color: $red;
+  background-color: $white;
+  border-color: $dark-pink;
+  color: $red;
 }
 
 .alert-error {
-    background-color: $pink;
-    border-color: $dark-pink;
-    color: $red;
+  background-color: $pink;
+  border-color: $dark-pink;
+  color: $red;
 }
 
 /*
@@ -229,45 +251,45 @@ fieldset {
 *   in a nice, responsive way (everything should be ems unless it is a purposely fixed element
 */
 @media (max-width: $screen-xs-min) {
-    html, body {
-        font-size: 12px;
-    }
+  html, body {
+    font-size: 12px;
+  }
 
-    .container {
-        max-width: 460px;
-    }
+  .container {
+    max-width: 460px;
+  }
 }
 
 @media (max-width: $screen-sm-min) {
-    html, body {
-        font-size: 14px;
-    }
+  html, body {
+    font-size: 14px;
+  }
 
-    .container {
-        max-width: 758px;
-    }
+  .container {
+    max-width: 758px;
+  }
 
-    input {
-        padding: 1em 1.5em;
-        width: 24em
-    }
+  input {
+    padding: 1em 1.5em;
+    width: 24em
+  }
 }
 
 @media (max-width: $screen-md-min) {
-    .container {
-        max-width: 1014px;
-    }
+  .container {
+    max-width: 1014px;
+  }
 }
 
 @media (min-width: $screen-lg-min) {
-    html, body {
-        font-size: 16px;
-    }
+  html, body {
+    font-size: 16px;
+  }
 
 }
 
 @media (min-width: $screen-xl-min) {
-    html, body {
-        font-size: 19px;
-    }
+  html, body {
+    font-size: 19px;
+  }
 }
