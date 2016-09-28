@@ -8,7 +8,7 @@
             <fieldset>
                 <input type="hidden" name="token" value="{{ token }}">
                 <label>
-                    <input id="age" type="checkbox" name="age"/>
+                    <input id="age" type="checkbox" name="age" {% if is_age_verified %}checked{% endif %}/>
                     <span class="check"></span>
                     I verify that I am at least 21 years of age.
                 </label>

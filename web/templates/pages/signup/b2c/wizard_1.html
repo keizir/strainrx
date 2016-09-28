@@ -7,8 +7,8 @@
             {% csrf_token %}
             <fieldset>
                 <input type="hidden" name="token" value="{{ token }}">
-                <input type="text" name="firstName" placeholder="First Name"/>
-                <input type="text" name="lastName" placeholder="Last Name"/>
+                <input type="text" name="firstName" placeholder="First Name" value="{{ first_name }}"/>
+                <input type="text" name="lastName" placeholder="Last Name" value="{{ last_name }}"/>
                 <span class="error-message"></span>
             </fieldset>
             <button class="btn-primary btn-step-1" type="submit">Next</button>

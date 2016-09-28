@@ -52,7 +52,7 @@ a {
 }
 
 .strains-wrapper {
-    min-height: 100%;
+    height: 63em;
     margin-bottom: -8em;
 }
 
@@ -229,7 +229,7 @@ fieldset {
 *   in a nice, responsive way (everything should be ems unless it is a purposely fixed element
 */
 @media (max-width: $screen-xs-min) {
-    body {
+    html, body {
         font-size: 12px;
     }
 
@@ -239,7 +239,7 @@ fieldset {
 }
 
 @media (max-width: $screen-sm-min) {
-    body {
+    html, body {
         font-size: 14px;
     }
 
@@ -259,15 +259,15 @@ fieldset {
     }
 }
 
-@media (max-width: $screen-lg-min) {
-    body {
-        font-size: 15px;
+@media (min-width: $screen-lg-min) {
+    html, body {
+        font-size: 16px;
     }
 
 }
 
-@media (max-width: $screen-xl-min) {
-    body {
-        font-size: 16px;
+@media (min-width: $screen-xl-min) {
+    html, body {
+        font-size: 19px;
     }
 }
