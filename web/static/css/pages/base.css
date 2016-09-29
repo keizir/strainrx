@@ -4859,6 +4859,7 @@ a {
   border: none;
   width: 14em;
     margin: 0.15em;
+    font-weight: bold;
 }
 
 .btn-secondary {
@@ -4869,6 +4870,11 @@ a {
   border: 1px solid #10b3dc;
   width: 14em;
     margin: 0.15em;
+    font-weight: bold;
+}
+
+.btn-secondary:disabled {
+    color: #aaa8a8;
 }
 
 input, select {

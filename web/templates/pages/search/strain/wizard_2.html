@@ -1,5 +1,7 @@
 {% extends "pages/search/strain/wizard.html" %}
 
+{% load staticfiles i18n %}
+
 {% block wizard-content %}
     <h1>What type of effects are you looking for?</h1>
     <h3>(Choose up to 5 Effects)</h3>
@@ -7,60 +9,72 @@
         <div class="fields effects">
             <div class="form-field-group">
                 <div class="form-field">
-                    <span class="importance-value hidden">1</span>
                     <span class="strain-effect" id="happy">Happy</span>
+                    <span class="importance-value hidden">1</span>
                     <span class="removable hidden"></span>
                 </div>
                 <div class="form-field">
                     <span class="strain-effect" id="uplifting">Uplifting</span>
+                    <span class="importance-value hidden">1</span>
                     <span class="removable hidden"></span>
                 </div>
                 <div class="form-field">
                     <span class="strain-effect" id="stimulated">Stimulated</span>
+                    <span class="importance-value hidden">1</span>
                     <span class="removable hidden"></span>
                 </div>
                 <div class="form-field">
                     <span class="strain-effect" id="energetic">Energetic</span>
+                    <span class="importance-value hidden">1</span>
                     <span class="removable hidden"></span>
                 </div>
                 <div class="form-field">
                     <span class="strain-effect" id="creative">Creative</span>
+                    <span class="importance-value hidden">1</span>
                     <span class="removable hidden"></span>
                 </div>
             </div>
             <div class="form-field-group">
                 <div class="form-field">
                     <span class="strain-effect" id="focused">Focused</span>
+                    <span class="importance-value hidden">1</span>
                     <span class="removable hidden"></span>
                 </div>
                 <div class="form-field">
                     <span class="strain-effect" id="relaxed">Relaxed</span>
+                    <span class="importance-value hidden">1</span>
                     <span class="removable hidden"></span>
                 </div>
                 <div class="form-field">
                     <span class="strain-effect" id="sleepy">Sleepy</span>
+                    <span class="importance-value hidden">1</span>
                     <span class="removable hidden"></span>
                 </div>
                 <div class="form-field">
                     <span class="strain-effect" id="talkative">Talkative</span>
+                    <span class="importance-value hidden">1</span>
                     <span class="removable hidden"></span>
                 </div>
                 <div class="form-field">
                     <span class="strain-effect" id="euphoric">Euphoric</span>
+                    <span class="importance-value hidden">1</span>
                     <span class="removable hidden"></span>
                 </div>
             </div>
             <div class="form-field-group">
                 <div class="form-field">
                     <span class="strain-effect" id="hungry">Hungry</span>
+                    <span class="importance-value hidden">1</span>
                     <span class="removable hidden"></span>
                 </div>
                 <div class="form-field">
                     <span class="strain-effect" id="tingly">Tingly</span>
+                    <span class="importance-value hidden">1</span>
                     <span class="removable hidden"></span>
                 </div>
                 <div class="form-field">
                     <span class="strain-effect" id="good_humored">Good Humored</span>
+                    <span class="importance-value hidden">1</span>
                     <span class="removable hidden"></span>
                 </div>
             </div>
@@ -79,4 +93,12 @@
             <button class="btn-primary btn-step-2" type="submit">Next</button>
         </div>
     </div>
+{% endblock %}
+
+{% block javascript %}
+    <script src="{% static 'js/pages/search/strain/search_wizard_base.js' %}"></script>
+    <script src="{% static 'js/pages/search/strain/search_wizard_2.js' %}"></script>
+    <script type="text/javascript">
+        new W.pages.StrainSearchWizard2Page();
+    </script>
 {% endblock %}

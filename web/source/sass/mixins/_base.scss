@@ -129,6 +129,7 @@ a {
   border: none;
   width: 14em;
   margin: 0.15em;
+  font-weight: bold;
 }
 
 .btn-secondary {
@@ -139,6 +140,11 @@ a {
   border: 1px solid $blue;
   width: 14em;
   margin: 0.15em;
+  font-weight: bold;
+}
+
+.btn-secondary:disabled {
+  color: $light-grey;
 }
 
 input, select {

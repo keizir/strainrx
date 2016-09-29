@@ -29,6 +29,8 @@ class StrainSearchWizard3View(LoginRequiredMixin, TemplateView):
     def get_context_data(self, **kwargs):
         context = super(StrainSearchWizard3View, self).get_context_data(**kwargs)
         context['step'] = 3
+        search_criteria = self.request.session['search_criteria']
+        context['is_2nd_step_skipped'] = search_criteria['effects'] == 'skipped'
         return context
 
 
@@ -46,4 +48,5 @@ class StrainSearchResultView(LoginRequiredMixin, TemplateView):
 
     def get_context_data(self, **kwargs):
         context = super(StrainSearchResultView, self).get_context_data(**kwargs)
+        context['search_criteria'] = self.request.session['search_criteria']  # TODO remove this later
         return context
