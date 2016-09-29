@@ -5,5 +5,17 @@
 {% block content %}
     <div class="container">
         <h1>RESULTS</h1>
+        <button id="show-temp-results" type="button" class="btn-primary" style="margin: 1em">Show / Hide</button>
+        <span class="criteria hidden" style="display: block; margin: 2em">{{ search_criteria }}</span>
     </div>
+{% endblock %}
+
+{% block javascript %}
+    <script>
+        $(document).ready(function () {
+            $('#show-temp-results').on('click', function () {
+                $('.criteria').toggleClass('hidden');
+            });
+        });
+    </script>
 {% endblock %}

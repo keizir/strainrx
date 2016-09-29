@@ -21,8 +21,14 @@
 }
 
 .search-form-wrapper .form-actions {
-  margin: 1em 0;
+    margin: 5em 0 0;
     text-align: center;
+}
+
+.search-form-wrapper .additional-actions-wrapper {
+    margin: 1em auto;
+    color: #10b3dc;
+    cursor: default;
 }
 
 .search-form-wrapper .form-field-group {
@@ -52,6 +58,22 @@
     display: block;
 }
 
+.search-form-wrapper .form-field-group .strain-check .type-info {
+    color: #10b3dc;
+    background-size: 1.5em 1.5em;
+    display: inline-block;
+    width: 1.5em;
+    height: 1.5em;
+    position: relative;
+    bottom: 4.9em;
+    left: 3.9em;
+    cursor: pointer;
+}
+
+.search-form-wrapper .form-field-group .strain-check .type-info .fa-2x {
+    font-size: 1.5em;
+}
+
 .search-form-wrapper .form-field-group .form-field span.strain-effect {
   border: 1px solid #10b3dc;
   color: #10b3dc;
@@ -62,6 +84,7 @@
     display: inline-block;
   text-align: center;
     cursor: pointer;
+    font-weight: bold;
 }
 
 .search-form-wrapper .form-field-group .form-field span.removable {
@@ -69,6 +92,15 @@
     float: right;
     bottom: 2.25em;
     right: 0.5em;
+}
+
+.search-form-wrapper .form-field-group .form-field span.importance-value {
+    position: relative;
+    float: left;
+    bottom: 3em;
+    left: 0.8em;
+    color: #10b3dc;
+    font-weight: bold;
 }
 
 .search-form-wrapper .form-field-group .form-field span.strain-effect.active {
@@ -171,6 +203,7 @@
     display: inline-block;
     width: 6em;
     margin: 0 3em;
+    cursor: default;
 }
 
 .strain-search-wrapper .effects-form .slider {
@@ -201,4 +234,13 @@
     width: 14em;
       margin: 1em auto;
   }
+
+    .search-form-wrapper .form-field-group .strain-check .type-info {
+        bottom: 4.7em;
+        left: 5.4em;
+    }
+
+    .search-form-wrapper .form-field-group .strain-check .type-info .fa-2x {
+        font-size: 2em;
+    }
 }

@@ -1,4 +1,5 @@
 import logging
+
 from rest_framework import permissions
 from rest_framework import status
 from rest_framework.response import Response
@@ -52,10 +53,49 @@ class StrainSearchWizardView(APIView):
         return Response({}, status=status.HTTP_200_OK)
 
     def process_step_2(self, request):
+        data = request.data
+
+        if data.get('skipped'):
+            effects = 'skipped'
+        else:
+            effects = data.get('effects')
+
+        search_criteria = request.session.get('search_criteria')
+        search_criteria['effects'] = effects
+        request.session['search_criteria'] = search_criteria
+
+        print(str(request.session['search_criteria']))
+
         return Response({}, status=status.HTTP_200_OK)
 
     def process_step_3(self, request):
+        data = request.data
+
+        if data.get('skipped'):
+            benefits = 'skipped'
+        else:
+            benefits = data.get('benefits')
+
+        search_criteria = request.session.get('search_criteria')
+        search_criteria['benefits'] = benefits
+        request.session['search_criteria'] = search_criteria
+
+        print(str(request.session['search_criteria']))
+
         return Response({}, status=status.HTTP_200_OK)
 
     def process_step_4(self, request):
+        data = request.data
+
+        if data.get('skipped'):
+            side_effects = 'skipped'
+        else:
+            side_effects = data.get('sideEffects')
+
+        search_criteria = request.session.get('search_criteria')
+        search_criteria['side_effects'] = side_effects
+        request.session['search_criteria'] = search_criteria
+
+        print(str(request.session['search_criteria']))
+
         return Response({}, status=status.HTTP_200_OK)
