@@ -143,6 +143,7 @@ a {
   font-weight: bold;
 }
 
+.btn-primary:disabled,
 .btn-secondary:disabled {
   color: $light-grey;
 }
