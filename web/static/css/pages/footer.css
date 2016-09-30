@@ -1,7 +1,6 @@
 footer, .push {
   height: 8em;
-    width: 100%;
-}
+  width: 100%; }
 
 .footer-region {
   background: #fff;
@@ -10,27 +9,21 @@ footer, .push {
   font-size: 0.75em;
   height: 11em;
   border-top: 1px solid #2f3f4c;
-    text-align: center;
-}
+  text-align: center; }
 
 .footer-region .separator:after {
-    color: #1e1e1e;
-}
+  color: #1e1e1e; }
 
 .footer-region a {
-    color: #10b3dc;
-}
+  color: #10b3dc; }
 
 .footer-region .links-wrapper .links {
   margin-bottom: 5px;
-    color: #1e1e1e;
-}
+  color: #1e1e1e; }
 
 .footer-region .links-wrapper .links > li {
-    display: inline-block;
-}
+  display: inline-block; }
 
 .footer-region .copyright-wrapper {
   color: #1e1e1e;
-    padding-top: 1em;
-}
+  padding-top: 1em; }

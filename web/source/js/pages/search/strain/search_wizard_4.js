@@ -62,6 +62,7 @@ W.pages.StrainSearchWizard4Page = W.pages.StrainSearchBase.extend({
 
             if (that.selectedSideEffects.length > 0) {
                 that.activateSlider();
+                that.ui.$btnSubmit.removeAttr('disabled');
                 that.ui.$btnSkip.attr('disabled', 'disabled');
             } else {
                 that.regions.$sliderWrapper.addClass('hidden');
@@ -94,6 +95,7 @@ W.pages.StrainSearchWizard4Page = W.pages.StrainSearchBase.extend({
             if (that.selectedSideEffects.length === 0) {
                 that.regions.$sliderWrapper.addClass('hidden');
                 that.currentSideEffectName = '';
+                that.ui.$btnSubmit.attr('disabled', 'disabled');
                 that.ui.$btnSkip.removeAttr('disabled');
             }
         });
@@ -119,10 +121,23 @@ W.pages.StrainSearchWizard4Page = W.pages.StrainSearchBase.extend({
         var that = this;
         this.ui.$btnSubmit.on('click', function (e) {
             e.preventDefault();
-            that.sendDataToWizard({
-                step: 4,
-                sideEffects: that.selectedSideEffects
-            }, that.successURL);
+            var doNotShowAgainCookie = Cookies.get('strains:search:donotshowagain'),
+                doNotShowAgain = !doNotShowAgainCookie || doNotShowAgainCookie === 'false';
+            if (that.selectedSideEffects.length === 1 && that.selectedSideEffects[0].value === 1 && doNotShowAgain) {
+                var $justASecondDialog = $('.just-a-second-dialog');
+                $justASecondDialog.find('.dismiss-btn').on('click', function () {
+                    $justASecondDialog.dialog('close');
+                });
+
+                W.common.Dialog($justASecondDialog, function () {
+                    Cookies.set('strains:search:donotshowagain', $('#do-not-show-again').is(':checked'));
+                });
+            } else {
+                that.sendDataToWizard({
+                    step: 4,
+                    sideEffects: that.selectedSideEffects
+                }, that.successURL);
+            }
         });
     },
 

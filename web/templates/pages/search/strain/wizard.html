@@ -47,3 +47,33 @@
         </div>
     </div>
 {% endblock %}
+
+{% block modal %}
+    <div class="dialog info-dialog sativa-dialog hidden" title="Sativa">
+        <span>This is Sativa</span>
+    </div>
+    <div class="dialog info-dialog hybrid-dialog hidden" title="Hybrid">
+        <span>This is Hybrid</span>
+    </div>
+    <div class="dialog info-dialog indica-dialog hidden" title="Indica">
+        <span>This is Indica</span>
+    </div>
+    <div class="dialog info-dialog just-a-second-dialog hidden" title="Just a second...">
+        <div class="dialog-text">
+            <span>
+                Are you sure you don't want to increase the potency of your selection?
+                Consider advancing the slider for a heightened experience of your own choosing.
+            </span>
+        </div>
+        <div class="dialog-actions">
+            <div class="additional-section">
+                <input type="checkbox" id="do-not-show-again">
+                <label for="do-not-show-again">Don't show this again</label>
+            </div>
+            <div class="buttons-section">
+                <button type="button" class="btn-primary dismiss-btn">Dismiss</button>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+

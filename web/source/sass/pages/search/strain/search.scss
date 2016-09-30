@@ -89,11 +89,21 @@
   font-weight: bold;
 }
 
+.search-form-wrapper .form-field-group .form-field span.strain-effect .benefit-text {
+  display: block;
+  width: 7em;
+  margin: 0 auto;
+}
+
 .search-form-wrapper .form-field-group .form-field span.removable {
   position: relative;
   float: right;
   bottom: 2.25em;
   right: 0.5em;
+}
+
+.search-form-wrapper .form-field-group .form-field span.step-3.removable {
+  bottom: 2.9em;
 }
 
 .search-form-wrapper .form-field-group .form-field span.importance-value {
@@ -103,6 +113,10 @@
   left: 0.8em;
   color: $blue;
   font-weight: bold;
+}
+
+.search-form-wrapper .form-field-group .form-field span.step-3.importance-value {
+  bottom: 3.7em;
 }
 
 .search-form-wrapper .form-field-group .form-field span.strain-effect.active {
@@ -221,9 +235,36 @@
   border-color: $dark-grey;
 }
 
+.just-a-second-dialog .dialog-text {
+  height: 40%;
+  line-height: 2em;
+}
+
+.just-a-second-dialog .additional-section input[type="checkbox"] {
+  width: 2em;
+}
+
+.just-a-second-dialog .buttons-section {
+  text-align: center;
+  position: relative;
+  top: 5em;
+}
+
 @media (max-width: $screen-xs-min) {
   .search-form-wrapper {
     width: 26em;
+  }
+
+  .strain-search-wrapper .wizard-wrapper {
+    width: 29em;
+  }
+
+  .strain-search-wrapper .wizard-wrapper .step-wrapper {
+    width: 6.2em;
+  }
+
+  .strain-search-wrapper .wizard-wrapper hr {
+    width: 20em;
   }
 
   .strain-search-wrapper .wizard-wrapper .step-wrapper .title {
@@ -247,5 +288,51 @@
 
   .search-form-wrapper .form-field-group .strain-check .type-info .fa-2x {
     font-size: 2em;
+  }
+
+  .search-form-wrapper .additional-actions-wrapper {
+    margin: 1em 3em;
+  }
+
+  .strain-search-wrapper .effects-form .form-field {
+    display: block;
+    margin: 0 auto;
+  }
+
+  .strain-search-wrapper .effects-form .form-field.step-3 {
+    height: 4em;
+  }
+
+  .search-form-wrapper .form-field-group .form-field span.step-3.removable {
+    bottom: 1.4em;
+  }
+
+  .strain-search-wrapper .effects-form .slider {
+    width: 90%;
+  }
+
+  .strain-search-wrapper .effects-form .slider-wrapper .slider-step-label {
+    width: 5em;
+    margin: 0 0.9em;
+    cursor: default;
+    font-size: 10px;
+  }
+
+  .search-form-wrapper .form-field-group .form-field span.importance-value {
+    height: 0;
+  }
+
+  .search-form-wrapper .form-field-group .form-field span.removable {
+    bottom: 0.8em;
+    margin-top: -1.5em;
+  }
+}
+
+@media (max-width: $screen-sm-min) {
+  .strain-search-wrapper .effects-form .form-field-group {
+    width: 70%;
+  }
+  .strain-search-wrapper .effects-form .slider-wrapper .slider-step-label {
+    margin: 0 2em;
   }
 }
