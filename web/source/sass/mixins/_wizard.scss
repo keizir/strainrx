@@ -1,5 +1,5 @@
 .wizard-step {
-    border: 1px solid $light-grey;
+  border: 1px solid $grey-light;
     background: $white;
     width: 2em;
     height: 2em;
@@ -13,16 +13,16 @@
 }
 
 .wizard-step a {
-    color: $light-grey;
+  color: $grey-light;
 }
 
 .wizard-step.active {
-    border: 2px solid $normal-grey;
+  border: 2px solid $grey-normal;
 }
 
 .wizard-step.finished,
 .wizard-step.passed {
-    border: 2px solid $normal-grey;
+  border: 2px solid $grey-normal;
     background: $avocado-green;
 }
 

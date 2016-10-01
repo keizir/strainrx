@@ -2,7 +2,7 @@
 
 .strain-search-wrapper {
   text-align: center;
-  color: $normal-grey;
+  color: $grey-normal;
 }
 
 .strain-search-wrapper input {
@@ -44,7 +44,7 @@
   height: 6em;
   text-align: center;
   padding: 1em 2em;
-  border: 1px solid $light-grey;
+  border: 1px solid $grey-light;
   border-radius: 0.5em;
   margin: 0 0.2em;
 }
@@ -55,7 +55,7 @@
 
 .search-form-wrapper .form-field-group .strain-check .type {
   font-weight: bold;
-  color: $dark-grey;
+  color: $grey-dark;
   margin-bottom: 0.5em;
   display: block;
 }
@@ -124,8 +124,8 @@
 }
 
 .search-form-wrapper .form-field-group .form-field span.strain-effect.disabled {
-  border: 1px solid $normal-grey;
-  color: $light-grey;
+  border: 1px solid $grey-normal;
+  color: $grey-light;
 }
 
 .search-form-wrapper fieldset {
@@ -148,7 +148,7 @@
 .search-form-wrapper label > span.check {
   width: 2em;
   height: 2em;
-  border: 1px solid $light-grey;
+  border: 1px solid $grey-light;
   border-radius: 1em;
   vertical-align: middle;
 }
@@ -220,7 +220,7 @@
 }
 
 .strain-search-wrapper .effects-form .slider-wrapper .slider-step-label {
-  color: $light-grey;
+  color: $grey-light;
   display: inline-block;
   width: 6em;
   margin: 0 3em;
@@ -231,13 +231,13 @@
   width: 50em;
   display: block;
   margin: 3em auto 5em;
-  background-color: $normal-grey;
-  border-color: $normal-grey;
+  background-color: $grey-normal;
+  border-color: $grey-normal;
 }
 
 .strain-search-wrapper .effects-form .slider span {
-  background-color: $dark-grey;
-  border-color: $dark-grey;
+  background-color: $grey-dark;
+  border-color: $grey-dark;
 }
 
 .just-a-second-dialog .dialog-text {

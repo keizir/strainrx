@@ -67,6 +67,10 @@ a {
   padding: 0 1em;
 }
 
+.inline-block {
+  display: inline-block;
+}
+
 .separator:after {
   content: "|";
   padding: 0 0.5em 0 0.5em;
@@ -118,7 +122,7 @@ a {
 
 .bold {
   font-weight: bold;
-  color: $dark-grey;
+  color: $grey-dark;
 }
 
 .btn-primary {
@@ -145,14 +149,14 @@ a {
 
 .btn-primary:disabled,
 .btn-secondary:disabled {
-  color: $light-grey;
+  color: $grey-light;
 }
 
 input, select {
-  border: 1px solid $normal-grey;
+  border: 1px solid $grey-normal;
   border-radius: 0.5em;
   padding: 1.2em 2em;
-  color: $normal-grey;
+  color: $grey-normal;
   margin-bottom: 1em;
   width: 30em
 }
@@ -181,7 +185,7 @@ fieldset {
   display: block;
   text-align: left;
   margin-bottom: 0.5em;
-  color: $dark-grey;
+  color: $grey-dark;
 }
 
 .form .form-field input,
@@ -190,8 +194,8 @@ fieldset {
   width: 18em;
   padding: 1em;
   border-radius: 0;
-  border-color: $light-grey;
-  color: $light-grey;
+  border-color: $grey-light;
+  color: $grey-light;
 }
 
 .form .form-field select {

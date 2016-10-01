@@ -8,4 +8,9 @@ urlpatterns = [
             view=StrainSearchWizardView.as_view(),
             name='strain'
     ),
+    url(
+        regex=r'^strain/result/$',
+        view=StrainSearchResultsView.as_view(),
+        name='strain_result'
+    ),
 ]

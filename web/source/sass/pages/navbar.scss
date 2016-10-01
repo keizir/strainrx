@@ -57,7 +57,7 @@
 
 .nav-list .auth-menu .nav-menu-content {
     display: none;
-    background: $dark-grey;
+  background: $grey-dark;
     color: $white;
     width: 18em;
     right: 1em;
@@ -141,7 +141,7 @@
     }
 
     .nav-list .nav-menu-btn {
-        color: $dark-grey;
+      color: $grey-dark;
     }
 
     .nav-list .nav-menu-btn-wrapper {
@@ -156,11 +156,11 @@
 
     .nav-list, .nav-list ul,
     .nav-container .nav-list-wrapper .nav-list .auth-menu {
-        background: $dark-grey;
+      background: $grey-dark;
     }
 
     .nav-container .nav-list-wrapper .nav-list .auth-menu {
-        background: $dark-grey;
+      background: $grey-dark;
         display: block;
         position: absolute;
     }

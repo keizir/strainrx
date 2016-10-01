@@ -2,7 +2,7 @@
 
 .user-profile {
   display: block;
-  color: $light-grey;
+  color: $grey-light;
   text-align: center;
 }
 
@@ -31,7 +31,7 @@
   width: 8em;
   height: 8em;
   margin: 0 auto;
-  border: 1px solid $light-grey;
+  border: 1px solid $grey-light;
   border-radius: 4em;
 }
 
@@ -59,7 +59,7 @@
 }
 
 .user-profile .profile-header .profile-tabs span a {
-  color: $normal-grey;
+  color: $grey-normal;
   font-weight: bold;
 }
 

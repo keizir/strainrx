@@ -1,21 +1,94 @@
 {% extends "base.html" %}
 
-{% block title %}Results{% endblock %}
+{% load staticfiles i18n %}
+
+{% block title %}Search Results{% endblock %}
+
+{% block css %}
+    <link href="{% static 'css/pages/base.css' %}" rel="stylesheet">
+    <link href="{% static 'css/pages/search/strain/search_results.css' %}" rel="stylesheet">
+{% endblock %}
 
 {% block content %}
-    <div class="container">
-        <h1>RESULTS</h1>
-        <button id="show-temp-results" type="button" class="btn-primary" style="margin: 1em">Show / Hide</button>
-        <span class="criteria hidden" style="display: block; margin: 2em">{{ search_criteria }}</span>
+    <div class="container search-result-container">
+        <div class="search-result-header-wrapper">
+            <h1>Here Are Your Top Recommendations</h1>
+            <div class="filter-menu-wrapper">
+                <div class="filter-menu">
+                    <ul>
+                        <li class="filter-menu-list-item">Show All</li>
+                        <li class="filter-menu-list-item">Show All</li>
+                        <li class="filter-menu-list-item">Show All</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div class="search-result-body-wrapper">
+            <div class="search-result">
+                {% for strain in search_results %}
+                    <div class="result-item">
+                        <div class="item-info-wrapper inline-block">
+                            <div class="item-image inline-block">
+                                <img src="{{ strain.image }}" alt="Strain Image">
+                            </div>
+                            <div class="item-info inline-block">
+                                <span class="strain-name">
+                                    <a href="#">{{ strain.name }}</a>
+                                </span>
+                                <span class="strain-type">{{ strain.type }}</span>
+                                <span class="strain-rating">{{ strain.rating }}</span>
+                            </div>
+                        </div>
+                        <div class="separator inline-block"></div>
+                        <div class="item-locations inline-block">
+                            <span class="locations-icon">
+                                <i class="fa fa-map-marker fa-2x" aria-hidden="true"></i>
+                            </span>
+                            <span class="locations">
+                                <span>location</span>
+                            </span>
+                        </div>
+                        <div class="separator inline-block"></div>
+                        <div class="item-deliveries inline-block">
+                            <span class="deliveries-icon">
+                                <i class="fa fa-truck fa-2x" aria-hidden="true"></i>
+                            </span>
+                            <span class="deliveries">
+                                <span>delivery</span>
+                            </span>
+                        </div>
+                        <div class="separator inline-block"></div>
+                        <div class="item-percentage-match inline-block">
+                            <span class="percentage">{{ strain.match_percentage }}%</span>
+                            <span class="match">match</span>
+                        </div>
+                    </div>
+
+                    {% empty %}
+                    <p>Sorry, no results found.</p>
+                {% endfor %}
+            </div>
+        </div>
+        <div class="search-result-footer-wrapper {% if search_results_total <= 8 %}hidden{% endif %}">
+            <div class="scroll-down-wrapper">
+                <div class="inline-block">
+                    <span class="scroll-icon">
+                        <i class="fa fa-refresh fa-2x" aria-hidden="true"></i>
+                    </span>
+                </div>
+                <div class="inline-block">
+                    <span class="scroll-text">
+                        Scroll down to load more results
+                    </span>
+                </div>
+            </div>
+        </div>
     </div>
 {% endblock %}
 
 {% block javascript %}
-    <script>
-        $(document).ready(function () {
-            $('#show-temp-results').on('click', function () {
-                $('.criteria').toggleClass('hidden');
-            });
-        });
+    <script src="{% static 'js/pages/search/strain/search_results.js' %}"></script>
+    <script type="text/javascript">
+        new W.pages.StrainSearchResultsPage();
     </script>
 {% endblock %}
