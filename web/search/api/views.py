@@ -1,6 +1,6 @@
 import logging
 
-from rest_framework import permissions
+from django.contrib.auth.mixins import LoginRequiredMixin
 from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.views import APIView
@@ -14,9 +14,7 @@ def bad_request(error_message):
     }, status=status.HTTP_400_BAD_REQUEST)
 
 
-class StrainSearchWizardView(APIView):
-    permission_classes = (permissions.AllowAny,)
-
+class StrainSearchWizardView(LoginRequiredMixin, APIView):
     def post(self, request):
         step = request.data.get('step')
 
@@ -47,9 +45,6 @@ class StrainSearchWizardView(APIView):
             types = {'sativa': data.get('sativa'), 'hybrid': data.get('hybrid'), 'indica': data.get('indica')}
 
         request.session['search_criteria'] = {'strain_types': types}
-
-        print(str(request.session['search_criteria']))
-
         return Response({}, status=status.HTTP_200_OK)
 
     def process_step_2(self, request):
@@ -63,9 +58,6 @@ class StrainSearchWizardView(APIView):
         search_criteria = request.session.get('search_criteria')
         search_criteria['effects'] = effects
         request.session['search_criteria'] = search_criteria
-
-        print(str(request.session['search_criteria']))
-
         return Response({}, status=status.HTTP_200_OK)
 
     def process_step_3(self, request):
@@ -79,9 +71,6 @@ class StrainSearchWizardView(APIView):
         search_criteria = request.session.get('search_criteria')
         search_criteria['benefits'] = benefits
         request.session['search_criteria'] = search_criteria
-
-        print(str(request.session['search_criteria']))
-
         return Response({}, status=status.HTTP_200_OK)
 
     def process_step_4(self, request):
@@ -95,7 +84,15 @@ class StrainSearchWizardView(APIView):
         search_criteria = request.session.get('search_criteria')
         search_criteria['side_effects'] = side_effects
         request.session['search_criteria'] = search_criteria
+        return Response({}, status=status.HTTP_200_OK)
 
-        print(str(request.session['search_criteria']))
 
+class StrainSearchResultsView(LoginRequiredMixin, APIView):
+    print('asdasd')
+
+    def get(self, request):
+        print(request.data.get('page'))
+        print(request.data.get('size'))
+        # search_criteria = request.session.get('search_criteria')
+        # search ElasticSearch paginated
         return Response({}, status=status.HTTP_200_OK)

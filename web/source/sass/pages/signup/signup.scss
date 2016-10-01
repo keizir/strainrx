@@ -2,7 +2,7 @@
 
 .sign-up-wrapper {
     text-align: center;
-    color: $normal-grey;
+  color: $grey-normal;
 }
 
 .sign-up-wrapper input {
@@ -35,7 +35,7 @@
 .sign-up-form-wrapper label > span.check {
     width: 2em;
     height: 2em;
-    border: 1px solid $light-grey;
+  border: 1px solid $grey-light;
     border-radius: 1em;
     vertical-align: middle;
 }

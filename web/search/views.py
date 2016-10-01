@@ -48,5 +48,39 @@ class StrainSearchResultView(LoginRequiredMixin, TemplateView):
 
     def get_context_data(self, **kwargs):
         context = super(StrainSearchResultView, self).get_context_data(**kwargs)
-        context['search_criteria'] = self.request.session['search_criteria']  # TODO remove this later
+        dummy_response = list()  # TODO remove this later - START
+
+        for num in range(0, 7):
+            dummy_response.append(
+                {
+                    'name': 'Blue Dream',
+                    'type': 'Sativa',
+                    'rating': '4.7',
+                    'image': 'image_location.png',
+                    'match_percentage': 91.45,
+                    'delivery_addresses': [
+                        {
+                            'state': 'CA',
+                            'city': 'Santa Monica',
+                            'street1': 'Street 1 location',
+                            'open': 'true'
+                        },
+                        {
+                            'state': 'CA',
+                            'city': 'Santa Monica',
+                            'street1': 'Street 1 location',
+                            'open': 'false'
+                        },
+                        {
+                            'state': 'CA',
+                            'city': 'Santa Monica',
+                            'street1': 'Street 1 location',
+                            'open': 'false'
+                        }
+                    ]
+                }
+            )
+
+        context['search_results'] = dummy_response
+        context['search_results_total'] = 24  # TODO remove this later - END
         return context

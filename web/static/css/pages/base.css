@@ -4803,6 +4803,9 @@ a {
   margin-right: auto;
   padding: 0 1em; }
 
+.inline-block {
+  display: inline-block; }
+
 .separator:after {
   content: "|";
   padding: 0 0.5em 0 0.5em; }
