@@ -63,6 +63,10 @@
   line-height: 3em;
   padding: 1em; }
 
+.user-profile .form .form-field-group {
+    width: 100%;
+}
+
 .user-profile .user-info .form fieldset {
   width: 62em;
   margin: 0 auto; }
@@ -113,10 +117,59 @@
   .user-profile .user-info .form .form-field.gender-field {
     margin: 0; } }
 
-@media (max-width: 1024px) {
+@media (max-width: 768px) {
   .user-profile .profile-header .profile-tabs {
-    right: 12em;
+      right: 0;
+      margin: 3em auto 0;
+  }
+
+    .user-profile .user-info .form fieldset {
+        width: 25em;
+    }
+
+    .user-profile .form .form-field-group {
+        width: 100%;
+        margin: 0 auto;
+    }
+
+    .user-profile .form .form-field {
+        display: block;
+    }
+
+    .user-profile .form .form-field input,
+    .user-profile .form .form-field select {
+        width: 100%;
+    }
+
+    .user-profile .user-info .form .form-field.gender-field,
+    .user-profile .user-info .form .form-field.date-field {
+        display: block;
+        width: 22em;
+        margin: 0 auto;
+    }
+
+    .user-profile .user-info .form .form-field.date-field select {
+        display: block;
+        width: 100%;
+        margin-right: 0;
+    }
+}
+
+@media (min-width: 1023px) {
+    .user-profile .profile-header .profile-tabs {
+        right: 0;
+        width: 100%;
+        margin: 2em auto;
+    }
+
+    .user-profile .form .form-field {
+        display: inline-block;
+        margin: 0 1em;
     width: 18em; }
-  .user-profile .form fieldset {
-    width: 25em;
-    margin: 0 auto; } }
+
+    .user-profile .user-info .form .form-field.date-field {
+        display: inline-block;
+        width: 34.5em;
+        margin-left: 0;
+    }
+}

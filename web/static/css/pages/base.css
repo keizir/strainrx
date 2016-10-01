@@ -4954,13 +4954,13 @@ fieldset {
 *   Body font size changes below will cascade to all em units to effectively scale our pages
 *   in a nice, responsive way (everything should be ems unless it is a purposely fixed element
 */
-@media (max-width: 480px) {
+@media (max-width: 479px) {
   html, body {
     font-size: 12px; }
   .container {
     max-width: 460px; } }
 
-@media (max-width: 768px) {
+@media (max-width: 767px) {
   html, body {
     font-size: 14px; }
   .container {
@@ -4969,7 +4969,7 @@ fieldset {
     padding: 1em 1.5em;
     width: 24em; } }
 
-@media (max-width: 1024px) {
+@media (max-width: 1023px) {
   .container {
     max-width: 1014px; } }
 
