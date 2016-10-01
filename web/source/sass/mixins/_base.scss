@@ -257,7 +257,7 @@ fieldset {
 *   Body font size changes below will cascade to all em units to effectively scale our pages
 *   in a nice, responsive way (everything should be ems unless it is a purposely fixed element
 */
-@media (max-width: $screen-xs-min) {
+@media (max-width: $screen-xs-max) {
   html, body {
     font-size: 12px;
   }
@@ -267,7 +267,7 @@ fieldset {
   }
 }
 
-@media (max-width: $screen-sm-min) {
+@media (max-width: $screen-sm-max) {
   html, body {
     font-size: 14px;
   }
@@ -282,7 +282,7 @@ fieldset {
   }
 }
 
-@media (max-width: $screen-md-min) {
+@media (max-width: $screen-md-max) {
   .container {
     max-width: 1014px;
   }
