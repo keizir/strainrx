@@ -29,12 +29,12 @@
                             <div class="form-field">
                                 <label for="city">City (Optional)</label>
                                 <input id="city" type="text" name="city"
-                                       value="{{ request.user.city }}">
+                                       {% if request.user.city != None %}value="{{ request.user.city }}"{% endif %}>
                             </div>
                             <div class="form-field">
                                 <label for="state">State (Optional)</label>
                                 <input id="state" type="text" name="state"
-                                       value="{{ request.user.state }}">
+                                       {% if request.user.state != None %}value="{{ request.user.state }}"{% endif %}>
                             </div>
                             <div class="form-field">
                                 <label for="zipcode">Zip Code (Optional)</label>
