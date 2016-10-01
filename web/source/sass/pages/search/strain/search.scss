@@ -123,6 +123,11 @@
   border: 3px solid $avocado-green;
 }
 
+.search-form-wrapper .form-field-group .form-field span.strain-effect.disabled {
+  border: 1px solid $normal-grey;
+  color: $light-grey;
+}
+
 .search-form-wrapper fieldset {
   padding-bottom: 2em;
 }

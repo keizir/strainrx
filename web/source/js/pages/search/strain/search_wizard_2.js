@@ -45,20 +45,31 @@ W.pages.StrainSearchWizard2Page = W.pages.StrainSearchBase.extend({
                     return effect.name === effectName;
                 });
 
+            that.currentEffectName = effectName;
             if (presentEffect.length > 0) {
-                that.currentEffectName = effectName;
                 that.ui.$slider.slider('value', $effect.parent().find('.importance-value').text());
                 return;
             }
 
-            $effect.addClass('active');
-            $effect.parent().find('.removable').removeClass('hidden');
-            $effect.parent().find('.importance-value').removeClass('hidden');
-            that.currentEffectName = effectName;
-            that.selectedEffects.push({
-                name: $effect.attr('id'),
-                value: 1
-            });
+            if (that.selectedEffects.length <= 4) {
+                $effect.addClass('active');
+                $effect.parent().find('.removable').removeClass('hidden');
+                $effect.parent().find('.importance-value').removeClass('hidden');
+                that.selectedEffects.push({
+                    name: $effect.attr('id'),
+                    value: 1
+                });
+            }
+
+            if (that.selectedEffects.length === 5) {
+                var $strainEffects = that.ui.$strainEffect;
+                for (var i = 0; i < $strainEffects.length; i++) {
+                    var $el = $($strainEffects[i]);
+                    if (!$el.hasClass('active')) {
+                        $el.addClass('disabled');
+                    }
+                }
+            }
 
             if (that.selectedEffects.length > 0) {
                 that.activateSlider();
@@ -91,6 +102,12 @@ W.pages.StrainSearchWizard2Page = W.pages.StrainSearchBase.extend({
                 }
             }
 
+            if (that.selectedEffects.length < 5) {
+                var $strainEffects = that.ui.$strainEffect;
+                for (var j = 0; j < $strainEffects.length; j++) {
+                    $($strainEffects[j]).removeClass('disabled');
+                }
+            }
 
             if (that.selectedEffects.length === 0) {
                 that.regions.$sliderWrapper.addClass('hidden');

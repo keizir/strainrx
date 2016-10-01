@@ -45,20 +45,31 @@ W.pages.StrainSearchWizard3Page = W.pages.StrainSearchBase.extend({
                     return benefit.name === benefitName;
                 });
 
+            that.currentBenefitName = benefitName;
             if (presentBenefit.length > 0) {
-                that.currentBenefitName = benefitName;
                 that.ui.$slider.slider('value', $benefit.parent().find('.importance-value').text());
                 return;
             }
 
-            $benefit.addClass('active');
-            $benefit.parent().find('.removable').removeClass('hidden');
-            $benefit.parent().find('.importance-value').removeClass('hidden');
-            that.currentBenefitName = benefitName;
-            that.selectedBenefits.push({
-                name: $benefit.attr('id'),
-                value: 1
-            });
+            if (that.selectedBenefits.length <= 4) {
+                $benefit.addClass('active');
+                $benefit.parent().find('.removable').removeClass('hidden');
+                $benefit.parent().find('.importance-value').removeClass('hidden');
+                that.selectedBenefits.push({
+                    name: $benefit.attr('id'),
+                    value: 1
+                });
+            }
+
+            if (that.selectedBenefits.length === 5) {
+                var $strainBenefits = that.ui.$strainBenefit;
+                for (var i = 0; i < $strainBenefits.length; i++) {
+                    var $el = $($strainBenefits[i]);
+                    if (!$el.hasClass('active')) {
+                        $el.addClass('disabled');
+                    }
+                }
+            }
 
             if (that.selectedBenefits.length > 0) {
                 that.activateSlider();
@@ -91,6 +102,12 @@ W.pages.StrainSearchWizard3Page = W.pages.StrainSearchBase.extend({
                 }
             }
 
+            if (that.selectedBenefits.length < 5) {
+                var $strainBenefits = that.ui.$strainBenefit;
+                for (var j = 0; j < $strainBenefits.length; j++) {
+                    $($strainBenefits[j]).removeClass('disabled');
+                }
+            }
 
             if (that.selectedBenefits.length === 0) {
                 that.regions.$sliderWrapper.addClass('hidden');
