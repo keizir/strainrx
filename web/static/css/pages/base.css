@@ -4823,7 +4823,7 @@ a {
 
 #loading-spinner {
   display: none;
-  color: #1e1e1e;
+    color: #231f20;
   position: fixed;
   font-size: 90px;
   top: calc(50% - 50px);
@@ -4931,17 +4931,20 @@ fieldset {
 .alert-debug {
   background-color: #fff;
   border-color: #d6e9c6;
-  color: #1e1e1e; }
+    color: #231f20;
+}
 
 .alert-info {
   background-color: #fff;
   border-color: #d6e9c6;
-  color: #1e1e1e; }
+    color: #231f20;
+}
 
 .alert-success {
   background-color: #d6e9c6;
   border-color: #d6e9c6;
-  color: #1e1e1e; }
+    color: #231f20;
+}
 
 .alert-warning {
   background-color: #fff;
@@ -4952,6 +4955,30 @@ fieldset {
   background-color: #f2dede;
   border-color: #eed3d7;
   color: #b94a48; }
+
+@keyframes rotate {
+    from {
+        transform: rotate(0deg);
+    }
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+.rotating {
+    -webkit-animation-name: rotate;
+    -webkit-animation-duration: 2s;
+    -webkit-animation-iteration-count: infinite;
+    -webkit-animation-timing-function: linear;
+    -moz-animation-name: rotate;
+    -moz-animation-duration: 2s;
+    -moz-animation-iteration-count: infinite;
+    -moz-animation-timing-function: linear;
+    animation-name: rotate;
+    animation-duration: 2s;
+    animation-iteration-count: infinite;
+    animation-timing-function: linear;
+}
 
 /*
 *   Body font size changes below will cascade to all em units to effectively scale our pages
@@ -5017,7 +5044,8 @@ fieldset {
   color: #fff; }
 
 .wizard-step.active a {
-  color: #1e1e1e; }
+    color: #231f20;
+}
 
 .ui-dialog {
   border-radius: 1em;
@@ -5095,7 +5123,8 @@ fieldset {
 
 .nav-list .nav-menu-btn-wrapper .nav-menu-btn a,
 .nav-list .nav-menu-btn-wrapper .nav-menu-btn {
-  color: #1e1e1e; }
+    color: #231f20;
+}
 
 .nav-list .auth-menu .nav-menu-content {
   display: none;
@@ -5114,7 +5143,8 @@ fieldset {
   padding: 0.5em 1.5em; }
 
 .nav-list .auth-menu .nav-menu-content .location {
-  background: #1e1e1e; }
+    background: #231f20;
+}
 
 .nav-list .auth-menu .nav-menu-content .location span {
   display: block; }
@@ -5193,20 +5223,22 @@ footer, .push {
   text-align: center; }
 
 .footer-region .separator:after {
-  color: #1e1e1e; }
+    color: #231f20;
+}
 
 .footer-region a {
   color: #10b3dc; }
 
 .footer-region .links-wrapper .links {
   margin-bottom: 5px;
-  color: #1e1e1e; }
+    color: #231f20;
+}
 
 .footer-region .links-wrapper .links > li {
   display: inline-block; }
 
 .footer-region .copyright-wrapper {
-  color: #1e1e1e;
+    color: #231f20;
   padding-top: 1em; }
 
 .home-row-01 {

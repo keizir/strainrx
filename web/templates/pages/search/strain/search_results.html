@@ -1,6 +1,7 @@
 {% extends "base.html" %}
 
 {% load staticfiles i18n %}
+{% load search_template_tags %}
 
 {% block title %}Search Results{% endblock %}
 
@@ -15,11 +16,25 @@
             <h1>Here Are Your Top Recommendations</h1>
             <div class="filter-menu-wrapper">
                 <div class="filter-menu">
-                    <ul>
-                        <li class="filter-menu-list-item">Show All</li>
-                        <li class="filter-menu-list-item">Show All</li>
-                        <li class="filter-menu-list-item">Show All</li>
-                    </ul>
+                    <div class="active-link">
+                        <span class="menu-active-link">
+                            <a href="#">Show All</a>
+                        </span>
+                        <span class="menu-expander">
+                            <i class="fa fa-caret-down" aria-hidden="true"></i>
+                        </span>
+                    </div>
+                    <div class="hidden-links hidden">
+                        <span class="menu-link">
+                            <a href="#">Show All</a>
+                        </span>
+                        <span class="menu-link">
+                            <a href="#">Available Locally</a>
+                        </span>
+                        <span class="menu-link">
+                            <a href="#">Deliveries Only</a>
+                        </span>
+                    </div>
                 </div>
             </div>
         </div>
@@ -45,7 +60,9 @@
                                 <i class="fa fa-map-marker fa-2x" aria-hidden="true"></i>
                             </span>
                             <span class="locations">
-                                <span>location</span>
+                                <span>{{ strain.delivery_addresses|length }} Locations</span>
+                                <span>{% find_closest_delivery_distance strain.delivery_addresses %}</span>
+                                <span>{% count_open_close_deliveries strain.delivery_addresses %}</span>
                             </span>
                         </div>
                         <div class="separator inline-block"></div>
@@ -54,7 +71,7 @@
                                 <i class="fa fa-truck fa-2x" aria-hidden="true"></i>
                             </span>
                             <span class="deliveries">
-                                <span>delivery</span>
+                                <span>1 Delivery Service Closed</span>
                             </span>
                         </div>
                         <div class="separator inline-block"></div>

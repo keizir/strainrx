@@ -4,12 +4,12 @@ from web.search.api.views import *
 
 urlpatterns = [
     url(
-            regex=r'^strain',
-            view=StrainSearchWizardView.as_view(),
-            name='strain'
+        regex=r'^strain',
+        view=StrainSearchWizardView.as_view(),
+        name='strain'
     ),
     url(
-        regex=r'^strain/result/$',
+        regex=r'^result/$',
         view=StrainSearchResultsView.as_view(),
         name='strain_result'
     ),
