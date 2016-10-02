@@ -40,7 +40,8 @@
 
 .nav-list .nav-menu-btn-wrapper .nav-menu-btn a,
 .nav-list .nav-menu-btn-wrapper .nav-menu-btn {
-  color: #1e1e1e; }
+    color: #231f20;
+}
 
 .nav-list .auth-menu .nav-menu-content {
   display: none;
@@ -59,7 +60,8 @@
   padding: 0.5em 1.5em; }
 
 .nav-list .auth-menu .nav-menu-content .location {
-  background: #1e1e1e; }
+    background: #231f20;
+}
 
 .nav-list .auth-menu .nav-menu-content .location span {
   display: block; }

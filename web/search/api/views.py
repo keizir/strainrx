@@ -1,4 +1,5 @@
 import logging
+from random import uniform
 
 from django.contrib.auth.mixins import LoginRequiredMixin
 from rest_framework import status
@@ -88,11 +89,51 @@ class StrainSearchWizardView(LoginRequiredMixin, APIView):
 
 
 class StrainSearchResultsView(LoginRequiredMixin, APIView):
-    print('asdasd')
-
     def get(self, request):
-        print(request.data.get('page'))
-        print(request.data.get('size'))
-        # search_criteria = request.session.get('search_criteria')
+        page = request.GET.get('page')
+        size = request.GET.get('size')
+
+        dummy_response = list()  # TODO remove this later - START
+
+        for num in range(0, 8):
+            dummy_response.append(
+                {
+                    'name': 'Blue Dream' if num % 2 == 0 else 'East Coast Sour Diesel',
+                    'type': 'Sativa',
+                    'rating': "{0:.2f}".format(5 * uniform(0.3, 1)),
+                    'image': 'image_location.png',
+                    'match_percentage': "{0:.2f}".format(100 * uniform(0.3, 1)),
+                    'delivery_addresses': [
+                        {
+                            'state': 'CA',
+                            'city': 'Santa Monica',
+                            'street1': 'Street 1 location',
+                            'open': 'true',
+                            'distance': uniform(500, 3000) * 0.000621371  # meters * mile coefficient
+                        },
+                        {
+                            'state': 'CA',
+                            'city': 'Santa Monica',
+                            'street1': 'Street 1 location',
+                            'open': 'false',
+                            'distance': uniform(500, 3000) * 0.000621371  # meters * mile coefficient
+                        },
+                        {
+                            'state': 'CA',
+                            'city': 'Santa Monica',
+                            'street1': 'Street 1 location',
+                            'open': 'false',
+                            'distance': uniform(500, 3000) * 0.000621371  # meters * mile coefficient
+                        }
+                    ]
+                }
+            )
+
+        dummy_response.sort(key=lambda entry: entry.get('match_percentage'), reverse=True)
+        # TODO remove this later - END
+
         # search ElasticSearch paginated
-        return Response({}, status=status.HTTP_200_OK)
+        return Response({
+            'search_results': dummy_response,
+            'search_results_total': 24
+        }, status=status.HTTP_200_OK)

@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
 from __future__ import absolute_import, unicode_literals
 
+from random import uniform
+
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.generic import TemplateView
 
@@ -50,37 +52,41 @@ class StrainSearchResultView(LoginRequiredMixin, TemplateView):
         context = super(StrainSearchResultView, self).get_context_data(**kwargs)
         dummy_response = list()  # TODO remove this later - START
 
-        for num in range(0, 7):
+        for num in range(0, 8):
             dummy_response.append(
                 {
-                    'name': 'Blue Dream',
+                    'name': 'Blue Dream' if num % 2 == 0 else 'East Coast Sour Diesel',
                     'type': 'Sativa',
-                    'rating': '4.7',
+                    'rating': "{0:.2f}".format(5 * uniform(0.3, 1)),
                     'image': 'image_location.png',
-                    'match_percentage': 91.45,
+                    'match_percentage': "{0:.2f}".format(100 * uniform(0.3, 1)),
                     'delivery_addresses': [
                         {
                             'state': 'CA',
                             'city': 'Santa Monica',
                             'street1': 'Street 1 location',
-                            'open': 'true'
+                            'open': 'true',
+                            'distance': uniform(500, 3000) * 0.000621371  # meters * mile coefficient
                         },
                         {
                             'state': 'CA',
                             'city': 'Santa Monica',
                             'street1': 'Street 1 location',
-                            'open': 'false'
+                            'open': 'false',
+                            'distance': uniform(500, 3000) * 0.000621371  # meters * mile coefficient
                         },
                         {
                             'state': 'CA',
                             'city': 'Santa Monica',
                             'street1': 'Street 1 location',
-                            'open': 'false'
+                            'open': 'false',
+                            'distance': uniform(500, 3000) * 0.000621371  # meters * mile coefficient
                         }
                     ]
                 }
             )
 
+        dummy_response.sort(key=lambda entry: entry.get('match_percentage'), reverse=True)
         context['search_results'] = dummy_response
         context['search_results_total'] = 24  # TODO remove this later - END
         return context

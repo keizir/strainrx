@@ -46,6 +46,7 @@ THIRD_PARTY_APPS = (
 LOCAL_APPS = (
     # custom users app
     'web.users.apps.UsersConfig',
+    'web.search.apps.SearchConfig',
     # Your stuff: custom apps go here
 )
 
