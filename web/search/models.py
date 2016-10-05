@@ -48,6 +48,7 @@ class Strain(models.Model):
                                 "tar": 0, "tea": 0, "tobacco": 0, "tree_fruit": 0, "tropical": 0,
                                 "vanilla": 0, "violet": 0, "woody": 0})
 
+    about = models.CharField(max_length=1500, null=True, blank=True)
     origins = models.ManyToManyField('self', symmetrical=False, blank=True)
 
     def __str__(self):
