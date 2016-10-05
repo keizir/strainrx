@@ -1,174 +1,54 @@
-from datetime import datetime
+from __future__ import unicode_literals, absolute_import
 
+from django.contrib.postgres.fields import JSONField
 from django.db import models
-from django.utils.translation import ugettext_lazy as _
-
-from web.users.models import User
+from django.utils.encoding import python_2_unicode_compatible
 
 
+@python_2_unicode_compatible
 class Strain(models.Model):
-    TYPE = (
-        ('SATIVA', 'Sativa'),
-        ('INDICA', 'Indica'),
-        ('HYBRID', 'Hybrid')
+    VARIETY_CHOICES = (
+        ('sativa', 'Sativa'),
+        ('indica', 'Indica'),
+        ('hybrid', 'Hybrid'),
     )
 
-    CATEGORY = (
-        ('FLOWER', 'Flower'),
-        ('EDIBLE', 'Edible'),
-        ('LIQUID', 'Liquid'),
-        ('OIL', 'Oil'),
-        ('WAX', 'Wax')
+    CATEGORY_CHOICES = (
+        ('flower', 'Flower'),
+        ('edible', 'Edible'),
+        ('liquid', 'Liquid'),
+        ('oil', 'Oil'),
+        ('wax', 'Wax'),
     )
 
-    internal_id = models.IntegerField(_('Internal Identifier'), blank=False, null=False)
-    name = models.CharField(_('Name'), blank=False, null=False, max_length=255)
-    type = models.CharField(_('Type'), blank=False, null=False, max_length=6, choices=TYPE)
-    category = models.CharField(_('Category'), blank=False, null=False, max_length=6, choices=CATEGORY)
-    about = models.CharField(_('About'), blank=True, null=True, max_length=1500)
-    origins = models.CharField(_('Origins'), blank=True, null=True, max_length=500)
-    similar = models.CharField(_('Similar'), blank=True, null=True, max_length=500)
+    name = models.CharField(max_length=255)
+    variety = models.CharField(max_length=255, choices=VARIETY_CHOICES)
+    category = models.CharField(max_length=255, choices=CATEGORY_CHOICES)
+
+    effects = JSONField(default={"happy": 0, "uplifted": 0, "stimulated": 0, "energetic": 0,
+                                 "creative": 0, "focused": 0, "relaxed": 0, "sleepy": 0, "talkative": 0,
+                                 "euphoric": 0, "hungry": 0, "tingly": 0, "good_humored": 0})
+
+    benefits = JSONField(default={"reduce_stress": 0, "help_depression": 0, "relieve_pain": 0, "reduce_fatigue": 0,
+                                  "reduce_headaches": 0, "help_muscles_spasms": 0, "lower_eye_pressure": 0,
+                                  "reduce_nausea": 0, "reduce_inflammation": 0, "relieve_cramps": 0,
+                                  "help_with_seizures": 0, "restore_appetite": 0, "help_with_insomnia": 0})
+
+    side_effects = JSONField(default={"anxiety": 0, "dry_mouth": 0, "paranoia": 0,
+                                      "headache": 0, "dizziness": 0, "dry_eyes": 0})
+
+    flavor = JSONField(default={"ammonia": 0, "apple": 0, "apricot": 0, "berry": 0, "blue_cheese": 0,
+                                "blueberry": 0, "buttery": 0, "cheese": 0, "chemical": 0, "chestnut": 0,
+                                "citrus": 0, "coffee": 0, "diesel": 0, "earthy": 0, "flowery": 0,
+                                "grape": 0, "grapefruit": 0, "herbal": 0, "honey": 0, "lavender": 0,
+                                "lemon": 0, "lime": 0, "mango": 0, "mentol": 0, "minty": 0,
+                                "nutty": 0, "orange": 0, "peach": 0, "pear": 0, "pepper": 0,
+                                "pine": 0, "pineapple": 0, "plum": 0, "pungent": 0, "rose": 0,
+                                "sage": 0, "skunk": 0, "spicy_herbal": 0, "strawberry": 0, "sweet": 0,
+                                "tar": 0, "tea": 0, "tobacco": 0, "tree_fruit": 0, "tropical": 0,
+                                "vanilla": 0, "violet": 0, "woody": 0})
+
+    origins = models.ManyToManyField('self', symmetrical=False, blank=True)
 
     def __str__(self):
         return self.name
-
-
-class Effect(models.Model):
-    NAMES = (
-        ('happy', 'Happy'),
-        ('uplifting', 'Uplifted (raised spirits)'),
-        ('stimulated', 'Aroused'),
-        ('energetic', 'Energetic'),
-        ('creative', 'Creative'),
-        ('focused', 'Focused (productive)'),
-        ('relaxed', 'Relaxed (calm and relaxed)'),
-        ('sleepy', 'Sleepy'),
-        ('talkative', 'Talkative (social)'),
-        ('euphoric', 'Euphoric'),
-        ('hungry', 'Hungry'),
-        ('tingly', 'Tingly (stimulated)'),
-        ('good_humored', 'Giggly (good humor)')
-    )
-
-    name = models.CharField(_('Name'), blank=False, null=False, max_length=30, choices=NAMES)
-
-
-class StrainEffect(models.Model):
-    strain = models.ForeignKey(Strain, on_delete=models.SET_NULL)
-    effect = models.ForeignKey(Effect, on_delete=models.SET_NULL)
-    effect_value = models.IntegerField(_('Effect Strength'), blank=False, null=False)
-
-
-class Benefit(models.Model):
-    NAMES = (
-        ('reduce-stress', 'Reduce Stress'),
-        ('help-depression', 'Help Depression'),
-        ('relieve-pain', 'Help With Pain'),
-        ('reduce-fatigue', 'Reduce Fatigue'),
-        ('reduce-headaches', 'Help With Headaches'),
-        ('help-muscles-spasms', 'Relieve Muscle Spasms'),
-        ('lower-eye-pressure', 'Lower Eye Pressure'),
-        ('reduce-nausea', 'Help With Nausea'),
-        ('reduce-inflammation', 'Reduce Inflammation'),
-        ('relieve-cramps', 'Relieve Cramps'),
-        ('help-with-seizures', 'Help With Seizures'),
-        ('restore-appetite', 'Restore Appetite'),
-        ('help-with-insomnia', 'Help With Insomnia')
-    )
-
-    name = models.CharField(_('Name'), blank=False, null=False, max_length=30, choices=NAMES)
-
-
-class StrainBenefit(models.Model):
-    strain = models.ForeignKey(Strain, on_delete=models.SET_NULL)
-    benefit = models.ForeignKey(Benefit, on_delete=models.SET_NULL)
-    benefit_value = models.IntegerField(_('Benefit Strength'), blank=False, null=False)
-
-
-class NegativeEffect(models.Model):
-    NAMES = (
-        ('anxiety', 'Anxiety'),
-        ('dry-mouth', 'Dry Mouth'),
-        ('paranoia', 'Paranoia'),
-        ('headache', 'Headache'),
-        ('dizziness', 'Dizziness'),
-        ('dry-eyes', 'Dry Eyes')
-    )
-
-    name = models.CharField(_('Name'), blank=False, null=False, max_length=30, choices=NAMES)
-
-
-class StrainNegativeEffect(models.Model):
-    strain = models.ForeignKey(Strain, on_delete=models.SET_NULL)
-    negative_effect = models.ForeignKey(NegativeEffect, on_delete=models.SET_NULL)
-    negative_effect_value = models.IntegerField(_('Negative Effect Strength'), blank=False, null=False)
-
-
-class Flavor(models.Model):
-    NAMES = (
-        ('ammonia', 'Ammonia'),
-        ('apple', 'Apple'),
-        ('apricot', 'Apricot'),
-        ('berry', 'Berry'),
-        ('blue-cheese', 'Blue Cheese'),
-        ('blueberry', 'Blueberry'),
-        ('buttery', 'Buttery'),
-        ('cheese', 'Cheese'),
-        ('chemical', 'Chemical'),
-        ('chestnut', 'Chestnut'),
-        ('citrus', 'Citrus'),
-        ('coffee', 'Coffee'),
-        ('diesel', 'Diesel'),
-        ('earthy', 'Earthy'),
-        ('flowery', 'Flowery'),
-        ('grape', 'Grape'),
-        ('grapefruit', 'Grapefruit'),
-        ('herbal', 'Herbal'),
-        ('honey', 'Honey'),
-        ('lavender', 'Lavender'),
-        ('lemon', 'Lemon'),
-        ('lime', 'Lime'),
-        ('mango', 'Mango'),
-        ('menthol', 'Menthol'),
-        ('minty', 'Minty'),
-        ('nutty', 'Nutty'),
-        ('orange', 'Orange'),
-        ('peach', 'Peach'),
-        ('pear', 'Pear'),
-        ('pepper', 'Pepper'),
-        ('pine', 'Pine'),
-        ('pineapple', 'Pineapple'),
-        ('plum', 'Plum'),
-        ('pungent', 'Pungent'),
-        ('rose', 'Rose'),
-        ('sage', 'Sage'),
-        ('skunk', 'Skunk'),
-        ('spicy-herbal', 'Spicy/Herbal'),
-        ('strawberry', 'Strawberry'),
-        ('sweet', 'Sweet'),
-        ('tar', 'Tar'),
-        ('tea', 'Tea'),
-        ('tobacco', 'Tobacco'),
-        ('tree-fruit', 'Tree Fruit'),
-        ('tropical', 'Tropical'),
-        ('vanilla', 'Vanilla'),
-        ('violet', 'Violet'),
-        ('woody', 'Woody')
-    )
-
-    name = models.CharField(_('Name'), blank=False, null=False, max_length=30, choices=NAMES)
-
-
-class StrainFlavor(models.Model):
-    strain = models.ForeignKey(Strain, on_delete=models.SET_NULL)
-    flavor = models.ForeignKey(Flavor, on_delete=models.SET_NULL)
-    flavor_value = models.IntegerField(_('Flavor Strength'), blank=False, null=False)
-
-
-class StrainReview(models.Model):
-    strain = models.ForeignKey(Strain, on_delete=models.SET_NULL)
-    rating = models.FloatField(_('Rating'), blank=False, null=False)
-    comment = models.CharField(_('Comment'), blank=True, null=True, max_length=500)
-
-    created_by = models.ForeignKey(User, on_delete=models.SET_NULL)
-    created_date = models.DateTimeField(_('Created Date'), blank=False, null=False, default=datetime.now)
