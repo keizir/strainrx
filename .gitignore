@@ -105,6 +105,10 @@ Session.vim
 ### Node
 node_modules
 
+### Python
+__pycache__
+*.pyc
+
 ### Project related
-/config/settings/local.py
 sendgrid.env
+config/settings/local.py

@@ -48,6 +48,7 @@ LOCAL_APPS = (
     'web.users.apps.UsersConfig',
     'web.search.apps.SearchConfig',
     # Your stuff: custom apps go here
+    'web',
 )
 
 # See: https://docs.djangoproject.com/en/dev/ref/settings/#installed-apps
