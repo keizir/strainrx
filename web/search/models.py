@@ -7,6 +7,9 @@ from django.utils.encoding import python_2_unicode_compatible
 
 @python_2_unicode_compatible
 class Strain(models.Model):
+    class Meta:
+        unique_together = (("name", "category"),)
+
     VARIETY_CHOICES = (
         ('sativa', 'Sativa'),
         ('indica', 'Indica'),
@@ -21,6 +24,7 @@ class Strain(models.Model):
         ('wax', 'Wax'),
     )
 
+    internal_id = models.CharField(max_length=10, null=True, blank=True)
     name = models.CharField(max_length=255)
     variety = models.CharField(max_length=255, choices=VARIETY_CHOICES)
     category = models.CharField(max_length=255, choices=CATEGORY_CHOICES)
@@ -41,7 +45,7 @@ class Strain(models.Model):
                                 "blueberry": 0, "buttery": 0, "cheese": 0, "chemical": 0, "chestnut": 0,
                                 "citrus": 0, "coffee": 0, "diesel": 0, "earthy": 0, "flowery": 0,
                                 "grape": 0, "grapefruit": 0, "herbal": 0, "honey": 0, "lavender": 0,
-                                "lemon": 0, "lime": 0, "mango": 0, "mentol": 0, "minty": 0,
+                                "lemon": 0, "lime": 0, "mango": 0, "menthol": 0, "minty": 0,
                                 "nutty": 0, "orange": 0, "peach": 0, "pear": 0, "pepper": 0,
                                 "pine": 0, "pineapple": 0, "plum": 0, "pungent": 0, "rose": 0,
                                 "sage": 0, "skunk": 0, "spicy_herbal": 0, "strawberry": 0, "sweet": 0,

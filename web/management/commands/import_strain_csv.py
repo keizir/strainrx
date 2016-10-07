@@ -1,10 +1,15 @@
 # -*- coding: utf-8 -*-
+import csv
+import logging
+import sys
+
+from django.core.exceptions import ValidationError
 from django.core.management.base import BaseCommand, CommandError
+
 from web.search.models import Strain
 
-import logging, csv
-
 logger = logging.getLogger(__name__)
+
 
 class Command(BaseCommand):
     help = """
@@ -24,7 +29,6 @@ class Command(BaseCommand):
                             dest='csv_path',
                             help='Path to csv relative to current directory')
 
-
     def handle(self, *args, **options):
         if options.get('csv_path'):
             self.csv_path = options.get('csv_path')
@@ -36,40 +40,219 @@ class Command(BaseCommand):
     def import_csv(self):
         with open(self.csv_path) as f:
             reader = csv.DictReader(f)
+
+            strain_origins = {}
+            strain_models = []
+
+            print('\n1. Parsing ...')
+
             for row in reader:
-                # TODO logic to skip rows based on starting_row param
-                # regular logging (logger.info, etc) should work but this is best practice for simple console output
-                self.stdout.write('importing {0}'.format(row.get('Strain')))
+                name = row.get('Strain')
+                internal_id = row.get('ID')
+                variety = self.get_variety(row)
+                category = self.get_category(row)
+                effects = self.build_effects_json(row)
+                benefits = self.build_benefits_json(row)
+                side_effects = self.build_side_effects(row)
+                flavors = self.build_flavors(row)
+                about = row.get('About')
 
-                # determine which variety is selected
-                if row.get('Sativa').upper() == 'X':
-                    variety = 'sativa'
-                elif row.get('Indica').upper() == 'X':
-                    variety = 'indica'
-                elif row.get('Hybrid').upper() == 'X':
-                    variety = 'hybrid'
+                strain_origins[name] = row.get('Origins')
+
+                if Strain.objects.filter(name=name, category=category).exists():
+                    strain = Strain.objects.get(name=name, category=category)
+                    strain.internal_id = internal_id
+                    strain.variety = variety
+                    strain.effects = effects
+                    strain.benefits = benefits
+                    strain.side_effects = side_effects
+                    strain.flavor = flavors
+                    strain.about = about
                 else:
-                    # no valid option found
-                    raise CommandError('invalid variety')
+                    strain = Strain(name=name, internal_id=internal_id, variety=variety, category=category,
+                                    effects=effects, benefits=benefits, side_effects=side_effects,
+                                    flavor=flavors, about=about)
 
-                # TODO get category via similar logic as variety
+                try:
+                    strain.full_clean()
+                    strain_models.append(strain)
+                except ValidationError as e:
+                    raise CommandError('Model did not pass validation.\n Errors: {0}\n Model: [{1}]'
+                                       .format(str(e.message_dict), str(strain.__dict__)))
 
-                s = Strain(
-                    name=row.get('Strain'),
-                    variety=variety,
-                    category='flower', # TODO temp hardcoding for testing until logic above is done
-                    # effects='', # TODO for each of these we'll need to build up the dicts with all applicable options (JSON encoding should be handled by django on save so you can use native python data structs)
-                    # benefits='',
-                    # side_effects='',
-                    # flavor='',
-                    about=row.get('About'),
-                )
+            print('\n2. Persisting ...')
 
-                # just for debug - print dict representation of the new strain
-                print('strain: ', s.__dict__)
+            persisted = []
 
-                # TODO validate / save strain
-                # django model validation: https://docs.djangoproject.com/en/1.10/ref/models/instances/#validating-objects
-                # s.save()
+            for to_persist in strain_models:
+                to_persist.save()
+                to_persist.origins.clear()
+                persisted.append(to_persist)
+                print('   --> Strain Persisted: [name="{0}", category="{1}"]'
+                      .format(to_persist.name, to_persist.category))
 
+            print('\n3. Persisting origins ...')
+            for s in persisted:
+                origins = strain_origins[s.name]
 
+                if origins is not None and origins != '':
+                    origins_split = origins.split(',')
+                    for name in origins_split:
+                        name_cleared = name.strip()
+                        if Strain.objects.filter(name=name_cleared).exists():
+                            existing = Strain.objects.get(name=name_cleared)
+                            s.origins.add(existing.id)
+                        else:
+                            print('   ---> !!! Error: Origin [name="{0}"] does not exist. '
+                                  'Parent strain [name="{1}", category="{2}"]'
+                                  .format(name_cleared, s.name, s.category),
+                                  file=sys.stderr)
+
+            print('\n4. Well Done!\n')
+
+    def get_variety(self, row):
+        if row.get('Sativa').upper() == 'X':  # Sativa
+            return 'sativa'
+        elif row.get('Indica').upper() == 'X':  # Indica
+            return 'indica'
+        elif row.get('Hybrid').upper() == 'X':  # Hybrid
+            return 'hybrid'
+        else:
+            raise CommandError('Invalid variety: name - {0}, sativa - {1}, indica - {2}, hybrid - {3}'
+                               .format(row.get('Strain'), row.get('Sativa'), row.get('Indica'), row.get('Hybrid')))
+
+    def get_category(self, row):
+        if row.get('Flower').upper() == 'X':
+            return 'flower'
+        elif row.get('Edible').upper() == 'X':
+            return 'edible'
+        elif row.get('Liquid').upper() == 'X':
+            return 'liquid'
+        elif row.get('Oil').upper() == 'X':
+            return 'oil'
+        elif row.get('Wax').upper() == 'X':
+            return 'wax'
+        else:
+            raise CommandError('Invalid category: '
+                               'name - {0}, flower - {1}, edible - {2}, liquid - {3}, oil - {4}, wax - {5}'
+                               .format(row.get('Strain'), row.get('Flower'), row.get('Edible'), row.get('Liquid'),
+                                       row.get('Oil'), row.get('Wax')))
+
+    def build_effects_json(self, row):
+        return {"happy": self.value_or_zero(row.get('Happy')),
+                "uplifted": self.value_or_zero(row.get('Uplifted (raised spirits)')),
+                "stimulated": self.value_or_zero(row.get('Aroused')),
+                "energetic": self.value_or_zero(row.get('Energetic')),
+                "creative": self.value_or_zero(row.get('Creative')),
+                "focused": self.value_or_zero(row.get('Focused (productive)')),
+                "relaxed": self.value_or_zero(row.get('Relaxed (calm and relaxed)')),
+                "sleepy": self.value_or_zero(row.get('Sleepy')),
+                "talkative": self.value_or_zero(row.get('Talkative (social)')),
+                "euphoric": self.value_or_zero(row.get('Euphoric')),
+                "hungry": self.value_or_zero(row.get('Hungry')),
+                "tingly": self.value_or_zero(row.get('Tingly (stimulated)')),
+                "good_humored": self.value_or_zero(row.get('Giggly (good humor)'))}
+
+    def build_benefits_json(self, row):
+        return {"reduce_stress": self.value_or_zero(row.get('Reduce Stress')),
+                "help_depression": self.value_or_zero(row.get('Help Depression')),
+                "relieve_pain": self.value_or_zero(row.get('Help With Pain')),
+                "reduce_fatigue": self.value_or_zero(row.get('Reduce Fatigue')),
+                "reduce_headaches": self.value_or_zero(row.get('Help With Headaches')),
+                "help_muscles_spasms": self.value_or_zero(row.get('Relieve Muscle Spasms')),
+                "lower_eye_pressure": self.value_or_zero(row.get('Lower Eye Pressure')),
+                "reduce_nausea": self.value_or_zero(row.get('Help With Nausea')),
+                "reduce_inflammation": self.value_or_zero(row.get('Reduce Inflammation')),
+                "relieve_cramps": self.value_or_zero(row.get('Relieve Cramps')),
+                "help_with_seizures": self.value_or_zero(row.get('Help With Seizures')),
+                "restore_appetite": self.value_or_zero(row.get('Restore Appetite')),
+                "help_with_insomnia": self.value_or_zero(row.get('Help With Insomnia'))}
+
+    def value_or_zero(self, value):
+        if value is not None and value != '':
+            return int(value)
+        else:
+            return 0
+
+    def build_side_effects(self, row):
+        return {"anxiety": self.get_side_effect_value(row.get('Anxiety')),
+                "dry_mouth": self.get_side_effect_value(row.get('Dry Mouth')),
+                "paranoia": self.get_side_effect_value(row.get('Paranoia')),
+                "headache": self.get_side_effect_value(row.get('Headache')),
+                "dizziness": self.get_side_effect_value(row.get('Dizziness')),
+                "dry_eyes": self.get_side_effect_value(row.get('Dry Eyes')), }
+
+    def get_side_effect_value(self, value):
+        if value is not None and value != '':
+            parsed = float(value)
+            if 0.1 <= parsed <= 0.5:
+                return 6
+            if 0.5 < parsed <= 1.4:
+                return 7
+            if 1.4 < parsed <= 2.3:
+                return 8
+            if 2.3 < parsed <= 3.1:
+                return 9
+            if 3.1 < parsed <= 4:
+                return 10
+        else:
+            return 0
+
+    def build_flavors(self, row):
+        return {"ammonia": self.get_flavor_value(row.get('Ammonia')),
+                "apple": self.get_flavor_value(row.get('Apple')),
+                "apricot": self.get_flavor_value(row.get('Apricot')),
+                "berry": self.get_flavor_value(row.get('Berry')),
+                "blue_cheese": self.get_flavor_value(row.get('Blue Cheese')),
+                "blueberry": self.get_flavor_value(row.get('Blueberry')),
+                "buttery": self.get_flavor_value(row.get('Buttery')),
+                "cheese": self.get_flavor_value(row.get('Cheese')),
+                "chemical": self.get_flavor_value(row.get('Chemical')),
+                "chestnut": self.get_flavor_value(row.get('Chestnut')),
+                "citrus": self.get_flavor_value(row.get('Citrus')),
+                "coffee": self.get_flavor_value(row.get('Coffee')),
+                "diesel": self.get_flavor_value(row.get('Diesel')),
+                "earthy": self.get_flavor_value(row.get('Earthy')),
+                "flowery": self.get_flavor_value(row.get('Flowery')),
+                "grape": self.get_flavor_value(row.get('Grape')),
+                "grapefruit": self.get_flavor_value(row.get('Grapefruit')),
+                "herbal": self.get_flavor_value(row.get('Herbal')),
+                "honey": self.get_flavor_value(row.get('Honey')),
+                "lavender": self.get_flavor_value(row.get('Lavender')),
+                "lemon": self.get_flavor_value(row.get('Lemon')),
+                "lime": self.get_flavor_value(row.get('Lime')),
+                "mango": self.get_flavor_value(row.get('Mango')),
+                "menthol": self.get_flavor_value(row.get('Menthol')),
+                "minty": self.get_flavor_value(row.get('Minty')),
+                "nutty": self.get_flavor_value(row.get('Nutty')),
+                "orange": self.get_flavor_value(row.get('Orange')),
+                "peach": self.get_flavor_value(row.get('Peach')),
+                "pear": self.get_flavor_value(row.get('Pear')),
+                "pepper": self.get_flavor_value(row.get('Pepper')),
+                "pine": self.get_flavor_value(row.get('Pine')),
+                "pineapple": self.get_flavor_value(row.get('Pineapple')),
+                "plum": self.get_flavor_value(row.get('Plum')),
+                "pungent": self.get_flavor_value(row.get('Pungent')),
+                "rose": self.get_flavor_value(row.get('Rose')),
+                "sage": self.get_flavor_value(row.get('Sage')),
+                "skunk": self.get_flavor_value(row.get('Skunk')),
+                "spicy_herbal": self.get_flavor_value(row.get('Spicy/Herbal')),
+                "strawberry": self.get_flavor_value(row.get('Strawberry')),
+                "sweet": self.get_flavor_value(row.get('Sweet')),
+                "tar": self.get_flavor_value(row.get('Tar')),
+                "tea": self.get_flavor_value(row.get('Tea')),
+                "tobacco": self.get_flavor_value(row.get('Tobacco')),
+                "tree_fruit": self.get_flavor_value(row.get('Tree Fruit')),
+                "tropical": self.get_flavor_value(row.get('Tropical')),
+                "vanilla": self.get_flavor_value(row.get('Vanilla')),
+                "violet": self.get_flavor_value(row.get('Violet')),
+                "woody": self.get_flavor_value(row.get('Woody')), }
+
+    def get_flavor_value(self, value):
+        if value is not None and value != '':
+            if value == 'X':
+                return 2
+            else:
+                return int(value)
+        else:
+            return 0
