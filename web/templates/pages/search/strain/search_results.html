@@ -48,7 +48,7 @@
                             </div>
                             <div class="item-info inline-block">
                                 <span class="strain-name">
-                                    <a href="#">{{ strain.name }}</a>
+                                    <a href="{% url 'search:strain_detail' slug_name=strain.strain_slug %}">{{ strain.name }}</a>
                                 </span>
                                 <span class="strain-type">{{ strain.type }}</span>
                                 <span class="strain-rating">{{ strain.rating }}</span>

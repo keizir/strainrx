@@ -111,4 +111,9 @@ __pycache__
 
 ### Project related
 sendgrid.env
-config/settings/local.py
+/config/settings/local.py
+/web/static
+
+### Local staff
+/strainrx-web
+

@@ -26,3 +26,17 @@ def count_open_close_deliveries(array):
             closed.append(dispensary)
 
     return str(len(opened)) + ' Open, ' + str(len(closed)) + ' Close'
+
+
+@register.simple_tag
+def abbreviate_strain_name(origin_name):
+    words = origin_name.split()
+    abbreviation = ''
+
+    if len(words) == 1:
+        abbreviation = origin_name[:2]
+    else:
+        for word in words:
+            abbreviation += word[:1].upper()
+
+    return abbreviation

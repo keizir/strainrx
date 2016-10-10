@@ -137,3 +137,15 @@ class StrainSearchResultsView(LoginRequiredMixin, APIView):
             'search_results': dummy_response,
             'search_results_total': 24
         }, status=status.HTTP_200_OK)
+
+
+class StrainLikeView(LoginRequiredMixin, APIView):
+    def post(self, request):
+        add_to_favourites = request.data.get('like')
+        return Response({}, status=status.HTTP_200_OK)
+
+
+class StrainUploadImageView(LoginRequiredMixin, APIView):
+    def post(self, request):
+        files = request.FILES
+        return Response({}, status=status.HTTP_200_OK)

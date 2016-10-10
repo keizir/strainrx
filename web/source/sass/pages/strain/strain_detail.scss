@@ -1,0 +1,513 @@
+@import '../../mixins/variables';
+
+.heart-active {
+    color: $avocado-green;
+}
+
+.strain-detail-wrapper {
+    display: block;
+    width: 100%;
+    margin: 2em auto 0;
+    color: $grey-normal;
+
+    .fa-2x {
+        font-size: 1.5em;
+    }
+
+    .detail-section {
+        display: block;
+        width: 80%;
+        margin: 0 auto 3em;
+
+        .second-row {
+            margin-top: 2em;
+        }
+
+        .second-row .photo-controls {
+            display: inline-block;
+            text-align: left;
+            width: 25%;
+        }
+
+        .second-row .location-controls {
+            display: inline-block;
+            text-align: right;
+            width: 74%;
+        }
+
+        .info-image-section {
+            border-top: 1px solid $grey-light;
+        }
+
+        .strain-photo-wrapper {
+            display: inline-block;
+            width: 70%;
+            vertical-align: top;
+            margin: 1em auto;
+            text-align: left;
+        }
+
+        .strain-photo-wrapper img {
+            width: 100%;
+        }
+
+        .strain-info-wrapper {
+            display: inline-block;
+            width: 25%;
+            text-align: center;
+            margin: 2em auto;
+
+            .popularity-wrapper .title {
+                font-size: 1.5em;
+            }
+
+            .popularity-wrapper h1 {
+                margin: 0 auto;
+                font-size: 7em;
+                width: 1em;
+                border-bottom: 1px solid $grey-light;
+                padding-bottom: 10px;
+            }
+
+            .match-score-wrapper {
+                margin-top: 2em;
+
+                .title {
+                    display: block;
+                    font-size: 1.5em;
+                }
+
+                .score-value {
+                    font-size: 5em;
+                }
+
+                .percent-sign {
+                    font-size: 2.4em;
+                    vertical-align: top;
+                    position: relative;
+                    top: 10px;
+                }
+            }
+        }
+
+        .section-header {
+            display: block;
+            font-size: 1.4em;
+            margin-bottom: 10px;
+        }
+
+        .section-header span {
+            display: block;
+        }
+
+        .section-header span.disagree-link {
+            display: block;
+            text-align: right;
+            font-size: 0.7em;
+            font-weight: bold;
+        }
+
+        .strain-data {
+            display: inline-block;
+            width: 80%;
+
+            .strain-name {
+                font-size: 2em;
+            }
+
+            .strain-like-wrapper {
+                display: inline-block;
+                vertical-align: bottom;
+                width: 2em;
+                height: 2em;
+                text-align: center;
+            }
+
+            .strain-like {
+                cursor: pointer;
+            }
+
+            .rating-row {
+                display: block;
+            }
+
+            .rating-row span {
+                display: inline-block;
+            }
+        }
+
+        .social-icons {
+            display: inline-block;
+            width: 20%;
+            float: right;
+            text-align: right;
+            cursor: default;
+        }
+
+        .social-icons a {
+            color: $grey-normal;
+        }
+
+        .social-icons a:hover {
+            color: $iris-blue;
+        }
+
+        .strain-about span {
+            display: block;
+            width: 100%;
+            word-wrap: break-word;
+            white-space: normal;
+            text-align: justify;
+        }
+
+        .strain-about span.about {
+            line-height: 1.8em;
+        }
+
+        .strain-effects .effects-region {
+            display: block;
+        }
+
+        .effects-wrapper {
+            .effect-wrapper {
+                display: block;
+                height: 2em;
+                margin-bottom: 0.8em;
+            }
+
+            .effect-name {
+                display: inline-block;
+                width: 10%;
+                position: relative;
+                vertical-align: top;
+            }
+
+            .effect {
+                display: inline-block;
+                width: 90%;
+                height: 2em;
+                background-color: $white-smoke;
+            }
+
+            .effect .fill {
+                height: 2em;
+                display: inline-block;
+                background-color: $aero-blue;
+            }
+
+            .effect .fill-5 {
+                width: 100%;
+            }
+
+            .effect .fill-4 {
+                width: 80%;
+            }
+
+            .effect .fill-3 {
+                width: 60%;
+            }
+
+            .effect .fill-2 {
+                width: 40%;
+            }
+
+            .effect .fill-1 {
+                width: 20%;
+            }
+        }
+
+        .strain-similar .similar-wrapper {
+            display: inline-block;
+            padding: 2em;
+            border: 1px solid $grey-light;
+            margin-bottom: 0.25em;
+        }
+
+        .strain-similar .similar-wrapper span {
+            display: block;
+        }
+
+        .strain-reviews .section-header span {
+            display: inline-block;
+        }
+
+        .strain-reviews .all-reviews-link-wrapper a {
+            font-size: 0.7em;
+            color: $avocado-green;
+            text-decoration: underline;
+            margin-left: 1em;
+        }
+
+        .strain-lineage-section {
+            display: inline-block;
+            width: 49.5%;
+            vertical-align: top;
+
+            a {
+                color: $medium-aquamarine;
+            }
+
+            .lineage-region {
+                a:first-child {
+                    display: inline-block;
+                    width: 30%;
+                    height: 10em;
+                    vertical-align: top;
+                }
+
+                a:first-child .abbreviation {
+                    margin-top: 1.4em;
+                    font-weight: bold;
+                }
+
+                a:first-child div.lineage-wrapper {
+                    display: block;
+                    width: 100%;
+                    height: 10em;
+                    border: 3px solid $medium-aquamarine;
+                    text-align: center;
+                }
+
+                a {
+                    display: inline-block;
+                    width: 30%;
+                    height: 4.9em;
+                    vertical-align: top;
+                }
+
+                a .abbreviation {
+                    margin-top: 0.2em;
+                    font-weight: bold;
+                }
+
+                a:nth-child(3) {
+                    display: inline-block;
+                    position: relative;
+                    bottom: -5.1em;
+                    right: 31.1%;
+                    width: 30%;
+                    height: 5em;
+                    vertical-align: top;
+                }
+
+                a:nth-child(4) {
+                    display: inline-block;
+                    position: relative;
+                    bottom: 10em;
+                    left: 61.9%;
+                    width: 30%;
+                    height: 5em;
+                    vertical-align: top;
+                }
+
+                a:nth-child(5) {
+                    display: inline-block;
+                    position: relative;
+                    bottom: 4.9em;
+                    left: 30.9%;
+                    width: 30%;
+                    height: 5em;
+                }
+
+                a div.lineage-wrapper {
+                    display: block;
+                    width: 100%;
+                    height: 4.9em;
+                    border: 3px solid $medium-aquamarine;
+                    text-align: center;
+                }
+
+                .lineage-wrapper .abbreviation {
+                    display: block;
+                    font-size: 2em;
+                }
+
+                .lineage-wrapper .name {
+                    display: block;
+                    font-size: 0.8em;
+                }
+            }
+        }
+
+        .strain-flavors-section {
+            display: inline-block;
+            width: 49.5%;
+            vertical-align: top;
+        }
+
+        .strain-flavors-section .flavor-wrapper {
+            display: inline-block;
+            width: 33%;
+            height: 10em;
+            border: 1px solid $grey-light;
+            margin-right: -1px;
+            text-align: center;
+        }
+
+        .strain-flavors-section .flavor-wrapper .flavor {
+            margin-top: 2em;
+        }
+
+        .strain-flavors-section .flavor-wrapper .flavor-name {
+            margin-top: 1em;
+            display: block;
+        }
+
+        .strain-flavors-section .flavor-wrapper img {
+            height: 3em;
+            width: 3em;
+        }
+    }
+}
+
+.form-dialog form {
+    display: block;
+    width: 100%;
+    height: 90%;
+    text-align: center;
+}
+
+.form-dialog form input {
+    width: 10.5em;
+    margin: 1em 0;
+}
+
+.form-dialog form .photo-camera-wrapper {
+    display: block;
+    width: 100%;
+    height: 25%;
+    margin: 1em 0;
+    color: $black;
+}
+
+.form-dialog form .form-actions {
+    margin-top: 2em;
+}
+
+@media (min-width: $screen-md-min) {
+    .strain-detail-wrapper .detail-section .second-row .photo-controls {
+        width: 50%;
+    }
+
+    .strain-detail-wrapper .detail-section .second-row .location-controls {
+        width: 49%;
+    }
+}
+
+@media (max-width: $screen-sm-min) {
+    .strain-detail-wrapper .detail-section .strain-info-wrapper .popularity-wrapper .title {
+        font-size: 1em;
+    }
+
+    .strain-detail-wrapper .detail-section .strain-info-wrapper .popularity-wrapper h1 {
+        margin: 0 auto;
+        font-size: 6em;
+        width: 1em;
+        border-bottom: 1px solid $grey-light;
+        padding-bottom: 10px;
+    }
+
+    .strain-detail-wrapper .detail-section .strain-info-wrapper .match-score-wrapper .title {
+        display: block;
+        font-size: 1em;
+    }
+
+    .strain-detail-wrapper .detail-section .strain-info-wrapper .match-score-wrapper .score-value {
+        font-size: 3.5em;
+    }
+
+    .strain-detail-wrapper .detail-section .strain-info-wrapper .match-score-wrapper .percent-sign {
+        font-size: 1.8em;
+        vertical-align: top;
+        position: relative;
+        top: 10px;
+    }
+
+    .strain-detail-wrapper .detail-section .effects-wrapper .effect-wrapper {
+        height: 3.5em;
+    }
+
+    .strain-detail-wrapper .detail-section .effects-wrapper .effect-name {
+        display: block;
+        width: 100%;
+        margin-bottom: 5px;
+    }
+
+    .strain-detail-wrapper .detail-section .effects-wrapper .effect {
+        display: block;
+        width: 100%;
+    }
+}
+
+@media (max-width: $screen-xs-max) {
+    .strain-detail-wrapper .detail-section .second-row .photo-controls {
+        display: block;
+        text-align: left;
+        width: 100%;
+    }
+
+    .strain-detail-wrapper .detail-section .second-row .location-controls {
+        display: block;
+        text-align: left;
+        width: 100%;
+        margin-top: 1em;
+    }
+
+    .strain-detail-wrapper .detail-section .strain-photo-wrapper {
+        display: block;
+        width: 100%;
+        vertical-align: top;
+    }
+
+    .strain-detail-wrapper .detail-section .strain-info-wrapper {
+        display: block;
+        width: 100%;
+        text-align: center;
+    }
+
+    .strain-detail-wrapper .detail-section .strain-info-wrapper .popularity-wrapper {
+        display: inline-block;
+        margin: 0 auto;
+        vertical-align: top;
+        width: 45%;
+        text-align: center;
+    }
+
+    .strain-detail-wrapper .detail-section .strain-info-wrapper .popularity-wrapper h1 {
+        border-bottom: none;
+    }
+
+    .strain-detail-wrapper .detail-section .strain-info-wrapper .match-score-wrapper {
+        display: inline-block;
+        margin: 0 auto;
+        vertical-align: top;
+        width: 45%;
+        text-align: center;
+    }
+
+    .strain-detail-wrapper .detail-section .effects-wrapper .effect-wrapper {
+        height: 3.5em;
+    }
+
+    .strain-detail-wrapper .detail-section .effects-wrapper .effect-name {
+        display: block;
+        width: 100%;
+        margin-bottom: 5px;
+    }
+
+    .strain-detail-wrapper .detail-section .effects-wrapper .effect {
+        display: block;
+        width: 100%;
+    }
+
+    .strain-detail-wrapper .detail-section .strain-lineage-section {
+        display: block;
+        width: 100%;
+    }
+
+    .strain-detail-wrapper .detail-section .strain-flavors-section {
+        display: block;
+        width: 100%;
+    }
+
+}

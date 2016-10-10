@@ -1,11 +1,11 @@
 @import '../../../mixins/variables';
 
 .nav-region {
-  background-color: $grey-lighter;
+  background-color: $white-smoke;
 }
 
 .strains-wrapper {
-  background-color: $grey-lighter;
+  background-color: $white-smoke;
   width: 100%;
   margin: 0 auto;
 }
@@ -46,7 +46,7 @@
 }
 
 .strains-wrapper .search-result-header-wrapper .filter-menu .menu-expander i {
-  color: $blue;
+  color: $iris-blue;
   cursor: pointer;
 }
 

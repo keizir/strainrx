@@ -45,9 +45,9 @@ MIDDLEWARE_CLASSES = (
 # set this to 60 seconds and then to 518400 when you can prove it works
 SECURE_HSTS_SECONDS = 60
 SECURE_HSTS_INCLUDE_SUBDOMAINS = env.bool(
-        'DJANGO_SECURE_HSTS_INCLUDE_SUBDOMAINS', default=True)
+    'DJANGO_SECURE_HSTS_INCLUDE_SUBDOMAINS', default=True)
 SECURE_CONTENT_TYPE_NOSNIFF = env.bool(
-        'DJANGO_SECURE_CONTENT_TYPE_NOSNIFF', default=True)
+    'DJANGO_SECURE_CONTENT_TYPE_NOSNIFF', default=True)
 SECURE_BROWSER_XSS_FILTER = True
 SESSION_COOKIE_SECURE = True
 SESSION_COOKIE_HTTPONLY = True
@@ -209,6 +209,9 @@ LOGGING = {
 # Custom Admin URL, use {% url 'admin:index' %}
 ADMIN_URL = env('DJANGO_ADMIN_URL')
 
-
 # Your production stuff: Below this line define 3rd party library settings
 HOST = 'https://strains.com'
+
+AWS_S3_ACCESS_KEY_ID = env('AWS_S3_ACCESS_KEY_ID')
+AWS_S3_SECRET_ACCESS_KEY = env('AWS_S3_SECRET_ACCESS_KEY')
+AWS_STORAGE_BUCKET_NAME = env('AWS_STORAGE_BUCKET_NAME')

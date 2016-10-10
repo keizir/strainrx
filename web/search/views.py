@@ -6,6 +6,8 @@ from random import uniform
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.generic import TemplateView
 
+from web.search.models import Strain
+
 
 class StrainSearchWizard1View(LoginRequiredMixin, TemplateView):
     template_name = 'pages/search/strain/wizard_1.html'
@@ -55,8 +57,9 @@ class StrainSearchResultView(LoginRequiredMixin, TemplateView):
         for num in range(0, 8):
             dummy_response.append(
                 {
-                    'name': 'Blue Dream' if num % 2 == 0 else 'East Coast Sour Diesel',
+                    'name': 'Sour Diesel' if num % 2 == 0 else 'Amnesia Haze',
                     'type': 'Sativa',
+                    'strain_slug': 'sour-diesel-flower' if num % 2 == 0 else 'amnesia-haze-flower',
                     'rating': "{0:.2f}".format(5 * uniform(0.3, 1)),
                     'image': 'image_location.png',
                     'match_percentage': "{0:.2f}".format(100 * uniform(0.3, 1)),
@@ -89,4 +92,17 @@ class StrainSearchResultView(LoginRequiredMixin, TemplateView):
         dummy_response.sort(key=lambda entry: entry.get('match_percentage'), reverse=True)
         context['search_results'] = dummy_response
         context['search_results_total'] = 24  # TODO remove this later - END
+        return context
+
+
+class StrainDetailView(LoginRequiredMixin, TemplateView):
+    template_name = 'pages/strain/strain_detail.html'
+
+    def get_context_data(self, **kwargs):
+        slug_name = kwargs.get('slug_name')
+        strain = Strain.objects.get(strain_slug=slug_name)
+        context = super(StrainDetailView, self).get_context_data(**kwargs)
+        context['strain'] = strain
+        context['strain_rating'] = 4.5  # TODO check strain overall rating
+        context['favorite'] = True  # TODO check user's favourites
         return context
