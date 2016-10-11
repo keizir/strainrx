@@ -13,6 +13,7 @@
 {% block content %}
     <div class="container">
         <div class="strain-detail-wrapper">
+            <input type="hidden" class="strain-id" value="{{ strain.id }}"/>
             <div class="detail-section">
                 <div class="detail-header">
                     <div class="row">
@@ -80,8 +81,8 @@
             </div>
             <div class="detail-section info-image-section">
                 <div class="strain-photo-wrapper">
-                    {% if strain.image.url %}
-                        <img src="{{ strain.image.url }}" alt="Strain Image"/>
+                    {% if strain_image %}
+                        <img src="{{ strain_image.image.url }}" alt="Strain Image"/>
                     {% else %}
                         <img src="{% static 'images/weed_small.jpg' %}" alt="Strain Image"/>
                     {% endif %}
@@ -193,19 +194,21 @@
 
 {% block modal %}
     <div class="dialog form-dialog upload-image-dialog hidden" title="Upload Photo">
-        <form action="{% url 'search_api:upload_strain_image' %}" method="post"
-              enctype="multipart/form-data">
+        <form class="image-upload-form">
             {% csrf_token %}
             <span class="photo-camera-wrapper">
                 <i class="fa fa-camera fa-5x" aria-hidden="true"></i>
             </span>
             <div class="form-group">
                 <div class="form-field">
-                    <input type="file" value="Choose File"/>
+                    <input type="file" class="upload-image" value="Choose File"/>
                 </div>
             </div>
             <div class="form-actions">
-                <button class="btn-primary" type="submit">Upload</button>
+                <button class="btn-primary btn-upload-image-submit" type="submit">Upload</button>
+                <div class="loader hidden">
+                    <i class="fa fa-refresh fa-3x rotating" aria-hidden="true"></i>
+                </div>
             </div>
         </form>
     </div>

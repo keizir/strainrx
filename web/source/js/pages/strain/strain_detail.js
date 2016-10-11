@@ -10,6 +10,7 @@ W.pages.StrainDetailPage = Class.extend({
     flavorsNames: W.common.Constants.flavors,
 
     ui: {
+        $strainId: $('.strain-id'),
         $strainRatingStars: $('.strain-rating-stars'),
         $strainLike: $('.strain-like'),
         $effectsRegion: $('.effects-region'),
@@ -30,10 +31,7 @@ W.pages.StrainDetailPage = Class.extend({
         this.populateSideEffects();
         this.populateFlavors();
 
-        this.ui.$addPhotoLink.on('click', function (e) {
-            e.preventDefault();
-            W.common.Dialog($('.upload-image-dialog'));
-        });
+        this.uploadPhotoListener();
     },
 
     initRating: function initRating() {
@@ -250,5 +248,40 @@ W.pages.StrainDetailPage = Class.extend({
 
         html += '</div>';
         return html;
+    },
+
+    uploadPhotoListener: function uploadPhotoListener() {
+        var that = this;
+
+        this.ui.$addPhotoLink.on('click', function (e) {
+            e.preventDefault();
+            W.common.Dialog($('.upload-image-dialog'));
+
+            $('.image-upload-form').on('submit', function (e) {
+                e.preventDefault();
+                $('.loader').removeClass('hidden');
+                $('.btn-upload-image-submit').addClass('hidden');
+
+                var file = $('.upload-image')[0].files[0],
+                    formData = new FormData();
+
+                formData.append('file', file);
+                formData.append('name', file.name);
+
+                $.ajax({
+                    type: 'POST',
+                    url: '/api/v1/search/strain/{0}/image'.format(that.ui.$strainId.val()),
+                    enctype: 'multipart/form-data',
+                    data: formData,
+                    processData: false,
+                    contentType: false,
+                    success: function () {
+                        $('.loader').addClass('hidden');
+                        $('.btn-upload-image-submit').removeClass('hidden');
+                        $('.upload-image-dialog').dialog('close');
+                    }
+                });
+            });
+        });
     }
 });

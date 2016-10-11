@@ -6,7 +6,7 @@ from random import uniform
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.generic import TemplateView
 
-from web.search.models import Strain
+from web.search.models import Strain, StrainImage
 
 
 class StrainSearchWizard1View(LoginRequiredMixin, TemplateView):
@@ -101,8 +101,11 @@ class StrainDetailView(LoginRequiredMixin, TemplateView):
     def get_context_data(self, **kwargs):
         slug_name = kwargs.get('slug_name')
         strain = Strain.objects.get(strain_slug=slug_name)
+        image = StrainImage.objects.filter(strain=strain)[:1]
+
         context = super(StrainDetailView, self).get_context_data(**kwargs)
         context['strain'] = strain
+        context['strain_image'] = image[0]
         context['strain_rating'] = 4.5  # TODO check strain overall rating
         context['favorite'] = True  # TODO check user's favourites
         return context

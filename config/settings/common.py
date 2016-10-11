@@ -256,6 +256,7 @@ MAX_STRAIN_IMAGE_SIZE = 10 * 1024 * 1024  # 10 MB
 SENDGRID_API_KEY = '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'
 DEFAULT_FROM_EMAIL = 'support@strainrx.co'
 
-DEFAULT_FILE_STORAGE = 'storages.backends.s3boto.S3BotoStorage'
 AWS_S3_SECURE_URLS = False  # use http instead of https
 AWS_QUERYSTRING_AUTH = False  # don't add complex authentication-related query parameters for requests
+
+DEFAULT_FILE_STORAGE = 'storages.backends.s3boto.S3BotoStorage'

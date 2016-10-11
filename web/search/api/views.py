@@ -6,6 +6,8 @@ from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
+from web.search.models import Strain, StrainImage
+
 logger = logging.getLogger(__name__)
 
 
@@ -146,6 +148,14 @@ class StrainLikeView(LoginRequiredMixin, APIView):
 
 
 class StrainUploadImageView(LoginRequiredMixin, APIView):
-    def post(self, request):
-        files = request.FILES
+    def post(self, request, strain_id):
+        file = request.FILES.get('file')
+        strain = Strain.objects.get(pk=strain_id)
+
+        image = StrainImage()
+        image.image = file
+        image.strain = strain
+        image.created_by = request.user
+        image.save()
+
         return Response({}, status=status.HTTP_200_OK)
