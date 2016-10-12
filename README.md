@@ -1,15 +1,75 @@
-# The Strain RX project
+# The Strain RX project.
 
-### Local install guide
+![image](https://img.shields.io/badge/built%20with-Cookiecutter%20Django-ff69b4.svg)
+[Built with Cookiecutter Django](https://github.com/pydanny/cookiecutter-django/)
+
+
+# Local install guide
+You should have python 3.5.1 installed as well as Nodejs 4.4.7
+
 1. Fork and then clone your fork.  
+1. create a virtualenv and activate it
 2. From the cloned directory run:  
-`pip3 install -r requirements/local.txt`  
-`npm install`  
-3. Create a local Postgre DB then change you `local.py` settings to point to your DB.  
+    `pip3 install -r requirements/local.txt`
+    `npm install`  
+3. Create a local Postgre DB (`createdb`) then change your `local.py` settings to point to your DB.  
 4. Run `python manage.py migrate`.  
-5. Run `gulp`.  
-6. In parallel run `python manage.py createsuperuser` and `python manage.py runserver`.  
-7. Ping http://127.0.0.1:8000/.  
+5. Run `gulp` (builds all static files and will watch for changes and rebuild while it is running)
+6. To create a superuser: `python manage.py createsuperuser`
+1. To run server: `python manage.py runserver` and visit localhost:8000
 
-### Sending emails  
-1. Install `pip install sendgrid`  
+
+## Install ElasticSearch
+1. Download ES 2.4.x and Kibana 4.6.x from https://www.elastic.co/downloads
+    1. Unzip and move both to directory of your choice
+1. From within ES directory run `bin/elasticsearch` - ES should now be running at http://localhost:9200
+1. From within Kibana directory run `./bin/kibana plugin --install elastic/sense` to install sense plugin
+1. From within Kibana directory run `./bin/kibana`
+    1. You should now be able to use sense to interact with ES at http://localhost:5601/app/sense
+
+
+
+
+# Settings
+
+Moved to [settings](http://cookiecutter-django.readthedocs.io/en/latest/settings.html).
+
+
+# Basic Commands
+
+### Setting Up Your Users
+
+-   To create a **normal user account**, just go to Sign Up and fill out the form. Once you submit it, you’ll see a “Verify Your E-mail Address” page. Go to your console to see a simulated email verification message. Copy the link into your browser. Now the user’s email should be verified and ready to go.
+-   To create an **superuser account**, use this command:
+
+        `python manage.py createsuperuser`
+
+For convenience, you can keep your normal user logged in on Chrome and your superuser logged in on Firefox (or similar), so that you can see how the site behaves for both kinds of users.
+
+### Test coverage
+
+To run the tests, check your test coverage, and generate an HTML coverage report:
+    ```
+        coverage run manage.py test
+        coverage html
+        open htmlcov/index.html
+    ```
+
+#### Running tests with py.test
+
+    `py.test`
+
+### Live reloading and Sass CSS compilation
+
+Moved to [Live reloading and SASS compilation](http://cookiecutter-django.readthedocs.io/en/latest/live-reloading-and-sass-compilation.html).
+
+
+# Deployment
+
+The following details how to deploy this application.
+### TODO
+
+
+
+
+

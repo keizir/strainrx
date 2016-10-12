@@ -260,3 +260,8 @@ AWS_S3_SECURE_URLS = False  # use http instead of https
 AWS_QUERYSTRING_AUTH = False  # don't add complex authentication-related query parameters for requests
 
 DEFAULT_FILE_STORAGE = 'storages.backends.s3boto.S3BotoStorage'
+
+# Elasticsearch
+ELASTICSEARCH_URL = env('ELASTICSEARCH_URL', default='')
+ELASTICSEARCH_USERNAME = env('ELASTICSEARCH_USERNAME', default='')
+ELASTICSEARCH_PASSWORD = env('ELASTICSEARCH_PASSWORD', default='')

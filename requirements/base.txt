@@ -51,3 +51,4 @@ django-storages==1.5.1
 # Your custom requirements go here
 # API
 djangorestframework==3.4.6
+requests==2.11.1
