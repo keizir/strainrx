@@ -7,162 +7,167 @@
 // General Mixins
 // --------------------------------------------------
 @mixin clearfix {
-  &:before, &:after {
-    content: " ";
-    display: table;
-  }
-  &:after {
-    clear: both;
-  }
+    &:before, &:after {
+        content: " ";
+        display: table;
+    }
+    &:after {
+        clear: both;
+    }
 }
 
 // active or hover state of elements
 @mixin active {
-  cursor: pointer;
-  font-weight: 400;
+    cursor: pointer;
+    font-weight: 400;
 }
 
 //
 // Global Styles
 // --------------------------------------------------
 html {
-  height: 100%;
-  //margin-bottom: 8em;
+    height: 100%;
+    //margin-bottom: 8em;
 }
 
 html, body {
-  background-color: $almost-white;
-  position: relative;
-  font-family: 'gotham_bookregular', sans-serif;
-  font-size: 12px;
-  -webkit-text-size-adjust: 100%;
-  -ms-text-size-adjust: 100%;
+    background-color: $almost-white;
+    position: relative;
+    font-family: 'gotham_bookregular', sans-serif;
+    font-size: 12px;
+    -webkit-text-size-adjust: 100%;
+    -ms-text-size-adjust: 100%;
 }
 
 * {
-  box-sizing: border-box;
-  margin: 0;
-  padding: 0;
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
 }
 
 a {
-  color: $iris-blue;
-  text-decoration: none;
-
-  &:hover {
-    @include active;
+    color: $iris-blue;
     text-decoration: none;
-  }
+    cursor: pointer;
+
+    &:hover {
+        @include active;
+        text-decoration: none;
+    }
+}
+
+button {
+    cursor: pointer;
 }
 
 .strains-wrapper {
-  height: 100%;
+    height: 100%;
 }
 
 .container {
-  width: 100%;
-  max-width: 1200px;
-  margin-left: auto;
-  margin-right: auto;
-  padding: 0 1em;
+    width: 100%;
+    max-width: 1200px;
+    margin-left: auto;
+    margin-right: auto;
+    padding: 0 1em;
 }
 
 .inline-block {
-  display: inline-block;
+    display: inline-block;
 }
 
 .separator:after {
-  content: "|";
-  padding: 0 0.5em 0 0.5em;
+    content: "|";
+    padding: 0 0.5em 0 0.5em;
 }
 
 .pull-right {
-  float: right !important;
+    float: right !important;
 }
 
 .error-message {
-  display: block;
-  color: $red;
+    display: block;
+    color: $red;
 }
 
 .success-message {
-  display: block;
-  color: $avocado-green;
+    display: block;
+    color: $avocado-green;
 }
 
 #loading-spinner {
-  display: none;
-  color: $black;
-  position: fixed;
-  font-size: 90px;
-  top: calc(50% - #{$nav-height});
-  left: calc(50%);
-  text-align: center;
-  z-index: $zindex-spinner;
-
-  .fa {
-    position: absolute;
+    display: none;
+    color: $black;
+    position: fixed;
+    font-size: 90px;
     top: calc(50% - #{$nav-height});
-    left: calc(50% - #{$nav-height});
-  }
+    left: calc(50%);
+    text-align: center;
+    z-index: $zindex-spinner;
+
+    .fa {
+        position: absolute;
+        top: calc(50% - #{$nav-height});
+        left: calc(50% - #{$nav-height});
+    }
 }
 
 .hidden {
-  display: none !important;
+    display: none !important;
 }
 
 .visible {
-  display: block !important;
+    display: block !important;
 }
 
 .disabled {
-  pointer-events: none;
-  cursor: default;
+    pointer-events: none;
+    cursor: default;
 }
 
 .bold {
-  font-weight: bold;
-  color: $grey-dark;
+    font-weight: bold;
+    color: $grey-dark;
 }
 
 .btn-primary {
-  background-color: $iris-blue;
-  border-radius: 0.5em;
-  color: $white;
-  padding: 0.75em 3.5em;
-  border: none;
-  width: 14em;
-  margin: 0.15em;
-  font-weight: bold;
+    background-color: $iris-blue;
+    border-radius: 0.5em;
+    color: $white;
+    padding: 0.75em 3.5em;
+    border: none;
+    width: 14em;
+    margin: 0.15em;
+    font-weight: bold;
 }
 
 .btn-secondary {
-  background-color: $white;
-  border-radius: 0.5em;
-  color: $iris-blue;
-  padding: 0.75em 3.5em;
-  border: 1px solid $iris-blue;
-  width: 14em;
-  margin: 0.15em;
-  font-weight: bold;
+    background-color: $white;
+    border-radius: 0.5em;
+    color: $iris-blue;
+    padding: 0.75em 3.5em;
+    border: 1px solid $iris-blue;
+    width: 14em;
+    margin: 0.15em;
+    font-weight: bold;
 }
 
 .btn-primary:disabled,
 .btn-secondary:disabled {
-  color: $grey-light;
+    color: $grey-light;
 }
 
 input, select {
-  border: 1px solid $grey-normal;
-  border-radius: 0.5em;
-  padding: 1.2em 2em;
-  color: $grey-normal;
-  margin-bottom: 1em;
-  width: 30em
+    border: 1px solid $grey-normal;
+    border-radius: 0.5em;
+    padding: 1.2em 2em;
+    color: $grey-normal;
+    margin-bottom: 1em;
+    width: 30em
 }
 
 fieldset {
-  border: none
+    border: none
 
 }
 
@@ -171,55 +176,55 @@ fieldset {
 }
 
 .form .form-field-group {
-  display: block;
-  margin-bottom: 1em;
-  float: left;
+    display: block;
+    margin-bottom: 1em;
+    float: left;
 }
 
 .form .form-field {
-  display: inline-block;
-  margin: 0 1em;
+    display: inline-block;
+    margin: 0 1em;
 }
 
 .form .form-field label {
-  display: block;
-  text-align: left;
-  margin-bottom: 0.5em;
-  color: $grey-dark;
+    display: block;
+    text-align: left;
+    margin-bottom: 0.5em;
+    color: $grey-dark;
 }
 
 .form .form-field input,
 .form .form-field select {
-  display: block;
-  width: 18em;
-  padding: 1em;
-  border-radius: 0;
-  border-color: $grey-light;
-  color: $grey-light;
+    display: block;
+    width: 18em;
+    padding: 1em;
+    border-radius: 0;
+    border-color: $grey-light;
+    color: $grey-light;
 }
 
 .form .form-field select {
-  -webkit-appearance: none;
-  background-color: $white;
+    -webkit-appearance: none;
+    background-color: $white;
 }
 
 .slider {
-  height: 4px;
+    height: 4px;
 }
 
 .slider span {
-  border-radius: 1em;
-  display: inline-block;
-  margin-top: -4px;
+    border-radius: 1em;
+    display: inline-block;
+    margin-top: -4px;
 }
 
 .form .removable {
-  background: url(../../images/close_icon.png) no-repeat;
-  background-size: 1.5em 1.5em;
-  display: inline-block;
-  width: 1.5em;
-  height: 1.5em;
-  content: '';
+    background: url(../../images/close_icon.png) no-repeat;
+    background-size: 1.5em 1.5em;
+    display: inline-block;
+    width: 1.5em;
+    height: 1.5em;
+    content: '';
 }
 
 // bootstrap alert CSS, translated to the django-standard levels of
@@ -228,75 +233,75 @@ fieldset {
 // Django messages
 // --------------------------------------------------
 .alert-debug {
-  background-color: $white;
-  border-color: $mint-green;
-  color: $black;
+    background-color: $white;
+    border-color: $mint-green;
+    color: $black;
 }
 
 .alert-info {
-  background-color: $white;
-  border-color: $mint-green;
-  color: $black;
+    background-color: $white;
+    border-color: $mint-green;
+    color: $black;
 }
 
 .alert-success {
-  background-color: $mint-green;
-  border-color: $mint-green;
-  color: $black;
+    background-color: $mint-green;
+    border-color: $mint-green;
+    color: $black;
 }
 
 .alert-warning {
-  background-color: $white;
-  border-color: $dark-pink;
-  color: $red;
+    background-color: $white;
+    border-color: $dark-pink;
+    color: $red;
 }
 
 .alert-error {
-  background-color: $pink;
-  border-color: $dark-pink;
-  color: $red;
+    background-color: $pink;
+    border-color: $dark-pink;
+    color: $red;
 }
 
 @-webkit-keyframes rotate {
-  from {
-    -webkit-transform: rotate(0deg);
-  }
-  to {
-    -webkit-transform: rotate(360deg);
-  }
+    from {
+        -webkit-transform: rotate(0deg);
+    }
+    to {
+        -webkit-transform: rotate(360deg);
+    }
 }
 
 @-moz-keyframes rotate {
-  from {
-    -moz-transform: rotate(0deg);
-  }
-  to {
-    -moz-transform: rotate(360deg);
-  }
+    from {
+        -moz-transform: rotate(0deg);
+    }
+    to {
+        -moz-transform: rotate(360deg);
+    }
 }
 
 @keyframes rotate {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+    from {
+        transform: rotate(0deg);
+    }
+    to {
+        transform: rotate(360deg);
+    }
 }
 
 .rotating {
-  -webkit-animation-name: rotate;
-  -webkit-animation-duration: 2s;
-  -webkit-animation-iteration-count: infinite;
-  -webkit-animation-timing-function: linear;
-  -moz-animation-name: rotate;
-  -moz-animation-duration: 2s;
-  -moz-animation-iteration-count: infinite;
-  -moz-animation-timing-function: linear;
-  animation-name: rotate;
-  animation-duration: 2s;
-  animation-iteration-count: infinite;
-  animation-timing-function: linear;
+    -webkit-animation-name: rotate;
+    -webkit-animation-duration: 2s;
+    -webkit-animation-iteration-count: infinite;
+    -webkit-animation-timing-function: linear;
+    -moz-animation-name: rotate;
+    -moz-animation-duration: 2s;
+    -moz-animation-iteration-count: infinite;
+    -moz-animation-timing-function: linear;
+    animation-name: rotate;
+    animation-duration: 2s;
+    animation-iteration-count: infinite;
+    animation-timing-function: linear;
 }
 
 /*
@@ -304,45 +309,45 @@ fieldset {
 *   in a nice, responsive way (everything should be ems unless it is a purposely fixed element
 */
 @media (max-width: $screen-xs-max) {
-  html, body {
-    font-size: 12px;
-  }
+    html, body {
+        font-size: 12px;
+    }
 
-  .container {
-    max-width: 460px;
-  }
+    .container {
+        max-width: 460px;
+    }
 }
 
 @media (max-width: $screen-sm-max) {
-  html, body {
-    font-size: 14px;
-  }
+    html, body {
+        font-size: 14px;
+    }
 
-  .container {
-    max-width: 758px;
-  }
+    .container {
+        max-width: 758px;
+    }
 
-  input {
-    padding: 1em 1.5em;
-    width: 24em
-  }
+    input {
+        padding: 1em 1.5em;
+        width: 24em
+    }
 }
 
 @media (max-width: $screen-md-max) {
-  .container {
-    max-width: 1014px;
-  }
+    .container {
+        max-width: 1014px;
+    }
 }
 
 @media (min-width: $screen-lg-min) {
-  html, body {
-    font-size: 16px;
-  }
+    html, body {
+        font-size: 16px;
+    }
 
 }
 
 @media (min-width: $screen-xl-min) {
-  html, body {
-    font-size: 19px;
-  }
+    html, body {
+        font-size: 19px;
+    }
 }
