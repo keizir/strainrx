@@ -33,6 +33,115 @@
             display: inline-block;
             text-align: right;
             width: 74%;
+
+            .filter-menu {
+                .menu-expander {
+                    margin-left: 0.5em;
+                }
+
+                .menu-expander i {
+                    color: $iris-blue;
+                    cursor: pointer;
+                }
+
+                .col-1 {
+                    display: inline-block;
+                    width: 30%;
+                    color: $iris-blue;
+                }
+
+                .col-2 {
+                    display: inline-block;
+                    width: 15%;
+                }
+
+                .col-3 {
+                    display: inline-block;
+                    width: 15%;
+                }
+
+                .col-4 {
+                    display: inline-block;
+                    width: 15%;
+                }
+
+                .col-5 {
+                    display: inline-block;
+                    width: 18%;
+                }
+
+                .locations {
+                    position: absolute;
+                    right: 10%;
+                    background: $white;
+                    width: 45%;
+                    border: 1px solid $grey-normal;
+                    padding: 8px;
+                    color: $black;
+                }
+
+                .location-header {
+                    display: block;
+                    line-height: 2.5em;
+                    font-weight: bold;
+                    text-align: center;
+                }
+
+                .dispensary {
+                    display: block;
+                    line-height: 2.5em;
+                    text-align: center;
+                }
+
+                .location-marker {
+                    cursor: pointer;
+                    margin-right: 10px;
+                }
+
+                .location-marker:hover {
+                    color: $iris-blue;
+                }
+
+                .truck-marker {
+                    cursor: pointer;
+                }
+
+                .truck-marker:hover {
+                    color: $iris-blue;
+                }
+
+                .price-expander {
+                    cursor: pointer;
+                }
+
+                .prices-wrapper {
+                    position: absolute;
+                    right: 23%;
+                    top: 16%;
+                    background: #fff;
+                    border: 1px solid $black;
+                    padding: 10px;
+
+                    .price {
+                        display: block;
+                        cursor: pointer;
+                    }
+
+                    .price:hover {
+                        color: $iris-blue;
+                    }
+                }
+
+                .price-values {
+                    .price-value {
+                        display: none;
+                    }
+
+                    .price-value.active {
+                        display: block;
+                    }
+                }
+            }
         }
 
         .info-image-section {
@@ -510,4 +619,89 @@
         width: 100%;
     }
 
+    .strain-detail-wrapper .detail-section .second-row .location-controls {
+        .filter-menu {
+            .menu-expander {
+                margin-left: 0.5em;
+            }
+
+            .menu-expander i {
+                color: $iris-blue;
+                cursor: pointer;
+            }
+
+            .col-1 {
+                display: inline-block;
+                width: 26%;
+                color: $iris-blue;
+                text-align: left;
+                margin-left: 5px;
+                vertical-align: middle;
+            }
+
+            .col-2 {
+                display: inline-block;
+                width: 15%;
+                vertical-align: middle;
+            }
+
+            .col-3 {
+                display: inline-block;
+                width: 13%;
+                vertical-align: middle;
+            }
+
+            .col-4 {
+                display: inline-block;
+                width: 14%;
+                vertical-align: middle;
+            }
+
+            .col-5 {
+                display: inline-block;
+                width: 12%;
+                vertical-align: middle;
+            }
+
+            .locations {
+                position: absolute;
+                right: 1%;
+                background: $white;
+                width: 98%;
+                border: 1px solid $grey-normal;
+                padding: 8px;
+                color: $black;
+            }
+
+            .location-header {
+                display: block;
+                line-height: 2em;
+                font-weight: bold;
+                text-align: center;
+            }
+
+            .dispensary {
+                display: block;
+                line-height: 2em;
+                text-align: center;
+            }
+
+            .location-marker {
+                cursor: pointer;
+                margin-right: 10px;
+            }
+
+            .location-marker:hover {
+                color: $iris-blue;
+            }
+
+            .truck-marker {
+                cursor: pointer;
+            }
+
+            .truck-marker:hover {
+                color: $iris-blue;
+            }
+        }
+    }
 }

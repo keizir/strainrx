@@ -108,4 +108,22 @@ class StrainDetailView(LoginRequiredMixin, TemplateView):
         context['strain_image'] = image[0]
         context['strain_rating'] = 4.5  # TODO check strain overall rating
         context['favorite'] = True  # TODO check user's favourites
+
+        dispensaries = []
+
+        for num in range(0, 5):
+            dispensaries.append({
+                'id': num,
+                'name': 'The Green Shop',
+                'rating': 4.6,
+                'distance': 1.3,
+                'price': {
+                    'gram': 100.00,
+                    'eight': 20.00,
+                    'quarter': 30.00,
+                    'half': 54.98
+                }
+            })
+
+        context['dispensaries'] = dispensaries
         return context

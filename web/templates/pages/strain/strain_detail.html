@@ -64,15 +64,49 @@
                         <div class="location-controls">
                             <div class="filter-menu">
                                 <div class="active-link">
-                                <span class="menu-active-link">
-                                    <a href="#"><b>AVAILABLE</b> at these locations</a>
-                                </span>
+                                    <span class="menu-active-link">
+                                        <a href="#"><b>AVAILABLE</b> at these locations</a>
+                                    </span>
                                     <span class="menu-expander">
-                                    <i class="fa fa-caret-down" aria-hidden="true"></i>
-                                </span>
+                                        <i class="fa fa-caret-down" aria-hidden="true"></i>
+                                    </span>
                                 </div>
                                 <div class="locations hidden">
-
+                                    <div class="location-header">
+                                        <span class="col-1"></span>
+                                        <span class="col-2"></span>
+                                        <span class="col-3">Distance</span>
+                                        <span class="col-4">
+                                            Price <i class="fa fa-caret-down price-expander" aria-hidden="true"></i>
+                                        </span>
+                                        <span class="col-5"></span>
+                                        <span class="prices-wrapper hidden">
+                                            <span class="price" id="gram">Gram</span>
+                                            <span class="price" id="eight">Eight</span>
+                                            <span class="price" id="quarter">Quarter</span>
+                                            <span class="price" id="half">Half</span>
+                                        </span>
+                                    </div>
+                                    {% for d in dispensaries %}
+                                        <div class="dispensary">
+                                            <span class="col-1">
+                                                <a href="#">{{ d.name }}</a>
+                                            </span>
+                                            <span class="col-2 dispensary-rating">{{ d.rating }}</span>
+                                            <span class="col-3">({{ d.distance }} mi)</span>
+                                            <span class="col-4 price-values">
+                                                <span class="price-value active" id="gram">${{ d.price.gram }}</span>
+                                                <span class="price-value" id="eight">${{ d.price.eight }}</span>
+                                                <span class="price-value" id="quarter">${{ d.price.quarter }}</span>
+                                                <span class="price-value" id="half">${{ d.price.half }}</span>
+                                            </span>
+                                            <span class="col-5">
+                                                <i class="fa fa-2x fa-map-marker location-marker"
+                                                   aria-hidden="true"></i>
+                                                <i class="fa fa-2x fa-truck truck-marker" aria-hidden="true"></i>
+                                            </span>
+                                        </div>
+                                    {% endfor %}
                                 </div>
                             </div>
                         </div>

@@ -13,11 +13,19 @@ W.pages.StrainDetailPage = Class.extend({
         $strainId: $('.strain-id'),
         $strainRatingStars: $('.strain-rating-stars'),
         $strainLike: $('.strain-like'),
+
         $effectsRegion: $('.effects-region'),
         $benefitsRegion: $('.benefits-region'),
         $sideEffectsRegion: $('.side-effects-region'),
         $flavorsRegion: $('.flavors-region'),
-        $addPhotoLink: $('.add-photo-link')
+
+        $addPhotoLink: $('.add-photo-link'),
+
+        $menuExpander: $('.menu-expander'),
+        $menuLocations: $('.locations'),
+        $menuFilter: $('.filter-menu'),
+        $menuLink: $('.menu-link'),
+        $priceExpander: $('.price-expander')
     },
 
     init: function init() {
@@ -32,6 +40,7 @@ W.pages.StrainDetailPage = Class.extend({
         this.populateFlavors();
 
         this.uploadPhotoListener();
+        this.buildLocationsMenu();
     },
 
     initRating: function initRating() {
@@ -281,6 +290,62 @@ W.pages.StrainDetailPage = Class.extend({
                         $('.upload-image-dialog').dialog('close');
                     }
                 });
+            });
+        });
+    },
+
+    buildLocationsMenu: function buildLocationsMenu() {
+        var that = this;
+
+        that.ui.$menuExpander.on('click', function () {
+            that.ui.$menuLocations.toggleClass('hidden');
+            that.ui.$menuFilter.toggleClass('expanded');
+        });
+
+        that.ui.$menuFilter.mouseleave(function () {
+            that.ui.$menuLocations.addClass('hidden');
+            that.ui.$menuFilter.removeClass('expanded');
+        });
+
+        that.ui.$menuLink.on('click', function (e) {
+            e.preventDefault();
+            that.ui.$menuActiveLink.text($(this).find('a').text());
+            that.ui.$menuFilter.removeClass('expanded');
+            that.ui.$menuLocations.addClass('hidden');
+        });
+
+        that.ui.$priceExpander.on('click', function () {
+            $('.prices-wrapper').toggleClass('hidden');
+        });
+
+        $('.prices-wrapper').mouseleave(function () {
+            $(this).addClass('hidden');
+        });
+
+        $('.price').on('click', function () {
+            $('.prices-wrapper').addClass('hidden');
+            var priceType = $(this).attr('id');
+            $('.price-value').each(function (index, $el) {
+                var $price = $($el);
+                if ($price.attr('id') === priceType) {
+                    $price.addClass('active');
+                } else {
+                    $price.removeClass('active');
+                }
+            });
+        });
+
+        $('.dispensary-rating').each(function () {
+            var $this = $(this),
+                rating = $this.text();
+
+            $this.rateYo({
+                rating: rating,
+                readOnly: true,
+                spacing: '1px',
+                normalFill: '#aaa8a8', // $grey-light
+                ratedFill: '#6bc331', // $avocado-green
+                starWidth: '16px'
             });
         });
     }
