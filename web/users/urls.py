@@ -34,11 +34,11 @@ urlpatterns = [
             name='detail'
     ),
 
-    # URL pattern for the UserFavouritesDetailView
+    # URL pattern for the UserFavoritesDetailView
     url(
-            regex=r'^(?P<username>[\w.@+-]+)/favourites$',
-            view=views.UserFavouritesView.as_view(),
-            name='favourites'
+            regex=r'^(?P<username>[\w.@+-]+)/favorites$',
+            view=views.UserFavoritesView.as_view(),
+            name='favorites'
     ),
 
     # URL pattern for the UserReviewsView

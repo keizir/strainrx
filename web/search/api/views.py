@@ -143,7 +143,7 @@ class StrainSearchResultsView(LoginRequiredMixin, APIView):
 
 class StrainLikeView(LoginRequiredMixin, APIView):
     def post(self, request):
-        add_to_favourites = request.data.get('like')
+        add_to_favorites = request.data.get('like')
         return Response({}, status=status.HTTP_200_OK)
 
 

@@ -4,11 +4,10 @@ W.ns('W.pages');
 
 W.pages.B2CSignUpPage = Class.extend({
 
-    init: function (cfg) {
-        var config = cfg || {};
-
-        this.name = (config.name === undefined) ? console.error('name is undefined') : config.name;
-        this.elem = (config.elem === undefined) ? console.error('elem is undefined') : $(config.elem);
+    init: function () {
+        $('input').on('focus', function () {
+            $('.error-message').text('');
+        });
 
         this.registerStep1ClickListener();
         this.registerStep2ClickListener();

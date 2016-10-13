@@ -22,15 +22,15 @@ class UserDetailView(LoginRequiredMixin, DetailView):
         return context
 
 
-class UserFavouritesView(LoginRequiredMixin, DetailView):
+class UserFavoritesView(LoginRequiredMixin, DetailView):
     model = User
     slug_field = 'username'
     slug_url_kwarg = 'username'
-    template_name_suffix = '_favourites'
+    template_name_suffix = '_favorites'
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['tab'] = 'favourites'
+        context['tab'] = 'favorites'
         return context
 
 

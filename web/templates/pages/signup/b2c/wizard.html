@@ -10,31 +10,33 @@
 {% endblock %}
 
 {% block content %}
-    <div class="sign-up-wrapper">
-        <div class="wizard-wrapper">
+    <div class="container">
+        <div class="sign-up-wrapper">
+            <div class="wizard-wrapper">
             <span
-                class="wizard-step step-1 {% if passed %}passed{% elif step == 1 %}active{% elif step == 6 %}finished{% else %}passed{% endif %}">
+                    class="wizard-step step-1 {% if passed %}passed{% elif step == 1 %}active{% elif step == 6 %}finished{% else %}passed{% endif %}">
                 <a href="{% url 'users:signup1' %}">1</a>
             </span>
-            <span
-                class="wizard-step step-2 {% if passed %}passed{% elif step == 2 %}active{% elif step == 6 %}finished{% elif step > 2 %}passed{% else %}disabled{% endif %}">
+                <span
+                        class="wizard-step step-2 {% if passed %}passed{% elif step == 2 %}active{% elif step == 6 %}finished{% elif step > 2 %}passed{% else %}disabled{% endif %}">
                 <a href="{% url 'users:signup2' %}">2</a>
             </span>
-            <span
-                class="wizard-step step-3 {% if passed %}passed{% elif step == 3 %}active{% elif step == 6 %}finished{% elif step > 3 %}passed{% else %}disabled{% endif %}">
+                <span
+                        class="wizard-step step-3 {% if passed %}passed{% elif step == 3 %}active{% elif step == 6 %}finished{% elif step > 3 %}passed{% else %}disabled{% endif %}">
                 <a href="{% url 'users:signup3' %}">3</a>
             </span>
-            <span
-                class="wizard-step step-4 {% if step == 4 %}active{% elif step == 6 %}finished{% elif step > 4 %}passed{% else %}disabled{% endif %}">
+                <span
+                        class="wizard-step step-4 {% if step == 4 %}active{% elif step == 6 %}finished{% elif step > 4 %}passed{% else %}disabled{% endif %}">
                 <a href="{% url 'users:signup4' %}">4</a>
             </span>
-            <span
-                class="wizard-step step-5 {% if step == 5 %}active{% elif step == 6 %}finished{% elif step > 5 %}passed{% else %}disabled{% endif %}">
+                <span
+                        class="wizard-step step-5 {% if step == 5 %}active{% elif step == 6 %}finished{% elif step > 5 %}passed{% else %}disabled{% endif %}">
                 <a href="{% url 'users:signup5' %}">5</a>
             </span>
-            <hr/>
+                <hr/>
+            </div>
+            {% block wizard-content %}{% endblock %}
         </div>
-        {% block wizard-content %}{% endblock %}
     </div>
 {% endblock %}
 

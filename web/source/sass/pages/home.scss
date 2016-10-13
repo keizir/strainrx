@@ -1,179 +1,193 @@
 @import '../mixins/variables';
 
-.main-region {
-
-}
-
 .home-row-01 {
-  background: $grey-light url(../../images/weed_dark.jpg) no-repeat fixed center center;
-  -webkit-background-size: cover;
-  text-align: center;
-  height: 26em;
-  display: block;
-  z-index: 1;
-}
+    background: $grey-light url(../../images/weed_dark.jpg) no-repeat fixed center center;
+    -webkit-background-size: cover;
+    text-align: center;
+    height: 26em;
+    display: block;
+    z-index: 1;
 
-.home-row-01 h1 {
-  margin: 0.5em;
-}
+    h1 {
+        margin: 0.5em;
+    }
 
-.home-row-01 p {
-  width: 34em;
-  margin: 0 auto 2em auto;
+    p {
+        width: 34em;
+        margin: 0 auto 2em auto;
+    }
 }
 
 .home-row-02 {
-  height: 25em;
-  background: $paradiso;
-  position: absolute;
-  top: 30em;
-  width: 100%;
-}
+    height: 25em;
+    background: $paradiso;
+    position: absolute;
+    top: 30em;
+    width: 100%;
 
-.home-row-02 .search-box {
-  display: block;
-  width: 40em;
-  height: 20em;
-  color: $white;
-  margin: 0 auto 0 auto;
-  padding: 0 5em;
-  text-align: center;
-}
+    .search-box {
+        display: block;
+        width: 40em;
+        height: 20em;
+        color: $white;
+        margin: 0 auto 0 auto;
+        padding: 0 5em;
+        text-align: center;
+    }
 
-.home-row-02 .search-box i {
-  padding: 0.75em 0;
-}
+    .search-box i {
+        padding: 0.75em 0;
+    }
 
-.home-row-02 .search-box .search-form button[type="submit"] {
-  margin-top: 1em;
-  border: 1px $white solid;
-  background-color: $paradiso;
-  font-size: 1em;
-  font-weight: 500;
-}
+    .search-box .search-form button[type="submit"] {
+        margin-top: 1em;
+        border: 1px $white solid;
+        background-color: $paradiso;
+        font-size: 1em;
+        font-weight: 500;
+    }
 
-.home-row-02 .search-box .search-form input[type="text"] {
-  width: 30em;
-  padding: 1em;
-  font-size: 0.7em;
-  border: none;
-  border-radius: 0.5em;
-  margin-top: 1.5em;
-}
+    .search-box .search-form input[type="text"] {
+        width: 30em;
+        padding: 1em;
+        font-size: 0.7em;
+        border: none;
+        border-radius: 0.5em;
+        margin-top: 1.5em;
+    }
 
-.home-row-02 .search-box p {
-  font-size: 0.8em;
-  margin-top: 2em;
-}
+    .search-box p {
+        font-size: 0.8em;
+        margin-top: 2em;
+    }
 
-.home-row-02 .search-box h2 {
-  font-weight: 300;
+    .search-box h2 {
+        font-weight: 300;
+    }
 }
 
 .home-sub-row-01 {
-  display: block;
-  width: 100%;
-  height: 8em;
-}
+    display: block;
+    width: 100%;
+    height: 8em;
 
-.home-sub-row-01 .location-holder {
-  display: inline-block;
-  float: left;
-  margin: 2em 0 0 6em;
-  line-height: 3em;
-}
+    .location-holder {
+        display: inline-block;
+        float: left;
+        margin-top: 2em;
+        line-height: 3em;
+    }
 
-.home-sub-row-01 .location-holder > form > fieldset {
-  border: none;
-  padding-top: 0.35em;
-  margin: 0;
-}
+    .location-holder > form > fieldset {
+        border: none;
+        padding-top: 0.35em;
+        margin: 0;
+    }
 
-.home-sub-row-01 .location-holder .check {
-  margin-left: -30px;
-}
+    .location-holder .check {
+        margin-left: -30px;
+    }
 
-.home-sub-row-01 .location-holder .your-location {
-  border: 1px solid $grey;
-  padding: 0.75em;
-  border-bottom-left-radius: 0.5em;
-  border-top-left-radius: 0.5em;
-  margin-right: -5px;
-  color: $white;
-  background: $grey;
-  opacity: 0.8;
-}
+    .location-holder .your-location {
+        border: 1px solid $grey;
+        padding: 0.75em;
+        border-bottom-left-radius: 0.5em;
+        border-top-left-radius: 0.5em;
+        margin-right: -5px;
+        color: $white;
+        background: $grey;
+        opacity: 0.8;
+    }
 
-.home-sub-row-01 .location-holder .your-location-value {
-  border: 1px solid $grey;
-  padding: 0.75em;
-  border-radius: 0 0.5em 0.5em 0;
-  width: 30em;
-  opacity: 0.8;
-}
+    .location-holder .your-location-value {
+        border: 1px solid $grey;
+        padding: 0.75em;
+        border-radius: 0 0.5em 0.5em 0;
+        width: 30em;
+        opacity: 0.8;
+    }
 
-.home-sub-row-01 .favourites-holder {
-  display: inline-block;
-  float: right;
-  margin: 2em 6em 0 0;
-  line-height: 3em;
-  padding: 0.35em;
-  opacity: 0.8;
-}
+    .favorites-holder {
+        display: inline-block;
+        float: right;
+        margin-top: 2em;
+        line-height: 3em;
+        padding: 0.35em 0;
+        opacity: 0.8;
 
-.home-sub-row-01 .favourites-holder .favourites {
-  border: 1px solid $grey;
-  padding: 0.75em 1em;
-  border-radius: 0.5em;
-  background: $grey;
-  color: $white;
+        .favorites {
+            border: 1px solid $grey;
+            padding: 0.75em 1em;
+            border-radius: 0.5em;
+            background: $grey;
+            color: $white;
+
+            .fa-sort-desc {
+                position: relative;
+                top: -0.2em;
+                margin-left: 0.3em;
+            }
+        }
+    }
 }
 
 .home-sub-row-02 {
-  display: block;
-  width: 100%;
-  color: $white;
-  line-height: 2.5em;
+    display: block;
+    width: 100%;
+    color: $white;
+    line-height: 2.5em;
 }
 
 @media (max-width: $screen-md-min) {
-  .home-row-01 p {
-    width: 22em;
-  }
+    fieldset {
+        padding: 0.2em 0.4em;
+    }
 
-  .home-sub-row-01 .location-holder {
-    margin: 0.5em 0 0 0.5em;
-  }
+    .home-row-01 p {
+        width: 22em;
+    }
 
-  .home-sub-row-01 .favourites-holder {
-    margin: 0.5em -2em 0 0;
-  }
+    .home-sub-row-01 .location-holder {
+        margin-top: 0.5em;
+    }
 
-  .home-sub-row-01 .location-holder .your-location {
-    padding: 0.75em;
-    border-radius: 0.5em;
-    margin-right: 0;
-  }
+    .home-sub-row-01 .favorites-holder {
+        margin-top: 0.5em;
+    }
 
-  .home-sub-row-01 .location-holder .your-location-value {
-    display: none;
-  }
+    .home-sub-row-01 .location-holder .your-location {
+        padding: 0.75em;
+        border-radius: 0.5em;
+        margin-right: 0;
+    }
 
-  .home-sub-row-01 .location-holder .check {
-    display: none;
-  }
+    .home-sub-row-01 .location-holder .your-location-value {
+        display: none;
+    }
 
-  .home-sub-row-01 {
-    height: 6em;
-  }
+    .home-sub-row-01 .location-holder .check {
+        display: none;
+    }
 
-  .home-row-02 .search-box {
-    width: 30em;
-    padding: 0 2em;
-  }
+    .home-sub-row-01 {
+        height: 6em;
+    }
 
-  .footer-region {
-    padding: 2em 4em;
-    line-height: 2em;
-  }
+    .home-row-02 .search-box {
+        width: 30em;
+        padding: 0 2em;
+    }
+
+    .footer-region {
+        padding: 2em 4em;
+        line-height: 2em;
+    }
+}
+
+@media (max-width: $screen-xs-min) {
+    .home-sub-row-01 .favorites-holder {
+        margin-top: 0.5em;
+        position: absolute;
+        right: 5%;
+    }
 }

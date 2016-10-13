@@ -26,8 +26,10 @@
 }
 
 .nav-container {
+    display: block;
     padding: 0 1.3em;
     line-height: 4em;
+    height: 4em;
 
     .nav-brand-wrapper {
         display: inline-block;

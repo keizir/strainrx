@@ -34,8 +34,8 @@
                         <a href="{% url 'users:detail' request.user.username %}">User Information</a>
                     </span>
                     <span class="separator"></span>
-                    <span class="profile-tab favourites-tab {% if tab == 'favourites' %}active{% endif %}">
-                        <a href="{% url 'users:favourites' request.user.username %}">Favourites</a>
+                    <span class="profile-tab favorites-tab {% if tab == 'favorites' %}active{% endif %}">
+                        <a href="{% url 'users:favorites' request.user.username %}">Favorites</a>
                     </span>
                     <span class="separator"></span>
                     <span class="profile-tab my-reviews-tab {% if tab == 'reviews' %}active{% endif %}">

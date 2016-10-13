@@ -1,343 +1,359 @@
 @import '../../../mixins/variables';
 
 .strain-search-wrapper {
-  text-align: center;
-  color: $grey-normal;
+    text-align: center;
+    color: $grey-normal;
+
+    .btn-primary:disabled {
+        opacity: 0.5;
+        color: $white;
+    }
+
+    .btn-secondary:disabled {
+        opacity: 0.5;
+        color: $iris-blue;
+    }
 }
 
 .strain-search-wrapper input {
-  display: block;
-  margin: 0 auto 1em;
+    display: block;
+    margin: 0 auto 1em;
 }
 
 .search-form-wrapper {
-  margin: 2em auto 0;
-  padding-bottom: 6em;
-  display: block;
-  width: 100%;
-  text-align: center;
+    margin: 2em auto 0;
+    padding-bottom: 6em;
+    display: block;
+    width: 100%;
+    text-align: center;
 }
 
 .search-form-wrapper .form {
-  padding-top: 2em;
+    padding-top: 2em;
 }
 
 .search-form-wrapper .form-actions {
-  margin: 5em 0 0;
-  text-align: center;
+    margin: 5em 0 0;
+    text-align: center;
 }
 
 .search-form-wrapper .additional-actions-wrapper {
-  margin: 1em auto;
-  color: $iris-blue;
-  cursor: default;
+    margin: 1em auto;
+    color: $iris-blue;
+    cursor: default;
 }
 
 .search-form-wrapper .form-field-group {
-  float: none;
-  margin: 1em auto;
-  width: 40em;
+    float: none;
+    margin: 1em auto;
+    width: 40em;
 }
 
 .search-form-wrapper .form-field-group .strain-check {
-  width: 10em;
-  height: 6em;
-  text-align: center;
-  padding: 1em 2em;
-  border: 1px solid $grey-light;
-  border-radius: 0.5em;
-  margin: 0 0.2em;
+    width: 10em;
+    height: 6em;
+    text-align: center;
+    padding: 1em 2em;
+    border: 1px solid $grey-light;
+    border-radius: 0.5em;
+    margin: 0 0.2em;
 }
 
 .search-form-wrapper .form-field-group .strain-check label {
-  text-align: center;
+    text-align: center;
 }
 
 .search-form-wrapper .form-field-group .strain-check .type {
-  font-weight: bold;
-  color: $grey-dark;
-  margin-bottom: 0.5em;
-  display: block;
+    display: block;
+    font-weight: bold;
+    margin-bottom: 0.5em;
+    font-weight: bold;
 }
 
 .search-form-wrapper .form-field-group .strain-check .type-info {
-  color: $iris-blue;
-  background-size: 1.5em 1.5em;
-  display: inline-block;
-  width: 1.5em;
-  height: 1.5em;
-  position: relative;
-  bottom: 4.9em;
-  left: 3.9em;
-  cursor: pointer;
+    color: $iris-blue;
+    background-size: 1.5em 1.5em;
+    display: inline-block;
+    width: 1.5em;
+    height: 1.5em;
+    position: relative;
+    bottom: 4.9em;
+    left: 3.9em;
+    cursor: pointer;
 }
 
 .search-form-wrapper .form-field-group .strain-check .type-info .fa-2x {
-  font-size: 1.5em;
+    font-size: 1.5em;
 }
 
 .search-form-wrapper .form-field-group .form-field span.strain-effect {
-  border: 1px solid $iris-blue;
-  color: $iris-blue;
-  border-radius: 0.3em;
-  padding: 0.4em;
-  width: 12em;
-  line-height: 1.3em;
-  display: inline-block;
-  text-align: center;
-  cursor: pointer;
-  font-weight: bold;
+    border: 1px solid $iris-blue;
+    color: $iris-blue;
+    border-radius: 0.3em;
+    padding: 0.4em;
+    width: 12em;
+    line-height: 1.3em;
+    display: inline-block;
+    text-align: center;
+    cursor: pointer;
+    font-weight: bold;
 }
 
 .search-form-wrapper .form-field-group .form-field span.strain-effect .benefit-text {
-  display: block;
-  width: 7em;
-  margin: 0 auto;
+    display: block;
+    width: 7em;
+    margin: 0 auto;
 }
 
 .search-form-wrapper .form-field-group .form-field span.removable {
-  position: relative;
-  float: right;
-  bottom: 2.25em;
-  right: 0.5em;
+    position: relative;
+    float: right;
+    bottom: 2.25em;
+    right: 0.5em;
 }
 
 .search-form-wrapper .form-field-group .form-field span.step-3.removable {
-  bottom: 2.9em;
+    bottom: 2.9em;
 }
 
 .search-form-wrapper .form-field-group .form-field span.importance-value {
-  position: relative;
-  float: left;
-  bottom: 3em;
-  left: 0.8em;
-  color: $iris-blue;
-  font-weight: bold;
+    position: relative;
+    float: left;
+    bottom: 3em;
+    left: 0.8em;
+    color: $iris-blue;
+    font-weight: bold;
 }
 
 .search-form-wrapper .form-field-group .form-field span.step-3.importance-value {
-  bottom: 3.7em;
+    bottom: 3.7em;
 }
 
 .search-form-wrapper .form-field-group .form-field span.strain-effect.active {
-  border: 3px solid $avocado-green;
+    border: 3px solid $avocado-green;
 }
 
 .search-form-wrapper .form-field-group .form-field span.strain-effect.disabled {
-  border: 1px solid $grey-normal;
-  color: $grey-light;
+    border: 1px solid $grey-normal;
+    color: $grey-light;
 }
 
 .search-form-wrapper fieldset {
-  padding-bottom: 2em;
+    padding-bottom: 2em;
 }
 
 .search-form-wrapper label {
-  display: inline-block;
+    display: inline-block;
 }
 
 .search-form-wrapper label > input + span.check {
-  cursor: pointer;
+    cursor: pointer;
 }
 
 .search-form-wrapper span.check {
-  display: inline-block;
-  margin: 0;
+    display: inline-block;
+    margin: 0;
 }
 
 .search-form-wrapper label > span.check {
-  width: 2em;
-  height: 2em;
-  border: 1px solid $grey-light;
-  border-radius: 1em;
-  vertical-align: middle;
+    width: 2em;
+    height: 2em;
+    border: 1px solid $grey-light;
+    border-radius: 1em;
+    vertical-align: middle;
 }
 
 .search-form-wrapper label > input {
-  position: absolute;
-  visibility: hidden;
-  width: 2em;
-  height: 2em;
-  padding: 0.35em 0;
+    position: absolute;
+    visibility: hidden;
+    width: 2em;
+    height: 2em;
+    padding: 0.35em 0;
 }
 
 .search-form-wrapper label > input:checked + span:before {
-  content: '\2713';
-  display: block;
-  width: 2em;
-  height: 2em;
-  padding: 0.35em 0;
-  color: $iris-blue;
-  text-align: center;
+    content: '\2713';
+    display: block;
+    width: 2em;
+    height: 2em;
+    padding: 0.35em 0;
+    color: $iris-blue;
+    text-align: center;
 }
 
 .strain-search-wrapper .wizard-wrapper {
-  padding: 2em 0;
-  width: 30em;
-  height: 10em;
-  margin: 0 auto;
+    padding: 2em 0;
+    width: 30em;
+    height: 10em;
+    margin: 0 auto;
 }
 
 .strain-search-wrapper .wizard-wrapper hr {
-  z-index: 1;
-  width: 22em;
-  margin: -4em auto 0 auto;
+    z-index: 1;
+    width: 22em;
+    margin: -4em auto 0 auto;
 }
 
 .strain-search-wrapper .wizard-wrapper .step-wrapper {
-  display: inline-block;
-  width: 7em;
-  height: 5em;
-  text-align: center;
-  vertical-align: top;
+    display: inline-block;
+    width: 7em;
+    height: 5em;
+    text-align: center;
+    vertical-align: top;
 }
 
 .strain-search-wrapper .wizard-wrapper .step-wrapper .title {
-  display: inline-block;
-  padding-top: 1em;
+    display: inline-block;
+    padding-top: 1em;
 }
 
 .strain-search-wrapper .effects-form {
-  display: inline-block;
-  text-align: left;
+    display: inline-block;
+    text-align: left;
 }
 
 .strain-search-wrapper .effects-form .form-field-group {
-  width: 100%;
-  margin: 0 auto;
-  line-height: 3em;
+    width: 100%;
+    margin: 0 auto;
+    line-height: 3em;
 }
 
 .strain-search-wrapper .effects-form .form-field {
-  margin: 0 0.3em;
-  width: 12em;
-  height: 3em;
+    margin: 0 0.3em;
+    width: 12em;
+    height: 3em;
 }
 
 .strain-search-wrapper .effects-form .slider-wrapper {
-  text-align: center;
-  margin: 3em auto;
+    text-align: center;
+    margin: 3em auto;
 }
 
 .strain-search-wrapper .effects-form .slider-wrapper .slider-step-label {
-  color: $grey-light;
-  display: inline-block;
-  width: 6em;
-  margin: 0 3em;
-  cursor: default;
+    color: $grey-light;
+    display: inline-block;
+    width: 6em;
+    margin: 0 3em;
+    cursor: default;
 }
 
 .strain-search-wrapper .effects-form .slider {
-  width: 50em;
-  display: block;
-  margin: 3em auto 5em;
-  background-color: $grey-normal;
-  border-color: $grey-normal;
+    width: 50em;
+    display: block;
+    margin: 3em auto 5em;
+    background-color: $grey-normal;
+    border-color: $grey-normal;
 }
 
 .strain-search-wrapper .effects-form .slider span {
-  background-color: $grey-dark;
-  border-color: $grey-dark;
+    background-color: $grey-dark;
+    border-color: $grey-dark;
 }
 
-.just-a-second-dialog .dialog-text {
-  height: 40%;
-  line-height: 2em;
-}
+.just-a-second-dialog {
+    .dialog-text {
+        height: 40%;
+        line-height: 1.5em;
+    }
 
-.just-a-second-dialog .additional-section input[type="checkbox"] {
-  width: 2em;
-}
+    .additional-section {
+        margin-top: 2em;
 
-.just-a-second-dialog .buttons-section {
-  text-align: center;
-  position: relative;
-  top: 5em;
+        input[type="checkbox"] {
+            width: 2em;
+        }
+    }
+
+    .buttons-section {
+        text-align: center;
+        position: relative;
+        top: 5em;
+    }
 }
 
 @media (max-width: $screen-xs-min) {
-  .search-form-wrapper {
-    width: 26em;
-  }
+    .search-form-wrapper {
+        width: 26em;
+    }
 
-  .strain-search-wrapper .wizard-wrapper {
-    width: 29em;
-  }
+    .strain-search-wrapper .wizard-wrapper {
+        width: 29em;
+    }
 
-  .strain-search-wrapper .wizard-wrapper .step-wrapper {
-    width: 6.2em;
-  }
+    .strain-search-wrapper .wizard-wrapper .step-wrapper {
+        width: 6.2em;
+    }
 
-  .strain-search-wrapper .wizard-wrapper hr {
-    width: 20em;
-  }
+    .strain-search-wrapper .wizard-wrapper hr {
+        width: 20em;
+    }
 
-  .strain-search-wrapper .wizard-wrapper .step-wrapper .title {
-    width: 5em;
-  }
+    .strain-search-wrapper .wizard-wrapper .step-wrapper .title {
+        width: 5em;
+    }
 
-  .search-form-wrapper .form-field-group {
-    width: 25em;
-  }
+    .search-form-wrapper .form-field-group {
+        width: 25em;
+    }
 
-  .search-form-wrapper .form-field-group .strain-check {
-    display: block;
-    width: 14em;
-    margin: 1em auto;
-  }
+    .search-form-wrapper .form-field-group .strain-check {
+        display: block;
+        width: 14em;
+        margin: 1em auto;
+    }
 
-  .search-form-wrapper .form-field-group .strain-check .type-info {
-    bottom: 4.7em;
-    left: 5.4em;
-  }
+    .search-form-wrapper .form-field-group .strain-check .type-info {
+        bottom: 4.7em;
+        left: 5.4em;
+    }
 
-  .search-form-wrapper .form-field-group .strain-check .type-info .fa-2x {
-    font-size: 2em;
-  }
+    .search-form-wrapper .form-field-group .strain-check .type-info .fa-2x {
+        font-size: 2em;
+    }
 
-  .search-form-wrapper .additional-actions-wrapper {
-    margin: 1em 3em;
-  }
+    .search-form-wrapper .additional-actions-wrapper {
+        margin: 1em 3em;
+    }
 
-  .strain-search-wrapper .effects-form .form-field {
-    display: block;
-    margin: 0 auto;
-  }
+    .strain-search-wrapper .effects-form .form-field {
+        display: block;
+        margin: 0 auto;
+    }
 
-  .strain-search-wrapper .effects-form .form-field.step-3 {
-    height: 4em;
-  }
+    .strain-search-wrapper .effects-form .form-field.step-3 {
+        height: 4em;
+    }
 
-  .search-form-wrapper .form-field-group .form-field span.step-3.removable {
-    bottom: 1.4em;
-  }
+    .search-form-wrapper .form-field-group .form-field span.step-3.removable {
+        bottom: 1.4em;
+    }
 
-  .strain-search-wrapper .effects-form .slider {
-    width: 90%;
-  }
+    .strain-search-wrapper .effects-form .slider {
+        width: 90%;
+    }
 
-  .strain-search-wrapper .effects-form .slider-wrapper .slider-step-label {
-    width: 5em;
-    margin: 0 0.9em;
-    cursor: default;
-    font-size: 10px;
-  }
+    .strain-search-wrapper .effects-form .slider-wrapper .slider-step-label {
+        width: 5em;
+        margin: 0 0.9em;
+        cursor: default;
+        font-size: 10px;
+    }
 
-  .search-form-wrapper .form-field-group .form-field span.importance-value {
-    height: 0;
-  }
+    .search-form-wrapper .form-field-group .form-field span.importance-value {
+        height: 0;
+    }
 
-  .search-form-wrapper .form-field-group .form-field span.removable {
-    bottom: 0.8em;
-    margin-top: -1.5em;
-  }
+    .search-form-wrapper .form-field-group .form-field span.removable {
+        bottom: 0.8em;
+        margin-top: -1.5em;
+    }
 }
 
 @media (max-width: $screen-sm-min) {
-  .strain-search-wrapper .effects-form .form-field-group {
-    width: 70%;
-  }
-  .strain-search-wrapper .effects-form .slider-wrapper .slider-step-label {
-    margin: 0 2em;
-  }
+    .strain-search-wrapper .effects-form .form-field-group {
+        width: 70%;
+    }
+    .strain-search-wrapper .effects-form .slider-wrapper .slider-step-label {
+        margin: 0 2em;
+    }
 }

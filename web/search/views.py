@@ -107,7 +107,7 @@ class StrainDetailView(LoginRequiredMixin, TemplateView):
         context['strain'] = strain
         context['strain_image'] = image[0]
         context['strain_rating'] = 4.5  # TODO check strain overall rating
-        context['favorite'] = True  # TODO check user's favourites
+        context['favorite'] = True  # TODO check user's favorites
 
         dispensaries = []
 
