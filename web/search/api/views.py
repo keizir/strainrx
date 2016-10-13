@@ -103,7 +103,7 @@ class StrainSearchResultsView(LoginRequiredMixin, APIView):
                     'name': 'Blue Dream' if num % 2 == 0 else 'East Coast Sour Diesel',
                     'type': 'Sativa',
                     'rating': "{0:.2f}".format(5 * uniform(0.3, 1)),
-                    'image': 'image_location.png',
+                    'image': None,
                     'match_percentage': "{0:.2f}".format(100 * uniform(0.3, 1)),
                     'delivery_addresses': [
                         {

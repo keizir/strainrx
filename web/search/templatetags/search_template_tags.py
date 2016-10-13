@@ -9,9 +9,12 @@ def find_closest_delivery_distance(array):
     for dispensary in array:
         distances.append(dispensary.get('distance'))
 
-    min_distance = min(distances)
-    min_distance = "{0:.2f}".format(min_distance)
-    return 'Nearest ' + str(min_distance) + 'mi'
+    if len(distances) > 0:
+        min_distance = min(distances)
+        min_distance = "{0:.2f}".format(min_distance)
+        return 'Nearest ' + str(min_distance) + 'mi'
+    else:
+        return 'No dispensaries found'
 
 
 @register.simple_tag

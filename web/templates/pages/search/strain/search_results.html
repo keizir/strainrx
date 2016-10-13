@@ -44,7 +44,11 @@
                     <div class="result-item">
                         <div class="item-info-wrapper inline-block">
                             <div class="item-image inline-block">
-                                <img src="{{ strain.image }}" alt="Strain Image">
+                                {% if strain.image %}
+                                    <img src="{{ strain.image.image.url }}" alt="Strain Image">
+                                {% else %}
+                                    <img src="{% static 'images/weed_small.jpg' %}" alt="Strain Image"/>
+                                {% endif %}
                             </div>
                             <div class="item-info inline-block">
                                 <span class="strain-name">

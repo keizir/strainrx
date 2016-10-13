@@ -92,10 +92,13 @@ W.pages.StrainSearchResultsPage = Class.extend({
     },
 
     parseSearchResultItem: function (position, item) {
+        var imageElement = item.image ? '<img src="' + item.image.image.url + '" alt="Strain Image">' :
+            '<img src="/static/images/weed_small.jpg" alt="Strain Image">';
+
         return '<div class="result-item">' +
             '<div class="item-info-wrapper inline-block">' +
             '<div class="item-image inline-block">' +
-            '<img src="' + item.image + '" alt="Strain Image">' +
+            imageElement +
             '</div>' +
             '<div class="item-info inline-block">' +
             '<span class="strain-name">' +

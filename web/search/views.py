@@ -6,6 +6,7 @@ from random import uniform
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.generic import TemplateView
 
+from web.search.es_service import SearchElasticService
 from web.search.models import Strain, StrainImage
 
 
@@ -52,6 +53,16 @@ class StrainSearchResultView(LoginRequiredMixin, TemplateView):
 
     def get_context_data(self, **kwargs):
         context = super(StrainSearchResultView, self).get_context_data(**kwargs)
+
+        query_strain_name = self.request.GET.get('q')
+        start_from = self.request.GET.get('from')
+
+        if query_strain_name:
+            data = SearchElasticService().query_strains_by_name(query_strain_name, size=8, start_from=start_from)
+            context['search_results'] = data.get('list')
+            context['search_results_total'] = data.get('total')
+            return context
+
         dummy_response = list()  # TODO remove this later - START
 
         for num in range(0, 8):
@@ -61,7 +72,7 @@ class StrainSearchResultView(LoginRequiredMixin, TemplateView):
                     'type': 'Sativa',
                     'strain_slug': 'sour-diesel-flower' if num % 2 == 0 else 'amnesia-haze-flower',
                     'rating': "{0:.2f}".format(5 * uniform(0.3, 1)),
-                    'image': 'image_location.png',
+                    'image': None,
                     'match_percentage': "{0:.2f}".format(100 * uniform(0.3, 1)),
                     'delivery_addresses': [
                         {
