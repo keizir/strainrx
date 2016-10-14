@@ -81,6 +81,9 @@ class SearchElasticService(BaseElasticService):
         :return: { 'list': [], 'total': 0 }
         """
 
+        if start_from is None:
+            start_from = 0
+
         method = self.METHODS.get('GET')
         url = '{0}{1}{2}{3}{4}{5}'.format(
             self.BASE_ELASTIC_URL,
@@ -109,6 +112,8 @@ class SearchElasticService(BaseElasticService):
         """
             Return strains ranked by SRX score
         """
+        if start_from is None:
+            start_from = 0
 
         method = self.METHODS.get('GET')
         url = '{base}{index}{type}/_search?size={size}&from={start_from}'.format(
