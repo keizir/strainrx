@@ -1,11 +1,12 @@
 import logging
-from random import uniform
 
 from django.contrib.auth.mixins import LoginRequiredMixin
 from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
+from web.search import es_service
+from web.search.es_service import SearchElasticService
 from web.search.models import Strain, StrainImage
 
 logger = logging.getLogger(__name__)
@@ -94,57 +95,38 @@ class StrainSearchResultsView(LoginRequiredMixin, APIView):
     def get(self, request):
         page = request.GET.get('page')
         size = request.GET.get('size')
+        start_from = (int(page) - 1) * int(size)
 
-        dummy_response = list()  # TODO remove this later - START
+        search_criteria = request.session.get('search_criteria')
 
-        for num in range(0, 8):
-            dummy_response.append(
-                {
-                    'name': 'Blue Dream' if num % 2 == 0 else 'East Coast Sour Diesel',
-                    'type': 'Sativa',
-                    'rating': "{0:.2f}".format(5 * uniform(0.3, 1)),
-                    'image': None,
-                    'match_percentage': "{0:.2f}".format(100 * uniform(0.3, 1)),
-                    'delivery_addresses': [
-                        {
-                            'state': 'CA',
-                            'city': 'Santa Monica',
-                            'street1': 'Street 1 location',
-                            'open': 'true',
-                            'distance': uniform(500, 3000) * 0.000621371  # meters * mile coefficient
-                        },
-                        {
-                            'state': 'CA',
-                            'city': 'Santa Monica',
-                            'street1': 'Street 1 location',
-                            'open': 'false',
-                            'distance': uniform(500, 3000) * 0.000621371  # meters * mile coefficient
-                        },
-                        {
-                            'state': 'CA',
-                            'city': 'Santa Monica',
-                            'street1': 'Street 1 location',
-                            'open': 'false',
-                            'distance': uniform(500, 3000) * 0.000621371  # meters * mile coefficient
-                        }
-                    ]
-                }
-            )
+        if search_criteria:
+            data = SearchElasticService().query_strain_srx_score(search_criteria, size, start_from)
+            result_list = data.get('list')
+            result_list.sort(key=lambda entry: entry.get('match_percentage'), reverse=True)
+            return Response({
+                'search_results': result_list,
+                'search_results_total': data.get('total')
+            }, status=status.HTTP_200_OK)
 
-        dummy_response.sort(key=lambda entry: entry.get('match_percentage'), reverse=True)
-        # TODO remove this later - END
-
-        # search ElasticSearch paginated
         return Response({
-            'search_results': dummy_response,
-            'search_results_total': 24
-        }, status=status.HTTP_200_OK)
+            "error": "Cannot determine a search criteria."
+        }, status=status.HTTP_400_BAD_REQUEST)
 
 
 class StrainLikeView(LoginRequiredMixin, APIView):
     def post(self, request):
         add_to_favorites = request.data.get('like')
         return Response({}, status=status.HTTP_200_OK)
+
+
+class StrainLookupView(LoginRequiredMixin, APIView):
+    def get(self, request):
+        query = request.GET.get('q')
+        result = SearchElasticService().lookup_strain(query)
+        return Response({
+            'total': result.get('total'),
+            'payloads': result.get('payloads')
+        }, status=status.HTTP_200_OK)
 
 
 class StrainUploadImageView(LoginRequiredMixin, APIView):

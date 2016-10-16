@@ -33,36 +33,77 @@
         margin: 0 auto 0 auto;
         padding: 0 5em;
         text-align: center;
-    }
 
-    .search-box i {
-        padding: 0.75em 0;
-    }
+        i {
+            padding: 0.75em 0;
+        }
 
-    .search-box .search-form button[type="submit"] {
-        margin-top: 1em;
-        border: 1px $white solid;
-        background-color: $paradiso;
-        font-size: 1em;
-        font-weight: 500;
-    }
+        p {
+            font-size: 0.8em;
+            margin-top: 2em;
+        }
 
-    .search-box .search-form input[type="text"] {
-        width: 30em;
-        padding: 1em;
-        font-size: 0.7em;
-        border: none;
-        border-radius: 0.5em;
-        margin-top: 1.5em;
-    }
+        h2 {
+            font-weight: 300;
+        }
 
-    .search-box p {
-        font-size: 0.8em;
-        margin-top: 2em;
-    }
+        .search-form {
+            display: block;
+            position: relative;
+            height: 100%;
 
-    .search-box h2 {
-        font-weight: 300;
+            button[type="submit"] {
+                margin-top: 1em;
+                border: 1px $white solid;
+                background-color: $paradiso;
+                font-size: 1em;
+                font-weight: 500;
+            }
+
+            input[type="text"] {
+                width: 30em;
+                padding: 1em;
+                font-size: 0.7em;
+                border: none;
+                border-radius: 0.5em;
+                margin-top: 1.5em;
+                color: $grey-normal;
+                line-height: 1.2em;
+            }
+
+            button:focus,
+            input:focus {
+                outline: none;
+            }
+
+            .payloads-region {
+                display: block;
+                position: absolute;
+                top: 4em;
+                left: 6.4em;
+                width: 30em;
+                font-size: 0.7em;
+                color: $grey-normal;
+                background-color: $white;
+                border-bottom-left-radius: 0.5em;
+                border-bottom-right-radius: 0.5em;
+
+                .search-payload {
+                    display: block;
+                    padding: 1em;
+                    text-align: left;
+                    cursor: pointer;
+                }
+
+                .search-payload.active,
+                .search-payload:hover {
+                    background-color: $aero-blue;
+                    color: $grey-dark;
+                    border-radius: 0.5em;
+                    font-weight: bold;
+                }
+            }
+        }
     }
 }
 

@@ -176,7 +176,7 @@ W.pages.StrainDetailPage = Class.extend({
         });
 
         sideEffectsToDisplay.sort(this.sortValues);
-        this.ui.$sideEffectsRegion.append(this.effectHtml(sideEffectsToDisplay));
+        this.ui.$sideEffectsRegion.append(this.sideEffectHtml(sideEffectsToDisplay));
     },
 
     populateFlavors: function populateFlavors() {
@@ -216,23 +216,58 @@ W.pages.StrainDetailPage = Class.extend({
             effectHtml += '<span class="effect-name">' + effect.name + '</span>';
             effectHtml += '<div class="effect">';
 
-            if (effect.value === 5 || effect.value === 10) {
+            if (effect.value >= 5) {
                 effectHtml += '<span class="fill fill-5"></span>';
             }
 
-            if (effect.value === 4 || effect.value === 9) {
+            if (effect.value === 4) {
                 effectHtml += '<span class="fill fill-4"></span>';
             }
 
-            if (effect.value === 3 || effect.value === 8) {
+            if (effect.value === 3) {
                 effectHtml += '<span class="fill fill-3"></span>';
             }
 
-            if (effect.value === 2 || effect.value === 7) {
+            if (effect.value === 2) {
                 effectHtml += '<span class="fill fill-2"></span>';
             }
 
-            if (effect.value === 1 || effect.value === 6) {
+            if (effect.value === 1) {
+                effectHtml += '<span class="fill fill-1"></span>';
+            }
+
+            effectHtml += '</div></div>';
+        });
+
+        effectHtml += '</div>';
+        return effectHtml;
+    },
+
+    sideEffectHtml: function sideEffectHtml(toDisplay) {
+        var effectHtml = '<div class="effects-wrapper">';
+
+        $.each(toDisplay, function (index, effect) {
+            effectHtml += '<div class="effect-wrapper">';
+            effectHtml += '<span class="effect-name">' + effect.name + '</span>';
+            effectHtml += '<div class="effect">';
+
+            if (effect.value === 10) {
+                effectHtml += '<span class="fill fill-5"></span>';
+            }
+
+            if (effect.value === 9) {
+                effectHtml += '<span class="fill fill-4"></span>';
+            }
+
+            if (effect.value === 8) {
+                effectHtml += '<span class="fill fill-3"></span>';
+            }
+
+            if (effect.value === 7) {
+                effectHtml += '<span class="fill fill-2"></span>';
+            }
+
+            if (effect.value === 6) {
                 effectHtml += '<span class="fill fill-1"></span>';
             }
 

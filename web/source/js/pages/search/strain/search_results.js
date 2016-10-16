@@ -4,7 +4,8 @@ W.ns('W.pages');
 
 W.pages.StrainSearchResultsPage = Class.extend({
 
-    scrollPage: 0,
+    scrollPage: 2, // start from 2nd page because we already have 1st
+    scrollSize: 8,
 
     ui: {
         $document: $(document),
@@ -65,26 +66,23 @@ W.pages.StrainSearchResultsPage = Class.extend({
 
                 $.ajax({
                     method: 'GET',
-                    url: '/api/v1/search/result/?page=' + that.scrollPage + '&size=8',
+                    url: '/api/v1/search/result/?page={0}&size={1}'.format(that.scrollPage, that.scrollSize),
                     dataType: 'json',
                     success: function (data) {
                         that.scrollPage += 1;
                         var searchResults = data.search_results,
                             searchResultsTotal = data.search_results_total;
 
-                        // TODO remove this setTimeout. Used just for dummy data
-                        setTimeout(function () {
-                            if (that.scrollPage * 8 >= searchResultsTotal) {
-                                $('.search-result-footer-wrapper').addClass('hidden');
-                            }
+                        if (that.scrollPage * that.scrollSize >= searchResultsTotal) {
+                            $('.search-result-footer-wrapper').addClass('hidden');
+                        }
 
-                            for (var i = 0; i < searchResults.length; i++) {
-                                that.ui.$searchResult.append(that.parseSearchResultItem(i, searchResults[i]));
-                                that.initRating($('.loaded-rating-' + i));
-                            }
+                        for (var i = 0; i < searchResults.length; i++) {
+                            that.ui.$searchResult.append(that.parseSearchResultItem(i, searchResults[i]));
+                            that.initRating($('.loaded-rating-' + i));
+                        }
 
-                            that.ui.$loadingIcon.removeClass('rotating');
-                        }, 2000);
+                        that.ui.$loadingIcon.removeClass('rotating');
                     }
                 });
             }
@@ -92,48 +90,14 @@ W.pages.StrainSearchResultsPage = Class.extend({
     },
 
     parseSearchResultItem: function (position, item) {
-        var imageElement = item.image ? '<img src="' + item.image.image.url + '" alt="Strain Image">' :
-            '<img src="/static/images/weed_small.jpg" alt="Strain Image">';
-
-        return '<div class="result-item">' +
-            '<div class="item-info-wrapper inline-block">' +
-            '<div class="item-image inline-block">' +
-            imageElement +
-            '</div>' +
-            '<div class="item-info inline-block">' +
-            '<span class="strain-name">' +
-            '<a href="#">' + item.name + '</a>' +
-            '</span>' +
-            '<span class="strain-type">' + item.type + '</span>' +
-            '<span class="strain-rating loaded-rating-' + position + '">' + item.rating + '</span>' +
-            '</div>' +
-            '</div>' +
-            '<div class="separator inline-block"></div>' +
-            '<div class="item-locations inline-block">' +
-            '<span class="locations-icon">' +
-            '<i class="fa fa-map-marker fa-2x" aria-hidden="true"></i>' +
-            '</span>' +
-            '<span class="locations">' +
-            '<span>' + item.delivery_addresses.length + ' Locations</span>' +
-            '<span>' + this.findClosestDeliveryDistance(item.delivery_addresses) + '</span>' +
-            '<span>' + this.countOpenCloseDeliveries(item.delivery_addresses) + '</span>' +
-            '</span>' +
-            '</div>' +
-            '<div class="separator inline-block"></div>' +
-            '<div class="item-deliveries inline-block">' +
-            '<span class="deliveries-icon">' +
-            '<i class="fa fa-truck fa-2x" aria-hidden="true"></i>' +
-            '</span>' +
-            '<span class="deliveries">' +
-            '<span>1 Delivery Service Closed</span>' +
-            '</span>' +
-            '</div>' +
-            '<div class="separator inline-block"></div>' +
-            '<div class="item-percentage-match inline-block">' +
-            '<span class="percentage">' + item.match_percentage + '%</span>' +
-            '<span class="match">match</span>' +
-            '</div>' +
-            '</div>';
+        var that = this,
+            compiled = _.template($('#strain-item-template').html());
+        return compiled({
+            'position': position,
+            'strain': item,
+            'closestDeliveryDistance': that.findClosestDeliveryDistance(item.delivery_addresses),
+            'openClosedCount': that.countOpenCloseDeliveries(item.delivery_addresses)
+        });
     },
 
     findClosestDeliveryDistance: function (dispensaries) {

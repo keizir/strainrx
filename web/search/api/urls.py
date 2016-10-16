@@ -14,6 +14,11 @@ urlpatterns = [
         name='strain_like'
     ),
     url(
+        regex=r'^strain/lookup/$',
+        view=StrainLookupView.as_view(),
+        name='strain_lookup'
+    ),
+    url(
         regex=r'^strain',
         view=StrainSearchWizardView.as_view(),
         name='strain'

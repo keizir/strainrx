@@ -1,9 +1,10 @@
 # -*- coding: utf-8 -*-
-import logging
 import json
+import logging
 
 from django.core.management.base import BaseCommand, CommandError
 
+from web.search.es_mappings import strain_mapping, strain_suggester_mapping
 from web.search.es_service import SearchElasticService as ElasticService
 from web.search.models import Strain
 
@@ -40,7 +41,8 @@ class Command(BaseCommand):
             raise CommandError('Index is required')
 
         self.DROP_AND_REBUILD = options.get('drop_and_rebuild', False)
-        self.INDEX_TYPE = options.get('index_type', 'Flower').lower()
+        self.INDEX_TYPE = options.get('index_type', 'flower').lower()
+        self.SUGGESTER_INDEX_TYPE = 'name'
 
         self.etl_strains()
 
@@ -52,305 +54,6 @@ class Command(BaseCommand):
 
     def drop_and_rebuild(self):
         es = ElasticService()
-
-        mapping = {
-            "properties": {
-                "id": {
-                    "type": "integer",
-                    "index": "not_analyzed"
-                },
-                "name": {
-                    "type": "string",
-                    "index": "analyzed",
-                    "analyzer": "name_analyzer",
-                    "norms": {
-                        "enabled": False
-                    },
-                    "fields": {
-                        "raw": {
-                            "type": "string",
-                            "index": "not_analyzed"
-                        },
-                        "stemmed": {
-                            "type": "string",
-                            "analyzer": "snowball"
-                        }
-                    }
-                },
-                "strain_slug": {
-                    "type": "string",
-                    "index": "no"
-                },
-                "variety": {
-                    "type": "string"
-                },
-                "category": {
-                    "type": "string"
-                },
-                "effects": {
-                    "properties": {
-                        "happy": {
-                            "type": "short"
-                        },
-                        "uplifted": {
-                            "type": "short"
-                        },
-                        "stimulated": {
-                            "type": "short"
-                        },
-                        "energetic": {
-                            "type": "short"
-                        },
-                        "creative": {
-                            "type": "short"
-                        },
-                        "focused": {
-                            "type": "short"
-                        },
-                        "relaxed": {
-                            "type": "short"
-                        },
-                        "sleepy": {
-                            "type": "short"
-                        },
-                        "talkative": {
-                            "type": "short"
-                        },
-                        "euphoric": {
-                            "type": "short"
-                        },
-                        "hungry": {
-                            "type": "short"
-                        },
-                        "tingly": {
-                            "type": "short"
-                        },
-                        "good_humored": {
-                            "type": "short"
-                        }
-                    }
-                },
-                "benefits": {
-                    "properties": {
-                        "reduce_stress": {
-                            "type": "short"
-                        },
-                        "help_depression": {
-                            "type": "short"
-                        },
-                        "relieve_pain": {
-                            "type": "short"
-                        },
-                        "reduce_fatigue": {
-                            "type": "short"
-                        },
-                        "reduce_headaches": {
-                            "type": "short"
-                        },
-                        "help_muscles_spasms": {
-                            "type": "short"
-                        },
-                        "lower_eye_pressure": {
-                            "type": "short"
-                        },
-                        "reduce_nausea": {
-                            "type": "short"
-                        },
-                        "reduce_inflammation": {
-                            "type": "short"
-                        },
-                        "relieve_cramps": {
-                            "type": "short"
-                        },
-                        "help_with_seizures": {
-                            "type": "short"
-                        },
-                        "restore_appetite": {
-                            "type": "short"
-                        },
-                        "help_with_insomnia": {
-                            "type": "short"
-                        }
-                    }
-                },
-                "side_effects": {
-                    "properties": {
-                        "anxiety": {
-                            "type": "short"
-                        },
-                        "dry_mouth": {
-                            "type": "short"
-                        },
-                        "paranoia": {
-                            "type": "short"
-                        },
-                        "headache": {
-                            "type": "short"
-                        },
-                        "dizziness": {
-                            "type": "short"
-                        },
-                        "dry_eyes": {
-                            "type": "short"
-                        }
-                    }
-                },
-                "flavor": {
-                    "properties": {
-                        "ammonia": {
-                            "type": "short"
-                        },
-                        "apple": {
-                            "type": "short"
-                        },
-                        "apricot": {
-                            "type": "short"
-                        },
-                        "berry": {
-                            "type": "short"
-                        },
-                        "blue_cheese": {
-                            "type": "short"
-                        },
-                        "blueberry": {
-                            "type": "short"
-                        },
-                        "buttery": {
-                            "type": "short"
-                        },
-                        "cheese": {
-                            "type": "short"
-                        },
-                        "chemical": {
-                            "type": "short"
-                        },
-                        "chestnut": {
-                            "type": "short"
-                        },
-                        "citrus": {
-                            "type": "short"
-                        },
-                        "coffee": {
-                            "type": "short"
-                        },
-                        "diesel": {
-                            "type": "short"
-                        },
-                        "earthy": {
-                            "type": "short"
-                        },
-                        "flowery": {
-                            "type": "short"
-                        },
-                        "grape": {
-                            "type": "short"
-                        },
-                        "grapefruit": {
-                            "type": "short"
-                        },
-                        "herbal": {
-                            "type": "short"
-                        },
-                        "honey": {
-                            "type": "short"
-                        },
-                        "lavender": {
-                            "type": "short"
-                        },
-                        "lemon": {
-                            "type": "short"
-                        },
-                        "lime": {
-                            "type": "short"
-                        },
-                        "mango": {
-                            "type": "short"
-                        },
-                        "menthol": {
-                            "type": "short"
-                        },
-                        "minty": {
-                            "type": "short"
-                        },
-                        "nutty": {
-                            "type": "short"
-                        },
-                        "orange": {
-                            "type": "short"
-                        },
-                        "peach": {
-                            "type": "short"
-                        },
-                        "pear": {
-                            "type": "short"
-                        },
-                        "pepper": {
-                            "type": "short"
-                        },
-                        "pine": {
-                            "type": "short"
-                        },
-                        "pineapple": {
-                            "type": "short"
-                        },
-                        "plum": {
-                            "type": "short"
-                        },
-                        "pungent": {
-                            "type": "short"
-                        },
-                        "rose": {
-                            "type": "short"
-                        },
-                        "sage": {
-                            "type": "short"
-                        },
-                        "skunk": {
-                            "type": "short"
-                        },
-                        "spicy_herbal": {
-                            "type": "short"
-                        },
-                        "strawberry": {
-                            "type": "short"
-                        },
-                        "sweet": {
-                            "type": "short"
-                        },
-                        "tar": {
-                            "type": "short"
-                        },
-                        "tea": {
-                            "type": "short"
-                        },
-                        "tobacco": {
-                            "type": "short"
-                        },
-                        "tree_fruit": {
-                            "type": "short"
-                        },
-                        "tropical": {
-                            "type": "short"
-                        },
-                        "vanilla": {
-                            "type": "short"
-                        },
-                        "violet": {
-                            "type": "short"
-                        },
-                        "woody": {
-                            "type": "short"
-                        }
-                    }
-                },
-                "about": {
-                    "type": "string"
-                },
-                "origins": {
-                    "type": "string"
-                }
-            }
-        }
 
         # create custom analyzer for strain names
         index_settings = {
@@ -373,7 +76,8 @@ class Command(BaseCommand):
         es.set_settings(self.INDEX, index_settings)
 
         # set mapping
-        es.set_mapping(self.INDEX, self.INDEX_TYPE, mapping)
+        es.set_mapping(self.INDEX, self.INDEX_TYPE, strain_mapping)
+        es.set_mapping(self.INDEX, self.SUGGESTER_INDEX_TYPE, strain_suggester_mapping)
 
         self.stdout.write('Setup complete for {0} index'.format(self.INDEX))
 
@@ -382,7 +86,8 @@ class Command(BaseCommand):
         # fetch all strains
         strains = Strain.objects.all()
 
-        bulk_data = []
+        bulk_strain_data = []
+        bulk_strain_suggester_data = []
 
         # build up bulk update
         for s in strains:
@@ -390,7 +95,8 @@ class Command(BaseCommand):
                 'index': {}
             })
 
-            doc = json.dumps({
+            bulk_strain_data.append(action_data)
+            bulk_strain_data.append(json.dumps({
                 'id': s.id,
                 'name': s.name,
                 'strain_slug': s.strain_slug,
@@ -402,22 +108,48 @@ class Command(BaseCommand):
                 'flavor': s.flavor,
                 'about': s.about,
                 'origins': ''
-            })
+            }))
 
-            bulk_data.append(action_data)
-            bulk_data.append(doc)
+            bulk_strain_suggester_data.append(action_data)
+            bulk_strain_suggester_data.append(json.dumps({
+                'name': s.name,
+                'name_suggest': {
+                    'input': s.name,
+                    'output': s.name,
+                    'payload': {
+                        'id': s.id,
+                        'name': s.name,
+                        'strain_slug': s.strain_slug,
+                        'variety': s.variety,
+                        'category': s.category
+                    }
+                }
+            }))
 
-        if len(bulk_data) == 0:
+        if len(bulk_strain_data) == 0:
             self.stdout.write('Nothing to update')
             return
 
-        transformed_bulk_data = '{0}\n'.format('\n'.join(bulk_data))
+        transformed_bulk_data = '{0}\n'.format('\n'.join(bulk_strain_data))
+        transformed_bulk_suggester_data = '{0}\n'.format('\n'.join(bulk_strain_suggester_data))
+
         results = es.bulk_index(transformed_bulk_data, index=self.INDEX, index_type=self.INDEX_TYPE)
+        results_suggester = es.bulk_index(transformed_bulk_suggester_data, index=self.INDEX,
+                                          index_type=self.SUGGESTER_INDEX_TYPE)
 
         if results.get('success') is False:
             # keep track of any errors we get
-            logger.error(('Error updating {index_type} in ES. Errors: {errors}'.format(
-                index_type=self.INDEX,
+            logger.error(('Error updating {index}/{index_type} in ES. Errors: {errors}'.format(
+                index=self.INDEX,
+                index_type=self.INDEX_TYPE,
+                errors=results.get('errors')
+            )))
+
+        if results_suggester.get('success') is False:
+            # keep track of any errors we get
+            logger.error(('Error updating {index}/{index_type} in ES. Errors: {errors}'.format(
+                index=self.INDEX,
+                index_type=self.SUGGESTER_INDEX_TYPE,
                 errors=results.get('errors')
             )))
 

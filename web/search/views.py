@@ -53,56 +53,28 @@ class StrainSearchResultView(LoginRequiredMixin, TemplateView):
 
     def get_context_data(self, **kwargs):
         context = super(StrainSearchResultView, self).get_context_data(**kwargs)
+        r = self.request
 
-        query_strain_name = self.request.GET.get('q')
-        start_from = self.request.GET.get('from')
+        query_strain_name = r.GET.get('q')  # TODO remove q param form url later
+        search_criteria = r.session.get('search_criteria')
+        start_from = r.GET.get('from')
 
-        if query_strain_name:
-            data = SearchElasticService().query_strains_by_name(query_strain_name, size=8, start_from=start_from)
-            context['search_results'] = data.get('list')
+        if search_criteria:
+            data = SearchElasticService().query_strain_srx_score(search_criteria, 8, start_from)
+            result_list = data.get('list')
+            result_list.sort(key=lambda entry: entry.get('match_percentage'), reverse=True)
+            context['search_results'] = result_list
             context['search_results_total'] = data.get('total')
             return context
 
-        dummy_response = list()  # TODO remove this later - START
+        if query_strain_name:
+            data = SearchElasticService().query_strains_by_name(query_strain_name, size=8, start_from=start_from)
+            result_list = data.get('list')
+            result_list.sort(key=lambda entry: entry.get('match_percentage'), reverse=True)
+            context['search_results'] = result_list
+            context['search_results_total'] = data.get('total')
+            return context
 
-        for num in range(0, 8):
-            dummy_response.append(
-                {
-                    'name': 'Sour Diesel' if num % 2 == 0 else 'Amnesia Haze',
-                    'type': 'Sativa',
-                    'strain_slug': 'sour-diesel-flower' if num % 2 == 0 else 'amnesia-haze-flower',
-                    'rating': "{0:.2f}".format(5 * uniform(0.3, 1)),
-                    'image': None,
-                    'match_percentage': "{0:.2f}".format(100 * uniform(0.3, 1)),
-                    'delivery_addresses': [
-                        {
-                            'state': 'CA',
-                            'city': 'Santa Monica',
-                            'street1': 'Street 1 location',
-                            'open': 'true',
-                            'distance': uniform(500, 3000) * 0.000621371  # meters * mile coefficient
-                        },
-                        {
-                            'state': 'CA',
-                            'city': 'Santa Monica',
-                            'street1': 'Street 1 location',
-                            'open': 'false',
-                            'distance': uniform(500, 3000) * 0.000621371  # meters * mile coefficient
-                        },
-                        {
-                            'state': 'CA',
-                            'city': 'Santa Monica',
-                            'street1': 'Street 1 location',
-                            'open': 'false',
-                            'distance': uniform(500, 3000) * 0.000621371  # meters * mile coefficient
-                        }
-                    ]
-                }
-            )
-
-        dummy_response.sort(key=lambda entry: entry.get('match_percentage'), reverse=True)
-        context['search_results'] = dummy_response
-        context['search_results_total'] = 24  # TODO remove this later - END
         return context
 
 
@@ -116,7 +88,7 @@ class StrainDetailView(LoginRequiredMixin, TemplateView):
 
         context = super(StrainDetailView, self).get_context_data(**kwargs)
         context['strain'] = strain
-        context['strain_image'] = image[0]
+        context['strain_image'] = image[0] if image else None
         context['strain_rating'] = 4.5  # TODO check strain overall rating
         context['favorite'] = True  # TODO check user's favorites
 

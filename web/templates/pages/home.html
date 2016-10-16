@@ -6,9 +6,9 @@
 
 {% block css %}
     <link href="{% static 'css/pages/base.css' %}" rel="stylesheet">
+    <link href="{% static 'css/pages/home.css' %}" rel="stylesheet">
     <style>
-        /* This overrides needs only on home page */
-        /* Do not remove */
+        /* Overrides related only to home page. Keep them here. */
         html, body {
             margin: 0;
         }
@@ -19,20 +19,20 @@
         }
 
         .nav-region {
-            background-color: #2f3f4c; /* dark-grey */
+            background-color: #2f3f4c;
         }
 
         .nav-list .nav-menu-btn-wrapper .nav-menu-btn {
-            color: #fff; /* white */
+            color: #fff;
         }
 
         .nav-list .nav-menu-btn-wrapper .nav-menu-btn .user-name,
         .nav-list .nav-menu-btn-wrapper .nav-menu-btn .resend-email-link {
-            color: #10b3dc; /* blue */
+            color: #10b3dc;
         }
 
         .footer-region {
-            background: #1e1e1e; /* black */
+            background: #231f20;
             text-align: left;
         }
 
@@ -42,6 +42,8 @@
         .footer-region .links-wrapper .links {
             color: #fff;
         }
+
+
     </style>
 {% endblock %}
 
@@ -83,11 +85,12 @@
                 <h2>Strains Look Up</h2>
                 <p>Use our specialized search engine to find the strain you're looking for</p>
 
-                <form class="search-form" method="post">
+                <form class="search-form">
                     {% csrf_token %}
-                    <input type="text" name="searchQuery" id="search-input"
+                    <input class="lookup-input" type="text"
                            placeholder="Example: Blue Dream, Maiu Wowie, Pineapple express"/>
-                    <button class="btn-primary" type="submit">Look Up Strain</button>
+                    <div class="payloads-region"></div>
+                    <button class="btn-primary lookup-submit" type="submit">Look Up Strain</button>
                 </form>
             </div>
         </div>

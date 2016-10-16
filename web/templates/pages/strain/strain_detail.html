@@ -133,12 +133,14 @@
                     </div>
                 </div>
             </div>
-            <div class="detail-section">
-                <div class="strain-about">
-                    <span class="section-header">A Dream To Smoke</span>
-                    <span class="about">{{ strain.about }}</span>
+            {% if strain.about %}
+                <div class="detail-section">
+                    <div class="strain-about">
+                        <span class="section-header">A Dream To Smoke</span>
+                        <span class="about">{{ strain.about }}</span>
+                    </div>
                 </div>
-            </div>
+            {% endif %}
             <div class="detail-section">
                 <div class="strain-effects">
                     <span class="section-header">

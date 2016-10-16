@@ -27,18 +27,15 @@ class SearchElasticService(BaseElasticService):
             strain_image = StrainImage.objects.filter(strain=db_strain)[:1]
             # TODO  ^ need optimization here in order not to queru strain from DB to get actual image
 
-            match_percentage = "{0:.2f}".format(100 * uniform(0.3, 1))  # TODO count match percentage with SRX
-
             processed_results.append({
                 'id': source.get('id'),
-                'internal_id': source.get('internal_id'),
                 'name': source.get('name'),
                 'strain_slug': source.get('strain_slug'),
                 'variety': source.get('variety'),
                 'category': source.get('category'),
                 'rating': rating,
-                'image': strain_image[0] if len(strain_image) > 0 else None,
-                'match_percentage': match_percentage,
+                'image_url': strain_image[0].image.url if len(strain_image) > 0 else None,
+                'match_percentage': "{0:.2f}".format(s.get('_score')),
                 'delivery_addresses': [  # TODO retrieve deliveries that has this strain for sale
                     {
                         'state': 'CA',
@@ -107,7 +104,6 @@ class SearchElasticService(BaseElasticService):
 
         return results
 
-
     def query_strain_srx_score(self, criteria, size=50, start_from=0):
         """
             Return strains ranked by SRX score
@@ -116,7 +112,7 @@ class SearchElasticService(BaseElasticService):
             start_from = 0
 
         method = self.METHODS.get('GET')
-        url = '{base}{index}{type}/_search?size={size}&from={start_from}'.format(
+        url = '{base}{index}/{type}/_search?size={size}&from={start_from}'.format(
             base=self.BASE_ELASTIC_URL,
             index=self.URLS.get('STRAIN'),
             type='flower',
@@ -124,7 +120,22 @@ class SearchElasticService(BaseElasticService):
             start_from=start_from
         )
 
-        query = {
+        query = self.build_srx_score_es_query(criteria)
+        es_response = self._request(method, url, data=json.dumps(query))
+
+        # remove extra info returned by ES and do any other necessary transforms
+        results = self._transform_strain_results(es_response)
+        return results
+
+    def build_srx_score_es_query(self, criteria):
+        # TODO not forget to use strain type at the end
+        criteria_strain_types = criteria.get('strain_types')
+
+        effects_data = self.parse_criteria_data(criteria.get('effects'))
+        benefits_data = self.parse_criteria_data(criteria.get('benefits'))
+        side_effects_data = self.parse_criteria_data(criteria.get('side_effects'))
+
+        return {
             "query": {
                 "function_score": {
                     "query": {
@@ -134,22 +145,11 @@ class SearchElasticService(BaseElasticService):
                         {
                             "script_score": {
                                 "params": {
-                                    "effectSum": 20, # TODO sum effect ratings from user criteria
-                                    "benefitSum": 3, # TODO sum benefit ratings from user criteria
-                                    "userEffects": { # TODO use actual user ratings
-                                        "happy": 5,
-                                        "relaxed": 4,
-                                        "creative": 2,
-                                        "talkative": 2,
-                                        "energetic": 2,
-                                        "sleepy": 5
-                                    },
-                                    "userBenefits": { # TODO use actual user ratings
-                                        "reduce_fatigue": 3
-                                    },
-                                    "userNegEffects": { # TODO use actual user ratings
-                                        "dry_eyes": 6
-                                    }
+                                    "effectSum": effects_data.get('sum'),
+                                    "benefitSum": benefits_data.get('sum'),
+                                    "userEffects": effects_data.get('data'),
+                                    "userBenefits": benefits_data.get('data'),
+                                    "userNegEffects": side_effects_data.get('data')
                                 },
                                 "script": "def psa=effectSum+benefitSum;def benefitPoints=0;def effectPoints=0;def negEffectPoints=0;def distLookup=[(-5):-1,(-4):-0.8,(-3):-0.51,(-2):-0.33,(-1):-0.14,(0):0,(1):-0.01,(2):-0.01,(3):-0.01,(4):-0.01,(5):-0.01];for(e in userEffects){e=e.key;def strainE=_source['effects'][e];def userE=userEffects[e];def effectBonus=0.0;dist=strainE-userE;npe=distLookup[dist]*userE;if(userE==strainE){switch(strainE){case 3:effectBonus=0.3;break;case 4:effectBonus=0.5;break;case 5:effectBonus=1.0;break;}};effectPoints+=effectBonus+userE+npe;};for(b in userBenefits){b=b.key;def strainB=_source['benefits'][b];def userB=userBenefits[b];def benefitBonus=0.0;dist=strainB-userB;npb=distLookup[dist]*userB;if(userB==strainB){switch(strainB){case 3:benefitBonus=0.3;break;case 4:benefitBonus=0.5;break;case 5:benefitBonus=1.0;break;}};benefitPoints+=benefitBonus+userB+npb;};for(ne in userNegEffects){ne=ne.key;def strainNE=_source['side_effects'][ne];def userNE=userNegEffects[ne];negPoints=0;if(userNE==0||strainNE==0){negPoints=0;}else{negPoints=(-1*(userNE-strainNE)^2)/psa;};negEffectPoints+=negPoints;};def tp=effectPoints+negEffectPoints+benefitPoints;return(tp/psa)*100;"
                             }
@@ -159,14 +159,61 @@ class SearchElasticService(BaseElasticService):
             }
         }
 
-        q = self._request(method, url, data=json.dumps(query))
+    def parse_criteria_data(self, criteria):
+        data = {}
+        data_sum = 0
+
+        if criteria and len(criteria) > 0 and criteria != 'skipped':
+            for e in criteria:
+                data_sum += e.get('value')
+                data[e.get('name')] = e.get('value')
+
+        return {
+            'data': data,
+            'sum': data_sum
+        }
+
+    def lookup_strain(self, query):
+        method = self.METHODS.get('POST')
+        url = '{base}{index}/{type}/_search'.format(
+            base=self.BASE_ELASTIC_URL,
+            index=self.URLS.get('STRAIN'),
+            type='name'
+        )
+
+        query = {
+            "suggest": {
+                "name_suggestion": {
+                    "text": query,
+                    "completion": {
+                        "field": "name_suggest"
+                    }
+                }
+            }
+        }
+
+        es_response = self._request(method, url, data=json.dumps(query))
 
         # remove extra info returned by ES and do any other necessary transforms
-        results = self._transform_strain_results(q)
-
+        results = self._transform_suggest_results(es_response)
         return results
 
+    def _transform_suggest_results(self, es_response):
+        suggests = es_response.get('suggest', {}).get('name_suggestion', {})
+        total = 0
+        payloads = []
 
+        for s in suggests:
+            options = s.get('options')
+            if options:
+                total = len(options)
+                for o in options:
+                    payloads.append(o.get('payload'))
+
+        return {
+            'total': total,
+            'payloads': payloads
+        }
 
 
 """
