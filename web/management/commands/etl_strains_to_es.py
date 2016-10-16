@@ -34,6 +34,12 @@ class Command(BaseCommand):
                             dest='index_type',
                             help='Name of ES index type to store results in')
 
+        parser.add_argument('--create_or_update_suggester',
+                            action='store_true',
+                            default=None,
+                            dest='update_suggester',
+                            help='If arg is included will create/recreate strain suggester index')
+
     def handle(self, *args, **options):
         if options.get('index'):
             self.INDEX = options.get('index').lower()
@@ -41,6 +47,7 @@ class Command(BaseCommand):
             raise CommandError('Index is required')
 
         self.DROP_AND_REBUILD = options.get('drop_and_rebuild', False)
+        self.UPDATE_SUGGESTER_INDEX = options.get('update_suggester', False)
         self.INDEX_TYPE = options.get('index_type', 'flower').lower()
         self.SUGGESTER_INDEX_TYPE = 'name'
 
@@ -77,7 +84,9 @@ class Command(BaseCommand):
 
         # set mapping
         es.set_mapping(self.INDEX, self.INDEX_TYPE, strain_mapping)
-        es.set_mapping(self.INDEX, self.SUGGESTER_INDEX_TYPE, strain_suggester_mapping)
+
+        if self.UPDATE_SUGGESTER_INDEX:
+            es.set_mapping(self.INDEX, self.SUGGESTER_INDEX_TYPE, strain_suggester_mapping)
 
         self.stdout.write('Setup complete for {0} index'.format(self.INDEX))
 
@@ -110,32 +119,29 @@ class Command(BaseCommand):
                 'origins': ''
             }))
 
-            bulk_strain_suggester_data.append(action_data)
-            bulk_strain_suggester_data.append(json.dumps({
-                'name': s.name,
-                'name_suggest': {
-                    'input': s.name,
-                    'output': s.name,
-                    'payload': {
-                        'id': s.id,
-                        'name': s.name,
-                        'strain_slug': s.strain_slug,
-                        'variety': s.variety,
-                        'category': s.category
+            if self.UPDATE_SUGGESTER_INDEX:
+                bulk_strain_suggester_data.append(action_data)
+                bulk_strain_suggester_data.append(json.dumps({
+                    'name': s.name,
+                    'name_suggest': {
+                        'input': s.name,
+                        'output': s.name,
+                        'payload': {
+                            'id': s.id,
+                            'name': s.name,
+                            'strain_slug': s.strain_slug,
+                            'variety': s.variety,
+                            'category': s.category
+                        }
                     }
-                }
-            }))
+                }))
 
         if len(bulk_strain_data) == 0:
             self.stdout.write('Nothing to update')
             return
 
         transformed_bulk_data = '{0}\n'.format('\n'.join(bulk_strain_data))
-        transformed_bulk_suggester_data = '{0}\n'.format('\n'.join(bulk_strain_suggester_data))
-
         results = es.bulk_index(transformed_bulk_data, index=self.INDEX, index_type=self.INDEX_TYPE)
-        results_suggester = es.bulk_index(transformed_bulk_suggester_data, index=self.INDEX,
-                                          index_type=self.SUGGESTER_INDEX_TYPE)
 
         if results.get('success') is False:
             # keep track of any errors we get
@@ -145,13 +151,18 @@ class Command(BaseCommand):
                 errors=results.get('errors')
             )))
 
-        if results_suggester.get('success') is False:
-            # keep track of any errors we get
-            logger.error(('Error updating {index}/{index_type} in ES. Errors: {errors}'.format(
-                index=self.INDEX,
-                index_type=self.SUGGESTER_INDEX_TYPE,
-                errors=results.get('errors')
-            )))
+        if self.UPDATE_SUGGESTER_INDEX:
+            transformed_bulk_suggester_data = '{0}\n'.format('\n'.join(bulk_strain_suggester_data))
+            results_suggester = es.bulk_index(transformed_bulk_suggester_data, index=self.INDEX,
+                                              index_type=self.SUGGESTER_INDEX_TYPE)
+
+            if results_suggester.get('success') is False:
+                # keep track of any errors we get
+                logger.error(('Error updating {index}/{index_type} in ES. Errors: {errors}'.format(
+                    index=self.INDEX,
+                    index_type=self.SUGGESTER_INDEX_TYPE,
+                    errors=results.get('errors')
+                )))
 
         self.stdout.write(
             'Updated {0} index with {1} strains'.format(self.INDEX, len(strains))
