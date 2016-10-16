@@ -9,13 +9,8 @@ gulp.task('default', function (cb) {
 });
 
 // don't watch files on stage / prod
-gulp.task('trevanna_tracks.staging', function (cb) {
-    global.watch = false;
-    console.log('\n\n Starting staging build... \n\n');
-    gulpSequence('build', cb);
-});
 
-gulp.task('trevanna_tracks.production', function (cb) {
+gulp.task('prod', function (cb) {
     global.watch = false;
     console.log('\n\n Starting production build... \n\n');
     gulpSequence('build', cb);
