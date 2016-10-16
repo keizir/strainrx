@@ -20,6 +20,8 @@ W.pages.StrainSearchWizard2Page = W.pages.StrainSearchBase.extend({
      */
     currentEffectName: '',
 
+    popupDismissed: false,
+
     ui: {
         $btnSkip: $('.btn-skip-2'),
         $btnSubmit: $('.btn-step-2'),
@@ -28,17 +30,52 @@ W.pages.StrainSearchWizard2Page = W.pages.StrainSearchBase.extend({
         $slider: $('.slider')
     },
 
-    init: function () {
-        this.clickStrainEffectListener();
-        this.clickRemoveEffectListener();
-        this.registerStep2ClickListener();
-        this.registerStep2SkipClickListener();
+    init: function init() {
+        this.restoreState();
+        this.clickStrainEffect();
+        this.clickRemoveEffect();
+        this.clickStep2Submit();
+        this.clickStep2Skip();
     },
 
-    clickStrainEffectListener: function () {
+    restoreState: function restoreState() {
+        var that = this,
+            step2State = Cookies.get('strains:search:step2');
+
+        if (step2State) {
+            step2State = JSON.parse(step2State);
+
+            if (!step2State.skipped) {
+                $.each(step2State.effects, function (index, effect) {
+                    var $effect = $('#{0}'.format(effect.name)),
+                        $parent = $effect.parent(),
+                        $importanceValue = $parent.find('.importance-value');
+
+                    $effect.addClass('active');
+                    $parent.find('.removable').removeClass('hidden');
+                    $importanceValue.removeClass('hidden');
+                    $importanceValue.text(effect.value);
+                    that.selectedEffects.push({
+                        name: effect.name,
+                        value: effect.value
+                    });
+                });
+
+                if (that.selectedEffects.length > 0) {
+                    that.toggleButtonsAndSliderState();
+                    that.currentEffectName = that.selectedEffects[that.selectedEffects.length - 1].name;
+                    that.ui.$slider.slider('value', that.selectedEffects[that.selectedEffects.length - 1].value);
+                }
+            }
+        }
+    },
+
+    clickStrainEffect: function clickStrainEffect() {
         var that = this;
 
         that.ui.$strainEffect.on('click', function () {
+            that.popupDismissed = false;
+
             var $effect = $(this),
                 effectName = $effect.attr('id'),
                 presentEffect = that.selectedEffects.filter(function (effect) {
@@ -71,17 +108,21 @@ W.pages.StrainSearchWizard2Page = W.pages.StrainSearchBase.extend({
                 }
             }
 
-            if (that.selectedEffects.length > 0) {
-                that.activateSlider();
-                that.ui.$btnSubmit.removeAttr('disabled');
-                that.ui.$btnSkip.attr('disabled', 'disabled');
-            } else {
-                that.regions.$sliderWrapper.addClass('hidden');
-            }
+            that.toggleButtonsAndSliderState();
         });
     },
 
-    clickRemoveEffectListener: function () {
+    toggleButtonsAndSliderState: function toggleButtonsAndSliderState() {
+        if (this.selectedEffects.length > 0) {
+            this.activateSlider();
+            this.ui.$btnSubmit.removeAttr('disabled');
+            this.ui.$btnSkip.attr('disabled', 'disabled');
+        } else {
+            this.regions.$sliderWrapper.addClass('hidden');
+        }
+    },
+
+    clickRemoveEffect: function clickRemoveEffect() {
         var that = this;
 
         that.ui.$removeEffect.on('click', function () {
@@ -122,7 +163,7 @@ W.pages.StrainSearchWizard2Page = W.pages.StrainSearchBase.extend({
      * Override from parent view. Used in parent
      * @param ui
      */
-    handleSlideChange: function (ui) {
+    handleSlideChange: function handleSlideChange(ui) {
         var that = this;
         this.selectedEffects.forEach(function (effect) {
             if (effect.name === that.currentEffectName) {
@@ -134,35 +175,44 @@ W.pages.StrainSearchWizard2Page = W.pages.StrainSearchBase.extend({
         });
     },
 
-    registerStep2ClickListener: function () {
+    clickStep2Submit: function clickStep2Submit() {
         var that = this;
         this.ui.$btnSubmit.on('click', function (e) {
             e.preventDefault();
+
             var doNotShowAgainCookie = Cookies.get('strains:search:donotshowagain'),
-                doNotShowAgain = !doNotShowAgainCookie || doNotShowAgainCookie === 'false';
-            if (that.selectedEffects.length === 1 && that.selectedEffects[0].value === 1 && doNotShowAgain) {
+                showDialog = !doNotShowAgainCookie || doNotShowAgainCookie === 'false';
+
+            if (that.selectedEffects[that.selectedEffects.length - 1].value === 1 && !that.popupDismissed && showDialog) {
                 var $justASecondDialog = $('.just-a-second-dialog');
                 $justASecondDialog.find('.dismiss-btn').on('click', function () {
                     $justASecondDialog.dialog('close');
+                    that.popupDismissed = true;
                 });
 
                 W.common.Dialog($justASecondDialog, function () {
+                    that.popupDismissed = false;
                     Cookies.set('strains:search:donotshowagain', $('#do-not-show-again').is(':checked'));
                 });
             } else {
-                that.sendDataToWizard({
+                var data = {
                     step: 2,
                     effects: that.selectedEffects
-                }, that.successURL);
+                };
+
+                Cookies.set('strains:search:step2', data);
+                that.sendDataToWizard(data, that.successURL);
             }
         });
     },
 
-    registerStep2SkipClickListener: function () {
+    clickStep2Skip: function clickStep2Skip() {
         var that = this;
         this.ui.$btnSkip.on('click', function (e) {
             e.preventDefault();
-            that.sendDataToWizard({step: 2, skipped: true}, that.successURL);
+            var data = {step: 2, skipped: true};
+            Cookies.set('strains:search:step2', data);
+            that.sendDataToWizard(data, that.successURL);
         });
     }
 });

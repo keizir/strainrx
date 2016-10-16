@@ -4,29 +4,43 @@ W.ns('W.users');
 
 W.users.DetailPage = Class.extend({
 
-    init: function () {
-        this.registerUpdateUserInfoClickListener();
-        this.registerChangePasswordClickListener();
+    ui: {
+        $messagesRegion: $('.messages')
     },
 
-    registerUpdateUserInfoClickListener: function () {
+    init: function () {
+        var that = this;
+
+        $('select').focus(function () {
+            that.ui.$messagesRegion.text('');
+        });
+
+        this.clickUpdateUserInfo();
+        this.clickChangePassword();
+    },
+
+    clickUpdateUserInfo: function clickUpdateUserInfo() {
         var that = this;
 
         $('.btn-update-user-info').on('click', function (e) {
             e.preventDefault();
 
-            $.ajax({
-                method: 'PUT',
-                url: '/api/v1/users/' + $('input[name="uid"]').val() + '/',
-                dataType: 'json',
-                data: JSON.stringify(collectUserData()),
-                success: function () {
-                    that.showSuccessMessage('You profile information has been successfully updated');
-                },
-                error: function (error) {
-                    that.showErrorMessage(error);
-                }
-            });
+            var data = collectUserData();
+
+            if (isValid(data)) {
+                $.ajax({
+                    method: 'PUT',
+                    url: '/api/v1/users/' + $('input[name="uid"]').val() + '/',
+                    dataType: 'json',
+                    data: JSON.stringify(data),
+                    success: function () {
+                        that.showSuccessMessage('You profile information has been successfully updated');
+                    },
+                    error: function (error) {
+                        that.showErrorMessage(error);
+                    }
+                });
+            }
 
             function collectUserData() {
                 var defaultSelectValue = '- Select One -',
@@ -48,10 +62,22 @@ W.users.DetailPage = Class.extend({
                     'gender': gender !== defaultSelectValue ? gender : null
                 };
             }
+
+            function isValid(data) {
+                var birthDay = data.birth_day,
+                    birthMonth = data.birth_month;
+
+                if (birthDay && birthMonth && birthDay > 28 && birthMonth === 'feb') {
+                    that.displayErrorMessage('February has only 28 days');
+                    return false;
+                }
+
+                return true;
+            }
         });
     },
 
-    registerChangePasswordClickListener: function () {
+    clickChangePassword: function clickChangePassword() {
         var that = this;
 
         $('.btn-update-pwd').on('click', function (e) {
@@ -78,28 +104,31 @@ W.users.DetailPage = Class.extend({
         });
     },
 
-    showSuccessMessage: function (message) {
-        var $messages = $('.messages');
-        $messages.text(message);
-        $messages.removeClass('error-message');
-        $messages.addClass('success-message');
+    showSuccessMessage: function showSuccessMessage(message) {
+        var $messagesRegion = this.ui.$messagesRegion;
+        $messagesRegion.text(message);
+        $messagesRegion.removeClass('error-message');
+        $messagesRegion.addClass('success-message');
         setTimeout(function () {
-            $messages.text('');
+            $messagesRegion.text('');
         }, 3000);
     },
 
-    showErrorMessage: function (error) {
+    showErrorMessage: function showErrorMessage(error) {
+        var that = this;
         if (error.status === 400) {
-            var $messages = $('.messages'),
-                errorText = JSON.parse(error.responseText);
-
-            $messages.text(errorText.error ?
+            var errorText = JSON.parse(error.responseText);
+            that.displayErrorMessage(errorText.error ?
                 errorText.error : errorText.zipcode ?
                 'Zip Code may contain max 10 characters' : errorText.email ?
                 'Email format is invalid' : 'Exception');
-
-            $messages.removeClass('success-message');
-            $messages.addClass('error-message');
         }
+    },
+
+    displayErrorMessage: function displayErrorMessage(message) {
+        var $messagesRegion = this.ui.$messagesRegion;
+        $messagesRegion.text(message);
+        $messagesRegion.removeClass('success-message');
+        $messagesRegion.addClass('error-message');
     }
 });

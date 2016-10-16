@@ -20,6 +20,8 @@ W.pages.StrainSearchWizard3Page = W.pages.StrainSearchBase.extend({
      */
     currentBenefitName: '',
 
+    popupDismissed: false,
+
     ui: {
         $btnSkip: $('.btn-skip-3'),
         $btnSubmit: $('.btn-step-3'),
@@ -28,17 +30,52 @@ W.pages.StrainSearchWizard3Page = W.pages.StrainSearchBase.extend({
         $slider: $('.slider')
     },
 
-    init: function () {
-        this.clickStrainBenefitListener();
-        this.clickRemoveBenefitListener();
-        this.registerStep3ClickListener();
-        this.registerStep3SkipClickListener();
+    init: function init() {
+        this.restoreState();
+        this.clickStrainBenefit();
+        this.clickRemoveBenefit();
+        this.clickStep3Submit();
+        this.clickStep3Skip();
     },
 
-    clickStrainBenefitListener: function () {
+    restoreState: function restoreState() {
+        var that = this,
+            step3State = Cookies.get('strains:search:step3');
+
+        if (step3State) {
+            step3State = JSON.parse(step3State);
+
+            if (!step3State.skipped) {
+                $.each(step3State.benefits, function (index, benefit) {
+                    var $effect = $('#{0}'.format(benefit.name)),
+                        $parent = $effect.parent(),
+                        $importanceValue = $parent.find('.importance-value');
+
+                    $effect.addClass('active');
+                    $parent.find('.removable').removeClass('hidden');
+                    $importanceValue.removeClass('hidden');
+                    $importanceValue.text(benefit.value);
+                    that.selectedBenefits.push({
+                        name: benefit.name,
+                        value: benefit.value
+                    });
+                });
+
+                if (that.selectedBenefits.length > 0) {
+                    that.toggleButtonsAndSliderState();
+                    that.currentBenefitName = that.selectedBenefits[that.selectedBenefits.length - 1].name;
+                    that.ui.$slider.slider('value', that.selectedBenefits[that.selectedBenefits.length - 1].value);
+                }
+            }
+        }
+    },
+
+    clickStrainBenefit: function clickStrainBenefit() {
         var that = this;
 
         that.ui.$strainBenefit.on('click', function () {
+            that.popupDismissed = false;
+
             var $benefit = $(this),
                 benefitName = $benefit.attr('id'),
                 presentBenefit = that.selectedBenefits.filter(function (benefit) {
@@ -71,17 +108,21 @@ W.pages.StrainSearchWizard3Page = W.pages.StrainSearchBase.extend({
                 }
             }
 
-            if (that.selectedBenefits.length > 0) {
-                that.activateSlider();
-                that.ui.$btnSubmit.removeAttr('disabled');
-                that.ui.$btnSkip.attr('disabled', 'disabled');
-            } else {
-                that.regions.$sliderWrapper.addClass('hidden');
-            }
+            that.toggleButtonsAndSliderState();
         });
     },
 
-    clickRemoveBenefitListener: function () {
+    toggleButtonsAndSliderState: function toggleButtonsAndSliderState() {
+        if (this.selectedBenefits.length > 0) {
+            this.activateSlider();
+            this.ui.$btnSubmit.removeAttr('disabled');
+            this.ui.$btnSkip.attr('disabled', 'disabled');
+        } else {
+            this.regions.$sliderWrapper.addClass('hidden');
+        }
+    },
+
+    clickRemoveBenefit: function clickRemoveBenefit() {
         var that = this;
 
         that.ui.$removeBenefit.on('click', function () {
@@ -122,7 +163,7 @@ W.pages.StrainSearchWizard3Page = W.pages.StrainSearchBase.extend({
      * Override from parent view. Used in parent
      * @param ui
      */
-    handleSlideChange: function (ui) {
+    handleSlideChange: function handleSlideChange(ui) {
         var that = this;
         this.selectedBenefits.forEach(function (benefit) {
             if (benefit.name === that.currentBenefitName) {
@@ -134,35 +175,43 @@ W.pages.StrainSearchWizard3Page = W.pages.StrainSearchBase.extend({
         });
     },
 
-    registerStep3ClickListener: function () {
+    clickStep3Submit: function clickStep3Submit() {
         var that = this;
         this.ui.$btnSubmit.on('click', function (e) {
             e.preventDefault();
+
             var doNotShowAgainCookie = Cookies.get('strains:search:donotshowagain'),
-                doNotShowAgain = !doNotShowAgainCookie || doNotShowAgainCookie === 'false';
-            if (that.selectedBenefits.length === 1 && that.selectedBenefits[0].value === 1 && doNotShowAgain) {
+                showDialog = !doNotShowAgainCookie || doNotShowAgainCookie === 'false';
+
+            if (that.selectedBenefits[that.selectedBenefits.length - 1].value === 1 && !that.popupDismissed && showDialog) {
                 var $justASecondDialog = $('.just-a-second-dialog');
                 $justASecondDialog.find('.dismiss-btn').on('click', function () {
                     $justASecondDialog.dialog('close');
+                    that.popupDismissed = true;
                 });
 
                 W.common.Dialog($justASecondDialog, function () {
+                    that.popupDismissed = false;
                     Cookies.set('strains:search:donotshowagain', $('#do-not-show-again').is(':checked'));
                 });
             } else {
-                that.sendDataToWizard({
+                var data = {
                     step: 3,
                     benefits: that.selectedBenefits
-                }, that.successURL);
+                };
+                Cookies.set('strains:search:step3', data);
+                that.sendDataToWizard(data, that.successURL);
             }
         });
     },
 
-    registerStep3SkipClickListener: function () {
+    clickStep3Skip: function clickStep3Skip() {
         var that = this;
         this.ui.$btnSkip.on('click', function (e) {
             e.preventDefault();
-            that.sendDataToWizard({step: 3, skipped: true}, that.successURL);
+            var data = {step: 3, skipped: true};
+            Cookies.set('strains:search:step3', data);
+            that.sendDataToWizard(data, that.successURL);
         });
     }
 });

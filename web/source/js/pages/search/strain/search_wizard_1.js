@@ -15,27 +15,57 @@ W.pages.StrainSearchWizard1Page = W.pages.StrainSearchBase.extend({
         $checkbox: $('input[type="checkbox"]')
     },
 
-    init: function () {
+    init: function init() {
+        this.restoreState();
         this.clickStep1Submit();
-        this.ckickStep1Skip();
+        this.clickStep1Skip();
         this.clickTypeInfo();
         this.clickCheckbox();
     },
 
-    clickStep1Submit: function () {
+    restoreState: function restoreState() {
+        var step1State = Cookies.get('strains:search:step1');
+
+        if (step1State) {
+            step1State = JSON.parse(step1State);
+
+            if (step1State.sativa) {
+                $('input[name="sativa"]').prop('checked', 'checked');
+                this.checkedTypes.push('sativa');
+            }
+
+            if (step1State.hybrid) {
+                $('input[name="hybrid"]').prop('checked', 'checked');
+                this.checkedTypes.push('hybrid');
+            }
+
+            if (step1State.indica) {
+                $('input[name="indica"]').prop('checked', 'checked');
+                this.checkedTypes.push('indica');
+            }
+
+            this.toggleSubmitButtonState();
+        }
+
+    },
+
+    clickStep1Submit: function clickStep1Submit() {
         var that = this;
         this.ui.$btnSubmit.on('click', function (e) {
             e.preventDefault();
-            that.sendDataToWizard({
+            var data = {
                 step: 1,
                 sativa: $('input[name="sativa"]').is(":checked"),
                 hybrid: $('input[name="hybrid"]').is(":checked"),
                 indica: $('input[name="indica"]').is(":checked")
-            }, that.successURL);
+            };
+
+            Cookies.set('strains:search:step1', data);
+            that.sendDataToWizard(data, that.successURL);
         });
     },
 
-    ckickStep1Skip: function () {
+    clickStep1Skip: function clickStep1Skip() {
         var that = this;
         this.ui.$btnSkip.on('click', function (e) {
             e.preventDefault();
@@ -43,14 +73,14 @@ W.pages.StrainSearchWizard1Page = W.pages.StrainSearchBase.extend({
         });
     },
 
-    clickTypeInfo: function () {
+    clickTypeInfo: function clickTypeInfo() {
         this.ui.$typeInfo.on('click', function (e) {
             e.preventDefault();
             W.common.Dialog($('.' + $(this).parent().find('.type').attr('id') + '-dialog'));
         });
     },
 
-    clickCheckbox: function () {
+    clickCheckbox: function clickCheckbox() {
         var that = this;
         this.ui.$checkbox.on('click', function () {
             var $checkbox = $(this);
@@ -65,11 +95,15 @@ W.pages.StrainSearchWizard1Page = W.pages.StrainSearchBase.extend({
                 }
             }
 
-            if (that.checkedTypes.length > 0) {
-                that.ui.$btnSubmit.removeAttr('disabled');
-            } else {
-                that.ui.$btnSubmit.attr('disabled', 'disabled');
-            }
+            that.toggleSubmitButtonState();
         });
+    },
+
+    toggleSubmitButtonState: function toggleSubmitButtonState() {
+        if (this.checkedTypes.length > 0) {
+            this.ui.$btnSubmit.removeAttr('disabled');
+        } else {
+            this.ui.$btnSubmit.attr('disabled', 'disabled');
+        }
     }
 });

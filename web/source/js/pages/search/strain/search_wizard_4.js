@@ -20,6 +20,8 @@ W.pages.StrainSearchWizard4Page = W.pages.StrainSearchBase.extend({
      */
     currentSideEffectName: '',
 
+    popupDismissed: false,
+
     ui: {
         $btnSkip: $('.btn-skip-4'),
         $btnSubmit: $('.btn-step-4'),
@@ -28,17 +30,19 @@ W.pages.StrainSearchWizard4Page = W.pages.StrainSearchBase.extend({
         $slider: $('.slider')
     },
 
-    init: function () {
-        this.clickStrainSideEffectListener();
-        this.clickRemoveSideEffectListener();
-        this.registerStep4ClickListener();
-        this.registerStep4SkipClickListener();
+    init: function init() {
+        this.clickStrainSideEffect();
+        this.clickRemoveSideEffect();
+        this.clickStep4Submit();
+        this.clickStep4Skip();
     },
 
-    clickStrainSideEffectListener: function () {
+    clickStrainSideEffect: function clickStrainSideEffect() {
         var that = this;
 
         that.ui.$strainSideEffect.on('click', function () {
+            that.popupDismissed = false;
+
             var $sideEffect = $(this),
                 sideEffectName = $sideEffect.attr('id'),
                 presentSideEffect = that.selectedSideEffects.filter(function (sideEffect) {
@@ -70,7 +74,7 @@ W.pages.StrainSearchWizard4Page = W.pages.StrainSearchBase.extend({
         });
     },
 
-    clickRemoveSideEffectListener: function () {
+    clickRemoveSideEffect: function clickRemoveSideEffect() {
         var that = this;
 
         that.ui.$removeSideEffect.on('click', function () {
@@ -105,7 +109,7 @@ W.pages.StrainSearchWizard4Page = W.pages.StrainSearchBase.extend({
      * Override from parent view. Used in parent
      * @param ui
      */
-    handleSlideChange: function (ui) {
+    handleSlideChange: function handleSlideChange(ui) {
         var that = this;
         this.selectedSideEffects.forEach(function (sideEffect) {
             if (sideEffect.name === that.currentSideEffectName) {
@@ -117,19 +121,23 @@ W.pages.StrainSearchWizard4Page = W.pages.StrainSearchBase.extend({
         });
     },
 
-    registerStep4ClickListener: function () {
+    clickStep4Submit: function clickStep4Submit() {
         var that = this;
         this.ui.$btnSubmit.on('click', function (e) {
             e.preventDefault();
+
             var doNotShowAgainCookie = Cookies.get('strains:search:donotshowagain'),
-                doNotShowAgain = !doNotShowAgainCookie || doNotShowAgainCookie === 'false';
-            if (that.selectedSideEffects.length === 1 && that.selectedSideEffects[0].value === 1 && doNotShowAgain) {
+                showDialog = !doNotShowAgainCookie || doNotShowAgainCookie === 'false';
+
+            if (that.selectedSideEffects[that.selectedSideEffects.length - 1].value === 1 && !that.popupDismissed && showDialog) {
                 var $justASecondDialog = $('.just-a-second-dialog');
                 $justASecondDialog.find('.dismiss-btn').on('click', function () {
                     $justASecondDialog.dialog('close');
+                    that.popupDismissed = true;
                 });
 
                 W.common.Dialog($justASecondDialog, function () {
+                    that.popupDismissed = false;
                     Cookies.set('strains:search:donotshowagain', $('#do-not-show-again').is(':checked'));
                 });
             } else {
@@ -141,7 +149,7 @@ W.pages.StrainSearchWizard4Page = W.pages.StrainSearchBase.extend({
         });
     },
 
-    registerStep4SkipClickListener: function () {
+    clickStep4Skip: function clickStep4Skip() {
         var that = this;
         this.ui.$btnSkip.on('click', function (e) {
             e.preventDefault();
