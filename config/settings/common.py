@@ -11,6 +11,8 @@ https://docs.djangoproject.com/en/dev/ref/settings/
 from __future__ import absolute_import, unicode_literals
 
 import environ
+import os
+import raven
 
 ROOT_DIR = environ.Path(__file__) - 3  # (web/config/settings/common.py - 3 = web/)
 APPS_DIR = ROOT_DIR.path('web')
@@ -40,7 +42,8 @@ THIRD_PARTY_APPS = (
     'allauth.account',  # registration
     'allauth.socialaccount',  # registration
     'rest_framework',  # API,
-    'storages'
+    'storages',
+    'raven.contrib.django.raven_compat',
 )
 
 # Apps specific for this project go here.
@@ -93,7 +96,7 @@ EMAIL_BACKEND = env('DJANGO_EMAIL_BACKEND', default='django.core.mail.backends.s
 # ------------------------------------------------------------------------------
 # See: https://docs.djangoproject.com/en/dev/ref/settings/#admins
 ADMINS = (
-    ("""Kostiantyn Noha""", 'kostiantyn.noha@gmail.com'),
+    ("""Strain Tech""", 'tech@strainrx.co'),
 )
 
 # See: https://docs.djangoproject.com/en/dev/ref/settings/#managers
@@ -103,8 +106,14 @@ MANAGERS = ADMINS
 # ------------------------------------------------------------------------------
 # See: https://docs.djangoproject.com/en/dev/ref/settings/#databases
 DATABASES = {
-    # Raises ImproperlyConfigured exception if DATABASE_URL not in os.environ
-    'default': env.db('DATABASE_URL', default='postgres:///web'),
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': env('DB_NAME', default=''),
+        'USER': env('DB_USER', default=''),
+        'PASSWORD': env('DB_PASSWORD', default=''),
+        'HOST': env('DB_HOST', default=''),
+        'PORT': '5432',
+    }
 }
 DATABASES['default']['ATOMIC_REQUESTS'] = True
 
@@ -253,8 +262,10 @@ LOGGER_NAME = 'web'
 
 MAX_STRAIN_IMAGE_SIZE = 10 * 1024 * 1024  # 10 MB
 
-SENDGRID_API_KEY = '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'
+SENDGRID_API_KEY = env('SENDGRID_API_KEY', default='')
 DEFAULT_FROM_EMAIL = 'support@strainrx.co'
+
+HOST = env('HOST_URL', default='localhost:8000')
 
 AWS_S3_SECURE_URLS = False  # use http instead of https
 AWS_QUERYSTRING_AUTH = False  # don't add complex authentication-related query parameters for requests
@@ -265,3 +276,87 @@ DEFAULT_FILE_STORAGE = 'storages.backends.s3boto.S3BotoStorage'
 ELASTICSEARCH_URL = env('ELASTICSEARCH_URL', default='')
 ELASTICSEARCH_USERNAME = env('ELASTICSEARCH_USERNAME', default='')
 ELASTICSEARCH_PASSWORD = env('ELASTICSEARCH_PASSWORD', default='')
+
+# AWS
+AWS_ACCESS_KEY_ID = env('DJANGO_AWS_ACCESS_KEY_ID', default='')
+AWS_SECRET_ACCESS_KEY = env('DJANGO_AWS_SECRET_ACCESS_KEY', default='')
+AWS_STORAGE_BUCKET_NAME = env('DJANGO_AWS_STORAGE_BUCKET_NAME', default='')
+
+SERVER_ENV = env('SERVER_ENV', default='dev')
+
+RAVEN_CONFIG = {
+    'dsn': env('SENTRY_DSN', default=''),
+    # If you are using git, you can also automatically configure the
+    # release based on the git info.
+    'release': raven.fetch_git_sha(os.path.dirname(APPS_DIR)),
+    'environment': SERVER_ENV
+}
+
+# LOGGING CONFIGURATION
+# ------------------------------------------------------------------------------
+# See: https://docs.djangoproject.com/en/dev/ref/settings/#logging
+# A sample logging configuration. The only tangible logging
+# performed by this configuration is to send an email to
+# the site admins on every HTTP 500 error when DEBUG=False.
+# See http://docs.djangoproject.com/en/dev/topics/logging for
+# more details on how to customize your logging configuration.
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': True,
+    'filters': {
+        'require_debug_false': {
+            '()': 'django.utils.log.RequireDebugFalse'
+        }
+    },
+    'formatters': {
+        'verbose': {
+            'format': '%(levelname)s %(asctime)s %(module)s '
+                      '%(process)d %(thread)d %(message)s'
+        },
+    },
+    'handlers': {
+        'mail_admins': {
+            'level': 'ERROR',
+            'filters': ['require_debug_false'],
+            'class': 'django.utils.log.AdminEmailHandler'
+        },
+        'console': {
+            'level': 'DEBUG',
+            'class': 'logging.StreamHandler',
+            'formatter': 'verbose',
+        },
+        'sentry': {
+            'level': 'ERROR',
+            'class': 'raven.contrib.django.raven_compat.handlers.SentryHandler',
+            'tags': {
+                'environment': SERVER_ENV
+            }
+        }
+    },
+    'loggers': {
+        'web': {
+            'level': 'DEBUG',
+            'handlers': ['sentry']
+        },
+        'django.request': {
+            'handlers': ['mail_admins'],
+            'level': 'ERROR',
+            'propagate': True
+        },
+        'django.security.DisallowedHost': {
+            'level': 'ERROR',
+            'handlers': ['console', 'mail_admins'],
+            'propagate': True
+        },
+        'raven': {
+            'level': 'DEBUG',
+            'handlers': ['console'],
+            'propagate': False,
+        },
+        'sentry.errors': {
+            'level': 'DEBUG',
+            'handlers': ['console'],
+            'propagate': False,
+        },
+    }
+}

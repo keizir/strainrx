@@ -46,9 +46,14 @@ sendgrid==3.4.0
 boto==2.42.0
 django-storages==1.5.1
 
+# Email backends for Mailgun, Postmark, SendGrid and more
+# -------------------------------------------------------
+django-anymail==0.4.2
+
 
 
 # Your custom requirements go here
 # API
 djangorestframework==3.4.6
 requests==2.11.1
+raven==5.27.1

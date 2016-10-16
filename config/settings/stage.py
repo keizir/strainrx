@@ -17,7 +17,7 @@ from .common import *  # noqa
 
 # DEBUG
 # ------------------------------------------------------------------------------
-DEBUG = env.bool('DJANGO_DEBUG', default=True)
+DEBUG = env.bool('DJANGO_DEBUG', default=False)
 TEMPLATES[0]['OPTIONS']['debug'] = DEBUG
 
 # SECRET CONFIGURATION
@@ -70,19 +70,4 @@ INSTALLED_APPS += ('django_extensions',)
 # ------------------------------------------------------------------------------
 TEST_RUNNER = 'django.test.runner.DiscoverRunner'
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'stage_ds_oltp',
-        'USER': 'strains_admin',
-        'PASSWORD': '0180c348-6dc6-42f0-9ff9-43cd02162a02',
-        'HOST': 'strainrx-ds-oltp.cpdsc6jugpam.us-west-2.rds.amazonaws.com',
-        'PORT': '5432',
-    }
-}
 
-HOST = 'http://ec2-54-70-213-66.us-west-2.compute.amazonaws.com'
-
-AWS_S3_ACCESS_KEY_ID = env('AWS_S3_ACCESS_KEY_ID')
-AWS_S3_SECRET_ACCESS_KEY = env('AWS_S3_SECRET_ACCESS_KEY')
-AWS_STORAGE_BUCKET_NAME = env('AWS_STORAGE_BUCKET_NAME')
