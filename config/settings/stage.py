@@ -12,6 +12,10 @@ Stage settings
 
 import os
 import socket
+from __future__ import absolute_import, unicode_literals
+
+from boto.s3.connection import OrdinaryCallingFormat
+from django.utils import six
 
 from .common import *  # noqa
 
@@ -26,12 +30,18 @@ TEMPLATES[0]['OPTIONS']['debug'] = DEBUG
 # Note: This key only used for development and testing.
 SECRET_KEY = env('DJANGO_SECRET_KEY', default='!3ioc^sm0fa9-zg9!v7&^-vz98#j(2f5=_kko%&-&cz91b0522')
 
-# Mail settings
+# EMAIL
 # ------------------------------------------------------------------------------
+DEFAULT_FROM_EMAIL = env('DJANGO_DEFAULT_FROM_EMAIL',
+                         default='web <noreply@example.com>')
+EMAIL_SUBJECT_PREFIX = env('DJANGO_EMAIL_SUBJECT_PREFIX', default='[web] ')
+SERVER_EMAIL = env('DJANGO_SERVER_EMAIL', default=DEFAULT_FROM_EMAIL)
 
-EMAIL_PORT = 1025
+# Anymail
+INSTALLED_APPS += ("anymail",)
+ANYMAIL = {
 
-EMAIL_HOST = 'localhost'
+}
 EMAIL_BACKEND = env('DJANGO_EMAIL_BACKEND',
                     default='django.core.mail.backends.console.EmailBackend')
 
@@ -43,6 +53,58 @@ CACHES = {
         'LOCATION': ''
     }
 }
+
+# SITE CONFIGURATION
+# ------------------------------------------------------------------------------
+# Hosts/domain names that are valid for this site
+# See https://docs.djangoproject.com/en/1.6/ref/settings/#allowed-hosts
+ALLOWED_HOSTS = env.list('DJANGO_ALLOWED_HOSTS', default=['example.com'])
+# END SITE CONFIGURATION
+
+INSTALLED_APPS += ('gunicorn',)
+
+# STORAGE CONFIGURATION
+# ------------------------------------------------------------------------------
+# Uploaded Media Files
+# ------------------------
+# See: http://django-storages.readthedocs.io/en/latest/index.html
+INSTALLED_APPS += (
+    'storages',
+)
+
+# AWS cache settings, don't change unless you know what you're doing:
+AWS_EXPIRY = 60 * 60 * 24 * 7
+
+# TODO See: https://github.com/jschneier/django-storages/issues/47
+# Revert the following and use str after the above-mentioned bug is fixed in
+# either django-storage-redux or boto
+AWS_HEADERS = {
+    'Cache-Control': six.b('max-age=%d, s-maxage=%d, must-revalidate' % (
+        AWS_EXPIRY, AWS_EXPIRY))
+}
+
+# URL that handles the media served from MEDIA_ROOT, used for managing
+# stored files.
+
+#  See:http://stackoverflow.com/questions/10390244/
+from storages.backends.s3boto import S3BotoStorage
+
+StaticRootS3BotoStorage = lambda: S3BotoStorage(location='static')
+MediaRootS3BotoStorage = lambda: S3BotoStorage(location='media')
+DEFAULT_FILE_STORAGE = 'config.settings.production.MediaRootS3BotoStorage'
+
+MEDIA_URL = 'https://s3.amazonaws.com/%s/media/' % AWS_STORAGE_BUCKET_NAME
+
+# Static Assets
+# ------------------------
+
+STATIC_URL = 'https://s3.amazonaws.com/%s/static/' % AWS_STORAGE_BUCKET_NAME
+STATICFILES_STORAGE = 'config.settings.production.StaticRootS3BotoStorage'
+# See: https://github.com/antonagestam/collectfast
+# For Django 1.7+, 'collectfast' should come before
+# 'django.contrib.staticfiles'
+AWS_PRELOAD_METADATA = True
+INSTALLED_APPS = ('collectfast',) + INSTALLED_APPS
 
 # django-debug-toolbar
 # ------------------------------------------------------------------------------

@@ -14,6 +14,9 @@ import environ
 import os
 import raven
 
+from boto.s3.connection import OrdinaryCallingFormat
+from django.utils import six
+
 ROOT_DIR = environ.Path(__file__) - 3  # (web/config/settings/common.py - 3 = web/)
 APPS_DIR = ROOT_DIR.path('web')
 
@@ -282,6 +285,9 @@ ELASTICSEARCH_PASSWORD = env('ELASTICSEARCH_PASSWORD', default='')
 AWS_ACCESS_KEY_ID = env('DJANGO_AWS_ACCESS_KEY_ID', default='')
 AWS_SECRET_ACCESS_KEY = env('DJANGO_AWS_SECRET_ACCESS_KEY', default='')
 AWS_STORAGE_BUCKET_NAME = env('DJANGO_AWS_STORAGE_BUCKET_NAME', default='')
+AWS_AUTO_CREATE_BUCKET = True
+AWS_QUERYSTRING_AUTH = False
+AWS_S3_CALLING_FORMAT = OrdinaryCallingFormat()
 
 SERVER_ENV = env('SERVER_ENV', default='dev')
 
