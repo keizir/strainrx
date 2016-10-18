@@ -58,7 +58,7 @@ CACHES = {
 # ------------------------------------------------------------------------------
 # Hosts/domain names that are valid for this site
 # See https://docs.djangoproject.com/en/1.6/ref/settings/#allowed-hosts
-ALLOWED_HOSTS = env.list('DJANGO_ALLOWED_HOSTS', default=['example.com'])
+ALLOWED_HOSTS = ['staging.strainrx.co']
 # END SITE CONFIGURATION
 
 INSTALLED_APPS += ('gunicorn',)
@@ -108,11 +108,8 @@ INSTALLED_APPS = ('collectfast',) + INSTALLED_APPS
 # MIDDLEWARE_CLASSES += ('debug_toolbar.middleware.DebugToolbarMiddleware',)
 # INSTALLED_APPS += ('debug_toolbar',)
 
-INTERNAL_IPS = ['54.70.213.66', ]
-# tricks to have debug toolbar when developing with docker
-if os.environ.get('USE_DOCKER') == 'yes':
-    ip = socket.gethostbyname(socket.gethostname())
-    INTERNAL_IPS += [ip[:-1] + "1"]
+HOST = 'http://staging.strainrx.co'
+
 
 # DEBUG_TOOLBAR_CONFIG = {
 #     'DISABLE_PANELS': [
