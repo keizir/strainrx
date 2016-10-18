@@ -8,7 +8,7 @@
 {% block head_title %}Sign In{% endblock %}
 
 {% block css %}
-    <link href="{% static 'css/pages/base.css' %}" rel="stylesheet">
+    {{ block.super }}
     <link href="{% static 'css/pages/login.css' %}" rel="stylesheet">
 {% endblock %}
 
@@ -38,5 +38,10 @@
 {% endblock %}
 
 {% block javascript %}
+    {{ block.super }}
     <script src="{% static 'js/pages/users/user_login.js' %}"></script>
+    <script src="{% static 'js/modules/user_login.js' %}"></script>
+    <script>
+        W.users.Login.init();
+    </script>
 {% endblock %}

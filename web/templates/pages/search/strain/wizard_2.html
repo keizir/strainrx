@@ -96,6 +96,7 @@
 {% endblock %}
 
 {% block javascript %}
+    {{ block.super }}
     <script src="{% static 'js/pages/search/strain/search_wizard_base.js' %}"></script>
     <script src="{% static 'js/pages/search/strain/search_wizard_2.js' %}"></script>
     <script type="text/javascript">

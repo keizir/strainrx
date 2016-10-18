@@ -28,4 +28,9 @@ urlpatterns = [
             view=ResendConfirmationEmailView.as_view(),
             name='resend_email_confirmation'
     ),
+    url(
+            regex=r'^reset-password',
+            view=ResetPasswordView.as_view(),
+            name='reset_password'
+    ),
 ]

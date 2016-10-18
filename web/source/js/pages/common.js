@@ -133,9 +133,9 @@ var W = {
          Takes in query string and returns a dictionary of any params found
          :qs is optional - will use current URL if not supplied
          */
-        var query = (queryString === undefined) ? window.location.search.substring(1) : queryString.split('?')[1];
-        var vars = query.split('&');
-        var data = {};
+        var query = (queryString === undefined) ? window.location.search.substring(1) : queryString.split('?')[1],
+            vars = query.split('&'),
+            data = {};
 
         for (var i = 0, len = vars.length; i < len; i++) {
             var pair = vars[i].split('=');

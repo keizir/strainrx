@@ -4,7 +4,7 @@
 {% block title %}User Profile{% endblock %}
 
 {% block css %}
-    <link href="{% static 'css/pages/base.css' %}" rel="stylesheet">
+    {{ block.super }}
     <link href="{% static 'css/users/user_detail.css' %}" rel="stylesheet">
 {% endblock %}
 
@@ -63,6 +63,7 @@
 {% endblock content %}
 
 {% block javascript %}
+    {{ block.super }}
     <script src="{% static 'js/users/user_detail.js' %}"></script>
     <script type="text/javascript">
         new W.users.DetailPage();

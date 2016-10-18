@@ -108,23 +108,23 @@
     <i class="fa fa-spinner fa-pulse"></i>
 </div>
 
-<script src="{% static 'js/vendor/jquery.min.js' %}"></script>
-<script src="{% static 'js/vendor/jquery.validate.min.js' %}"></script>
-<script src="{% static 'js/vendor/jquery-ui.min.js' %}"></script>
-<script src="{% static 'js/vendor/lodash.min.js' %}"></script>
-<script src="{% static 'js/vendor/class.js' %}"></script>
-<script src="{% static 'js/vendor/js.cookie.js' %}"></script>
-<script src="{% static 'js/vendor/jquery.rateyo.min.js' %}"></script>
-<script src="{% static 'js/pages/common.js' %}"></script>
-<script src="{% static 'js/views/base_view.js' %}"></script>
-<script src="{% static 'js/pages/base.js' %}"></script>
-<script src="{% static 'js/common/constants.js' %}"></script>
-<script src="{% static 'js/common/dialog.js' %}"></script>
-<script type="text/javascript">
-    W.Base.init();
-</script>
-
-{% block javascript %}{% endblock javascript %}
+{% block javascript %}
+    <script src="{% static 'js/vendor/jquery.min.js' %}"></script>
+    <script src="{% static 'js/vendor/jquery.validate.min.js' %}"></script>
+    <script src="{% static 'js/vendor/jquery-ui.min.js' %}"></script>
+    <script src="{% static 'js/vendor/lodash.min.js' %}"></script>
+    <script src="{% static 'js/vendor/class.js' %}"></script>
+    <script src="{% static 'js/vendor/js.cookie.js' %}"></script>
+    <script src="{% static 'js/vendor/jquery.rateyo.min.js' %}"></script>
+    <script src="{% static 'js/pages/common.js' %}"></script>
+    <script src="{% static 'js/views/base_view.js' %}"></script>
+    <script src="{% static 'js/pages/base.js' %}"></script>
+    <script src="{% static 'js/common/constants.js' %}"></script>
+    <script src="{% static 'js/common/dialog.js' %}"></script>
+    <script type="text/javascript">
+        W.Base.init();
+    </script>
+{% endblock javascript %}
 
 </body>
 

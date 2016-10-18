@@ -44,3 +44,10 @@ class User(AbstractUser):
 
     def get_absolute_url(self):
         return reverse('users:detail', kwargs={'username': self.username})
+
+
+@python_2_unicode_compatible
+class PwResetLink(models.Model):
+    user = models.OneToOneField(User, on_delete=models.DO_NOTHING, primary_key=True)
+    token = models.CharField(max_length=100)
+    last_modified_date = models.DateTimeField(auto_now=True)

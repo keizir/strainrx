@@ -2,18 +2,47 @@
 
 .login-block-wrapper {
     text-align: center;
-  color: $grey-normal;
+    color: $grey-normal;
     padding: 4em 1em 6em;
+
+    .login {
+        fieldset {
+            border: none;
+            margin: 0;
+            padding: 2em 1em 1.5em;
+        }
+
+        .forgot-password-link {
+            display: block;
+            margin-top: 3em;
+        }
+    }
 }
 
-.login-block-wrapper .login fieldset {
-    border: none;
-    margin: 0;
-    padding: 2em 1em 1.5em;
-}
+.pwd-reset-block-wrapper {
+    text-align: center;
+    color: $grey-normal;
+    padding: 4em 1em 6em;
 
-.login-block-wrapper .login .forgot-password-link {
-    display: block;
-    margin-top: 3em;
-}
+    .forgot-message span {
+        display: block;
+        margin: 1em auto;
+    }
 
+    .password-reset {
+        fieldset {
+            border: none;
+            margin: 0;
+            padding: 2em 1em 1.5em;
+        }
+
+        .form-group {
+            margin: 0 auto;
+            width: 30em;
+        }
+
+        .form-field {
+            display: block;
+        }
+    }
+}

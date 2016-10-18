@@ -108,6 +108,7 @@
 {% endblock %}
 
 {% block javascript %}
+    {{ block.super }}
     <script src="{% static 'js/pages/search/strain/search_results.js' %}"></script>
     <script type="text/javascript">
         new W.pages.StrainSearchResultsPage();

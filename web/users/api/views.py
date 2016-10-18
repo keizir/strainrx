@@ -1,4 +1,7 @@
+import datetime
 import logging
+import uuid
+
 from django.contrib.auth import authenticate, login
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.core.exceptions import ValidationError
@@ -10,7 +13,7 @@ from rest_framework.views import APIView
 
 from web.users.api.serializers import (UserDetailSerializer)
 from web.users.emails import EmailService
-from web.users.models import User
+from web.users.models import User, PwResetLink
 
 logger = logging.getLogger(__name__)
 
@@ -73,7 +76,8 @@ class UserDetailView(LoginRequiredMixin, APIView):
         user.name = serializer.validated_data.get('name')
         user.first_name = serializer.validated_data.get('first_name')
         user.last_name = serializer.validated_data.get('last_name')
-        user.email = serializer.validated_data.get('email')
+        user.email = serializer.validated_data.get('email').lower()
+        user.username = user.email.split('@')[0]
         user.city = serializer.validated_data.get('city')
         user.state = serializer.validated_data.get('state')
         user.zipcode = serializer.validated_data.get('zipcode')
@@ -200,7 +204,6 @@ class UserSignUpWizardView(APIView):
             return user_data
 
         is_age_verified = request.data.get('age')
-        print (is_age_verified)
         if is_age_verified is None or not is_age_verified:
             return bad_request('Age verification is required')
 
@@ -280,8 +283,8 @@ class UserSignUpWizardView(APIView):
         user = User()
         user.first_name = user_data.get('first_name')
         user.last_name = user_data.get('last_name')
-        user.email = user_data.get('email')
-        user.username = user_data.get('email')
+        user.email = user_data.get('email').lower()
+        user.username = user.email.split('@')[0]
         user.set_password(user_data.get('pwd'))
         user.is_age_verified = user_data.get('is_age_verified')
         user.is_email_verified = False
@@ -325,4 +328,119 @@ class ResendConfirmationEmailView(LoginRequiredMixin, APIView):
     def get(self, request):
         authenticated_user = request.user
         EmailService().send_confirmation_email(authenticated_user)
+        return Response({}, status=status.HTTP_200_OK)
+
+
+class ResetPasswordView(APIView):
+    permission_classes = (permissions.AllowAny,)
+
+    def get(self, request):
+        user_id = request.GET.get('uid')
+        token = request.GET.get('t')
+
+        if not user_id or not token:
+            return bad_request('Cannot validate your token. Please, try to reset you password one more time.')
+
+        try:
+            user = User.objects.get(pk=int(user_id))
+        except User.DoesNotExist:
+            return bad_request('There is no user to reset password for.')
+
+        try:
+            link = PwResetLink.objects.get(user=user)
+        except PwResetLink.DoesNotExist:
+            return bad_request('Cannot validate this reset link. Please, try to reset you password one more time.')
+
+        if link.token != token:
+            return bad_request('This link is invalid. Please, try to reset you password one more time.')
+
+        now = datetime.datetime.now()
+        delta = now - link.last_modified_date.replace(tzinfo=None)
+
+        if delta.days >= 2:
+            return bad_request('This link is inactive. Please, try to reset you password one more time.')
+
+        return Response({}, status=status.HTTP_200_OK)
+
+    def post(self, request):
+        action = request.data.get('action')
+
+        if action == 'send-reset-email':
+            return self.process_send_reset_email_action(request)
+
+        if action == 'reset-pwd':
+            return self.process_reset_pwd_action(request)
+
+        return bad_request('Cannot determine required action.')
+
+    def process_send_reset_email_action(self, request):
+        email = request.data.get('email')
+
+        if not email:
+            return bad_request('Email is required')
+
+        try:
+            validator = EmailValidator()
+            validator.__call__(email)
+        except ValidationError:
+            return bad_request('Invalid email format')
+
+        try:
+            user = User.objects.get(email=email)
+        except User.DoesNotExist:
+            user = None
+
+        if user is None:
+            return bad_request('There is no account registered for this email')
+
+        try:
+            link = PwResetLink.objects.get(user=user)
+        except PwResetLink.DoesNotExist:
+            link = PwResetLink()
+
+        token = '{0}-{1}'.format(uuid.uuid4(), uuid.uuid4())
+        link.user = user
+        link.token = token
+        link.last_modified_date = datetime.datetime.now()
+        link.save()
+
+        EmailService().send_reset_pwd_email(user, token)
+
+        return Response({}, status=status.HTTP_200_OK)
+
+    def process_reset_pwd_action(self, request):
+        user_id = request.data.get('uid')
+        token = request.data.get('t')
+        pwd = request.data.get('pwd')
+        pwd2 = request.data.get('pwd2')
+
+        if not user_id or not token:
+            return bad_request('Cannot validate your token. Please, try to reset you password one more time.')
+
+        try:
+            user = User.objects.get(pk=int(user_id))
+        except User.DoesNotExist:
+            return bad_request('There is no user to reset password for.')
+
+        try:
+            link = PwResetLink.objects.get(user=user)
+        except PwResetLink.DoesNotExist:
+            return bad_request('Cannot validate this reset link. Please, try to reset you password one more time.')
+
+        if link.token != token:
+            return bad_request('This link is invalid. Please, try to reset you password one more time.')
+
+        now = datetime.datetime.now()
+        delta = now - link.last_modified_date.replace(tzinfo=None)
+
+        if delta.days >= 2:
+            return bad_request('This link is inactive. Please, try to reset you password one more time.')
+
+        pwd_valid = validate_pwd(pwd, pwd2)
+        if isinstance(pwd_valid, Response):
+            return pwd_valid
+
+        user.set_password(pwd)
+        user.save()
+
         return Response({}, status=status.HTTP_200_OK)

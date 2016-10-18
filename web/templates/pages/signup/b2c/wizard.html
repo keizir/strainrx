@@ -5,7 +5,7 @@
 {% block title %}Sign Up{% endblock %}
 
 {% block css %}
-    <link href="{% static 'css/pages/base.css' %}" rel="stylesheet">
+    {{ block.super }}
     <link href="{% static 'css/pages/signup/signup.css' %}" rel="stylesheet">
 {% endblock %}
 
@@ -41,6 +41,7 @@
 {% endblock %}
 
 {% block javascript %}
+    {{ block.super }}
     <script src="{% static 'js/pages/signup/b2c/sign_up.js' %}"></script>
     <script type="text/javascript">
         new W.pages.B2CSignUpPage();
