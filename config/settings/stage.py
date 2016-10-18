@@ -10,9 +10,9 @@ Stage settings
 - Add django-extensions as app
 """
 
+from __future__ import absolute_import, unicode_literals
 import os
 import socket
-from __future__ import absolute_import, unicode_literals
 
 from boto.s3.connection import OrdinaryCallingFormat
 from django.utils import six
@@ -68,9 +68,6 @@ INSTALLED_APPS += ('gunicorn',)
 # Uploaded Media Files
 # ------------------------
 # See: http://django-storages.readthedocs.io/en/latest/index.html
-INSTALLED_APPS += (
-    'storages',
-)
 
 # AWS cache settings, don't change unless you know what you're doing:
 AWS_EXPIRY = 60 * 60 * 24 * 7
@@ -126,7 +123,7 @@ if os.environ.get('USE_DOCKER') == 'yes':
 
 # django-extensions
 # ------------------------------------------------------------------------------
-INSTALLED_APPS += ('django_extensions',)
+#INSTALLED_APPS += ('django_extensions',)
 
 # TESTING
 # ------------------------------------------------------------------------------

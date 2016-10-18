@@ -317,8 +317,7 @@ LOGGING = {
     },
     'formatters': {
         'verbose': {
-            'format': '%(levelname)s %(asctime)s %(module)s '
-                      '%(process)d %(thread)d %(message)s'
+            'format': '%(asctime)s %(levelname)s [%(funcName)s:%(process)d] %(message)s'
         },
     },
     'handlers': {
@@ -338,31 +337,42 @@ LOGGING = {
             'tags': {
                 'environment': SERVER_ENV
             }
+        },
+        'file': {
+            'level': 'DEBUG',
+            'class': 'logging.FileHandler',
+            'formatter': 'verbose',
+            'filename': os.path.join(str(ROOT_DIR), 'srx_error.log')
         }
     },
     'loggers': {
         'web': {
             'level': 'DEBUG',
-            'handlers': ['sentry']
+            'formatter': 'verbose',
+            'handlers': ['sentry', 'file']
         },
         'django.request': {
             'handlers': ['mail_admins'],
             'level': 'ERROR',
+            'formatter': 'verbose',
             'propagate': True
         },
         'django.security.DisallowedHost': {
             'level': 'ERROR',
             'handlers': ['console', 'mail_admins'],
+            'formatter': 'verbose',
             'propagate': True
         },
         'raven': {
             'level': 'DEBUG',
-            'handlers': ['console'],
+            'handlers': ['console', 'file'],
+            'formatter': 'verbose',
             'propagate': False,
         },
         'sentry.errors': {
             'level': 'DEBUG',
-            'handlers': ['console'],
+            'handlers': ['console', 'file'],
+            'formatter': 'verbose',
             'propagate': False,
         },
     }

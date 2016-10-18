@@ -114,6 +114,7 @@ sendgrid.env
 /config/settings/local.py
 /web/static
 
-### Local staff
+### Local stuff
 /strainrx-web
+srx_error.log
 
