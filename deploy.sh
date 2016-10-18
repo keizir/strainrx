@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # go to project directory
-cd /srv/www/web
+cd /home/deploy/www/web
 
 # activate python environment
 source srx_env/bin/activate
@@ -39,8 +39,8 @@ python manage.py collectstatic --noinput --verbosity=0
 echo "Restarting gunicorn"
 if pgrep "gunicorn" > /dev/null
 then
-    stop srx-gunicorn
+    sudo systemctl stop gunicorn.service
 fi
-start srx-gunicorn
+sudo systemctl start gunicorn.service
 
 echo "deploy complete"

@@ -58,7 +58,7 @@ CACHES = {
 # ------------------------------------------------------------------------------
 # Hosts/domain names that are valid for this site
 # See https://docs.djangoproject.com/en/1.6/ref/settings/#allowed-hosts
-ALLOWED_HOSTS = ['staging.strainrx.co']
+ALLOWED_HOSTS = ['.strainrx.co']
 # END SITE CONFIGURATION
 
 INSTALLED_APPS += ('gunicorn',)

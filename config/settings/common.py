@@ -352,14 +352,14 @@ LOGGING = {
             'handlers': ['sentry', 'file']
         },
         'django.request': {
-            'handlers': ['mail_admins'],
+            'handlers': ['file'],
             'level': 'ERROR',
             'formatter': 'verbose',
             'propagate': True
         },
         'django.security.DisallowedHost': {
             'level': 'ERROR',
-            'handlers': ['console', 'mail_admins'],
+            'handlers': ['console', 'file'],
             'formatter': 'verbose',
             'propagate': True
         },
