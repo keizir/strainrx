@@ -192,7 +192,7 @@ W.pages.StrainDetailPage = Class.extend({
                 var flavor = that.flavorsNames[name];
                 flavorsToDisplay.push({
                     name: flavor.name,
-                    img: '<img src="/static/' + flavor.image + '"/>',
+                    img: '<img src="{0}{1}"/>'.format(STATIC_URL, flavor.image),
                     value: value
                 });
             }

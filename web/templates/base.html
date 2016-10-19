@@ -14,8 +14,14 @@
       <script src="https://html5shim.googlecode.com/svn/trunk/html5.js"></script>
     <![endif]-->
 
+    <script>
+        var STATIC_URL = {% static '' %};
+    </script>
+
     {% block css %}
-        <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-T8Gy5hrqNKT+hzMclPo118YTQO6cYprQmhrYwIiQ/3axmI1hQomh7Ud2hPOy8SP1" crossorigin="anonymous">
+        <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet"
+              integrity="sha384-T8Gy5hrqNKT+hzMclPo118YTQO6cYprQmhrYwIiQ/3axmI1hQomh7Ud2hPOy8SP1"
+              crossorigin="anonymous">
         <link href="{% static 'css/vendor/jquery-ui.min.css' %}" rel="stylesheet">
         <link href="{% static 'css/vendor/jquery.rateyo.min.css' %}" rel="stylesheet">
         <link href="{% static 'css/pages/base.css' %}" rel="stylesheet">
@@ -46,7 +52,7 @@
                                             <a class="resend-email-link" href="#">Verify Email</a>
                                         {% else %}
                                             <span class="separator"></span>
-                                            <a class="nav-link" href="{% url 'users:detail' request.user.username %}">
+                                            <a class="nav-link" href="{% url 'users:detail' request.user.id %}">
                                                 My Account</a>
                                         {% endif %}
                                     </a>

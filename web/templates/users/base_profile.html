@@ -31,27 +31,27 @@
                 </div>
                 <div class="profile-tabs">
                     <span class="profile-tab user-profile-tab {% if tab == 'info' %}active{% endif %}">
-                        <a href="{% url 'users:detail' request.user.username %}">User Information</a>
+                        <a href="{% url 'users:detail' request.user.id %}">User Information</a>
                     </span>
                     <span class="separator"></span>
                     <span class="profile-tab favorites-tab {% if tab == 'favorites' %}active{% endif %}">
-                        <a href="{% url 'users:favorites' request.user.username %}">Favorites</a>
+                        <a href="{% url 'users:favorites' request.user.id %}">Favorites</a>
                     </span>
                     <span class="separator"></span>
                     <span class="profile-tab my-reviews-tab {% if tab == 'reviews' %}active{% endif %}">
-                        <a href="{% url 'users:reviews' request.user.username %}">My Reviews</a>
+                        <a href="{% url 'users:reviews' request.user.id %}">My Reviews</a>
                     </span>
                     <span class="separator"></span>
                     <span class="profile-tab subscriptions-tab {% if tab == 'subscriptions' %}active{% endif %}">
-                        <a href="{% url 'users:subscriptions' request.user.username %}">Subscriptions</a>
+                        <a href="{% url 'users:subscriptions' request.user.id %}">Subscriptions</a>
                     </span>
                     <span class="separator"></span>
                     <span class="profile-tab proximity-settings-tab {% if tab == 'proximity' %}active{% endif %}">
-                        <a href="{% url 'users:proximity' request.user.username %}">Proximity</a>
+                        <a href="{% url 'users:proximity' request.user.id %}">Proximity</a>
                     </span>
                     <span class="separator"></span>
                     <span class="profile-tab change-pwd-tab {% if tab == 'pwd' %}active{% endif %}">
-                        <a href="{% url 'users:change_pwd' request.user.username %}">Password</a>
+                        <a href="{% url 'users:change_pwd' request.user.id %}">Password</a>
                     </span>
                 </div>
             </div>

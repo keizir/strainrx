@@ -16,6 +16,7 @@
         .strains-wrapper {
             height: 63em;
             margin-bottom: -8em;
+            background-color: #508484;
         }
 
         .nav-region {
@@ -42,8 +43,6 @@
         .footer-region .links-wrapper .links {
             color: #fff;
         }
-
-
     </style>
 {% endblock %}
 
@@ -74,9 +73,11 @@
                 <h1>Find Your Perfect Strain</h1>
                 <p>Use our customized strain matching system to find the perfect strain for your needs</p>
                 {% if request.user.is_authenticated %}
-                    <a href="{% url 'search:strain1' %}"><button class="btn-primary btn-lets-go" type="button">Let's Go!</button></a>
+                    <button class="btn-primary btn-lets-go" type="button">Let's Go!</button>
                 {% else %}
-                    <a href="{% url 'users:signup1' %}"><button class="btn-primary btn-lets-go" type="button">Let's Go!</button></a>
+                    <a href="{% url 'users:signup1' %}">
+                        <button class="btn-primary" type="button">Let's Go!</button>
+                    </a>
                 {% endif %}
             </div>
         </div>

@@ -141,6 +141,10 @@ W.pages.StrainSearchWizard4Page = W.pages.StrainSearchBase.extend({
                     Cookies.set('strains:search:donotshowagain', $('#do-not-show-again').is(':checked'));
                 });
             } else {
+                Cookies.remove('strains:search:step1');
+                Cookies.remove('strains:search:step2');
+                Cookies.remove('strains:search:step3');
+
                 that.sendDataToWizard({
                     step: 4,
                     sideEffects: that.selectedSideEffects

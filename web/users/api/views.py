@@ -77,7 +77,6 @@ class UserDetailView(LoginRequiredMixin, APIView):
         user.first_name = serializer.validated_data.get('first_name')
         user.last_name = serializer.validated_data.get('last_name')
         user.email = serializer.validated_data.get('email').lower()
-        user.username = user.email.split('@')[0]
         user.city = serializer.validated_data.get('city')
         user.state = serializer.validated_data.get('state')
         user.zipcode = serializer.validated_data.get('zipcode')
@@ -284,7 +283,7 @@ class UserSignUpWizardView(APIView):
         user.first_name = user_data.get('first_name')
         user.last_name = user_data.get('last_name')
         user.email = user_data.get('email').lower()
-        user.username = user.email.split('@')[0]
+        user.username = str(uuid.uuid4())[:30]
         user.set_password(user_data.get('pwd'))
         user.is_age_verified = user_data.get('is_age_verified')
         user.is_email_verified = False

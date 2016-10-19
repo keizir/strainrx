@@ -29,42 +29,42 @@ urlpatterns = [
 
     # URL pattern for the UserDetailView
     url(
-            regex=r'^(?P<username>[\w.@+-]+)/$',
+            regex=r'^(?P<user_id>[0-9]{1,})/$',
             view=views.UserDetailView.as_view(),
             name='detail'
     ),
 
     # URL pattern for the UserFavoritesDetailView
     url(
-            regex=r'^(?P<username>[\w.@+-]+)/favorites$',
+            regex=r'^(?P<user_id>[0-9]{1,})/favorites$',
             view=views.UserFavoritesView.as_view(),
             name='favorites'
     ),
 
     # URL pattern for the UserReviewsView
     url(
-            regex=r'^(?P<username>[\w.@+-]+)/reviews',
+            regex=r'^(?P<user_id>[0-9]{1,})/reviews',
             view=views.UserReviewsView.as_view(),
             name='reviews'
     ),
 
     # URL pattern for the UserSubscriptionsView
     url(
-            regex=r'^(?P<username>[\w.@+-]+)/subscriptions',
+            regex=r'^(?P<user_id>[0-9]{1,})/subscriptions',
             view=views.UserSubscriptionsView.as_view(),
             name='subscriptions'
     ),
 
     # URL pattern for the UserProximitySettingsView
     url(
-            regex=r'^(?P<username>[\w.@+-]+)/proximity',
+            regex=r'^(?P<user_id>[0-9]{1,})/proximity',
             view=views.UserProximitySettingsView.as_view(),
             name='proximity'
     ),
 
     # URL pattern for the UserChangePwdView
     url(
-            regex=r'^(?P<username>[\w.@+-]+)/pwd',
+            regex=r'^(?P<user_id>[0-9]{1,})/pwd',
             view=views.UserChangePwdView.as_view(),
             name='change_pwd'
     ),

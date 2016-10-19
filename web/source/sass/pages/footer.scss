@@ -1,38 +1,38 @@
 @import '../mixins/variables';
 
-footer, .push {
+footer {
     height: 8em;
     width: 100%;
 }
 
 .footer-region {
-    background: $white;
+    background-color: $white;
     z-index: 100;
     padding: 2em 10em;
     font-size: 0.75em;
     height: 11em;
-  border-top: 1px solid $grey-dark;
+    border-top: 1px solid $grey-dark;
     text-align: center;
-}
 
-.footer-region .separator:after {
-    color: $black;
-}
+    a {
+        color: $iris-blue;
+    }
 
-.footer-region a {
-  color: $iris-blue;
-}
+    .separator:after {
+        color: $black;
+    }
 
-.footer-region .links-wrapper .links {
-    margin-bottom: 5px;
-    color: $black;
-}
+    .links-wrapper .links {
+        margin-bottom: 5px;
+        color: $black;
+    }
 
-.footer-region .links-wrapper .links > li {
-    display: inline-block;
-}
+    .links-wrapper .links > li {
+        display: inline-block;
+    }
 
-.footer-region .copyright-wrapper {
-    color: $black;
-    padding-top: 1em;
+    .copyright-wrapper {
+        color: $black;
+        padding-top: 1em;
+    }
 }
