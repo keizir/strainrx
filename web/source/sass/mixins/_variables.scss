@@ -4,8 +4,8 @@
 
 //== Paths
 $static-path: '/static/';
-$font-path: $static-path + '/fonts/';
-$image-path: $static-path + '/images/';
+$font-path: $static-path + 'fonts/';
+$image-path: $static-path + 'images/';
 
 //== Nav
 $nav-height: 50px;
