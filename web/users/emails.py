@@ -11,9 +11,8 @@ class EmailService:
     def send_confirmation_email(self, user):
         sg = sendgrid.SendGridAPIClient(apikey=settings.SENDGRID_API_KEY)
 
-        confirmation_url = '{host}{url}{uid}'.format(host=settings.HOST,
-                                                     url=reverse('users:confirm_email'),
-                                                     uid=str(user.id))
+        confirmation_url = '{host}{url}'.format(host=settings.HOST,
+                                                     url=reverse('users:confirm_email', kwargs={'uid': user.id}))
 
         html_content = self.basic_email_with_link_pattern.format(text='To verify your email click this',
                                                                  link_url=confirmation_url)

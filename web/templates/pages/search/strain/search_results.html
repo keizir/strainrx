@@ -6,7 +6,7 @@
 {% block title %}Search Results{% endblock %}
 
 {% block css %}
-    <link href="{% static 'css/pages/base.css' %}" rel="stylesheet">
+    {{ block.super }}
     <link href="{% static 'css/pages/search/strain/search_results.css' %}" rel="stylesheet">
 {% endblock %}
 
@@ -120,7 +120,7 @@
                     <% if (strain.image_url !== null) { %>
                     <img src="${ strain.image_url }" alt="Strain Image">
                     <% } else { %>
-                    <img src="/static/images/weed_small.jpg" alt="Strain Image"/>
+                    <img src="{% static 'images/weed_small.jpg' %}" alt="Strain Image"/>
                     <% } %>
                 </div>
                 <div class="item-info inline-block">
