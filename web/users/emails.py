@@ -12,7 +12,7 @@ class EmailService:
         sg = sendgrid.SendGridAPIClient(apikey=settings.SENDGRID_API_KEY)
 
         confirmation_url = '{host}{url}{uid}'.format(host=settings.HOST,
-                                                     url=reverse('confirm_email'),
+                                                     url=reverse('users:confirm_email'),
                                                      uid=str(user.id))
 
         html_content = self.basic_email_with_link_pattern.format(text='To verify your email click this',

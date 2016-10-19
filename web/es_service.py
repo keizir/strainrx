@@ -18,7 +18,7 @@ class BaseElasticService(object):
     HEADERS = {
         'Content-Type': 'application/json',
         'User-Agent': 'SRX Platform',
-        'Authorization': 'Basic {0}'.format(base64.b64encode(bytes('{0}:{1}'.format(settings.ELASTICSEARCH_USERNAME, settings.ELASTICSEARCH_PASSWORD), 'utf-8'))),
+        'Authorization': 'Basic {0}'.format(bytes.decode(base64.b64encode(bytes('{0}:{1}'.format(settings.ELASTICSEARCH_USERNAME, settings.ELASTICSEARCH_PASSWORD), 'utf-8')))),
     }
 
     METHODS = {

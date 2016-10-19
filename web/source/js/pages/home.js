@@ -5,7 +5,6 @@ W.ns('W.pages');
 W.pages.HomePage = Class.extend({
 
     ui: {
-        $btnLetsGo: $('.btn-lets-go'),
         $lookupInput: $('.lookup-input'),
         $lookupSubmit: $('.lookup-submit'),
         $payloadsRegion: $('.payloads-region')
@@ -15,13 +14,6 @@ W.pages.HomePage = Class.extend({
         this.clickLetsGoButton();
         this.changeLookupInput();
         this.clickLookupSubmit();
-    },
-
-    clickLetsGoButton: function clickLetsGoButton() {
-        this.ui.$btnLetsGo.on('click', function (e) {
-            e.preventDefault();
-            window.location.href = 'search/strain/wizard/1';
-        });
     },
 
     changeLookupInput: function changeLookupInput() {
