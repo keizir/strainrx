@@ -55,22 +55,12 @@ class StrainSearchResultView(LoginRequiredMixin, TemplateView):
         context = super(StrainSearchResultView, self).get_context_data(**kwargs)
         r = self.request
 
-        query_strain_name = r.GET.get('q')  # TODO remove q param form url later
         search_criteria = r.session.get('search_criteria')
         start_from = r.GET.get('from')
 
         if search_criteria:
             data = SearchElasticService().query_strain_srx_score(search_criteria, 8, start_from)
             result_list = data.get('list')
-            result_list.sort(key=lambda entry: entry.get('match_percentage'), reverse=True)
-            context['search_results'] = result_list
-            context['search_results_total'] = data.get('total')
-            return context
-
-        if query_strain_name:
-            data = SearchElasticService().query_strains_by_name(query_strain_name, size=8, start_from=start_from)
-            result_list = data.get('list')
-            result_list.sort(key=lambda entry: entry.get('match_percentage'), reverse=True)
             context['search_results'] = result_list
             context['search_results_total'] = data.get('total')
             return context

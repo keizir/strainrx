@@ -128,9 +128,7 @@ class SearchElasticService(BaseElasticService):
         return results
 
     def build_srx_score_es_query(self, criteria):
-        # TODO not forget to use strain type at the end
-        criteria_strain_types = criteria.get('strain_types')
-
+        criteria_strain_types = self.parse_criteria_strains(criteria.get('strain_types'))
         effects_data = self.parse_criteria_data(criteria.get('effects'))
         benefits_data = self.parse_criteria_data(criteria.get('benefits'))
         side_effects_data = self.parse_criteria_data(criteria.get('side_effects'))
@@ -139,7 +137,13 @@ class SearchElasticService(BaseElasticService):
             "query": {
                 "function_score": {
                     "query": {
-                        "match_all": {}
+                        "filtered": {
+                            "filter": {
+                                "terms": {
+                                    "variety": criteria_strain_types
+                                }
+                            }
+                        }
                     },
                     "functions": [
                         {
@@ -172,6 +176,12 @@ class SearchElasticService(BaseElasticService):
             'data': data,
             'sum': data_sum
         }
+
+    def parse_criteria_strains(self, criteria):
+        strains = [k.lower() for k,v in criteria.items() if v]
+
+        return strains
+
 
     def lookup_strain(self, query):
         method = self.METHODS.get('POST')

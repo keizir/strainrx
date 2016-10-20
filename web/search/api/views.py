@@ -102,7 +102,6 @@ class StrainSearchResultsView(LoginRequiredMixin, APIView):
         if search_criteria:
             data = SearchElasticService().query_strain_srx_score(search_criteria, size, start_from)
             result_list = data.get('list')
-            result_list.sort(key=lambda entry: entry.get('match_percentage'), reverse=True)
             return Response({
                 'search_results': result_list,
                 'search_results_total': data.get('total')
