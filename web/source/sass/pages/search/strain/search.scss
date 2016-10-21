@@ -276,6 +276,12 @@
     }
 }
 
+.wizard-1 {
+    .form-field-group {
+        float: none;
+    }
+}
+
 @media (max-width: $screen-xs-min) {
     .search-form-wrapper {
         width: 26em;

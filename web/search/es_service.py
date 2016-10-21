@@ -133,18 +133,27 @@ class SearchElasticService(BaseElasticService):
         benefits_data = self.parse_criteria_data(criteria.get('benefits'))
         side_effects_data = self.parse_criteria_data(criteria.get('side_effects'))
 
+        strain_variety_filter = {
+            "filtered": {
+                "filter": {
+                    "terms": {
+                        "variety": criteria_strain_types
+                    }
+                }
+            }
+        }
+
+        match_all_varieties = {
+            "match_all": {}
+        }
+
+        # if user skipped picking variety match all strains
+        strain_filter = strain_variety_filter if criteria_strain_types else match_all_varieties
+
         return {
             "query": {
                 "function_score": {
-                    "query": {
-                        "filtered": {
-                            "filter": {
-                                "terms": {
-                                    "variety": criteria_strain_types
-                                }
-                            }
-                        }
-                    },
+                    "query": strain_filter,
                     "functions": [
                         {
                             "script_score": {
@@ -178,7 +187,10 @@ class SearchElasticService(BaseElasticService):
         }
 
     def parse_criteria_strains(self, criteria):
-        strains = [k.lower() for k,v in criteria.items() if v]
+        if criteria == 'skipped':
+            strains = False
+        else:
+            strains = [k.lower() for k,v in criteria.items() if v]
 
         return strains
 
