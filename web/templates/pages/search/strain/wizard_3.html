@@ -6,104 +6,16 @@
     <h1>What type of ailments do you want to alleviate?</h1>
     <h3>(Choose up to 5 Effects)</h3>
     <div class="form effects-form">
-        <div class="fields effects">
-            <div class="form-field-group">
-                <div class="form-field step-3">
-                    <span class="strain-effect" id="reduce_stress">
-                        <span class="benefit-text">Reduce Stress</span>
-                    </span>
+        <div class="fields benefits">
+            {% for b in benefits %}
+                <div class="form-field">
+                    <div class="strain-effect" id="{{ b.data_name }}">
+                        <div class="benefit-text">{{ b.display_name }}</div>
+                    </div>
                     <span class="step-3 importance-value hidden">1</span>
                     <span class="step-3 removable hidden"></span>
                 </div>
-                <div class="form-field step-3">
-                    <span class="strain-effect" id="help_depression">
-                        <span class="benefit-text">Help Depression</span>
-                    </span>
-                    <span class="step-3 importance-value hidden">1</span>
-                    <span class="step-3 removable hidden"></span>
-                </div>
-                <div class="form-field step-3">
-                    <span class="strain-effect" id="relieve_pain">
-                        <span class="benefit-text">Relieve<br/>Pain</span>
-                    </span>
-                    <span class="step-3 importance-value hidden">1</span>
-                    <span class="step-3 removable hidden"></span>
-                </div>
-                <div class="form-field step-3">
-                    <span class="strain-effect" id="reduce_fatigue">
-                        <span class="benefit-text">Reduce Fatigue</span>
-                    </span>
-                    <span class="step-3 importance-value hidden">1</span>
-                    <span class="step-3 removable hidden"></span>
-                </div>
-                <div class="form-field step-3">
-                    <span class="strain-effect" id="reduce_headaches">
-                        <span class="benefit-text">Reduce Headaches</span>
-                    </span>
-                    <span class="step-3 importance-value hidden">1</span>
-                    <span class="step-3 removable hidden"></span>
-                </div>
-            </div>
-            <div class="form-field-group">
-                <div class="form-field step-3">
-                    <span class="strain-effect" id="help_muscles_spasms">
-                        <span class="benefit-text">Help Muscles Spasms</span>
-                    </span>
-                    <span class="step-3 importance-value hidden">1</span>
-                    <span class="step-3 removable hidden"></span>
-                </div>
-                <div class="form-field step-3">
-                    <span class="strain-effect" id="lower_eye_pressure">
-                        <span class="benefit-text">Lower Eye Pressure</span>
-                    </span>
-                    <span class="step-3 importance-value hidden">1</span>
-                    <span class="step-3 removable hidden"></span>
-                </div>
-                <div class="form-field step-3">
-                    <span class="strain-effect" id="reduce_nausea">
-                        <span class="benefit-text">Reduce Nausea</span>
-                    </span>
-                    <span class="step-3 importance-value hidden">1</span>
-                    <span class="step-3 removable hidden"></span>
-                </div>
-                <div class="form-field step-3">
-                    <span class="strain-effect" id="reduce_inflammation">
-                        <span class="benefit-text">Reduce Inflammation</span>
-                    </span>
-                    <span class="step-3 importance-value hidden">1</span>
-                    <span class="step-3 removable hidden"></span>
-                </div>
-                <div class="form-field step-3">
-                    <span class="strain-effect" id="relieve_cramps">
-                        <span class="benefit-text">Relieve Cramps</span>
-                    </span>
-                    <span class="step-3 importance-value hidden">1</span>
-                    <span class="step-3 removable hidden"></span>
-                </div>
-            </div>
-            <div class="form-field-group">
-                <div class="form-field step-3">
-                    <span class="strain-effect" id="restore_appetite">
-                        <span class="benefit-text">Restore Appetite</span>
-                    </span>
-                    <span class="step-3 importance-value hidden">1</span>
-                    <span class="step-3 removable hidden"></span>
-                </div>
-                <div class="form-field step-3">
-                    <span class="strain-effect" id="help_with_insomnia">
-                        <span class="benefit-text">Help With Insomnia</span>
-                    </span>
-                    <span class="step-3 importance-value hidden">1</span>
-                    <span class="step-3 removable hidden"></span>
-                </div>
-                <div class="form-field step-3">
-                    <span class="strain-effect" id="help_with_seizures">
-                        <span class="benefit-text">Help With Seizures</span>
-                    </span>
-                    <span class="step-3 importance-value hidden">1</span>
-                    <span class="step-3 removable hidden"></span>
-                </div>
-            </div>
+            {% endfor %}
         </div>
         <div class="slider-wrapper hidden">
             <span class="slider-step-label">Marginally Important</span>

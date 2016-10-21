@@ -1,13 +1,11 @@
 # -*- coding: utf-8 -*-
 from __future__ import absolute_import, unicode_literals
 
-from random import uniform
-
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.generic import TemplateView
 
 from web.search.es_service import SearchElasticService
-from web.search.models import Strain, StrainImage
+from web.search.models import Strain, StrainImage, Effect
 
 
 class StrainSearchWizard1View(LoginRequiredMixin, TemplateView):
@@ -24,7 +22,9 @@ class StrainSearchWizard2View(LoginRequiredMixin, TemplateView):
 
     def get_context_data(self, **kwargs):
         context = super(StrainSearchWizard2View, self).get_context_data(**kwargs)
+        effects = Effect.objects.filter(effect_type='effect')
         context['step'] = 2
+        context['effects'] = effects
         return context
 
 
@@ -33,8 +33,11 @@ class StrainSearchWizard3View(LoginRequiredMixin, TemplateView):
 
     def get_context_data(self, **kwargs):
         context = super(StrainSearchWizard3View, self).get_context_data(**kwargs)
-        context['step'] = 3
         search_criteria = self.request.session['search_criteria']
+        benefits = Effect.objects.filter(effect_type='benefit')
+
+        context['step'] = 3
+        context['benefits'] = benefits
         context['is_2nd_step_skipped'] = search_criteria['effects'] == 'skipped'
         return context
 
@@ -44,7 +47,9 @@ class StrainSearchWizard4View(LoginRequiredMixin, TemplateView):
 
     def get_context_data(self, **kwargs):
         context = super(StrainSearchWizard4View, self).get_context_data(**kwargs)
+        side_effects = Effect.objects.filter(effect_type='side_effect')
         context['step'] = 4
+        context['side_effects'] = side_effects
         return context
 
 

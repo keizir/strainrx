@@ -76,7 +76,7 @@ class Strain(models.Model):
 
 
 def upload_image_to(instance, filename):
-    return 'strains/{0}/images/{1}___{2}'.format(instance.strain.pk, uuid4(), filename)
+    return 'strains/{0}/images/{1}___{2}'.format(instance.strain.id, uuid4(), filename)
 
 
 def validate_image(field_file_obj):
@@ -95,3 +95,19 @@ class StrainImage(models.Model):
 
     created_date = models.DateField(blank=False, null=False, default=datetime.now)
     created_by = models.ForeignKey(User, on_delete=models.DO_NOTHING)
+
+
+@python_2_unicode_compatible
+class Effect(models.Model):
+    class Meta:
+        unique_together = (("effect_type", "data_name"),)
+
+    EFFECT_TYPE_CHOICES = (
+        ('effect', 'Effect'),
+        ('benefit', 'Benefit'),
+        ('side_effect', 'Side Effect'),
+    )
+
+    effect_type = models.CharField(max_length=20, choices=EFFECT_TYPE_CHOICES)
+    data_name = models.CharField(max_length=100)
+    display_name = models.CharField(max_length=100)
