@@ -2,95 +2,142 @@
 
 .sign-up-wrapper {
     text-align: center;
-  color: $grey-normal;
-}
+    color: $grey-normal;
 
-.sign-up-wrapper input {
-    display: block;
-    margin: 0 auto 1em;
+    input {
+        display: block;
+        margin: 0 auto 1em;
+    }
+
+    .wizard-wrapper {
+        padding: 2em 1em;
+        width: 30em;
+        margin: 0 auto;
+
+        hr {
+            z-index: 1;
+            width: 22em;
+            margin: -1em auto 0 auto;
+        }
+    }
+
+    .sign-up-b2b-wrapper {
+        padding: 0 1em 3em;
+        margin-top: -2em;
+    }
 }
 
 .sign-up-form-wrapper {
     margin-top: 2em;
     padding-bottom: 6em;
+
+    fieldset {
+        padding-bottom: 2em;
+    }
+
+    label {
+        display: inline-block;
+    }
+
+    label > input + span.check {
+        cursor: pointer;
+    }
+
+    span.check {
+        display: inline-block;
+        margin-right: 0.5em;
+    }
+
+    label > span.check {
+        width: 2em;
+        height: 2em;
+        border: 1px solid $grey-light;
+        border-radius: 1em;
+        vertical-align: middle;
+    }
+
+    label > input {
+        position: absolute;
+        visibility: hidden;
+        width: 2em;
+        height: 2em;
+        padding: 0.35em 0;
+    }
+
+    label > input:checked + span:before {
+        content: '\2713';
+        display: block;
+        width: 2em;
+        height: 2em;
+        padding: 0.35em 0;
+        color: $iris-blue;
+    }
+
+    .pwd-req {
+        display: block;
+        margin: 1em auto 3em;
+    }
+
+    .message-1 {
+        display: block;
+        margin: 3em auto;
+        width: 50em;
+        line-height: 2em;
+    }
+
+    .message-2 {
+        display: block;
+        margin: 3em auto;
+        width: 50em;
+        line-height: 2em;
+    }
 }
 
-.sign-up-form-wrapper fieldset {
-    padding-bottom: 2em;
-}
+.b2b-sign-up-wrapper {
+    .wizard-wrapper {
+        padding: 2em 0.8em;
+        width: 40em;
+        margin: 0 auto;
 
-.sign-up-form-wrapper label {
-    display: inline-block;
-}
+        hr {
+            z-index: 1;
+            width: 35em;
+            margin: -1em auto 0 auto;
+        }
 
-.sign-up-form-wrapper label > input + span.check {
-    cursor: pointer;
-}
+        .wizard-step {
+            margin: 0 1em;
+        }
+    }
 
-.sign-up-form-wrapper span.check {
-    display: inline-block;
-    margin-right: 0.5em;
-}
+    .b2b-sign-up-form-wrapper {
+        color: $grey-normal;
+        text-align: center;
 
-.sign-up-form-wrapper label > span.check {
-    width: 2em;
-    height: 2em;
-  border: 1px solid $grey-light;
-    border-radius: 1em;
-    vertical-align: middle;
-}
+        ::-webkit-input-placeholder {
+            text-align: center;
+        }
 
-.sign-up-form-wrapper label > input {
-    position: absolute;
-    visibility: hidden;
-    width: 2em;
-    height: 2em;
-    padding: 0.35em 0;
-}
+        :-moz-placeholder { /* Firefox 18- */
+            text-align: center;
+        }
 
-.sign-up-form-wrapper label > input:checked + span:before {
-    content: '\2713';
-    display: block;
-    width: 2em;
-    height: 2em;
-    padding: 0.35em 0;
-  color: $iris-blue;
-}
+        ::-moz-placeholder { /* Firefox 19+ */
+            text-align: center;
+        }
 
-.sign-up-form-wrapper .pwd-req {
-    display: block;
-    margin: 1em auto 3em;
-}
+        :-ms-input-placeholder {
+            text-align: center;
+        }
 
-.sign-up-form-wrapper .message-1 {
-    display: block;
-    margin: 3em auto;
-    width: 50em;
-    line-height: 2em;
-}
+        h1 {
+            margin: 2em auto;
+        }
 
-.sign-up-form-wrapper .message-2 {
-    display: block;
-    margin: 3em auto;
-    width: 50em;
-    line-height: 2em;
-}
-
-.wizard-wrapper {
-    padding: 2em 1em;
-    width: 30em;
-    margin: 0 auto;
-}
-
-.wizard-wrapper hr {
-    z-index: 1;
-    width: 22em;
-    margin: -1em auto 0 auto;
-}
-
-.sign-up-b2b-wrapper {
-    padding: 0 1em 3em;
-    margin-top: -2em;
+        .form-actions {
+            margin: 2em auto 5em;
+        }
+    }
 }
 
 @media (max-width: $screen-md-min) {

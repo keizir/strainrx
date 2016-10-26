@@ -10,12 +10,11 @@ https://docs.djangoproject.com/en/dev/ref/settings/
 """
 from __future__ import absolute_import, unicode_literals
 
-import environ
 import os
-import raven
 
+import environ
+import raven
 from boto.s3.connection import OrdinaryCallingFormat
-from django.utils import six
 
 ROOT_DIR = environ.Path(__file__) - 3  # (web/config/settings/common.py - 3 = web/)
 APPS_DIR = ROOT_DIR.path('web')
@@ -55,6 +54,7 @@ LOCAL_APPS = (
     # custom users app
     'web.users.apps.UsersConfig',
     'web.search.apps.SearchConfig',
+    'web.businesses.apps.BusinessConfig',
     # Your stuff: custom apps go here
     'web',
 )
@@ -265,14 +265,12 @@ REST_FRAMEWORK = {
 LOGGER_NAME = 'web'
 
 MAX_STRAIN_IMAGE_SIZE = 10 * 1024 * 1024  # 10 MB
+MAX_BUSINESS_IMAGE_SIZE = 5 * 1024 * 1024  # 5 MB
 
 SENDGRID_API_KEY = env('SENDGRID_API_KEY', default='')
 DEFAULT_FROM_EMAIL = 'support@strainrx.co'
 
 HOST = env('HOST_URL', default='localhost:8000')
-
-AWS_S3_SECURE_URLS = False  # use http instead of https
-AWS_QUERYSTRING_AUTH = False  # don't add complex authentication-related query parameters for requests
 
 DEFAULT_FILE_STORAGE = 'storages.backends.s3boto.S3BotoStorage'
 
@@ -286,7 +284,8 @@ AWS_ACCESS_KEY_ID = env('DJANGO_AWS_ACCESS_KEY_ID', default='')
 AWS_SECRET_ACCESS_KEY = env('DJANGO_AWS_SECRET_ACCESS_KEY', default='')
 AWS_STORAGE_BUCKET_NAME = env('DJANGO_AWS_STORAGE_BUCKET_NAME', default='')
 AWS_AUTO_CREATE_BUCKET = True
-AWS_QUERYSTRING_AUTH = False
+AWS_S3_SECURE_URLS = False  # use http instead of https
+AWS_QUERYSTRING_AUTH = False  # don't add complex authentication-related query parameters for requests
 AWS_S3_CALLING_FORMAT = OrdinaryCallingFormat()
 
 SERVER_ENV = env('SERVER_ENV', default='dev')

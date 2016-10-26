@@ -21,15 +21,19 @@ urlpatterns = [
                   # User management
                   url(r'^users/', include('web.users.urls', namespace='users')),
                   url(r'^search/', include('web.search.urls', namespace='search')),
+                  url(r'^businesses/', include('web.businesses.urls', namespace='businesses')),
                   url(r'^accounts/', include('allauth.urls')),
 
                   # Your stuff: custom urls includes go here
                   url(r'^api-auth/', include('rest_framework.urls', namespace='rest_framework')),
 
                   # API
-                  url(r'^api/v1/users/', include('web.users.api.urls', namespace='users_api', app_name='users_api')),
+                  url(r'^api/v1/users/',
+                      include('web.users.api.urls', namespace='users_api', app_name='users_api')),
                   url(r'^api/v1/search/',
                       include('web.search.api.urls', namespace='search_api', app_name='search_api')),
+                  url(r'^api/v1/businesses/',
+                      include('web.businesses.api.urls', namespace='businesses_api', app_name='businesses_api')),
 
               ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
