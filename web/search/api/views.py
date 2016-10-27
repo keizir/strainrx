@@ -5,9 +5,9 @@ from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
-from web.search import es_service
+from web.search.api.serializers import SearchCriteriaSerializer
 from web.search.es_service import SearchElasticService
-from web.search.models import Strain, StrainImage
+from web.search.models import Strain, StrainImage, Effect
 
 logger = logging.getLogger(__name__)
 
@@ -20,74 +20,26 @@ def bad_request(error_message):
 
 class StrainSearchWizardView(LoginRequiredMixin, APIView):
     def post(self, request):
-        step = request.data.get('step')
+        criteria = SearchCriteriaSerializer(data=request.data.get('search_criteria'))
+        criteria.is_valid()
 
-        if step is not None:
-            return self.process_step(request, step)
+        step_1_data = criteria.validated_data.get('step1')
+        step_2_data = criteria.validated_data.get('step2')
+        step_3_data = criteria.validated_data.get('step3')
+        step_4_data = criteria.validated_data.get('step4')
 
-        return bad_request('Invalid step number')
+        types = 'skipped' if step_1_data.get('skipped') else step_1_data
+        effects = 'skipped' if step_2_data.get('skipped') else step_2_data.get('effects')
+        benefits = 'skipped' if step_3_data.get('skipped') else step_3_data.get('effects')
+        side_effects = 'skipped' if step_4_data.get('skipped') else step_4_data.get('effects')
 
-    def process_step(self, request, step):
-        if step == 1:
-            return self.process_step_1(request)
+        request.session['search_criteria'] = {
+            'strain_types': types,
+            'effects': effects,
+            'benefits': benefits,
+            'side_effects': side_effects
+        }
 
-        if step == 2:
-            return self.process_step_2(request)
-
-        if step == 3:
-            return self.process_step_3(request)
-
-        if step == 4:
-            return self.process_step_4(request)
-
-    def process_step_1(self, request):
-        data = request.data
-
-        if data.get('skipped'):
-            types = 'skipped'
-        else:
-            types = {'sativa': data.get('sativa'), 'hybrid': data.get('hybrid'), 'indica': data.get('indica')}
-
-        request.session['search_criteria'] = {'strain_types': types}
-        return Response({}, status=status.HTTP_200_OK)
-
-    def process_step_2(self, request):
-        data = request.data
-
-        if data.get('skipped'):
-            effects = 'skipped'
-        else:
-            effects = data.get('effects')
-
-        search_criteria = request.session.get('search_criteria')
-        search_criteria['effects'] = effects
-        request.session['search_criteria'] = search_criteria
-        return Response({}, status=status.HTTP_200_OK)
-
-    def process_step_3(self, request):
-        data = request.data
-
-        if data.get('skipped'):
-            benefits = 'skipped'
-        else:
-            benefits = data.get('benefits')
-
-        search_criteria = request.session.get('search_criteria')
-        search_criteria['benefits'] = benefits
-        request.session['search_criteria'] = search_criteria
-        return Response({}, status=status.HTTP_200_OK)
-
-    def process_step_4(self, request):
-        data = request.data
-
-        if data.get('skipped'):
-            side_effects = 'skipped'
-        else:
-            side_effects = data.get('sideEffects')
-
-        search_criteria = request.session.get('search_criteria')
-        search_criteria['side_effects'] = side_effects
-        request.session['search_criteria'] = search_criteria
         return Response({}, status=status.HTTP_200_OK)
 
 
@@ -140,3 +92,17 @@ class StrainUploadImageView(LoginRequiredMixin, APIView):
         image.save()
 
         return Response({}, status=status.HTTP_200_OK)
+
+
+class StrainEffectView(LoginRequiredMixin, APIView):
+    def get(self, request, effect_type):
+        effects_raw = Effect.objects.filter(effect_type=effect_type)
+        effects = []
+
+        for e in effects_raw:
+            effects.append({
+                'data_name': e.data_name,
+                'display_name': e.display_name
+            })
+
+        return Response(effects, status=status.HTTP_200_OK)

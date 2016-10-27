@@ -4,6 +4,11 @@ from web.search.api.views import *
 
 urlpatterns = [
     url(
+        regex=r'^effect/(?P<effect_type>[a-z_]+)$',
+        view=StrainEffectView.as_view(),
+        name='effect_type'
+    ),
+    url(
         regex=r'^strain/(?P<strain_id>[1-9]+)/image',
         view=StrainUploadImageView.as_view(),
         name='upload_strain_image'

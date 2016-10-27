@@ -1,45 +1,34 @@
-{% extends "pages/search/strain/wizard.html" %}
-
-{% load staticfiles i18n %}
-
-{% block wizard-content %}
-    <h1>What type of ailments do you want to alleviate?</h1>
-    <h3>(Choose up to 5 Effects)</h3>
-    <div class="form effects-form">
-        <div class="fields benefits">
-            {% for b in benefits %}
+<script type="x/srx-template" id="search-wizard-step3">
+    <div class="search-form-wrapper">
+        <h1>What type of ailments do you want to alleviate?</h1>
+        <h3>(Choose up to 5 Effects)</h3>
+        <div class="form effects-form">
+            <div class="fields benefits">
+                <% _.each(benefits, function(b) { %>
                 <div class="form-field">
-                    <div class="strain-effect" id="{{ b.data_name }}">
-                        <div class="benefit-text">{{ b.display_name }}</div>
+                    <div class="strain-effect" id="<%= _.escape(b.data_name) %>">
+                        <div class="benefit-text"><%= _.escape(b.display_name) %></div>
                     </div>
                     <span class="step-3 importance-value hidden">1</span>
                     <span class="step-3 removable hidden"></span>
                 </div>
-            {% endfor %}
-        </div>
-        <div class="slider-wrapper hidden">
-            <span class="slider-step-label">Marginally Important</span>
-            <span class="slider-step-label">Somewhat Important</span>
-            <span class="slider-step-label">Important</span>
-            <span class="slider-step-label">Very Important</span>
-            <span class="slider-step-label">Must Have</span>
-            <div class="slider"></div>
-        </div>
-        <span class="error-message"></span>
-        <div class="form-actions">
-            <button class="btn-secondary btn-skip-3" type="submit"
-                    {% if is_2nd_step_skipped %}disabled="disabled"{% endif %}>Skip
-            </button>
-            <button class="btn-primary btn-step-3" type="submit" disabled="disabled">Next</button>
+                <% }); %>
+            </div>
+            <div class="slider-wrapper hidden">
+                <span class="slider-step-label">Marginally Important</span>
+                <span class="slider-step-label">Somewhat Important</span>
+                <span class="slider-step-label">Important</span>
+                <span class="slider-step-label">Very Important</span>
+                <span class="slider-step-label">Must Have</span>
+                <div class="slider"></div>
+            </div>
+            <span class="error-message"></span>
+            <div class="form-actions">
+                <button class="btn-secondary btn-skip-3" type="submit"
+                        {% if is_2nd_step_skipped %}disabled="disabled"{% endif %}>Skip
+                </button>
+                <button class="btn-primary btn-step-3" type="submit" disabled="disabled">Next</button>
+            </div>
         </div>
     </div>
-{% endblock %}
-
-{% block javascript %}
-    {{ block.super }}
-    <script src="{% static 'js/pages/search/strain/search_wizard_base.js' %}"></script>
-    <script src="{% static 'js/pages/search/strain/search_wizard_3.js' %}"></script>
-    <script type="text/javascript">
-        new W.pages.StrainSearchWizard3Page();
-    </script>
-{% endblock %}
+</script>

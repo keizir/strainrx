@@ -1,41 +1,29 @@
-{% extends "pages/search/strain/wizard.html" %}
-
-{% load staticfiles i18n %}
-
-{% block wizard-content %}
-    <h1>Do you want to minimize any possible side effects?</h1>
-    <div class="form effects-form">
-        <div class="fields effects">
-            {% for se in side_effects %}
+<script type="x/srx-template" id="search-wizard-step4">
+    <div class="search-form-wrapper">
+        <h1>Do you want to minimize any possible side effects?</h1>
+        <div class="form effects-form">
+            <div class="fields effects">
+                <% _.each(side_effects, function(se) { %>
                 <div class="form-field">
-                    <span class="strain-effect" id="{{ se.data_name }}">{{ se.display_name }}</span>
+                    <span class="strain-effect" id="<%= _.escape(se.data_name) %>"><%= _.escape(se.display_name) %></span>
                     <span class="importance-value hidden">1</span>
                     <span class="removable hidden"></span>
                 </div>
-            {% endfor %}
-        </div>
-        <div class="slider-wrapper hidden">
-            <span class="slider-step-label">Little Tolerance</span>
-            <span class="slider-step-label">Mild Tolerance</span>
-            <span class="slider-step-label">Moderate Tolerance</span>
-            <span class="slider-step-label">Strong Tolerance</span>
-            <span class="slider-step-label">Extreme Tolerance</span>
-            <div class="slider"></div>
-        </div>
-        <span class="error-message"></span>
-        <div class="form-actions">
-            <button class="btn-secondary btn-skip-4" type="submit">Skip</button>
-            <button class="btn-primary btn-step-4" type="submit" disabled="disabled">Next</button>
+                <% }); %>
+            </div>
+            <div class="slider-wrapper hidden">
+                <span class="slider-step-label">Little Tolerance</span>
+                <span class="slider-step-label">Mild Tolerance</span>
+                <span class="slider-step-label">Moderate Tolerance</span>
+                <span class="slider-step-label">Strong Tolerance</span>
+                <span class="slider-step-label">Extreme Tolerance</span>
+                <div class="slider"></div>
+            </div>
+            <span class="error-message"></span>
+            <div class="form-actions">
+                <button class="btn-secondary btn-skip-4" type="submit">Skip</button>
+                <button class="btn-primary btn-step-4" type="submit" disabled="disabled">Next</button>
+            </div>
         </div>
     </div>
-{% endblock %}
-
-
-{% block javascript %}
-    {{ block.super }}
-    <script src="{% static 'js/pages/search/strain/search_wizard_base.js' %}"></script>
-    <script src="{% static 'js/pages/search/strain/search_wizard_4.js' %}"></script>
-    <script type="text/javascript">
-        new W.pages.StrainSearchWizard4Page();
-    </script>
-{% endblock %}
+</script>

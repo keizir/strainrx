@@ -4,17 +4,25 @@ W.ns('W.common');
 
 W.common.Model = Class.extend({
 
-    model: {},
+    data: {},
 
-    init: function init(model) {
-        this.model = model || {};
+    init: function init(data) {
+        this.data = data || {};
     },
 
     get: function (key) {
-        return this.model[key];
+        return this.data[key];
     },
 
     set: function (key, value) {
-        this.model[key] = value;
+        this.data[key] = value;
+    },
+
+    getData: function getData() {
+        return this.data;
+    },
+
+    setData: function setData(data) {
+        this.data = data;
     }
 });

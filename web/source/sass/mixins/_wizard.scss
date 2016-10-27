@@ -1,5 +1,5 @@
 .wizard-step {
-  border: 1px solid $grey-light;
+    border: 1px solid $grey-light;
     background: $white;
     width: 2em;
     height: 2em;
@@ -12,30 +12,40 @@
     z-index: 2;
 }
 
+.wizard-step,
 .wizard-step a {
-  color: $grey-light;
+    color: $grey-light;
+    cursor: pointer;
 }
 
 .wizard-step.active {
-  border: 2px solid $grey-normal;
+    border: 2px solid $grey-normal;
 }
 
 .wizard-step.finished,
 .wizard-step.passed {
-  border: 2px solid $grey-normal;
+    border: 2px solid $grey-normal;
     background: $avocado-green;
 }
 
 .wizard-step.finished {
     pointer-events: none;
     cursor: default;
-}
-
-.wizard-step.finished a,
-.wizard-step.passed a {
     color: $white;
 }
 
+.wizard-step.passed,
+.wizard-step.passed a {
+    color: $white;
+    cursor: pointer;
+}
+
+.wizard-step.active,
 .wizard-step.active a {
     color: $black;
+    cursor: default;
+}
+
+.wizard-step.disabled {
+    cursor: default;
 }

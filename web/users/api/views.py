@@ -11,9 +11,11 @@ from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
+from web.search.api.serializers import SearchCriteriaSerializer
+from web.search.models import UserSearch
 from web.users.api.serializers import (UserDetailSerializer)
 from web.users.emails import EmailService
-from web.users.models import User, PwResetLink
+from web.users.models import User, PwResetLink, UserSetting
 
 logger = logging.getLogger(__name__)
 
@@ -59,10 +61,6 @@ def validate_email(email):
 
 class UserDetailView(LoginRequiredMixin, APIView):
     def put(self, request, user_id):
-        if request.user.id != int(user_id):
-            return Response({'error': 'You are not authorized to perform this action'},
-                            status=status.HTTP_403_FORBIDDEN)
-
         serializer = UserDetailSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
 
@@ -91,10 +89,6 @@ class UserDetailView(LoginRequiredMixin, APIView):
 
 class UserChangePwdView(LoginRequiredMixin, APIView):
     def post(self, request, user_id):
-        if request.user.id != int(user_id):
-            return Response({'error': 'You are not authorized to perform this action'},
-                            status=status.HTTP_403_FORBIDDEN)
-
         user = User.objects.get(pk=user_id)
         current_pwd = request.data.get('curPwd')
 
@@ -111,6 +105,36 @@ class UserChangePwdView(LoginRequiredMixin, APIView):
             user.set_password(pwd)
 
         user.save()
+
+        return Response({}, status=status.HTTP_200_OK)
+
+
+class UserSettingsView(LoginRequiredMixin, APIView):
+    def get(self, request, user_id):
+        user = User.objects.get(pk=user_id)
+        settings_raw = UserSetting.objects.filter(user=user)
+        settings = []
+
+        for s in settings_raw:
+            settings.append({
+                'setting_name': s.setting_name,
+                'setting_value': s.setting_value
+            })
+
+        return Response(settings, status=status.HTTP_200_OK)
+
+    def post(self, request, user_id):
+        setting_name = request.data.get('setting_name')
+        setting_value = request.data.get('setting_value')
+        user = User.objects.get(pk=user_id)
+
+        try:
+            setting = UserSetting.objects.get(setting_name=setting_name, user=user)
+        except UserSetting.DoesNotExist:
+            setting = UserSetting(setting_name=setting_name, user=user)
+
+        setting.setting_value = setting_value
+        setting.save()
 
         return Response({}, status=status.HTTP_200_OK)
 
@@ -441,5 +465,41 @@ class ResetPasswordView(APIView):
 
         user.set_password(pwd)
         user.save()
+
+        return Response({}, status=status.HTTP_200_OK)
+
+
+class UserStrainSearchesView(LoginRequiredMixin, APIView):
+    def get(self, request, user_id):
+        try:
+            user_search = UserSearch.objects.get(user=request.user)
+            return Response({'strain_search': user_search}, status=status.HTTP_200_OK)
+        except UserSearch.DoesNotExist:
+            return Response({}, status=status.HTTP_204_NO_CONTENT)
+
+    def post(self, request, user_id):
+        criteria = SearchCriteriaSerializer(data=request.data.get('search_criteria'))
+        criteria.is_valid()
+
+        step_1_data = criteria.validated_data.get('step1')
+        step_2_data = criteria.validated_data.get('step2')
+        step_3_data = criteria.validated_data.get('step3')
+        step_4_data = criteria.validated_data.get('step4')
+
+        types = 'skipped' if step_1_data.get('skipped') else step_1_data
+        effects = 'skipped' if step_2_data.get('skipped') else step_2_data.get('effects')
+        benefits = 'skipped' if step_3_data.get('skipped') else step_3_data.get('effects')
+        side_effects = 'skipped' if step_4_data.get('skipped') else step_4_data.get('effects')
+
+        try:
+            user_search = UserSearch.objects.get(user=request.user)
+        except UserSearch.DoesNotExist:
+            user_search = UserSearch(user=request.user)
+
+        user_search.varieties = types
+        user_search.effects = effects
+        user_search.benefits = benefits
+        user_search.side_effects = side_effects
+        user_search.save()
 
         return Response({}, status=status.HTTP_200_OK)

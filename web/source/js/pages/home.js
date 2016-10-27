@@ -5,29 +5,14 @@ W.ns('W.pages');
 W.pages.HomePage = Class.extend({
 
     ui: {
-        $btnLetsGo: $('.btn-lets-go'),
         $lookupInput: $('.lookup-input'),
         $lookupSubmit: $('.lookup-submit'),
         $payloadsRegion: $('.payloads-region')
     },
 
     init: function init() {
-        this.clickLetsGoButton();
         this.changeLookupInput();
         this.clickLookupSubmit();
-    },
-
-    clickLetsGoButton: function clickLetsGoButton() {
-        this.ui.$btnLetsGo.on('click', function (e) {
-            e.preventDefault();
-
-            // clear stored data that might be left from previous search
-            Cookies.remove('strains:search:step1');
-            Cookies.remove('strains:search:step2');
-            Cookies.remove('strains:search:step3');
-
-            window.location.href = 'search/strain/wizard/1';
-        });
     },
 
     changeLookupInput: function changeLookupInput() {

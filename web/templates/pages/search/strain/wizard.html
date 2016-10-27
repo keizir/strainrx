@@ -14,40 +14,51 @@
         <div class="strain-search-wrapper">
             <div class="wizard-wrapper">
                 <div class="step-wrapper">
-                <span
-                        class="wizard-step step-1 {% if step == 1 %}active{% elif step == 6 %}finished{% else %}passed{% endif %}">
-                    <a href="{% url 'search:strain1' %}">1</a>
-                </span>
+                    <span class="wizard-step step-1 active">1</span>
                     <span class="title">Classification</span>
                 </div>
                 <div class="step-wrapper">
-                <span
-                        class="wizard-step step-2 {% if step == 2 %}active{% elif step == 6 %}finished{% elif step > 2 %}passed{% else %}disabled{% endif %}">
-                    <a href="{% url 'search:strain2' %}">2</a>
-                </span>
+                    <span class="wizard-step step-2 disabled">2</span>
                     <span class="title">Effects</span>
                 </div>
                 <div class="step-wrapper">
-                <span
-                        class="wizard-step step-3 {% if step == 3 %}active{% elif step == 6 %}finished{% elif step > 3 %}passed{% else %}disabled{% endif %}">
-                    <a href="{% url 'search:strain3' %}">3</a>
-                </span>
+                    <span class="wizard-step step-3 disabled">3</span>
                     <span class="title">Medical benefits</span>
                 </div>
                 <div class="step-wrapper">
-                <span
-                        class="wizard-step step-4 {% if step == 4 %}active{% elif step == 6 %}finished{% elif step > 4 %}passed{% else %}disabled{% endif %}">
-                    <a href="{% url 'search:strain4' %}">4</a>
-                </span>
+                    <span class="wizard-step step-4 disabled">4</span>
                     <span class="title">Side effects</span>
                 </div>
+                <input type="hidden" class="current-user-id" value="{{ request.user.id }}">
                 <hr/>
             </div>
-            <div class="search-form-wrapper">
-                {% block wizard-content %}{% endblock %}
-            </div>
+
+            <div class="wizard-content-region"></div>
+
+            {% include 'pages/search/strain/wizard_1.html' %}
+            {% include 'pages/search/strain/wizard_2.html' %}
+            {% include 'pages/search/strain/wizard_3.html' %}
+            {% include 'pages/search/strain/wizard_4.html' %}
+
         </div>
     </div>
+{% endblock %}
+
+{% block javascript %}
+    {{ block.super }}
+    <script src="{% static 'js/common/model.js' %}"></script>
+    <script src="{% static 'js/common/wizard/wizard_step.js' %}"></script>
+    <script src="{% static 'js/common/wizard/wizard.js' %}"></script>
+    <script src="{% static 'js/pages/search/strain/search_wizard_step.js' %}"></script>
+    <script src="{% static 'js/pages/search/strain/search_wizard_step_1.js' %}"></script>
+    <script src="{% static 'js/pages/search/strain/search_wizard_step_2.js' %}"></script>
+    <script src="{% static 'js/pages/search/strain/search_wizard_step_3.js' %}"></script>
+    <script src="{% static 'js/pages/search/strain/search_wizard_step_4.js' %}"></script>
+    <script src="{% static 'js/pages/search/strain/search_wizard.js' %}"></script>
+    <script src="{% static 'js/pages/search/strain/search_view.js' %}"></script>
+    <script type="text/javascript">
+        W.pages.search.strain.SearchView.init();
+    </script>
 {% endblock %}
 
 {% block modal %}

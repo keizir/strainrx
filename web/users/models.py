@@ -2,6 +2,7 @@
 from __future__ import unicode_literals, absolute_import
 
 from django.contrib.auth.models import AbstractUser
+from django.contrib.postgres.fields import JSONField
 from django.core.urlresolvers import reverse
 from django.db import models
 from django.utils.encoding import python_2_unicode_compatible
@@ -50,4 +51,15 @@ class User(AbstractUser):
 class PwResetLink(models.Model):
     user = models.OneToOneField(User, on_delete=models.DO_NOTHING, primary_key=True)
     token = models.CharField(max_length=100)
+    last_modified_date = models.DateTimeField(auto_now=True)
+
+
+@python_2_unicode_compatible
+class UserSetting(models.Model):
+    class Meta:
+        unique_together = (("user", "setting_name"),)
+
+    user = models.ForeignKey(User, on_delete=models.DO_NOTHING)
+    setting_name = models.CharField(max_length=100)
+    setting_value = JSONField(max_length=4096, default={})
     last_modified_date = models.DateTimeField(auto_now=True)

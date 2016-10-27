@@ -111,3 +111,15 @@ class Effect(models.Model):
     effect_type = models.CharField(max_length=20, choices=EFFECT_TYPE_CHOICES)
     data_name = models.CharField(max_length=100)
     display_name = models.CharField(max_length=100)
+
+
+@python_2_unicode_compatible
+class UserSearch(models.Model):
+    user = models.ForeignKey(User, on_delete=models.DO_NOTHING)
+
+    varieties = JSONField(max_length=250)
+    effects = JSONField(max_length=1000)
+    benefits = JSONField(max_length=1000)
+    side_effects = JSONField(max_length=1000)
+
+    last_modified_date = models.DateTimeField(auto_now=True)

@@ -20,40 +20,47 @@
     }
 
     .wizard-wrapper {
-        padding: 2em 0;
+        display: block;
         width: 30em;
         height: 10em;
+        padding: 2em 0;
         margin: 0 auto;
+
+        hr {
+            z-index: 1;
+            width: 22em;
+            margin: -4em auto 0 auto;
+        }
+
+        .step-wrapper {
+            display: inline-block;
+            width: 7em;
+            height: 5em;
+            text-align: center;
+            vertical-align: top;
+
+            .title {
+                display: inline-block;
+                padding-top: 1em;
+            }
+        }
     }
 
-    .wizard-wrapper hr {
-        z-index: 1;
-        width: 22em;
-        margin: -4em auto 0 auto;
-    }
+    .step1-form-wrapper {
+        width: 100%;
 
-    .wizard-wrapper .step-wrapper {
-        display: inline-block;
-        width: 7em;
-        height: 5em;
-        text-align: center;
-        vertical-align: top;
-    }
-
-    .wizard-wrapper .step-wrapper .title {
-        display: inline-block;
-        padding-top: 1em;
+        .form-field-group {
+            float: none;
+            text-align: center;
+        }
     }
 
     .effects-form {
         display: inline-block;
-        text-align: left;
-    }
-
-    .effects-form {
         width: 100%;
         margin: 0 auto;
         line-height: 3em;
+        text-align: left;
     }
 
     .effects-form .form-field {
@@ -82,11 +89,11 @@
         margin: 3em auto 5em;
         background-color: $grey-normal;
         border-color: $grey-normal;
-    }
 
-    .effects-form .slider span {
-        background-color: $grey-dark;
-        border-color: $grey-dark;
+        span {
+            background-color: $grey-dark;
+            border-color: $grey-dark;
+        }
     }
 }
 
@@ -183,6 +190,7 @@
         float: right;
         bottom: 2.55em;
         right: 0.5em;
+        cursor: pointer;
     }
 
     .form-field .step-3.removable {
@@ -196,6 +204,7 @@
         left: 0.8em;
         color: $iris-blue;
         font-weight: bold;
+        cursor: default;
     }
 
     .form-field .step-3.importance-value {
@@ -276,13 +285,16 @@
     }
 }
 
-.wizard-1 {
-    .form-field-group {
-        float: none;
+@media (max-width: $screen-sm-max) {
+    .strain-search-wrapper .effects-form {
+        width: 70%;
+    }
+    .strain-search-wrapper .effects-form .slider-wrapper .slider-step-label {
+        margin: 0 2em;
     }
 }
 
-@media (max-width: $screen-xs-min) {
+@media (max-width: $screen-xs-max) {
     .search-form-wrapper {
         width: 26em;
     }
@@ -357,14 +369,5 @@
     .search-form-wrapper .form-field .removable {
         bottom: 0.8em;
         margin-top: -1.5em;
-    }
-}
-
-@media (max-width: $screen-sm-min) {
-    .strain-search-wrapper .effects-form {
-        width: 70%;
-    }
-    .strain-search-wrapper .effects-form .slider-wrapper .slider-step-label {
-        margin: 0 2em;
     }
 }
