@@ -5,6 +5,11 @@ from web.users.api.views import *
 
 urlpatterns = [
     url(
+        regex=r'^$',
+        view=UsersView.as_view(),
+        name='users'
+    ),
+    url(
         regex=r'^(?P<user_id>\d+)/$',
         view=user_is_owner(UserDetailView.as_view()),
         name='user-detail'

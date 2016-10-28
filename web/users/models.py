@@ -3,10 +3,13 @@ from __future__ import unicode_literals, absolute_import
 
 from django.contrib.auth.models import AbstractUser
 from django.contrib.postgres.fields import JSONField
+from django.core.exceptions import ValidationError
 from django.core.urlresolvers import reverse
 from django.db import models
 from django.utils.encoding import python_2_unicode_compatible
 from django.utils.translation import ugettext_lazy as _
+
+from web.users import validators
 
 USER_TYPE = [
     ('admin', 'Admin'),
@@ -39,6 +42,16 @@ class User(AbstractUser):
     birth_year = models.IntegerField(_('Birth Year'), blank=True, null=True)
 
     gender = models.CharField(_('Gender'), choices=GENDER, blank=True, null=True, max_length=10)
+
+    def clean(self):
+        validators.validate_email(self.email)
+
+        if not self.is_age_verified:
+            return ValidationError('Age verification is required')
+
+    def save(self, *args, **kwargs):
+        self.clean()
+        super().save(*args, **kwargs)
 
     def __str__(self):
         return self.username

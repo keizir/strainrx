@@ -37,9 +37,14 @@ W.common.Wizard = Class.extend({
 
     handleStepClick: function handleStepClick(step) {
         var $selectedStep = $('.step-{0}'.format(step));
-        $selectedStep.prevAll().addClass('passed').removeClass('active disabled');
-        $selectedStep.addClass('active').removeClass('passed disabled');
-        $selectedStep.nextAll().addClass('disabled').removeClass('active passed');
+
+        if ($selectedStep.length === 0) {
+            $('.wizard-step').addClass('finished').removeClass('active passed disabled');
+        } else {
+            $selectedStep.prevAll().addClass('passed').removeClass('active disabled');
+            $selectedStep.addClass('active').removeClass('passed disabled');
+            $selectedStep.nextAll().addClass('disabled').removeClass('active passed');
+        }
     },
 
     cleanErrorMessagesOnFocus: function cleanErrorMessagesOnFocus() {

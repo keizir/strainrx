@@ -1,8 +1,6 @@
 # -*- coding: utf-8 -*-
 from __future__ import absolute_import, unicode_literals
 
-import uuid
-
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.core.urlresolvers import reverse
 from django.views.generic import DetailView, ListView, RedirectView, UpdateView
@@ -114,105 +112,16 @@ class UserListView(LoginRequiredMixin, ListView):
     slug_url_kwarg = 'username'
 
 
-class UserSignUpWizard1View(TemplateView):
-    template_name = 'pages/signup/b2c/wizard_1.html'
-
-    def get_context_data(self, **kwargs):
-        context = super(UserSignUpWizard1View, self).get_context_data(**kwargs)
-        context['passed'] = False
-
-        if self.request.session.get('t_val') is not None:
-            token = self.request.session.get('t_val')
-            user_info = self.request.session.get(str(token))
-
-            if user_info is not None:
-                context['first_name'] = user_info.get('first_name')
-                context['last_name'] = user_info.get('last_name')
-                context['passed'] = True
-        else:
-            token = str(uuid.uuid1())
-
-        context['token'] = token
-        context['step'] = 1
-        self.request.session['t_val'] = token
-        return context
+class UserSignUpWizardView(TemplateView):
+    template_name = 'pages/signup/b2c/wizard.html'
 
 
-class UserSignUpWizard2View(TemplateView):
-    template_name = 'pages/signup/b2c/wizard_2.html'
-
-    def get_context_data(self, **kwargs):
-        context = super(UserSignUpWizard2View, self).get_context_data(**kwargs)
-        token = self.request.session['t_val']
-        user_info = self.request.session[str(token)]
-        context['token'] = token
-        context['step'] = 2
-        context['passed'] = False
-        is_age_verified = user_info.get('is_age_verified')
-
-        if is_age_verified is not None:
-            context['is_age_verified'] = is_age_verified
-            context['passed'] = True
-
-        self.request.session['t_val'] = token
-        return context
-
-
-class UserSignUpWizard3View(TemplateView):
-    template_name = 'pages/signup/b2c/wizard_3.html'
-
-    def get_context_data(self, **kwargs):
-        context = super(UserSignUpWizard3View, self).get_context_data(**kwargs)
-        token = self.request.session['t_val']
-        user_info = self.request.session[str(token)]
-        context['token'] = token
-        context['step'] = 3
-        context['passed'] = False
-
-        email = user_info.get('email')
-        if email is not None:
-            context['email'] = email
-            context['passed'] = True
-
-        self.request.session['t_val'] = token
-        return context
-
-
-class UserSignUpWizard4View(TemplateView):
-    template_name = 'pages/signup/b2c/wizard_4.html'
-
-    def get_context_data(self, **kwargs):
-        token = self.request.session['t_val']
-        context = super(UserSignUpWizard4View, self).get_context_data(**kwargs)
-        context['token'] = token
-        context['step'] = 4
-        self.request.session['t_val'] = token
-        return context
-
-
-class UserSignUpWizard5View(TemplateView):
-    template_name = 'pages/signup/b2c/wizard_5.html'
-
-    def get_context_data(self, **kwargs):
-        token = self.request.session['t_val']
-        context = super(UserSignUpWizard5View, self).get_context_data(**kwargs)
-        context['token'] = token
-        context['step'] = 5
-        self.request.session['t_val'] = token
-        return context
-
-
-class UserSignUpWizard6View(TemplateView):
-    template_name = 'pages/signup/b2c/wizard_6.html'
-
-    def get_context_data(self, **kwargs):
-        context = super(UserSignUpWizard6View, self).get_context_data(**kwargs)
-        context['step'] = 6
-        return context
+class UserSignUpDoneView(TemplateView):
+    template_name = 'pages/signup/b2c/almost_done.html'
 
 
 class ConfirmEmailView(TemplateView):
-    template_name = 'pages/signup/b2c/wizard_7.html'
+    template_name = 'pages/signup/b2c/email_confirmed.html'
 
     def get_context_data(self, **kwargs):
         uid = kwargs.get('uid')

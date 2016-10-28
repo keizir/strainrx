@@ -1,22 +1,24 @@
-{% extends "pages/signup/b2c/wizard.html" %}
-
-{% block wizard-content %}
-    <div class="sign-up-form-wrapper">
+<script type="x/srx-template" id="b2c-wizard-5">
+    <div class="sign-up-form-wrapper b2c-step-5">
         <h1>Terms of use and our privacy policy</h1>
         <form method="post">
-            {% csrf_token %}
             <fieldset>
-                <input type="hidden" name="token" value="{{ token }}">
-                <label>
-                    <input id="terms" type="checkbox" name="terms"/>
-                    <span class="check"></span>
-                    I agree to the
-                    <a href="{% url 'terms' %}">terms of use</a> and
-                    <a href="{% url 'privacy' %}">privacy policy</a>
-                </label>
+                <div class="form-field-group">
+                    <div class="form-field">
+                        <label>
+                            <input id="terms" type="checkbox" name="terms"/>
+                            <span class="check"></span>
+                            I agree to the
+                            <a href="{% url 'terms' %}">terms of use</a> and
+                            <a href="{% url 'privacy' %}">privacy policy</a>
+                        </label>
+                    </div>
+                </div>
                 <span class="error-message"></span>
             </fieldset>
-            <button class="btn-primary btn-step-5" type="submit">Next</button>
+            <div class="form-actions">
+                <button class="btn-primary btn-b2c-step-5" type="submit">Next</button>
+            </div>
         </form>
     </div>
-{% endblock %}
+</script>
