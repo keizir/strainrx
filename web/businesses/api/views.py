@@ -49,7 +49,6 @@ class BusinessSignUpWizardView(APIView):
 
         serializer = BusinessSerializer(business)
         request.session['business'] = serializer.data
-        request.session['business_image'] = business.image.url if business.image and business.image.url else None
 
         return Response({
             'business_id': business.pk
@@ -64,6 +63,9 @@ class BusinessImageView(LoginRequiredMixin, APIView):
         if len(business_users) > 0:
             business.image = file
             business.save()
+
+            request.session['business_image'] = business.image.url if business.image and business.image.url else None
+
             return Response({}, status=status.HTTP_200_OK)
         else:
             return Response({

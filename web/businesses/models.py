@@ -43,6 +43,8 @@ class Business(models.Model):
     created_date = models.DateTimeField(auto_now_add=True)
     trial_period_start_date = models.DateTimeField(blank=True, null=True)
 
+    def __str__(self):
+        return self.name
 
 @python_2_unicode_compatible
 class BusinessLocation(models.Model):
@@ -79,3 +81,6 @@ class BusinessLocation(models.Model):
     sat_close = models.TimeField(blank=True, null=True)
     sun_open = models.TimeField(blank=True, null=True)
     sun_close = models.TimeField(blank=True, null=True)
+
+    def __str__(self):
+        return '{0} - {1}'.format(self.business, self.business_type)
