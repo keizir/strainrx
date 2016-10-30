@@ -81,7 +81,7 @@ W.pages.b2b.SignUpWizard = W.common.Wizard.extend({
                 },
                 error: function () {
                     // Anyway redirect to next page even if image failed to save
-                    window.location.href = '/businesses/signup/done/';
+                    window.location.href = '/businesses/signup/done/?image=fail';
                 }
             });
         }

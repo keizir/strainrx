@@ -17,7 +17,7 @@ class BusinessSignUpSerializer(serializers.Serializer):
     state = serializers.CharField()
     zip_code = serializers.CharField()
     phone = serializers.CharField()
-    ext = serializers.CharField()
+    ext = serializers.CharField(allow_blank=True)
 
     mon_open = serializers.TimeField(format='%I:%M %p', input_formats=['%I:%M %p'], allow_null=True)
     mon_close = serializers.TimeField(format='%I:%M %p', input_formats=['%I:%M %p'], allow_null=True)

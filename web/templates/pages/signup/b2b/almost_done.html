@@ -37,6 +37,12 @@
                         Haven't received your verification email?
                         <a class="resend-b2b-email-link" href="#">Click here</a> to resend it.
                     </span>
+                    {% if request.GET.image and request.GET.image == 'fail' %}
+                        <span class="error-message">
+                            Business logo failed to upload. Please try again on your
+                            <a href="#">profile</a> page.
+                        </span>
+                    {% endif %}
                 </div>
             </div>
         </div>
