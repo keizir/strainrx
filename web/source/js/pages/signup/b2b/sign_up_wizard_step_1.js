@@ -26,6 +26,11 @@ W.pages.b2b.SignUpWizardStep1 = W.common.WizardStep.extend({
             return false;
         }
 
+        if (businessName.length > 255) {
+            $('.error-message').text('Max allowed length is 255 symbols');
+            return false;
+        }
+
         return true;
     },
 

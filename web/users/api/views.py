@@ -11,6 +11,8 @@ from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
+from web.businesses.models import Business
+from web.businesses.serializers import BusinessSerializer
 from web.search.api.serializers import SearchCriteriaSerializer
 from web.search.models import UserSearch
 from web.users import validators
@@ -140,6 +142,14 @@ class UserLoginView(APIView):
         authenticated = authenticate(username=user.email, password=pwd)
         if authenticated is None:
             return bad_request('Email or password does not match')
+
+        # If user is a business user we need a business object to be available across the app
+        if user.type == 'business':
+            business = Business.objects.filter(users__in=[user])[:1]
+            serializer = BusinessSerializer(business[0])
+            request.session['business'] = serializer.data
+            request.session['business_image'] = business[0].image.url if business[0].image and business[0].image.url \
+                else None
 
         login(request, authenticated)
         return Response({}, status=status.HTTP_200_OK)

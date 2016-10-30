@@ -13,16 +13,31 @@ W.pages.b2b.SignUpWizardStep9 = W.common.WizardStep.extend({
         });
     },
 
+    initEventHandlers: function initEventHandlers() {
+        this._super();
+        $('.check').on('click', function () {
+            $('.error-message').text('');
+        });
+    },
+
     renderHTML: function () {
         return this.$template({});
     },
 
     validate: function validate() {
+        var isTermsChecked = $('input[name="terms"]').is(':checked');
+        if (!isTermsChecked) {
+            $('.error-message').text('Agreement is required');
+            return false;
+        }
+
         return true;
     },
 
     submit: function submit() {
-        $.publish('submit_form');
+        var data = {terms: $('input[name="terms"]').is(":checked")};
+        $.publish('update_step_data', {step: this.step, data: data});
+        $.publish('submit_form', this.model.getData());
     }
 
 });

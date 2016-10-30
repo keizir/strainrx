@@ -13,6 +13,28 @@ W.pages.b2b.SignUpWizardStep2 = W.common.WizardStep.extend({
         });
     },
 
+    initEventHandlers: function initEventHandlers() {
+        var that = this;
+
+        $(this.submit_el).on('click', function (e) {
+            e.preventDefault();
+            if (that.validate()) {
+                that.checkIfEmailRegistered($('input[name="user_email"]').val(),
+                    function (data) {
+                        if (!data || data.exist) {
+                            $('.error-message').text('That email address is already registered');
+                            return;
+                        }
+
+                        that.submit();
+                    },
+                    function () {
+                        return false;
+                    });
+            }
+        });
+    },
+
     renderHTML: function () {
         var stepData = this.model.get(this.step);
         return this.$template({user_email: stepData && stepData.user_email});
@@ -26,7 +48,30 @@ W.pages.b2b.SignUpWizardStep2 = W.common.WizardStep.extend({
             return false;
         }
 
+        if (!this.validateEmail(userEmail)) {
+            $('.error-message').text('Invalid email format');
+            return false;
+        }
+
         return true;
+    },
+
+    validateEmail: function validateEmail(email) {
+        return W.common.Constants.regex.email.test(email);
+    },
+
+    checkIfEmailRegistered: function checkIfEmailRegistered(email, successCallback, errorCallback) {
+        $.ajax({
+            method: 'GET',
+            url: '/api/v1/users/?email={0}'.format(email),
+            dataType: 'json',
+            success: function (data) {
+                successCallback(data);
+            },
+            error: function (error) {
+                errorCallback(error);
+            }
+        });
     },
 
     submit: function submit() {

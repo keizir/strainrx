@@ -18,13 +18,44 @@ W.pages.b2b.SignUpWizardStep4 = W.common.WizardStep.extend({
     },
 
     validate: function validate() {
+        var isDispensary = $('input[name="dispensary"]').is(":checked"),
+            isDelivery = $('input[name="delivery"]').is(":checked"),
+            isGrowHouse = $('input[name="grow_house"]').is(":checked");
+
+        if (!isDispensary && !isDelivery) {
+            $('.error-message').text('Business Type is required');
+            return false;
+        }
+
+        if (isGrowHouse) {
+            $('.error-message').text('Grow House is not an available type now');
+            return false;
+        }
+
         return true;
     },
 
     submit: function submit() {
-        var data = {};
+        var data = {
+            dispensary: $('input[name="dispensary"]').is(":checked"),
+            delivery: $('input[name="delivery"]').is(":checked")
+        };
         $.publish('update_step_data', {step: this.step, data: data});
         $.publish('show_step', {step: 5});
+    },
+
+    restoreState: function restoreState() {
+        if (this.model.get(this.step)) {
+            var state = this.model.get(this.step);
+
+            if (state.dispensary) {
+                $('input[name="dispensary"]').prop('checked', 'checked');
+            }
+
+            if (state.delivery) {
+                $('input[name="delivery"]').prop('checked', 'checked');
+            }
+        }
     }
 
 });

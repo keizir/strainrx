@@ -21,8 +21,7 @@ W.pages.b2c.SignUpWizardStep5 = W.common.WizardStep.extend({
     },
 
     renderHTML: function () {
-        var stepData = this.model.get(this.step);
-        return this.$template({is_age_verified: stepData && stepData.is_age_verified});
+        return this.$template();
     },
 
     validate: function validate() {

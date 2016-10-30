@@ -1,4 +1,6 @@
 {% load staticfiles i18n %}
+{% load business_template_tags %}
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -44,29 +46,61 @@
                         {% if request.user.is_authenticated %}
                             <div class="auth-menu">
                                 <div class="nav-menu-btn-wrapper">
-                                    <a class="nav-menu-btn">
-                                        <i class="fa fa-user" aria-hidden="true"></i>
-                                        Welcome <span class="user-name">{{ request.user.first_name }}</span>
-                                        {% if not request.user.is_email_verified %}
-                                            <span class="separator"></span>
-                                            <a class="resend-email-link" href="#">Verify Email</a>
-                                        {% else %}
-                                            <span class="separator"></span>
-                                            <a class="nav-link" href="{% url 'users:detail' request.user.id %}">
-                                                My Account</a>
-                                        {% endif %}
-                                    </a>
+                                    {% if request.user.type == 'consumer' %}
+                                        <a class="nav-menu-btn">
+                                            <i class="fa fa-user" aria-hidden="true"></i>
+                                            Welcome <span class="user-name">{{ request.user.first_name }}</span>
+                                            {% if not request.user.is_email_verified %}
+                                                <span class="separator"></span>
+                                                <a class="resend-nav-email-link" href="#">Verify Email</a>
+                                            {% else %}
+                                                <span class="separator"></span>
+                                                <a class="nav-link" href="{% url 'users:detail' request.user.id %}">
+                                                    My Account</a>
+                                            {% endif %}
+                                        </a>
+                                    {% elif request.user.type == 'business' %}
+                                        <div class="business-image">
+                                            {% if request.session.business_image %}
+                                                <img src="{{ request.session.business_image }}">
+                                            {% endif %}
+                                        </div>
+                                        <div class="business-nav-menu-btn">
+                                                <span class="business-name">
+                                                    {{ request.session.business.name }}
+                                                </span>
+                                            <span class="business-active-since">
+                                                    Active since {% to_active_since_date request.session.business.created_date %}
+                                                </span>
+                                            {% if not request.session.business.is_business_verified %}
+                                                <span class="business-verify-location">
+                                                    {% if not request.user.is_email_verified %}
+                                                        <a class="resend-nav-b2b-email-link" href="#">Verify Email</a>
+                                                    {% else %}
+                                                        <a href="#">Verify Location</a>
+                                                    {% endif %}
+                                                </span>
+                                            {% endif %}
+                                        </div>
+                                    {% endif %}
                                 </div>
                                 <div class="nav-menu-content">
-                                    <div class="action">
-                                        <a class="nav-link" href="{% url 'account_logout' %}">Sign out</a>
-                                    </div>
-                                    <div class="action location">
-                                        <span><i class="fa fa-dot-circle-o"
-                                                 aria-hidden="true"></i> UPDATE LOCATION</span>
-                                        <span>12345, Santa Monica, LA</span>
-                                        <a class="update-location-href" href="#">Update location</a>
-                                    </div>
+                                    {% if request.user.type == 'consumer' %}
+                                        <div class="action">
+                                            <a class="nav-link" href="{% url 'account_logout' %}">Sign out</a>
+                                        </div>
+                                        <div class="action location">
+                                            <span>
+                                                <i class="fa fa-dot-circle-o" aria-hidden="true"></i> UPDATE LOCATION
+                                            </span>
+                                            <span>12345, Santa Monica, LA</span>
+                                            <a class="update-location-href" href="#">Update location</a>
+                                        </div>
+                                    {% elif request.user.type == 'business' %}
+                                        <div class="action">
+                                            <a class="nav-link" href="{% url 'account_logout' %}">Sign out</a>
+                                        </div>
+                                    {% endif %}
                                 </div>
                             </div>
                         {% else %}

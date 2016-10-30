@@ -137,6 +137,258 @@
         .form-actions {
             margin: 2em auto 5em;
         }
+
+        .sub-title {
+            display: block;
+            margin-top: -3em;
+            margin-bottom: 4em;
+            line-height: 1.5em;
+        }
+    }
+
+    .b2b-step-4 {
+        .form-field-group {
+            display: block;
+            width: 60%;
+            margin: 0 auto;
+
+            .form-field {
+                display: inline-block;
+                width: 20%;
+                margin: 0 3%;
+                color: $grey-dark;
+
+                label {
+                    cursor: pointer;
+                }
+
+                input[type="checkbox"] {
+                    width: 1em;
+                    height: 1em;
+                    cursor: pointer;
+                }
+            }
+        }
+
+        .grow-house {
+            cursor: default !important;
+            color: $grey-light;
+
+            label {
+                cursor: default;
+            }
+
+            input[type="checkbox"] {
+                cursor: default;
+            }
+        }
+    }
+
+    .b2b-step-5 {
+        .form-field-group {
+            display: block;
+            width: 30em;
+            margin: 0 auto 1em;
+            text-align: left;
+
+            .form-field {
+                display: inline-block;
+                width: 100%;
+                margin: 0 auto;
+
+                label {
+                    display: block;
+                    margin-bottom: 0.5em;
+                    color: $grey-dark;
+                    font-weight: bold;
+                }
+
+                input {
+                    border-radius: 0;
+                    width: 100%;
+                }
+            }
+        }
+
+        .city-field-group {
+            .form-field {
+                margin: 0;
+            }
+
+            .form-field.city {
+                width: 40%;
+            }
+
+            .form-field.state {
+                width: 20%;
+                margin: 0 4%;
+            }
+
+            .form-field.zipcode {
+                width: 30%;
+            }
+        }
+
+        .phone-field-group {
+            .form-field {
+                margin: 0;
+            }
+
+            .form-field.phone-number {
+                width: 70%;
+            }
+
+            .form-field.phone-ext {
+                width: 25%;
+                margin-left: 4%;
+            }
+        }
+    }
+
+    .b2b-step-6 {
+        .form .form-field-group {
+            float: none;
+            width: 100%;
+
+            .form-field {
+                display: block;
+                width: 21em;
+                margin: 0 auto;
+            }
+
+            .day-wrapper {
+                display: block;
+                width: 21em;
+                height: 2em;
+                margin: 0 auto 1em;
+                text-align: left;
+
+                .day {
+                    display: inline-block;
+                    position: relative;
+                    top: 0.35em;
+                    float: left;
+                    width: 25%;
+                }
+
+                .hours {
+                    display: inline-block;
+                    height: 2em;
+                    float: right;
+
+                    div {
+                        display: inline-block;
+                        height: 2em;
+                        vertical-align: top;
+                    }
+
+                    select {
+                        border-radius: 0;
+                        padding: 0 0.5em;
+                        width: 6em;
+                        height: 2em;
+                    }
+
+                    .separator {
+                        position: relative;
+                        top: 0.35em;
+                    }
+
+                    .separator:after {
+                        content: '-';
+                        padding: 0;
+                    }
+                }
+            }
+        }
+    }
+
+    .b2b-step-7 {
+        .image-upload-form {
+            fieldset {
+                display: block;
+                height: 8em;
+            }
+
+            .title {
+                margin: 4em auto;
+
+                .photo-camera-wrapper {
+                    color: $grey-dark;
+                }
+
+                h1 {
+                    margin: 0.4em auto;
+                }
+            }
+
+            .error-message {
+                display: block;
+                margin: 2em auto;
+            }
+
+            .upload-image {
+                width: 0.1px;
+                height: 0.1px;
+                opacity: 0;
+                overflow: hidden;
+                position: absolute;
+                z-index: -1;
+            }
+
+            .upload-image + label {
+                display: block;
+                width: 10em;
+                margin: 0 auto;
+                padding: 1em 2em;
+                cursor: pointer;
+                border: 1px solid $grey-normal;
+                color: $grey-normal;
+            }
+
+            .upload-image:focus + label {
+                outline: 1px solid $iris-blue;
+            }
+        }
+    }
+
+    .b2b-step-8 {
+        .form-field {
+            display: block;
+            width: 50%;
+            margin: 0 auto;
+
+            .check {
+                display: inline-block;
+                float: left;
+            }
+
+            .text {
+                display: inline-block;
+                float: right;
+                width: 90%;
+                text-align: left;
+                line-height: 2em;
+            }
+        }
+
+        .error-message {
+            margin-top: 2em;
+        }
+    }
+
+    .b2b-step-9 {
+        .error-message {
+            margin-top: 2em;
+        }
+    }
+
+    .go-to-menu {
+        width: 15em;
+
+        a {
+            color: $white;
+        }
     }
 }
 

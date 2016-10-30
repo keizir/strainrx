@@ -62,6 +62,46 @@
 
     .nav-menu-btn-wrapper {
         right: 1em;
+
+        .business-image {
+            display: inline-block;
+            float: left;
+            height: 4em;
+            width: 4em;
+        }
+
+        .business-nav-menu-btn {
+            display: inline-block;
+            float: right;
+            font-size: 0.8em;
+
+            span {
+                padding: 0.3em;
+            }
+
+            .business-name {
+                display: block;
+                font-size: 1.1em;
+                line-height: 1em;
+                color: $grey-normal;
+                font-weight: bold;
+            }
+
+            .business-active-since {
+                display: block;
+                line-height: 1em;
+                color: $grey-normal;
+            }
+
+            .business-verify-location {
+                display: block;
+                line-height: 1em;
+
+                a {
+                    text-decoration: underline;
+                }
+            }
+        }
     }
 
     .auth-menu {

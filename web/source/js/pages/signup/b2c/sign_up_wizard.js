@@ -27,7 +27,6 @@ W.pages.b2c.SignUpWizard = W.common.Wizard.extend({
     },
 
     _on_submit_form: function _on_submit_form(ev, data) {
-        var that = this;
         $.ajax({
             method: 'POST',
             url: '/api/v1/users/signup',

@@ -13,16 +13,30 @@ W.pages.b2b.SignUpWizardStep8 = W.common.WizardStep.extend({
         });
     },
 
+    initEventHandlers: function initEventHandlers() {
+        this._super();
+        $('.check').on('click', function () {
+            $('.error-message').text('');
+        });
+    },
+
     renderHTML: function () {
-        return this.$template({});
+        var stepData = this.model.get(this.step);
+        return this.$template({certified_legal_compliance: stepData && stepData.certified_legal_compliance});
     },
 
     validate: function validate() {
+        var isCertified = $('input[name="cert"]').is(":checked");
+        if (!isCertified) {
+            $('.error-message').text('Certification is required');
+            return false;
+        }
+
         return true;
     },
 
     submit: function submit() {
-        var data = {};
+        var data = {certified_legal_compliance: $('input[name="cert"]').is(":checked")};
         $.publish('update_step_data', {step: this.step, data: data});
         $.publish('show_step', {step: 9});
     }

@@ -60,7 +60,7 @@ urlpatterns = [
     url(
         regex=r'^signup/done/$',
         view=views.UserSignUpDoneView.as_view(),
-        name='signup'
+        name='signup_done'
     ),
     url(
         regex=r'^signup/wizard/$',

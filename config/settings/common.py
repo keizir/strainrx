@@ -283,7 +283,7 @@ ELASTICSEARCH_PASSWORD = env('ELASTICSEARCH_PASSWORD', default='')
 AWS_ACCESS_KEY_ID = env('DJANGO_AWS_ACCESS_KEY_ID', default='')
 AWS_SECRET_ACCESS_KEY = env('DJANGO_AWS_SECRET_ACCESS_KEY', default='')
 AWS_STORAGE_BUCKET_NAME = env('DJANGO_AWS_STORAGE_BUCKET_NAME', default='')
-AWS_AUTO_CREATE_BUCKET = True
+AWS_AUTO_CREATE_BUCKET = False
 AWS_S3_SECURE_URLS = False  # use http instead of https
 AWS_QUERYSTRING_AUTH = False  # don't add complex authentication-related query parameters for requests
 AWS_S3_CALLING_FORMAT = OrdinaryCallingFormat()

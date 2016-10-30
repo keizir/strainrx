@@ -4,6 +4,13 @@ W.ns('W.common');
 
 W.common.Constants = {
 
+    regex: {
+        email: /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
+        specialChar: /[~`!@#$%\^&*+=\-\[\]\\';,/{}|\\":<>\?]/,
+        onlyNumeric: /^\d+$/,
+        onlyAlpha: /^[a-zA-Z]+$/
+    },
+
     effectNames: {
         'happy': 'Happy',
         'uplifted': 'Uplifted',

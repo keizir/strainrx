@@ -13,17 +13,39 @@ W.pages.b2b.SignUpWizardStep7 = W.common.WizardStep.extend({
         });
     },
 
+    initEventHandlers: function initEventHandlers() {
+        this._super();
+
+        var that = this;
+        $('.btn-b2b-skip-7').on('click', function (e) {
+            e.preventDefault();
+            $.publish('update_step_data', {step: that.step, data: {skipped: true}});
+            $.publish('show_step', {step: 8});
+        });
+    },
+
     renderHTML: function () {
         return this.$template({});
     },
 
     validate: function validate() {
+        var file = $('.upload-image')[0].files[0];
+        if (!file) {
+            $('.error-message').text('Image file is required');
+            return false;
+        }
+
         return true;
     },
 
     submit: function submit() {
-        var data = {};
-        $.publish('update_step_data', {step: this.step, data: data});
+        var file = $('.upload-image')[0].files[0],
+            formData = new FormData();
+
+        formData.append('file', file);
+        formData.append('name', file.name);
+
+        $.publish('update_step_data', {step: this.step, data: formData});
         $.publish('show_step', {step: 8});
     }
 

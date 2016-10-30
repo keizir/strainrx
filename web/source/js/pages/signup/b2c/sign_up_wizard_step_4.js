@@ -50,8 +50,7 @@ W.pages.b2c.SignUpWizardStep4 = W.common.WizardStep.extend({
     },
 
     containsSpecialChar: function containsSpecialChar(pwd) {
-        var re = /[~`!@#$%\^&*+=\-\[\]\\';,/{}|\\":<>\?]/;
-        return re.test(pwd);
+        return W.common.Constants.regex.specialChar.test(pwd);
     },
 
     submit: function submit() {

@@ -11,7 +11,9 @@ from web.users.models import User
 
 
 def upload_business_image_to(instance, filename):
-    return 'businesses/{0}/images/{1}___{2}'.format(instance.pk, uuid4(), filename)
+    path = 'businesses/{0}/images/{1}___{2}'.format(instance.pk, uuid4(), filename)
+    print('--- uploading to : {0}'. format(path))
+    return path
 
 
 def validate_business_image(field_file_obj):
@@ -32,12 +34,14 @@ class Business(models.Model):
     dispensary = models.BooleanField(default=False)
     delivery = models.BooleanField(default=False)
     grow_house = models.BooleanField(default=False)
+    is_business_verified = models.BooleanField(default=False)
 
     users = models.ManyToManyField(User, related_name='businesses')
 
     # User who created the Business. Also included in [users] field
     created_by = models.ForeignKey(User, on_delete=models.DO_NOTHING, related_name='business_created_by')
     created_date = models.DateTimeField(auto_now_add=True)
+    trial_period_start_date = models.DateTimeField(blank=True, null=True)
 
 
 @python_2_unicode_compatible
@@ -54,7 +58,7 @@ class BusinessLocation(models.Model):
     street1 = models.CharField(max_length=100)
     city = models.CharField(max_length=100)
     state = models.CharField(max_length=50)
-    zip = models.CharField(max_length=10)
+    zip_code = models.CharField(max_length=10)
 
     phone = models.CharField(max_length=15)
     ext = models.CharField(max_length=5, blank=True, null=True)
