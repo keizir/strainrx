@@ -63,7 +63,7 @@ W.pages.b2c.SignUpWizardStep3 = W.common.WizardStep.extend({
     checkIfEmailRegistered: function checkIfEmailRegistered(email, successCallback, errorCallback) {
         $.ajax({
             method: 'GET',
-            url: '/api/v1/users/?email={0}'.format(email),
+            url: '/api/v1/users/?email={0}'.format(encodeURIComponent(email)),
             dataType: 'json',
             success: function (data) {
                 successCallback(data);

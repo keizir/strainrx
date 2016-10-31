@@ -47,7 +47,7 @@ W.pages.b2b.SignUpWizardStep5 = W.common.WizardStep.extend({
         }
 
         if (!W.common.Constants.regex.onlyAlpha.test(city)) {
-            $('.error-message').text('City name cannot contain a numbers');
+            $('.error-message').text('City name cannot contain numbers');
             return false;
         }
 

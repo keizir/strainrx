@@ -22,6 +22,23 @@ W.pages.b2b.SignUpWizardStep7 = W.common.WizardStep.extend({
             $.publish('update_step_data', {step: that.step, data: {skipped: true}});
             $.publish('show_step', {step: 8});
         });
+
+        $('.upload-image').on('change', function (e) {
+            e.preventDefault();
+            var preview = $('.uploaded-img'),
+                file = $(this)[0].files[0],
+                reader = new FileReader();
+
+            reader.addEventListener("load", function () {
+                preview[0].src = reader.result;
+                preview.removeClass('hidden');
+                $('.fa-camera').addClass('hidden');
+            }, false);
+
+            if (file) {
+                reader.readAsDataURL(file);
+            }
+        });
     },
 
     renderHTML: function () {

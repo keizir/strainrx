@@ -72,7 +72,7 @@ class Strain(models.Model):
         super(Strain, self).save(*args, **kwargs)
 
     def __str__(self):
-        return self.name
+        return '{0} - {1}'.format(self.name, self.category)
 
 
 def upload_image_to(instance, filename):
@@ -96,6 +96,9 @@ class StrainImage(models.Model):
     created_date = models.DateField(blank=False, null=False, default=datetime.now)
     created_by = models.ForeignKey(User, on_delete=models.DO_NOTHING)
 
+    def __str__(self):
+        return self.strain
+
 
 @python_2_unicode_compatible
 class Effect(models.Model):
@@ -112,6 +115,9 @@ class Effect(models.Model):
     data_name = models.CharField(max_length=100)
     display_name = models.CharField(max_length=100)
 
+    def __str__(self):
+        return '{0} - {1}'.format(self.effect_type, self.display_name)
+
 
 @python_2_unicode_compatible
 class UserSearch(models.Model):
@@ -123,3 +129,6 @@ class UserSearch(models.Model):
     side_effects = JSONField(max_length=1000)
 
     last_modified_date = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return '{0} - {1}'.format(self.user, self.last_modified_date)

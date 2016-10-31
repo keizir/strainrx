@@ -172,8 +172,8 @@ class UserSignUpWizardView(APIView):
 
         try:
             EmailService().send_confirmation_email(user)
-        except Exception as e:
-            print('Cannot send an email to ' + user.email)
+        except Exception:
+            logger.error('Cannot send an email to {0}'.format(user.email))
 
         authenticated = authenticate(username=user.email, password=serializer.validated_data.get('pwd'))
         if authenticated is None:
@@ -188,7 +188,7 @@ class UserSignUpWizardView(APIView):
 
         does_exist = User.objects.filter(email=data.get('email')).exists()
         if does_exist:
-            raise ValidationError('That email address is already registered')
+            return bad_request('That email address is already registered')
 
         try:
             validators.validate_pwd(data.get('pwd'), data.get('pwd2'))
