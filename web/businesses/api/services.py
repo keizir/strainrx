@@ -17,7 +17,7 @@ class BusinessSignUpService:
     def validate_and_create_user(self, data):
         does_exist = User.objects.filter(email=data.get('email')).exists()
         if does_exist:
-            raise ValidationError('That email address is already registered')
+            raise ValidationError('There is already an account associated with that email address')
 
         validators.validate_pwd(data.get('pwd'), data.get('pwd2'))
 

@@ -27,7 +27,7 @@ W.pages.b2c.SignUpWizardStep3 = W.common.WizardStep.extend({
                 that.checkIfEmailRegistered($('input[name="email"]').val(),
                     function (data) {
                         if (!data || data.exist) {
-                            $('.error-message').text('That email address is already registered');
+                            $('.error-message').text('There is already an account associated with that email address');
                             return;
                         }
 

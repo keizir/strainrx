@@ -22,7 +22,7 @@ W.pages.b2b.SignUpWizardStep2 = W.common.WizardStep.extend({
                 that.checkIfEmailRegistered($('input[name="user_email"]').val(),
                     function (data) {
                         if (!data || data.exist) {
-                            $('.error-message').text('That email address is already registered');
+                            $('.error-message').text('There is already an account associated with that email address');
                             return;
                         }
 
