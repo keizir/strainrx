@@ -9,7 +9,7 @@ urlpatterns = [
         name='effect_type'
     ),
     url(
-        regex=r'^strain/(?P<strain_id>[1-9]+)/image',
+        regex=r'^strain/(?P<strain_id>[0-9]+)/image',
         view=StrainUploadImageView.as_view(),
         name='upload_strain_image'
     ),
