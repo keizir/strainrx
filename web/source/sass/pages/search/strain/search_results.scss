@@ -252,25 +252,29 @@
         }
 
         .filter-menu {
-            width: 10em;
-
-            a {
-                font-size: 0.7em;
-            }
-
-            .active-link {
-                text-align: right;
-            }
-
-            .hidden-links {
-                text-align: right;
-            }
+            display: none;
         }
     }
 
     .search-result-container .search-result-body-wrapper .result-item .item-info-wrapper {
         display: block;
+        position: relative;
         width: 100%;
+
+        .item-info {
+            position: relative;
+            vertical-align: top;
+            margin: 0 auto;
+            top: -0.6em;
+            width: 55%;
+        }
+
+        .item-image {
+            position: relative;
+            float: left;
+            width: 35%;
+            vertical-align: top;
+        }
     }
 
     .search-result-container .search-result-body-wrapper .result-item {
@@ -284,6 +288,6 @@
     .search-result-container .search-result-body-wrapper .result-item .item-locations,
     .search-result-container .search-result-body-wrapper .result-item .item-deliveries,
     .search-result-container .search-result-body-wrapper .result-item .item-percentage-match {
-        width: 30%;
+        width: 29%;
     }
 }

@@ -404,3 +404,47 @@
         width: 22em;
     }
 }
+
+@media (max-width: $screen-xs-max) {
+    .sign-up-wrapper {
+        input {
+            padding: 1em 1.5em;
+            width: 100%;
+        }
+
+        .wizard-wrapper {
+            padding: 2em 0;
+            width: 100%;
+            text-align: center;
+
+            .wizard-step {
+                margin: 0 1em;
+            }
+
+            hr {
+                width: 18em;
+            }
+        }
+    }
+
+    .b2b-sign-up-wrapper {
+        input {
+            padding: 1em 1.5em;
+            width: 100%;
+        }
+
+        .wizard-wrapper {
+            padding: 2em 0;
+            width: 100%;
+            text-align: center;
+
+            .wizard-step {
+                margin: 0 0.2em;
+            }
+
+            hr {
+                width: 22em;
+            }
+        }
+    }
+}

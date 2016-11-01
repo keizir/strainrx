@@ -41,7 +41,6 @@
         float: right;
     }
 
-    .nav-list-wrapper:hover .nav-list ul,
     .nav-list-wrapper:hover .nav-list .auth-menu .nav-menu-content {
         display: block;
         position: absolute;
@@ -231,6 +230,11 @@
                     position: absolute;
                     right: 0;
                     top: 4em;
+                }
+
+                ul {
+                    display: block;
+                    position: absolute;
                 }
             }
 
