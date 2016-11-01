@@ -64,7 +64,7 @@ W.pages.HomePage = Class.extend({
                 return;
             }
 
-            if (text && text.length >= 3) {
+            if (text && text.length >= 1) {
                 $.ajax({
                     method: 'GET',
                     url: '/api/v1/search/strain/lookup/?q={0}'.format(text),

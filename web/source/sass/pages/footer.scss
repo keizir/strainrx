@@ -36,3 +36,24 @@ footer {
         padding-top: 1em;
     }
 }
+
+@media (max-width: $screen-xs-max) {
+    .footer-region {
+        padding: 0;
+        text-align: left;
+        line-height: 2em;
+
+        .container {
+            padding: 1.5em 3em 2em;
+        }
+
+        .separator:after {
+            content: '';
+            padding: 0;
+        }
+
+        .links li {
+            width: 49%;
+        }
+    }
+}

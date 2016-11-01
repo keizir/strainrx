@@ -124,7 +124,7 @@ W.pages.StrainSearchResultsPage = Class.extend({
             }
         }
 
-        return opened.length + ' Open, ' + closed.length + ' Close';
+        return opened.length + ' Open, ' + closed.length + ' Closed';
     },
 
     initRatings: function () {

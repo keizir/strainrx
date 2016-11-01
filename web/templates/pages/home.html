@@ -43,6 +43,28 @@
         .footer-region .links-wrapper .links {
             color: #fff;
         }
+
+        @media (max-width: 479px) {
+            .footer-region {
+                padding: 0;
+                text-align: left;
+                line-height: 2em;
+                height: 15em;
+            }
+
+            .footer-region .container {
+                padding: 1.5em 3em 2em;
+            }
+
+            .footer-region .separator:after {
+                content: '';
+                padding: 0;
+            }
+
+            .footer-region .links li {
+                width: 49%;
+            }
+        }
     </style>
 {% endblock %}
 

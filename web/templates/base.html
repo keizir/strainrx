@@ -52,7 +52,7 @@
                                             Welcome <span class="user-name">{{ request.user.first_name }}</span>
                                             {% if not request.user.is_email_verified %}
                                                 <span class="separator"></span>
-                                                <a class="resend-nav-email-link" href="#">Verify Email</a>
+                                                <a href="{% url "users:signup_done" %}">Verify Email</a>
                                             {% else %}
                                                 <span class="separator"></span>
                                                 <a class="nav-link" href="{% url 'users:detail' request.user.id %}">
@@ -75,7 +75,7 @@
                                             {% if not request.session.business.is_business_verified %}
                                                 <span class="business-verify-location">
                                                     {% if not request.user.is_email_verified %}
-                                                        <a class="resend-nav-b2b-email-link" href="#">Verify Email</a>
+                                                        <a href="{% url "businesses:signup_done" %}">Verify Email</a>
                                                     {% else %}
                                                         <a href="#">Verify Location</a>
                                                     {% endif %}

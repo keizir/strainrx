@@ -7,13 +7,6 @@ W.views.BaseView = Class.extend({
 
     init: function () {
         var that = this;
-        $('.resend-nav-email-link').on('click', function (e) {
-            that.sendEmailVerificationEmail(e);
-        });
-
-        $('.resend-nav-b2b-email-link').on('click', function (e) {
-            that.sendB2bEmailVerificationEmail(e);
-        });
     },
 
     show: function () {
@@ -22,21 +15,5 @@ W.views.BaseView = Class.extend({
 
     hide: function () {
         this.elem.hide();
-    },
-
-    sendEmailVerificationEmail: function (e) {
-        e.preventDefault();
-        $.ajax({
-            method: 'GET',
-            url: '/api/v1/users/resend-email-confirmation'
-        });
-    },
-
-    sendB2bEmailVerificationEmail: function (e) {
-        e.preventDefault();
-        $.ajax({
-            method: 'GET',
-            url: '/api/v1/businesses/resend-email-confirmation'
-        });
     }
 });

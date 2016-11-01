@@ -28,7 +28,7 @@ def count_open_close_deliveries(array):
         elif is_opened == 'false':
             closed.append(dispensary)
 
-    return str(len(opened)) + ' Open, ' + str(len(closed)) + ' Close'
+    return str(len(opened)) + ' Open, ' + str(len(closed)) + ' Closed'
 
 
 @register.simple_tag

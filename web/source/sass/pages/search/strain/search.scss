@@ -64,6 +64,7 @@
     }
 
     .effects-form .form-field {
+        position: relative;
         margin: 0 0.3em;
         width: 12em;
         height: 3em;
@@ -93,6 +94,18 @@
         span {
             background-color: $grey-dark;
             border-color: $grey-dark;
+            height: 1.5em;
+            width: 1.5em;
+            top: -0.45em;
+            outline: none;
+        }
+
+        span:focus {
+            box-shadow: 0 0 2pt 1pt $iris-blue;
+        }
+
+        span:hover {
+            box-shadow: 0 0 2pt 1pt $iris-blue;
         }
     }
 }
@@ -166,7 +179,7 @@
     }
 
     .form-field .strain-effect {
-        display: inline-block;
+        display: table;
         width: 12em;
         padding: 0.4em;
         border: 1px solid $iris-blue;
@@ -180,27 +193,32 @@
     }
 
     .form-field .strain-effect .benefit-text {
-        display: block;
-        width: 7em;
-        margin: 0 auto;
+        display: table-cell;
+        vertical-align: middle;
+
+        span {
+            display: block;
+            width: 7em;
+            margin: 0 auto;
+        }
     }
 
     .form-field .removable {
         position: relative;
         float: right;
-        bottom: 2.55em;
+        bottom: 1.95em;
         right: 0.5em;
         cursor: pointer;
     }
 
     .form-field .step-3.removable {
-        bottom: 2.9em;
+        bottom: 2.75em;
     }
 
     .form-field .importance-value {
         position: relative;
         float: left;
-        bottom: 3.3em;
+        bottom: 2.7em;
         left: 0.8em;
         color: $iris-blue;
         font-weight: bold;
@@ -208,7 +226,7 @@
     }
 
     .form-field .step-3.importance-value {
-        bottom: 3.7em;
+        bottom: 3.55em;
     }
 
     .form-field .strain-effect.active {
@@ -300,11 +318,11 @@
     }
 
     .strain-search-wrapper .wizard-wrapper {
-        width: 29em;
+        width: 100%;
     }
 
     .strain-search-wrapper .wizard-wrapper .step-wrapper {
-        width: 6.2em;
+        width: 24%;
     }
 
     .strain-search-wrapper .wizard-wrapper hr {
@@ -312,11 +330,11 @@
     }
 
     .strain-search-wrapper .wizard-wrapper .step-wrapper .title {
-        width: 5em;
+        width: 100%;
     }
 
     .search-form-wrapper {
-        width: 25em;
+        width: 100%;
     }
 
     .search-form-wrapper .strain-check {
@@ -338,6 +356,10 @@
         margin: 1em 3em;
     }
 
+    .strain-search-wrapper .effects-form {
+        width: 100%;
+    }
+
     .strain-search-wrapper .effects-form .form-field {
         display: block;
         margin: 0.5em auto;
@@ -347,8 +369,12 @@
         height: 4em;
     }
 
+    .strain-search-wrapper .effects-form .slider span {
+        top: -0.35em;
+    }
+
     .search-form-wrapper .form-field .step-3.removable {
-        bottom: 1.4em;
+        bottom: 1.2em;
     }
 
     .strain-search-wrapper .effects-form .slider {
@@ -356,18 +382,19 @@
     }
 
     .strain-search-wrapper .effects-form .slider-wrapper .slider-step-label {
-        width: 5em;
-        margin: 0 0.9em;
+        width: 17%;
+        margin: 0 0.2em;
         cursor: default;
         font-size: 10px;
     }
 
     .search-form-wrapper .form-field .importance-value {
         height: 0;
+        bottom: 2.8em;
     }
 
     .search-form-wrapper .form-field .removable {
-        bottom: 0.8em;
+        bottom: 0.5em;
         margin-top: -1.5em;
     }
 }

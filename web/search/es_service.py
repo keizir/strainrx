@@ -35,7 +35,7 @@ class SearchElasticService(BaseElasticService):
                 'category': source.get('category'),
                 'rating': rating,
                 'image_url': strain_image[0].image.url if len(strain_image) > 0 else None,
-                'match_percentage': "{0:.2f}".format(s.get('_score')),
+                'match_percentage': int(round(s.get('_score'))),
                 'delivery_addresses': [  # TODO retrieve deliveries that has this strain for sale
                     {
                         'state': 'CA',
@@ -190,10 +190,9 @@ class SearchElasticService(BaseElasticService):
         if criteria == 'skipped':
             strains = False
         else:
-            strains = [k.lower() for k,v in criteria.items() if v]
+            strains = [k.lower() for k, v in criteria.items() if v]
 
         return strains
-
 
     def lookup_strain(self, query):
         method = self.METHODS.get('POST')

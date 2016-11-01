@@ -41,6 +41,7 @@
         float: right;
     }
 
+    .nav-list-wrapper:hover .nav-list ul,
     .nav-list-wrapper:hover .nav-list .auth-menu .nav-menu-content {
         display: block;
         position: absolute;
@@ -237,6 +238,11 @@
 
         .nav-list-wrapper {
             .nav-list {
+                .separator:after {
+                    content: '';
+                    padding: 0;
+                }
+
                 .nav-menu-btn {
                     color: $grey-dark;
                 }

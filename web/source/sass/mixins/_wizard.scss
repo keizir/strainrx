@@ -1,3 +1,5 @@
+@import 'variables';
+
 .wizard-step {
     border: 1px solid $grey-light;
     background: $white;
@@ -20,12 +22,14 @@
 
 .wizard-step.active {
     border: 2px solid $grey-normal;
+    padding: 0.3em;
 }
 
 .wizard-step.finished,
 .wizard-step.passed {
     border: 2px solid $grey-normal;
     background: $avocado-green;
+    padding: 0.3em;
 }
 
 .wizard-step.finished {

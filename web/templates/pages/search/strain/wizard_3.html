@@ -7,7 +7,9 @@
                 <% _.each(benefits, function(b) { %>
                 <div class="form-field">
                     <div class="strain-effect" id="<%= _.escape(b.data_name) %>">
-                        <div class="benefit-text"><%= _.escape(b.display_name) %></div>
+                        <div class="benefit-text">
+                            <span><%= _.escape(b.display_name) %></span>
+                        </div>
                     </div>
                     <span class="step-3 importance-value hidden">1</span>
                     <span class="step-3 removable hidden"></span>
