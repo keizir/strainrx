@@ -49,7 +49,9 @@
         .search-form {
             display: block;
             position: relative;
-            height: 100%;
+            width: 21em;
+            margin: 0 auto;
+            height: 12em;
 
             button[type="submit"] {
                 margin-top: 1em;
@@ -79,8 +81,7 @@
             .payloads-region {
                 display: block;
                 position: absolute;
-                top: 4em;
-                left: 6.4em;
+                top: 2.5em;
                 width: 30em;
                 font-size: 0.7em;
                 color: $grey-normal;
@@ -225,10 +226,5 @@
         margin-top: 0.5em;
         position: absolute;
         right: 5%;
-    }
-
-    .home-row-02 .search-box .search-form .payloads-region {
-        top: 2.7em;
-        left: 5.3em;
     }
 }

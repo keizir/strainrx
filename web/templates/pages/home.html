@@ -116,9 +116,11 @@
 
                 <form class="search-form">
                     {% csrf_token %}
-                    <input class="lookup-input" type="text"
-                           placeholder="Example: Blue Dream, Maiu Wowie, Pineapple express"/>
-                    <div class="payloads-region"></div>
+                    <div class="form-field">
+                        <input class="lookup-input" type="text"
+                               placeholder="Example: Blue Dream, Maiu Wowie, Pineapple express"/>
+                        <div class="payloads-region"></div>
+                    </div>
                     <button class="btn-primary lookup-submit" type="submit">Look Up Strain</button>
                 </form>
             </div>
