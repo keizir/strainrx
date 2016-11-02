@@ -80,7 +80,13 @@ button {
     padding: 0 0.5em 0 0.5em;
 }
 
+.pull-left {
+    display: inline-block;
+    float: left;
+}
+
 .pull-right {
+    display: inline-block;
     float: right !important;
 }
 

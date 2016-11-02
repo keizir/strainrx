@@ -42,47 +42,51 @@
             <div class="search-result">
                 {% for strain in search_results %}
                     <div class="result-item">
-                        <div class="item-info-wrapper inline-block">
-                            <div class="item-image inline-block">
-                                {% if strain.image_url %}
-                                    <img src="{{ strain.image_url }}" alt="Strain Image">
-                                {% else %}
-                                    <img src="{% static 'images/weed_small.jpg' %}" alt="Strain Image"/>
-                                {% endif %}
-                            </div>
-                            <div class="item-info inline-block">
+                        <div class="pull-left">
+                            <div class="item-info-wrapper inline-block">
+                                <div class="item-image inline-block">
+                                    {% if strain.image_url %}
+                                        <img src="{{ strain.image_url }}" alt="Strain Image">
+                                    {% else %}
+                                        <img src="{% static 'images/weed_small.jpg' %}" alt="Strain Image"/>
+                                    {% endif %}
+                                </div>
+                                <div class="item-info inline-block">
                                 <span class="strain-name">
                                     <a href="{% url 'search:strain_detail' slug_name=strain.strain_slug %}">{{ strain.name }}</a>
                                 </span>
-                                <span class="strain-type">{{ strain.variety }}</span>
-                                <span class="strain-rating">{{ strain.rating }}</span>
+                                    <span class="strain-type">{{ strain.variety }}</span>
+                                    <span class="strain-rating">{{ strain.rating }}</span>
+                                </div>
                             </div>
                         </div>
-                        <div class="separator inline-block"></div>
-                        <div class="item-locations inline-block">
-                            <span class="locations-icon">
-                                <i class="fa fa-map-marker fa-2x" aria-hidden="true"></i>
-                            </span>
-                            <span class="locations">
-                                <span>{{ strain.delivery_addresses|length }} Locations</span>
-                                <span>{% find_closest_delivery_distance strain.delivery_addresses %}</span>
-                                <span>{% count_open_close_deliveries strain.delivery_addresses %}</span>
-                            </span>
-                        </div>
-                        <div class="separator inline-block"></div>
-                        <div class="item-deliveries inline-block">
-                            <div class="deliveries-icon">
-                                <i class="fa fa-truck fa-2x" aria-hidden="true"></i>
+                        <div class="pull-right">
+                            <div class="separator inline-block"></div>
+                            <div class="item-locations inline-block">
+                                <span class="locations-icon">
+                                    <i class="fa fa-map-marker fa-2x" aria-hidden="true"></i>
+                                </span>
+                                <span class="locations">
+                                    <span>{{ strain.delivery_addresses|length }} Locations</span>
+                                    <span>{% find_closest_delivery_distance strain.delivery_addresses %}</span>
+                                    <span>{% count_open_close_deliveries strain.delivery_addresses %}</span>
+                                </span>
                             </div>
-                            <div class="deliveries">
-                                <span>1 Delivery Service</span>
-                                <span>Closed</span>
+                            <div class="separator inline-block"></div>
+                            <div class="item-deliveries inline-block">
+                                <div class="deliveries-icon">
+                                    <i class="fa fa-truck fa-2x" aria-hidden="true"></i>
+                                </div>
+                                <div class="deliveries">
+                                    <span>1 Delivery Service</span>
+                                    <span>Closed</span>
+                                </div>
                             </div>
-                        </div>
-                        <div class="separator inline-block"></div>
-                        <div class="item-percentage-match inline-block">
-                            <span class="percentage">{{ strain.match_percentage }}%</span>
-                            <span class="match">match</span>
+                            <div class="separator inline-block"></div>
+                            <div class="item-percentage-match inline-block">
+                                <span class="percentage">{{ strain.match_percentage }}%</span>
+                                <span class="match">match</span>
+                            </div>
                         </div>
                     </div>
 
@@ -116,47 +120,51 @@
     </script>
     <script type="x/srx-template" id="strain-item-template">
         <div class="result-item">
-            <div class="item-info-wrapper inline-block">
-                <div class="item-image inline-block">
-                    <% if (strain.image_url !== null) { %>
-                    <img src="${ strain.image_url }" alt="Strain Image">
-                    <% } else { %>
-                    <img src="{% static 'images/weed_small.jpg' %}" alt="Strain Image"/>
-                    <% } %>
-                </div>
-                <div class="item-info inline-block">
-                <span class="strain-name">
-                    <a href="/search/strain/${ strain.strain_slug }"><%= strain.name %></a>
-                </span>
-                    <span class="strain-type">${ strain.variety }</span>
-                    <span class="strain-rating loaded-rating-<%= position %>">${ strain.rating }</span>
-                </div>
-            </div>
-            <div class="separator inline-block"></div>
-            <div class="item-locations inline-block">
-            <span class="locations-icon">
-                <i class="fa fa-map-marker fa-2x" aria-hidden="true"></i>
-            </span>
-                <span class="locations">
-                <span>${ strain.delivery_addresses.length } Locations</span>
-                <span>${ closestDeliveryDistance }</span>
-                <span>${ openClosedCount }</span>
-            </span>
-            </div>
-            <div class="separator inline-block"></div>
-            <div class="item-deliveries inline-block">
-                <div class="deliveries-icon">
-                    <i class="fa fa-truck fa-2x" aria-hidden="true"></i>
-                </div>
-                <div class="deliveries">
-                    <span>1 Delivery Service</span>
-                    <span>Closed</span>
+            <div class="pull-left">
+                <div class="item-info-wrapper inline-block">
+                    <div class="item-image inline-block">
+                        <% if (strain.image_url !== null) { %>
+                        <img src="${ strain.image_url }" alt="Strain Image">
+                        <% } else { %>
+                        <img src="{% static 'images/weed_small.jpg' %}" alt="Strain Image"/>
+                        <% } %>
+                    </div>
+                    <div class="item-info inline-block">
+                        <span class="strain-name">
+                            <a href="/search/strain/${ strain.strain_slug }"><%= strain.name %></a>
+                        </span>
+                        <span class="strain-type">${ strain.variety }</span>
+                        <span class="strain-rating loaded-rating-<%= position %>">${ strain.rating }</span>
+                    </div>
                 </div>
             </div>
-            <div class="separator inline-block"></div>
-            <div class="item-percentage-match inline-block">
-                <span class="percentage">${ strain.match_percentage }%</span>
-                <span class="match">match</span>
+            <div class="pull-right">
+                <div class="separator inline-block"></div>
+                <div class="item-locations inline-block">
+                    <span class="locations-icon">
+                        <i class="fa fa-map-marker fa-2x" aria-hidden="true"></i>
+                    </span>
+                    <span class="locations">
+                        <span>${ strain.delivery_addresses.length } Locations</span>
+                        <span>${ closestDeliveryDistance }</span>
+                        <span>${ openClosedCount }</span>
+                    </span>
+                </div>
+                <div class="separator inline-block"></div>
+                <div class="item-deliveries inline-block">
+                    <div class="deliveries-icon">
+                        <i class="fa fa-truck fa-2x" aria-hidden="true"></i>
+                    </div>
+                    <div class="deliveries">
+                        <span>1 Delivery Service</span>
+                        <span>Closed</span>
+                    </div>
+                </div>
+                <div class="separator inline-block"></div>
+                <div class="item-percentage-match inline-block">
+                    <span class="percentage">${ strain.match_percentage }%</span>
+                    <span class="match">match</span>
+                </div>
             </div>
         </div>
     </script>

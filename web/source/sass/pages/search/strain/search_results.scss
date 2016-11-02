@@ -8,201 +8,207 @@
     background-color: $white-smoke;
     width: 100%;
     margin: 0 auto;
-}
 
-.strains-wrapper .separator {
-    width: 1px;
-    height: 5em;
-    margin: 0 0.5em;
-    border-right: 1px solid $grey-normal;
-    vertical-align: top;
-}
+    .separator {
+        width: 1px;
+        height: 5em;
+        margin: 0 0.5em;
+        border-right: 1px solid $grey-normal;
+        vertical-align: top;
+    }
 
-.strains-wrapper .separator:after {
-    content: '';
-}
+    .separator:after {
+        content: '';
+    }
 
-.search-result-container .search-result-header-wrapper .filter-menu-wrapper {
-    display: inline-block;
-    float: right;
-    margin: 2em 1em 1em 0;
-}
+    .search-result-header-wrapper {
+        .filter-menu.expanded {
+            border: 1px solid $grey-normal;
+            background-color: $white;
+        }
 
-.strains-wrapper .search-result-header-wrapper .filter-menu.expanded {
-    border: 1px solid $grey-normal;
-    background-color: $white;
-}
+        .filter-menu {
+            width: 12em;
+        }
 
-.strains-wrapper .search-result-header-wrapper .filter-menu {
-    width: 12em;
-}
+        .filter-menu .menu-active-link a:hover {
+            text-decoration: underline;
+        }
 
-.strains-wrapper .search-result-header-wrapper .filter-menu .menu-active-link a:hover {
-    text-decoration: underline;
-}
+        .filter-menu .menu-expander {
+            margin-left: 0.5em;
+        }
 
-.strains-wrapper .search-result-header-wrapper .filter-menu .menu-expander {
-    margin-left: 0.5em;
-}
+        .filter-menu .menu-expander i {
+            color: $iris-blue;
+            cursor: pointer;
+        }
 
-.strains-wrapper .search-result-header-wrapper .filter-menu .menu-expander i {
-    color: $iris-blue;
-    cursor: pointer;
-}
+        .filter-menu .active-link {
+            text-align: left;
+            padding: 1em 1em 0 1em;
+        }
 
-.strains-wrapper .search-result-header-wrapper .filter-menu .active-link {
-    text-align: left;
-    padding: 1em 1em 0 1em;
-}
+        .filter-menu .menu-link {
+            display: block;
+            line-height: 1.3em;
+            padding: 0 1em;
+            margin: 0.2em 0;
+        }
 
-.strains-wrapper .search-result-header-wrapper .filter-menu .menu-link {
-    display: block;
-    line-height: 1.3em;
-    padding: 0 1em;
-    margin: 0.2em 0;
-}
+        .filter-menu .menu-link a {
+            color: $grey-normal;
+        }
 
-.strains-wrapper .search-result-header-wrapper .filter-menu .menu-link a {
-    color: $grey-normal;
-}
+        .filter-menu .menu-link:hover {
+            background-color: $avocado-green;
+        }
 
-.strains-wrapper .search-result-header-wrapper .filter-menu .menu-link:hover {
-    background-color: $avocado-green;
-}
-
-.strains-wrapper .search-result-header-wrapper .filter-menu .hidden-links span:last-child {
-    padding-bottom: 0.5em;
-}
-
-.search-result-container .search-result-header-wrapper {
-    color: $grey-normal;
-    display: block;
-    height: 8em;
-    margin-bottom: 3em;
-}
-
-.search-result-container .search-result-header-wrapper h1 {
-    display: inline-block;
-    margin: 1em 0;
-    width: 19em;
-    float: left;
-}
-
-.search-result-container .search-result-body-wrapper {
-    margin: 0 auto 2em;
-    width: 100%;
-}
-
-.search-result-container .search-result-body-wrapper div:last-child {
-    border-bottom: none;
-}
-
-.search-result-container .search-result-body-wrapper .result-item {
-    display: block;
-    height: 7em;
-    margin: 2em auto 0;
-    width: 100%;
-    border-bottom: 1px solid $grey-normal;
-}
-
-.search-result-container .search-result-body-wrapper .result-item .item-info-wrapper {
-    width: 55.5%;
-    height: 6em;
-}
-
-.search-result-container .search-result-body-wrapper .result-item .item-info-wrapper .item-image {
-    height: 6em;
-    width: 20%;
-    margin-right: 1em;
-    vertical-align: top;
-
-    img {
-        width: 100%;
+        .filter-menu .hidden-links span:last-child {
+            padding-bottom: 0.5em;
+        }
     }
 }
 
-.search-result-container .search-result-body-wrapper .result-item .item-info-wrapper .item-info {
-    height: 6em;
-    width: 70%;
-    vertical-align: top;
-}
+.search-result-container {
+    .search-result-header-wrapper .filter-menu-wrapper {
+        display: inline-block;
+        float: right;
+        margin: 2em 1em 1em 0;
+    }
 
-.search-result-container .search-result-body-wrapper .result-item .item-info-wrapper .item-info .strain-name {
-    display: block;
-    font-size: 1.3em;
-}
+    .search-result-header-wrapper {
+        color: $grey-normal;
+        display: block;
+        height: 8em;
+        margin-bottom: 3em;
 
-.search-result-container .search-result-body-wrapper .result-item .item-info-wrapper .item-info .strain-type {
-    display: block;
-    font-size: 0.7em;
-    margin: 0.5em 0;
-}
+        h1 {
+            display: inline-block;
+            margin: 1em 0;
+            width: 19em;
+            float: left;
+        }
+    }
 
-.search-result-container .search-result-body-wrapper .result-item .item-info-wrapper .item-info .strain-rating {
-    display: block;
-    padding: 0;
-}
+    .search-result-body-wrapper {
+        margin: 0 auto 2em;
+        width: 100%;
 
-.search-result-container .search-result-body-wrapper .result-item .item-locations,
-.search-result-container .search-result-body-wrapper .result-item .item-deliveries,
-.search-result-container .search-result-body-wrapper .result-item .item-percentage-match {
-    width: 14%;
-    height: 6em;
-    text-align: center;
-    vertical-align: top;
-    color: $grey;
-}
+        div:last-child {
+            border-bottom: none;
+        }
 
-.search-result-container .search-result-body-wrapper .result-item .item-deliveries .deliveries span,
-.search-result-container .search-result-body-wrapper .result-item .item-locations .locations span {
-    display: block;
-    font-size: 0.8em;
-    line-height: 1.5em;
-}
+        .result-item {
+            display: block;
+            height: 7em;
+            margin: 2em auto 0;
+            width: 100%;
+            border-bottom: 1px solid $grey-normal;
 
-.search-result-container .search-result-body-wrapper .result-item .item-locations .locations-icon {
-    display: block;
-    color: $black;
-}
+            .pull-right {
+                width: 50%;
+                text-align: center;
+            }
 
-.search-result-container .search-result-body-wrapper .result-item .item-deliveries .deliveries-icon {
-    display: block;
-    color: $black;
-}
+            .pull-left {
+                width: 50%;
+            }
 
-.search-result-container .search-result-body-wrapper .result-item .item-percentage-match .percentage {
-    display: block;
-    font-weight: bold;
-    font-size: 1.5em;
-}
+            .item-info-wrapper {
+                height: 6em;
+            }
 
-.search-result-container .search-result-footer-wrapper,
-.search-result-container .search-result-footer-wrapper .scroll-down-wrapper {
-    width: 100%;
-    height: 5em;
-    text-align: center;
-}
+            .item-info-wrapper .item-image {
+                height: 6em;
+                width: 20%;
+                margin-right: 1em;
+                vertical-align: top;
 
-.search-result-container .search-result-footer-wrapper .scroll-down-wrapper div {
-    height: 5em;
-    vertical-align: top;
-}
+                img {
+                    width: 100%;
+                }
+            }
 
-.search-result-container .search-result-footer-wrapper .scroll-down-wrapper .scroll-icon {
-    height: 2em;
-    display: block;
-    margin: 1.5em;
-}
+            .item-info-wrapper .item-info {
+                height: 6em;
+                width: 70%;
+                vertical-align: top;
+            }
 
-.search-result-container .search-result-footer-wrapper .scroll-down-wrapper .scroll-text {
-    height: 2em;
-    display: block;
-    margin: 2em 0;
-}
+            .item-info-wrapper .item-info .strain-name {
+                display: block;
+                font-size: 1.3em;
+            }
 
-@media (min-width: $screen-md-max) {
-    .search-result-container .search-result-body-wrapper .result-item .item-info-wrapper {
-        width: 50%;
+            .item-info-wrapper .item-info .strain-type {
+                display: block;
+                font-size: 0.7em;
+                margin: 0.5em 0;
+            }
+
+            .item-info-wrapper .item-info .strain-rating {
+                display: block;
+                padding: 0;
+            }
+
+            .item-locations,
+            .item-deliveries,
+            .item-percentage-match {
+                width: 28%;
+                height: 6em;
+                text-align: center;
+                vertical-align: top;
+                color: $grey;
+            }
+
+            .item-deliveries .deliveries span,
+            .item-locations .locations span {
+                display: block;
+                font-size: 0.8em;
+                line-height: 1.5em;
+            }
+
+            .item-locations .locations-icon {
+                display: block;
+                color: $black;
+            }
+
+            .item-deliveries .deliveries-icon {
+                display: block;
+                color: $black;
+            }
+
+            .item-percentage-match .percentage {
+                display: block;
+                font-weight: bold;
+                font-size: 1.5em;
+            }
+        }
+    }
+
+    .search-result-footer-wrapper,
+    .search-result-footer-wrapper .scroll-down-wrapper {
+        width: 100%;
+        height: 5em;
+        text-align: center;
+    }
+
+    .search-result-footer-wrapper .scroll-down-wrapper div {
+        height: 5em;
+        vertical-align: top;
+    }
+
+    .search-result-footer-wrapper .scroll-down-wrapper .scroll-icon {
+        height: 2em;
+        display: block;
+        margin: 1.5em;
+    }
+
+    .search-result-footer-wrapper .scroll-down-wrapper .scroll-text {
+        height: 2em;
+        display: block;
+        margin: 2em 0;
     }
 }
 
@@ -216,26 +222,54 @@
             margin: 0 0.1em;
         }
 
-        .search-result-header-wrapper h1 {
-            width: 10em;
+        .search-result-header-wrapper {
+            h1 {
+                width: 10em;
+            }
+
+            .filter-menu-wrapper {
+                width: 10em;
+            }
         }
 
-        .search-result-body-wrapper .result-item .item-info-wrapper {
-            width: 50%;
-        }
+        .search-result-body-wrapper .result-item {
+            height: 15em;
 
-        .search-result-body-wrapper .result-item .item-locations .locations {
-            font-size: 0.8em;
-        }
+            .pull-left {
+                display: block;
+                width: 100%;
+                height: 9em;
+            }
 
-        .search-result-body-wrapper .result-item .item-deliveries .deliveries {
-            font-size: 0.8em;
-        }
+            .pull-right {
+                display: block;
+                width: 100%;
+                height: 5em;
 
-        .search-result-body-wrapper .result-item .item-percentage-match .percentage {
-            display: block;
-            font-size: 1.2em;
-            font-weight: bold;
+                .separator:first-child {
+                    display: none;
+                }
+            }
+
+            .item-locations,
+            .item-deliveries,
+            .item-percentage-match {
+                width: 29%;
+            }
+
+            .item-locations .locations {
+                font-size: 0.8em;
+            }
+
+            .item-deliveries .deliveries {
+                font-size: 0.8em;
+            }
+
+            .item-percentage-match .percentage {
+                display: block;
+                font-size: 1.2em;
+                font-weight: bold;
+            }
         }
     }
 }
@@ -246,7 +280,6 @@
     }
 
     .search-result-header-wrapper {
-
         h1 {
             font-size: 1.5em;
         }
@@ -256,38 +289,50 @@
         }
     }
 
-    .search-result-container .search-result-body-wrapper .result-item .item-info-wrapper {
-        display: block;
-        position: relative;
-        width: 100%;
-
-        .item-info {
-            position: relative;
-            vertical-align: top;
-            margin: 0 auto;
-            top: -0.6em;
-            width: 55%;
-        }
-
-        .item-image {
-            position: relative;
-            float: left;
-            width: 35%;
-            vertical-align: top;
-        }
-    }
-
     .search-result-container .search-result-body-wrapper .result-item {
-        height: 12em;
-    }
+        height: 13em;
 
-    .search-result-container .search-result-body-wrapper .result-item .separator:nth-child(2) {
-        display: none;
-    }
+        .pull-left {
+            display: block;
+            width: 100%;
+            height: 7em;
+        }
 
-    .search-result-container .search-result-body-wrapper .result-item .item-locations,
-    .search-result-container .search-result-body-wrapper .result-item .item-deliveries,
-    .search-result-container .search-result-body-wrapper .result-item .item-percentage-match {
-        width: 29%;
+        .pull-right {
+            display: block;
+            width: 100%;
+            height: 5em;
+
+            .separator:first-child {
+                display: none;
+            }
+        }
+
+        .item-info-wrapper {
+            display: block;
+            position: relative;
+            width: 100%;
+
+            .item-info {
+                position: relative;
+                vertical-align: top;
+                margin: 0 auto;
+                top: -0.1em;
+                width: 55%;
+            }
+
+            .item-image {
+                position: relative;
+                float: left;
+                width: 30%;
+                vertical-align: top;
+            }
+        }
+
+        .item-locations,
+        .item-deliveries,
+        .item-percentage-match {
+            width: 29%;
+        }
     }
 }
