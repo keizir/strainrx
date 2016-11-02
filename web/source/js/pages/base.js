@@ -12,6 +12,7 @@ W.Base = function () {
     return {
         init: function init() {
             new BaseView();
+            console.log('test for cache bust');
         }
     };
 }();
