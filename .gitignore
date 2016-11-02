@@ -117,4 +117,5 @@ sendgrid.env
 ### Local stuff
 /strainrx-web
 srx_error.log
+.env
 
