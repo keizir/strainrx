@@ -1,0 +1,213 @@
+@import '../../mixins/variables';
+
+.business-account-page-wrapper {
+    display: block;
+    position: relative;
+    width: 100%;
+
+    .trial-header {
+        height: 3em;
+        margin-top: 1em;
+        background-color: $avocado-green;
+        color: $white;
+        text-align: center;
+
+        span {
+            line-height: 3em;
+        }
+    }
+
+    .business-account-header {
+        width: 70%;
+        margin: 0 auto;
+
+        .business-image {
+            display: inline-block;
+            position: relative;
+            top: -2em;
+
+            img {
+                width: 10em;
+            }
+
+            .upload-business-image-link-wrapper {
+                width: 100%;
+                margin: 0.5em auto 0;
+                text-align: center;
+                color: $grey-dark;
+
+                .upload-business-image {
+                    width: 0.1px;
+                    height: 0.1px;
+                    opacity: 0;
+                    overflow: hidden;
+                    position: absolute;
+                    z-index: -1;
+                }
+
+                .upload-business-image + label {
+                    display: block;
+                    cursor: pointer;
+                }
+            }
+        }
+
+        .account-header-menu {
+            display: inline-block;
+            position: relative;
+            top: 3em;
+            width: 70%;
+            vertical-align: top;
+            margin-left: 3%;
+
+            .header-menu-item {
+                display: inline-block;
+                margin: 0 5%;
+
+                i {
+                    color: $grey-normal;
+                }
+
+                a {
+                    position: relative;
+                    top: 0.9em;
+                    vertical-align: top;
+                    color: $grey-normal;
+                    text-decoration: underline;
+                    font-weight: bold;
+                }
+            }
+        }
+    }
+
+    .account-menu {
+        width: 70%;
+        margin: 2em auto;
+
+        .account-menu-nav-link a {
+            color: $grey-dark;
+        }
+
+        .account-menu-nav-link.active a {
+            color: $avocado-green;
+            font-weight: bold;
+        }
+    }
+
+    .business-account-tab-content {
+        display: block;
+        width: 70%;
+        margin: 0 auto;
+
+        .form {
+            display: block;
+            margin: 3em 0;
+
+            .form-field-group {
+                float: none;
+
+                .form-field {
+                    margin: 0 1em 0 0;
+                }
+            }
+
+            .form-actions {
+                display: block;
+                margin-top: 3em;
+            }
+        }
+    }
+}
+
+@media (max-width: $screen-sm-min) {
+    .business-account-page-wrapper {
+        .business-account-header {
+            width: 80%;
+
+            .business-image {
+                display: inline-block;
+                top: 1em;
+                width: 12em;
+                text-align: center;
+
+                img {
+                    width: 50%;
+                }
+            }
+
+            .account-header-menu {
+                top: 1em;
+                margin-left: 1em;
+                text-align: center;
+                width: 12em;
+
+                .header-menu-item {
+                    margin: 0 2em 1em;
+                }
+            }
+        }
+
+        .account-menu {
+            width: 80%;
+            line-height: 3em;
+        }
+
+        .business-account-tab-content {
+            width: 80%;
+        }
+    }
+}
+
+@media (max-width: $screen-xs-max) {
+    .business-account-page-wrapper {
+        .business-account-header {
+            width: 100%;
+            height: 22em;
+
+            .business-image {
+                display: block;
+                top: 1em;
+                text-align: center;
+                width: 100%;
+
+                img {
+                    width: 50%;
+                }
+            }
+
+            .account-header-menu {
+                display: block;
+                width: 100%;
+                margin: 1em auto;
+                text-align: center;
+
+                div:nth-child(2) {
+                    margin: 0 1em;
+                }
+
+                .header-menu-item {
+                    margin: 0;
+                }
+            }
+        }
+
+        .account-menu {
+            width: 100%;
+            text-align: center;
+
+            .separator:after {
+                content: '';
+                padding: 0;
+            }
+
+            .account-menu-nav-link {
+                display: block;
+                line-height: 2em;
+            }
+        }
+
+        .business-account-tab-content {
+            width: 100%;
+        }
+    }
+}

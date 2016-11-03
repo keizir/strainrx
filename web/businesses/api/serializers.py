@@ -39,3 +39,14 @@ class BusinessSignUpSerializer(serializers.Serializer):
 
     def update(self, instance, validated_data):
         pass
+
+
+class BusinessDetailSerializer(serializers.Serializer):
+    business_name = serializers.CharField()
+    email = serializers.CharField()
+
+    def update(self, instance, validated_data):
+        pass
+
+    def create(self, validated_data):
+        pass

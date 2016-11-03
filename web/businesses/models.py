@@ -12,7 +12,6 @@ from web.users.models import User
 
 def upload_business_image_to(instance, filename):
     path = 'businesses/{0}/images/{1}___{2}'.format(instance.pk, uuid4(), filename)
-    print('--- uploading to : {0}'. format(path))
     return path
 
 
@@ -45,6 +44,7 @@ class Business(models.Model):
 
     def __str__(self):
         return self.name
+
 
 @python_2_unicode_compatible
 class BusinessLocation(models.Model):

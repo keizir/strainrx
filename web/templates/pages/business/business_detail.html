@@ -1,0 +1,34 @@
+{% extends "pages/business/business_account_base.html" %}
+
+{% load staticfiles i18n %}
+
+{% block title %}Business Detail{% endblock %}
+
+{% block business_account_tab_content %}
+    <div class="form">
+        <div class="form-field-group">
+            <div class="form-field">
+                <label for="business_name">Business Name</label>
+                <input type="text" name="business_name" id="business_name" value="{{ business.name }}">
+            </div>
+            <div class="form-field">
+                <label for="email">Email</label>
+                <input type="text" name="email" id="email" value="{{ request.user.email }}">
+                <input type="hidden" name="current_email" value="{{ request.user.email }}">
+            </div>
+        </div>
+        <span class="error-message"></span>
+        <div class="form-actions">
+            <button type="submit" class="btn-primary btn-update-info">Update</button>
+        </div>
+    </div>
+{% endblock %}
+
+{% block javascript %}
+    {{ block.super }}
+    <script src="{% static 'js/pages/business/business_detail.js' %}"></script>
+    <script src="{% static 'js/pages/business/business_detail_view.js' %}"></script>
+    <script type="text/javascript">
+        W.pages.business.BusinessDetailView.init();
+    </script>
+{% endblock %}

@@ -98,6 +98,11 @@
                                         </div>
                                     {% elif request.user.type == 'business' %}
                                         <div class="action">
+                                            <a class="nav-link"
+                                               href="{% url 'businesses:detail' request.session.business.id %}">
+                                                Business Account</a>
+                                        </div>
+                                        <div class="action">
                                             <a class="nav-link" href="{% url 'account_logout' %}">Sign out</a>
                                         </div>
                                     {% endif %}

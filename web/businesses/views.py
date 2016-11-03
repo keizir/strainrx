@@ -34,5 +34,57 @@ class ConfirmEmailView(TemplateView):
         return context
 
 
+class BusinessDetailView(TemplateView):
+    template_name = 'pages/business/business_detail.html'
+
+    def get_context_data(self, **kwargs):
+        context = super(BusinessDetailView, self).get_context_data(**kwargs)
+        business = Business.objects.get(pk=kwargs.get('business_id'))
+        context['tab'] = 'info'
+        context['business'] = business
+        return context
+
+
 class BusinessMenuView(TemplateView):
     template_name = 'pages/business/business_menu.html'
+
+    def get_context_data(self, **kwargs):
+        context = super(BusinessMenuView, self).get_context_data(**kwargs)
+        context['tab'] = 'menu'
+        return context
+
+
+class BusinessLocationsView(TemplateView):
+    template_name = 'pages/business/business_locations.html'
+
+    def get_context_data(self, **kwargs):
+        context = super(BusinessLocationsView, self).get_context_data(**kwargs)
+        context['tab'] = 'locations'
+        return context
+
+
+class BusinessBillingInfoView(TemplateView):
+    template_name = 'pages/business/business_billing_info.html'
+
+    def get_context_data(self, **kwargs):
+        context = super(BusinessBillingInfoView, self).get_context_data(**kwargs)
+        context['tab'] = 'billing'
+        return context
+
+
+class BusinessDeliveryRadiusView(TemplateView):
+    template_name = 'pages/business/business_delivery_radius.html'
+
+    def get_context_data(self, **kwargs):
+        context = super(BusinessDeliveryRadiusView, self).get_context_data(**kwargs)
+        context['tab'] = 'radius'
+        return context
+
+
+class BusinessChangePwdView(TemplateView):
+    template_name = 'pages/business/business_change_pwd.html'
+
+    def get_context_data(self, **kwargs):
+        context = super(BusinessChangePwdView, self).get_context_data(**kwargs)
+        context['tab'] = 'pwd'
+        return context
