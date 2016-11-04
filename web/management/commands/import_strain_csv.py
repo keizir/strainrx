@@ -2,9 +2,11 @@
 import csv
 import logging
 import sys
+import time
 
 from django.core.exceptions import ValidationError
 from django.core.management.base import BaseCommand, CommandError
+from django.utils.text import slugify
 
 from web.search.models import Strain
 
@@ -39,6 +41,8 @@ class Command(BaseCommand):
 
     def import_csv(self):
         with open(self.csv_path) as f:
+            time_start = time.time()
+
             reader = csv.DictReader(f)
 
             strain_origins = {}
@@ -57,7 +61,7 @@ class Command(BaseCommand):
                 flavors = self.build_flavors(row)
                 about = row.get('About')
 
-                strain_origins[name] = row.get('Origins')
+                strain_origins[slugify(name)] = row.get('Origins')
 
                 if Strain.objects.filter(name=name, category=category).exists():
                     strain = Strain.objects.get(name=name, category=category)
@@ -93,14 +97,15 @@ class Command(BaseCommand):
 
             print('\n3. Persisting origins ...')
             for s in persisted:
-                origins = strain_origins[s.name]
+                origins = strain_origins[slugify(s.name)]
 
                 if origins is not None and origins != '':
                     origins_split = origins.split(',')
                     for name in origins_split:
                         name_cleared = name.strip()
-                        if Strain.objects.filter(name=name_cleared).exists():
-                            existing = Strain.objects.get(name=name_cleared)
+                        strain_slug = '{0}-{1}'.format(slugify(name_cleared), slugify(s.category))
+                        if Strain.objects.filter(strain_slug=strain_slug).exists():
+                            existing = Strain.objects.get(strain_slug=strain_slug)
                             s.origins.add(existing.id)
                         else:
                             print('   ---> !!! Error: Origin [name="{0}"] does not exist. '
@@ -108,7 +113,9 @@ class Command(BaseCommand):
                                   .format(name_cleared, s.name, s.category),
                                   file=sys.stderr)
 
-            print('\n4. Well Done!\n')
+            time_end = time.time()
+            print('\n4. Well Done! Persisted {0} strains in {1}sec!\n'
+                  .format(len(persisted), str(time_end - time_start)))
 
     def get_variety(self, row):
         if row.get('Sativa').upper() == 'X':  # Sativa
@@ -249,8 +256,8 @@ class Command(BaseCommand):
                 "woody": self.get_flavor_value(row.get('Woody')), }
 
     def get_flavor_value(self, value):
-        if value is not None and value != '':
-            if value == 'X':
+        if value is not None and value.strip() != '':
+            if value == 'X' or value:
                 return 2
             else:
                 return int(value)
