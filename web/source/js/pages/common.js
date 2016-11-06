@@ -177,7 +177,7 @@ $(document).on('ajaxSend', function () {
 
     AJAX_TIMEOUT = setTimeout(function () {
         if (W.isLoading()) {
-            $('#loadingSpinner').show();
+            $('#loading-spinner').show();
         }
     }, 500);
 });
@@ -185,6 +185,6 @@ $(document).on('ajaxSend', function () {
 $(document).on('ajaxComplete', function () {
     AJAX_COUNT -= 1;
     if (AJAX_COUNT === 0) {
-        $('#loadingSpinner').hide();
+        $('#loading-spinner').hide();
     }
 });

@@ -1,10 +1,10 @@
 @import '../mixins/variables';
 
 .nav-region {
-    border-radius: 0;
     display: block;
-    height: 4em;
     position: relative;
+    border-radius: 0;
+    height: 4em;
     z-index: 100;
     background-color: $almost-white;
 
@@ -212,7 +212,6 @@
         display: none;
         position: absolute;
         background: $white;
-        right: 1em;
         top: 2em;
         width: 50%;
     }
@@ -221,7 +220,9 @@
         .nav-list-wrapper:hover {
             .nav-list {
                 display: block;
-                width: 75%;
+                position: absolute;
+                left: 0;
+                width: 100%;
 
                 .auth-menu .nav-menu-content {
                     display: block;
@@ -234,6 +235,7 @@
                 ul {
                     display: block;
                     position: absolute;
+                    width: 100%;
                 }
             }
 
@@ -258,9 +260,9 @@
                     background: $grey-dark;
 
                     li {
-                        text-align: center;
+                        text-align: right;
                         width: 100%;
-                        padding: 10px 0;
+                        padding: 0.5em 2em;
                         margin: 0;
                     }
 
@@ -270,13 +272,12 @@
                 }
 
                 .auth-menu {
-                    background: $grey-dark;
                     display: block;
                     position: absolute;
-                    right: 0.8em;
-                    top: 0.7em;
+                    left: 0;
+                    top: 2em;
                     width: 100%;
-                    height: 4em;
+                    background: $grey-dark;
                     text-align: right;
 
                     a {
