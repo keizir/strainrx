@@ -50,12 +50,9 @@ class BusinessSignUpService:
 
         business = Business(
             name=data.get('name'),
-            dispensary=data.get('dispensary'),
-            delivery=data.get('delivery'),
-            certified_legal_compliance=data.get('certified_legal_compliance')
+            certified_legal_compliance=data.get('certified_legal_compliance'),
+            created_by=user
         )
-
-        business.created_by = user
         business.save()
 
         business.users.add(user)
@@ -64,19 +61,17 @@ class BusinessSignUpService:
         return business
 
     def create_business_locations(self, data, business):
-        if business.dispensary:
-            dispensary_location = self.build_business_location(data, business)
-            dispensary_location.business_type = 'dispensary'
-            dispensary_location.save()
-
-        if business.delivery:
-            delivery_location = self.build_business_location(data, business)
-            delivery_location.business_type = 'delivery'
-            delivery_location.save()
+        location = self.build_business_location(data, business)
+        location.primary = True
+        location.dispensary = data.get('dispensary')
+        location.delivery = data.get('delivery')
+        location.save()
 
     def build_business_location(self, data, business):
         business_location = BusinessLocation(
             business=business,
+            location_name=business.name,
+            location_email=business.created_by.email,
             street1=data.get('street1'),
             city=data.get('city'),
             state=data.get('state'),

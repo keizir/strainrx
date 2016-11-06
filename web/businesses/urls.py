@@ -37,19 +37,4 @@ urlpatterns = [
         view=user_is_owner(views.BusinessLocationsView.as_view()),
         name='locations'
     ),
-    url(
-        regex=r'^(?P<business_id>[0-9]{1,})/billing-info$',
-        view=user_is_owner(views.BusinessBillingInfoView.as_view()),
-        name='billing_info'
-    ),
-    url(
-        regex=r'^(?P<business_id>[0-9]{1,})/delivery-radius$',
-        view=user_is_owner(views.BusinessDeliveryRadiusView.as_view()),
-        name='delivery_radius'
-    ),
-    url(
-        regex=r'^(?P<business_id>[0-9]{1,})/pwd$',
-        view=user_is_owner(views.BusinessChangePwdView.as_view()),
-        name='password'
-    ),
 ]

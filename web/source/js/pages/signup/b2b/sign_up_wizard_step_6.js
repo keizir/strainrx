@@ -15,16 +15,8 @@ W.pages.b2b.SignUpWizardStep6 = W.common.WizardStep.extend({
 
     renderHTML: function () {
         return this.$template({
-            days: [
-                {name: 'Monday', value: 'mon'},
-                {name: 'Tuesday', value: 'tue'},
-                {name: 'Wednesday', value: 'wed'},
-                {name: 'Thursday', value: 'thu'},
-                {name: 'Friday', value: 'fri'},
-                {name: 'Saturday', value: 'sat'},
-                {name: 'Sunday', value: 'sun'}
-            ],
-            renderHours: _.template($('#b2b-operational-hours').html())
+            days: W.common.Constants.days,
+            renderHours: _.template($('#operational-hours').html())
         });
     },
 

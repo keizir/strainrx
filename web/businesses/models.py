@@ -30,9 +30,6 @@ class Business(models.Model):
                               validators=[validate_business_image])
 
     certified_legal_compliance = models.BooleanField(default=False)
-    dispensary = models.BooleanField(default=False)
-    delivery = models.BooleanField(default=False)
-    grow_house = models.BooleanField(default=False)
     is_business_verified = models.BooleanField(default=False)
 
     users = models.ManyToManyField(User, related_name='businesses')
@@ -48,14 +45,15 @@ class Business(models.Model):
 
 @python_2_unicode_compatible
 class BusinessLocation(models.Model):
-    BUSINESS_TYPE_CHOICES = (
-        ('dispensary', 'Dispensary'),
-        ('delivery', 'Delivery'),
-        ('grow_house', 'Grow House')
-    )
-
     business = models.ForeignKey(Business, on_delete=models.DO_NOTHING)
-    business_type = models.CharField(max_length=15, choices=BUSINESS_TYPE_CHOICES)
+    location_name = models.CharField(max_length=255, blank=True, null=True)
+    manager_name = models.CharField(max_length=255, blank=True, null=True)
+    location_email = models.CharField(max_length=255, blank=True, null=True)
+
+    primary = models.BooleanField(default=False)
+    dispensary = models.BooleanField(default=False)
+    delivery = models.BooleanField(default=False)
+    grow_house = models.BooleanField(default=False)
 
     street1 = models.CharField(max_length=100)
     city = models.CharField(max_length=100)
@@ -83,4 +81,4 @@ class BusinessLocation(models.Model):
     sun_close = models.TimeField(blank=True, null=True)
 
     def __str__(self):
-        return '{0} - {1}'.format(self.business, self.business_type)
+        return '{0} - {1}'.format(self.business, self.location_name)

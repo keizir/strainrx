@@ -1,4 +1,4 @@
-<script type="x/srx-template" id="b2b-operational-hours">
+<script type="x/srx-template" id="operational-hours">
     <div class="day-wrapper">
         <div class="day">
             <span id="${day_value}">${day_name}</span>
@@ -6,7 +6,7 @@
         <div class="hours">
             <div class="open-hours">
                 <select name="${day_value}_open" title="">
-                    <option></option>
+                    <option value=""></option>
                     <option value="01:00 AM">1:00am</option>
                     <option value="02:00 AM">2:00am</option>
                     <option value="03:00 AM">3:00am</option>
@@ -36,7 +36,7 @@
             <div class="separator"></div>
             <div class="close-hours">
                 <select name="${day_value}_close" title="">
-                    <option></option>
+                    <option value=""></option>
                     <option value="01:00 AM">1:00am</option>
                     <option value="02:00 AM">2:00am</option>
                     <option value="03:00 AM">3:00am</option>

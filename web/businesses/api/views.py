@@ -11,12 +11,11 @@ from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
-from web.businesses.api.serializers import BusinessSignUpSerializer, BusinessDetailSerializer
+from web.businesses.api.serializers import BusinessSignUpSerializer, BusinessLocationDetailSerializer
 from web.businesses.api.services import BusinessSignUpService
 from web.businesses.emails import EmailService
-from web.businesses.models import Business
-from web.businesses.serializers import BusinessSerializer
-from web.users.models import User
+from web.businesses.models import Business, BusinessLocation
+from web.businesses.serializers import BusinessSerializer, BusinessLocationSerializer
 
 logger = logging.getLogger(__name__)
 
@@ -77,35 +76,47 @@ class BusinessImageView(LoginRequiredMixin, APIView):
         return Response({}, status=status.HTTP_200_OK)
 
 
-class BusinessDetailView(LoginRequiredMixin, APIView):
-    def post(self, request, business_id):
-        business = Business.objects.get(pk=business_id)
-        serializer = BusinessDetailSerializer(data=request.data)
-        serializer.is_valid(raise_exception=True)
-
-        does_exist = User.objects.filter(email=serializer.validated_data.get('email')).exists()
-        if business.created_by.email != serializer.validated_data.get('email') and does_exist:
-            return bad_request('There is already an account associated with that email address')
-
-        business.name = serializer.validated_data.get('business_name')
-        business.save()
-
-        if business.created_by.email != serializer.validated_data.get('email'):
-            business_creator = User.objects.get(email=business.created_by.email)
-            business_creator.email = serializer.validated_data.get('email')
-            business_creator.is_email_verified = False
-            business_creator.save()
-
-            try:
-                EmailService().send_confirmation_email(business.created_by)
-            except Exception:
-                logger.exception('Cannot send an email to {0}'.format(business.created_by.email))
-
-        return Response({}, status=status.HTTP_200_OK)
-
-
 class ResendConfirmationEmailView(LoginRequiredMixin, APIView):
     def get(self, request):
         authenticated_user = request.user
         EmailService().send_confirmation_email(authenticated_user)
+        return Response({}, status=status.HTTP_200_OK)
+
+
+class BusinessLocationView(LoginRequiredMixin, APIView):
+    def get(self, request, business_id, business_location_id):
+        location = BusinessLocation.objects.get(pk=business_location_id)
+        serializer = BusinessLocationSerializer(location)
+        return Response({'location': serializer.data}, status=status.HTTP_200_OK)
+
+    def post(self, request, business_id, business_location_id):
+        serializer = BusinessLocationDetailSerializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        data = serializer.validated_data
+
+        business_location = BusinessLocation.objects.get(pk=business_location_id)
+        business_location.location_name = data.get('location_name')
+        business_location.manager_name = data.get('manager_name')
+        business_location.location_email = data.get('location_email')
+        business_location.dispensary = data.get('dispensary')
+        business_location.delivery = data.get('delivery')
+        business_location.phone = data.get('phone')
+        business_location.ext = data.get('ext')
+        business_location.mon_open = data.get('mon_open')
+        business_location.mon_close = data.get('mon_close')
+        business_location.tue_open = data.get('tue_open')
+        business_location.tue_close = data.get('tue_close')
+        business_location.wed_open = data.get('wed_open')
+        business_location.wed_close = data.get('wed_close')
+        business_location.thu_open = data.get('thu_open')
+        business_location.thu_close = data.get('thu_close')
+        business_location.fri_open = data.get('fri_open')
+        business_location.fri_close = data.get('fri_close')
+        business_location.sat_open = data.get('sat_open')
+        business_location.sat_close = data.get('sat_close')
+        business_location.sun_open = data.get('sun_open')
+        business_location.sun_close = data.get('sun_close')
+
+        business_location.save()
+
         return Response({}, status=status.HTTP_200_OK)

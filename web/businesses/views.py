@@ -5,7 +5,7 @@ from datetime import datetime
 
 from django.views.generic import TemplateView
 
-from web.businesses.models import Business
+from web.businesses.models import Business, BusinessLocation
 from web.users.models import User
 
 
@@ -40,8 +40,10 @@ class BusinessDetailView(TemplateView):
     def get_context_data(self, **kwargs):
         context = super(BusinessDetailView, self).get_context_data(**kwargs)
         business = Business.objects.get(pk=kwargs.get('business_id'))
-        context['tab'] = 'info'
         context['business'] = business
+        context['primary_location'] = BusinessLocation.objects.get(business=business, primary=True)
+        context['locations'] = BusinessLocation.objects.filter(business=business).order_by('id')
+        context['tab'] = 'info'
         return context
 
 
@@ -50,6 +52,10 @@ class BusinessMenuView(TemplateView):
 
     def get_context_data(self, **kwargs):
         context = super(BusinessMenuView, self).get_context_data(**kwargs)
+        business = Business.objects.get(pk=kwargs.get('business_id'))
+        primary_location = BusinessLocation.objects.get(business=business, primary=True)
+        context['business'] = business
+        context['primary_location'] = primary_location
         context['tab'] = 'menu'
         return context
 
@@ -59,32 +65,9 @@ class BusinessLocationsView(TemplateView):
 
     def get_context_data(self, **kwargs):
         context = super(BusinessLocationsView, self).get_context_data(**kwargs)
+        business = Business.objects.get(pk=kwargs.get('business_id'))
+        primary_location = BusinessLocation.objects.get(business=business, primary=True)
+        context['business'] = business
+        context['primary_location'] = primary_location
         context['tab'] = 'locations'
-        return context
-
-
-class BusinessBillingInfoView(TemplateView):
-    template_name = 'pages/business/business_billing_info.html'
-
-    def get_context_data(self, **kwargs):
-        context = super(BusinessBillingInfoView, self).get_context_data(**kwargs)
-        context['tab'] = 'billing'
-        return context
-
-
-class BusinessDeliveryRadiusView(TemplateView):
-    template_name = 'pages/business/business_delivery_radius.html'
-
-    def get_context_data(self, **kwargs):
-        context = super(BusinessDeliveryRadiusView, self).get_context_data(**kwargs)
-        context['tab'] = 'radius'
-        return context
-
-
-class BusinessChangePwdView(TemplateView):
-    template_name = 'pages/business/business_change_pwd.html'
-
-    def get_context_data(self, **kwargs):
-        context = super(BusinessChangePwdView, self).get_context_data(**kwargs)
-        context['tab'] = 'pwd'
         return context

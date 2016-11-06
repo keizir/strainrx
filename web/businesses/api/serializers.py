@@ -17,7 +17,7 @@ class BusinessSignUpSerializer(serializers.Serializer):
     state = serializers.CharField()
     zip_code = serializers.CharField()
     phone = serializers.CharField()
-    ext = serializers.CharField(allow_blank=True)
+    ext = serializers.CharField(allow_blank=True, allow_null=True)
 
     mon_open = serializers.TimeField(format='%I:%M %p', input_formats=['%I:%M %p'], allow_null=True)
     mon_close = serializers.TimeField(format='%I:%M %p', input_formats=['%I:%M %p'], allow_null=True)
@@ -41,9 +41,31 @@ class BusinessSignUpSerializer(serializers.Serializer):
         pass
 
 
-class BusinessDetailSerializer(serializers.Serializer):
-    business_name = serializers.CharField()
-    email = serializers.CharField()
+class BusinessLocationDetailSerializer(serializers.Serializer):
+    location_name = serializers.CharField()
+    manager_name = serializers.CharField(allow_blank=True, allow_null=True)
+    location_email = serializers.CharField()
+
+    phone = serializers.CharField()
+    ext = serializers.CharField(allow_blank=True, allow_null=True)
+
+    dispensary = serializers.BooleanField()
+    delivery = serializers.BooleanField()
+
+    mon_open = serializers.TimeField(format='%I:%M %p', input_formats=['%I:%M %p'], allow_null=True)
+    mon_close = serializers.TimeField(format='%I:%M %p', input_formats=['%I:%M %p'], allow_null=True)
+    tue_open = serializers.TimeField(format='%I:%M %p', input_formats=['%I:%M %p'], allow_null=True)
+    tue_close = serializers.TimeField(format='%I:%M %p', input_formats=['%I:%M %p'], allow_null=True)
+    wed_open = serializers.TimeField(format='%I:%M %p', input_formats=['%I:%M %p'], allow_null=True)
+    wed_close = serializers.TimeField(format='%I:%M %p', input_formats=['%I:%M %p'], allow_null=True)
+    thu_open = serializers.TimeField(format='%I:%M %p', input_formats=['%I:%M %p'], allow_null=True)
+    thu_close = serializers.TimeField(format='%I:%M %p', input_formats=['%I:%M %p'], allow_null=True)
+    fri_open = serializers.TimeField(format='%I:%M %p', input_formats=['%I:%M %p'], allow_null=True)
+    fri_close = serializers.TimeField(format='%I:%M %p', input_formats=['%I:%M %p'], allow_null=True)
+    sat_open = serializers.TimeField(format='%I:%M %p', input_formats=['%I:%M %p'], allow_null=True)
+    sat_close = serializers.TimeField(format='%I:%M %p', input_formats=['%I:%M %p'], allow_null=True)
+    sun_open = serializers.TimeField(format='%I:%M %p', input_formats=['%I:%M %p'], allow_null=True)
+    sun_close = serializers.TimeField(format='%I:%M %p', input_formats=['%I:%M %p'], allow_null=True)
 
     def update(self, instance, validated_data):
         pass

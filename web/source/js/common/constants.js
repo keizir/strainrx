@@ -11,6 +11,16 @@ W.common.Constants = {
         onlyAlpha: /^[a-zA-Z\s]+$/
     },
 
+    days: [
+        {name: 'Monday', value: 'mon'},
+        {name: 'Tuesday', value: 'tue'},
+        {name: 'Wednesday', value: 'wed'},
+        {name: 'Thursday', value: 'thu'},
+        {name: 'Friday', value: 'fri'},
+        {name: 'Saturday', value: 'sat'},
+        {name: 'Sunday', value: 'sun'}
+    ],
+
     effectNames: {
         'happy': 'Happy',
         'uplifted': 'Uplifted',

@@ -10,55 +10,63 @@
 {% endblock %}
 
 {% block content %}
-    <div class="container">
+    <div class="business-account-header-background"></div>
+    <div class="container business-account-container">
         <div class="business-account-page-wrapper">
             <input type="hidden" class="business-id" value="{{ request.session.business.id }}">
-            <div class="trial-header">
-                <span>Free Trial - <b>30</b> Days Remaining</span>
-            </div>
             <div class="business-account-header">
                 <div class="business-image">
                     <div class="image-wrapper">
-                        <img class="bus-logo" src="{{ request.session.business_image }}" alt="Logo">
-                    </div>
-                    <div class="upload-business-image-link-wrapper">
-                        <input type="file" id="file" class="upload-business-image"/>
-                        <label for="file">+ Upload New</label>
+                        {% if request.session.business_image %}
+                            <img class="bus-logo" src="{{ request.session.business_image }}">
+                        {% else %}
+                            <img class="bus-logo" src="{% static 'images/leaf-grey.png' %}">
+                        {% endif %}
                     </div>
                 </div>
-                <div class="account-header-menu">
+                <div class="business-info">
+                    <h2>{{ request.session.business.name }}</h2>
+                    {% if primary_location.dispensary and primary_location.delivery %}
+                        <span class="location-type">Dispensary, Delivery</span>
+                    {% elif primary_location.dispensary %}
+                        <span class="location-type">Dispensary</span>
+                    {% elif primary_location.delivery %}
+                        <span class="location-type">Delivery</span>
+                    {% endif %}
+                    <div class="address">
+                        <span>{{ primary_location.street1 }}</span>
+                        <span>{{ primary_location.city }}, {{ primary_location.state }} {{ primary_location.zip_code }}</span>
+                    </div>
+                    <div class="phone">
+                        <i class="fa fa-phone fa-2x" aria-hidden="true"></i>
+                        <span>Ph: {{ primary_location.phone }}</span>
+                    </div>
+                    <button type="button" class="btn-secondary btn-edit-info hidden">Edit Info</button>
+                </div>
+                <div class="account-header-menu hidden">
                     <div class="header-menu-item">
-                        <i class="fa fa-bar-chart fa-3x" aria-hidden="true"></i>
+                        <i class="fa fa-bar-chart fa-2x" aria-hidden="true"></i>
                         <a href="#">Stats</a>
                     </div>
                     <div class="header-menu-item">
-                        <i class="fa fa-usd fa-3x" aria-hidden="true"></i>
+                        <i class="fa fa-usd fa-2x" aria-hidden="true"></i>
                         <a href="#">Deals</a>
                     </div>
                     <div class="header-menu-item">
-                        <i class="fa fa-star fa-3x" aria-hidden="true"></i>
+                        <i class="fa fa-star fa-2x" aria-hidden="true"></i>
                         <a href="#">Reviews</a>
                     </div>
                 </div>
             </div>
             <div class="account-menu">
-                <span class="account-menu-nav-link {% if tab == 'info' %}active{% endif %} separator">
-                    <a href="{% url 'businesses:detail' request.session.business.id %}">Business Information</a>
-                </span>
-                <span class="account-menu-nav-link {% if tab == 'menu' %}active{% endif %} separator">
-                    <a href="{% url 'businesses:menu' request.session.business.id %}">Menu</a>
-                </span>
-                <span class="account-menu-nav-link {% if tab == 'locations' %}active{% endif %} separator">
+                <span class="account-menu-nav-link {% if tab == 'locations' %}active{% endif %}">
                     <a href="{% url 'businesses:locations' request.session.business.id %}">Locations</a>
                 </span>
-                <span class="account-menu-nav-link {% if tab == 'billing' %}active{% endif %} separator">
-                    <a href="{% url 'businesses:billing_info' request.session.business.id %}">Billing Information</a>
+                <span class="account-menu-nav-link {% if tab == 'info' %}active{% endif %}">
+                    <a href="{% url 'businesses:detail' request.session.business.id %}">Business Details</a>
                 </span>
-                <span class="account-menu-nav-link {% if tab == 'radius' %}active{% endif %} separator">
-                    <a href="{% url 'businesses:delivery_radius' request.session.business.id %}">Delivery Radius</a>
-                </span>
-                <span class="account-menu-nav-link {% if tab == 'pwd' %}active{% endif %}">
-                    <a href="{% url 'businesses:password' request.session.business.id %}">Password</a>
+                <span class="account-menu-nav-link {% if tab == 'menu' %}active{% endif %}">
+                    <a href="{% url 'businesses:menu' request.session.business.id %}">Menu</a>
                 </span>
             </div>
             <div class="business-account-tab-content">

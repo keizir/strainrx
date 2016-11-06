@@ -6,73 +6,187 @@ W.pages.business.BusinessDetail = Class.extend({
 
     ui: {
         $businessId: $('.business-id'),
+        $locations: $('.location-select'),
+        $locationOperationalHours: $('.location-operational-hours'),
         $btnUpdateInfo: $('.btn-update-info')
     },
 
     init: function init() {
+        var that = this,
+            currentLocationId = this.ui.$locations.val();
+
+        this.retrieveLocation(currentLocationId, function (location) {
+            if (location) {
+                var HoursTemplate = _.template($('#operational-hours-field').html());
+                that.ui.$locationOperationalHours.html(HoursTemplate({
+                    days: W.common.Constants.days,
+                    renderHours: _.template($('#operational-hours').html())
+                }));
+
+                that.preselectHours(location);
+            }
+        });
+
         this.clickUpdateBusinessInfo();
+        this.changeLocation();
 
         $('input').on('focus', function () {
             $('.error-message').text('');
         });
     },
 
-    clickUpdateBusinessInfo: function clickUpdateBusinessInfo() {
-        var that = this,
-            $errorMessage = $('.error-message');
-
-        this.ui.$btnUpdateInfo.on('click', function (e) {
-            e.preventDefault();
-
-            var businessName = $('input[name="business_name"]').val(),
-                email = $('input[name="email"]').val(),
-                currentEmailAddress = $('input[name="current_email"]').val();
-
-            if (!businessName || businessName.trim().length === 0) {
-                $errorMessage.text('Business Name is required');
-                return;
-            }
-
-            if (!email || email.trim().length === 0) {
-                $errorMessage.text('Email address is required');
-                return;
-            }
-
-            if (!W.common.Constants.regex.email.test(email)) {
-                $errorMessage.text('Invalid email address format');
-                return;
-            }
-
-            if (email.trim() !== currentEmailAddress.trim()) {
-                that.checkIfEmailRegistered(email, function (data) {
-                        if (!data || data.exist) {
-                            $errorMessage.text('There is already an account associated with that email address');
-                            return;
-                        }
-
-                        that.updateBusinessInfo({business_name: businessName.trim(), email: email.trim()});
-                    }, function () {
-                        return false;
-                    }
-                );
-            } else {
-                that.updateBusinessInfo({business_name: businessName.trim(), email: currentEmailAddress.trim()});
+    retrieveLocation: function retrieveLocation(locationId, successCallback) {
+        $.ajax({
+            method: 'GET',
+            url: '/api/v1/businesses/{0}/locations/{1}'.format(this.ui.$businessId.val(), locationId),
+            success: function (data) {
+                successCallback(data.location);
             }
         });
     },
 
-    checkIfEmailRegistered: function checkIfEmailRegistered(email, successCallback, errorCallback) {
-        $.ajax({
-            method: 'GET',
-            url: '/api/v1/users/?email={0}'.format(encodeURIComponent(email)),
-            dataType: 'json',
-            success: function (data) {
-                successCallback(data);
-            },
-            error: function (error) {
-                errorCallback(error);
+    preselectHours: function preselectHours(location) {
+        findAndSelect('mon_open', location);
+        findAndSelect('mon_close', location);
+        findAndSelect('tue_open', location);
+        findAndSelect('tue_close', location);
+        findAndSelect('wed_open', location);
+        findAndSelect('wed_close', location);
+        findAndSelect('thu_open', location);
+        findAndSelect('thu_close', location);
+        findAndSelect('fri_open', location);
+        findAndSelect('fri_close', location);
+        findAndSelect('sat_open', location);
+        findAndSelect('sat_close', location);
+        findAndSelect('sun_open', location);
+        findAndSelect('sun_close', location);
+
+        function findAndSelect(selectName, location) {
+            var value = location[selectName],
+                $select = $('select[name="{0}"]'.format(selectName));
+
+            $select.find('option').removeProp('selected');
+            $select.find('option[value="{0}"]'.format(value !== null ? value : '')).prop('selected', 'selected');
+        }
+    },
+
+    clickUpdateBusinessInfo: function clickUpdateBusinessInfo() {
+        var that = this;
+
+        this.ui.$btnUpdateInfo.on('click', function (e) {
+            e.preventDefault();
+            var data = that.getValidatedData();
+            if (data) {
+                that.updateBusinessInfo(data);
             }
         });
+    },
+
+    getOpenTime: function getOpenTime(day) {
+        var val = $('select[name="{0}_open"]'.format(day)).val();
+        return val !== '' ? val : null;
+    },
+
+    getCloseTime: function getCloseTime(day) {
+        var val = $('select[name="{0}_close"]'.format(day)).val();
+        return val !== '' ? val : null;
+    },
+
+    getValidatedData: function getValidatedData() {
+        var $errorMessage = $('.error-message'),
+            hoursErrorMessage = '{0} close time cannot be earlier than open time',
+            locationName = $('input[name="location_name"]').val(),
+            manager = $('input[name="manager"]').val(),
+            email = $('input[name="location_email"]').val(),
+            phone = $('input[name="phone"]').val(),
+            ext = $('input[name="ext"]').val(),
+            dispensary = $('input[name="dispensary"]').is(':checked'),
+            delivery = $('input[name="delivery"]').is(':checked'),
+            isOpenBeforeClose = function isOpenBeforeClose(open, close) {
+                if (open && close) {
+                    var o = new Date(Date.parse('1/1/1970 {0}'.format(open))),
+                        c = new Date(Date.parse('1/1/1970 {0}'.format(close)));
+                    return o < c;
+                }
+                return true;
+            };
+
+        if (!locationName || locationName.trim().length === 0) {
+            $errorMessage.text('Business Name is required');
+            return;
+        }
+
+        if (!email || email.trim().length === 0) {
+            $errorMessage.text('Email is required');
+            return;
+        }
+
+        if (!W.common.Constants.regex.email.test(email)) {
+            $errorMessage.text('Invalid email address format');
+            return;
+        }
+
+        if (!phone || phone.trim().length === 0) {
+            $errorMessage.text('Phone Number is required');
+            return;
+        }
+
+        if (!dispensary && !delivery) {
+            $errorMessage.text('Business Type is required');
+            return;
+        }
+
+        if (!isOpenBeforeClose(this.getOpenTime('mon'), this.getCloseTime('mon'))) {
+            $errorMessage.text(hoursErrorMessage.format('Monday'));
+            return;
+        }
+
+        if (!isOpenBeforeClose(this.getOpenTime('tue'), this.getCloseTime('tue'))) {
+            $errorMessage.text(hoursErrorMessage.format('Tuesday'));
+            return;
+        }
+
+        if (!isOpenBeforeClose(this.getOpenTime('wed'), this.getCloseTime('wed'))) {
+            $errorMessage.text(hoursErrorMessage.format('Wednesday'));
+            return;
+        }
+
+        if (!isOpenBeforeClose(this.getOpenTime('thu'), this.getCloseTime('thu'))) {
+            $errorMessage.text(hoursErrorMessage.format('Thursday'));
+            return;
+        }
+
+        if (!isOpenBeforeClose(this.getOpenTime('fri'), this.getCloseTime('fri'))) {
+            $errorMessage.text(hoursErrorMessage.format('Friday'));
+            return;
+        }
+
+        if (!isOpenBeforeClose(this.getOpenTime('sat'), this.getCloseTime('sat'))) {
+            $errorMessage.text(hoursErrorMessage.format('Saturday'));
+            return;
+        }
+
+        if (!isOpenBeforeClose(this.getOpenTime('sun'), this.getCloseTime('sun'))) {
+            $errorMessage.text(hoursErrorMessage.format('Sunday'));
+            return;
+        }
+
+        return {
+            location_name: locationName.trim(),
+            manager_name: manager ? manager.trim() : null,
+            location_email: email.trim(),
+            phone: phone.trim(),
+            ext: ext ? ext.trim() : null,
+            dispensary: dispensary,
+            delivery: delivery,
+            mon_open: this.getOpenTime('mon'), mon_close: this.getCloseTime('mon'),
+            tue_open: this.getOpenTime('tue'), tue_close: this.getCloseTime('tue'),
+            wed_open: this.getOpenTime('wed'), wed_close: this.getCloseTime('wed'),
+            thu_open: this.getOpenTime('thu'), thu_close: this.getCloseTime('thu'),
+            fri_open: this.getOpenTime('fri'), fri_close: this.getCloseTime('fri'),
+            sat_open: this.getOpenTime('sat'), sat_close: this.getCloseTime('sat'),
+            sun_open: this.getOpenTime('sun'), sun_close: this.getCloseTime('sun')
+        }
     },
 
     updateBusinessInfo: function updateBusinessInfo(data) {
@@ -81,7 +195,7 @@ W.pages.business.BusinessDetail = Class.extend({
 
         $.ajax({
             method: 'POST',
-            url: '/api/v1/businesses/{0}/info'.format(that.ui.$businessId.val()),
+            url: '/api/v1/businesses/{0}/locations/{1}'.format(this.ui.$businessId.val(), that.ui.$locations.val()),
             dataType: 'json',
             data: JSON.stringify(data),
             success: function () {
@@ -91,6 +205,7 @@ W.pages.business.BusinessDetail = Class.extend({
                 setTimeout(function () {
                     $errorMessage.text('');
                     $errorMessage.addClass('error-message');
+                    $errorMessage.removeClass('success-message');
                 }, 3000);
             },
             error: function (error) {
@@ -98,6 +213,37 @@ W.pages.business.BusinessDetail = Class.extend({
                     $errorMessage.text(JSON.parse(error.responseText).error);
                 }
             }
+        });
+    },
+
+    changeLocation: function changeLocation() {
+        var that = this;
+
+        this.ui.$locations.on('change', function () {
+            var locationId = $(this).val();
+            that.retrieveLocation(locationId, function (location) {
+                if (location) {
+                    $('input[name="location_name"]').val(location.location_name);
+                    $('input[name="manager"]').val(location.manager_name);
+                    $('input[name="location_email"]').val(location.location_email);
+                    $('input[name="phone"]').val(location.phone);
+                    $('input[name="ext"]').val(location.ext);
+
+                    if (location.dispensary) {
+                        $('input[name="dispensary"]').prop('checked', true);
+                    } else {
+                        $('input[name="dispensary"]').removeProp('checked');
+                    }
+
+                    if (location.delivery) {
+                        $('input[name="delivery"]').prop('checked', true);
+                    } else {
+                        $('input[name="delivery"]').removeProp('checked');
+                    }
+
+                    that.preselectHours(location);
+                }
+            });
         });
     }
 

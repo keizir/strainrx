@@ -5,23 +5,72 @@
 {% block title %}Business Detail{% endblock %}
 
 {% block business_account_tab_content %}
-    <div class="form">
+    <div class="form details-form">
         <div class="form-field-group">
             <div class="form-field">
-                <label for="business_name">Business Name</label>
-                <input type="text" name="business_name" id="business_name" value="{{ business.name }}">
+                <label for="locations">Address:</label>
+                <select class="location-select" id="locations">
+                    {% for l in locations %}
+                        <option value="{{ l.id }}">{{ l.street1 }}, {{ l.city }}, {{ l.state }} {{ l.zip_code }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+        </div>
+        <div class="form-field-group">
+            <div class="form-field">
+                <label for="location_name">Business Name:</label>
+                <input type="text" name="location_name" id="location_name" value="{{ locations.first.location_name }}">
+            </div>
+        </div>
+        <div class="form-field-group">
+            <div class="form-field">
+                <label for="manager">Manager (optional):</label>
+                <input type="text" name="manager" id="manager"
+                       {% if locations.first.manager_name %}value="{{ locations.first.manager_name }}" {% endif %}>
+            </div>
+        </div>
+        <div class="form-field-group">
+            <div class="form-field">
+                <label for="location_email">Email:</label>
+                <input type="text" name="location_email" id="location_email" value="{{ locations.first.location_email }}">
+            </div>
+        </div>
+        <div class="form-field-group phone-field-group">
+            <div class="form-field">
+                <label for="phone">Phone Number:</label>
+                <input type="text" name="phone" id="phone" value="{{ locations.first.phone }}">
             </div>
             <div class="form-field">
-                <label for="email">Email</label>
-                <input type="text" name="email" id="email" value="{{ request.user.email }}">
-                <input type="hidden" name="current_email" value="{{ request.user.email }}">
+                <label for="ext">Ext.</label>
+                <input type="text" name="ext" id="ext" value="{{ locations.first.ext }}">
             </div>
+        </div>
+        <div class="form-field-group business-type-field-group">
+            <h3>Business Type</h3>
+            <div class="form-field">
+                <input type="checkbox" name="dispensary" id="dispensary"
+                       {% if locations.first.dispensary %}checked{% endif %}>
+                <label for="dispensary">Dispensary</label>
+            </div>
+            <div class="form-field">
+                <input type="checkbox" name="delivery" id="delivery"
+                       {% if locations.first.delivery %}checked{% endif %}>
+                <label for="delivery">Delivery</label>
+            </div>
+        </div>
+        <div class="form-field-group hours-field-group">
+            <h3>Hours of Operation</h3>
+            <div class="location-operational-hours"></div>
         </div>
         <span class="error-message"></span>
         <div class="form-actions">
             <button type="submit" class="btn-primary btn-update-info">Update</button>
         </div>
     </div>
+
+    {% include 'pages/business/business_detail_operational_hours.html' %}
+    {% include 'common/operational_hours.html' %}
+
 {% endblock %}
 
 {% block javascript %}
