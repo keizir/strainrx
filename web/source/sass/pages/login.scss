@@ -21,6 +21,23 @@
             margin-top: 3em;
         }
     }
+
+    @media (max-width: $screen-xs-max) {
+        width: 100%;
+        padding: 5em 0;
+
+        .login {
+            display: block;
+            position: relative;
+            width: 100%;
+
+            fieldset {
+                display: block;
+                position: relative;
+                padding: 2em 0;
+            }
+        }
+    }
 }
 
 .pwd-reset-block-wrapper {
