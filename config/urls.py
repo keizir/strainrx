@@ -14,7 +14,7 @@ urlpatterns = [
                   url(r'^privacy/$', TemplateView.as_view(template_name='pages/privacy.html'), name='privacy'),
                   url(r'^terms/$', TemplateView.as_view(template_name='pages/terms.html'), name='terms'),
                   url(r'^contact/$', TemplateView.as_view(template_name='pages/contact.html'), name='contact'),
-                  url(r'^details/$', TemplateView.as_view(template_name='pages/dispensary/details.html'), name='details'),
+
 
 
 

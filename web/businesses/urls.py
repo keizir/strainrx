@@ -37,4 +37,9 @@ urlpatterns = [
         view=user_is_owner(views.BusinessLocationsView.as_view()),
         name='locations'
     ),
+    url(
+        regex=r'^(?P<business_id>[0-9]{1,})/dispensary_info/$',
+        view=views.BusinessDispensaryInfoView.as_view(),
+        name='dispensary_info'
+    ),
 ]

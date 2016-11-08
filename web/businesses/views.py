@@ -49,6 +49,7 @@ class BusinessDetailView(TemplateView):
 class BusinessMenuView(TemplateView):
     template_name = 'pages/business/business_menu.html'
 
+
     def get_context_data(self, **kwargs):
         context = super(BusinessMenuView, self).get_context_data(**kwargs)
         business = Business.objects.get(pk=kwargs.get('business_id'))
@@ -68,3 +69,8 @@ class BusinessLocationsView(TemplateView):
         context['locations'] = BusinessLocation.objects.filter(business=business, removed_date=None).order_by('id')
         context['tab'] = 'locations'
         return context
+
+
+class BusinessDispensaryInfoView(TemplateView):
+    template_name = 'pages/business/dispensary_info.html'
+
