@@ -232,6 +232,38 @@ fieldset {
     content: '';
 }
 
+.strain-lookup-field {
+    position: relative;
+
+    .payloads-region {
+        display: block;
+        position: absolute;
+        top: 2.5em;
+        width: 90%;
+        font-size: 0.7em;
+        color: $grey-normal;
+        background-color: $white;
+        border-bottom-left-radius: 0.5em;
+        border-bottom-right-radius: 0.5em;
+        z-index: 1000;
+
+        .search-payload {
+            display: block;
+            padding: 1em;
+            text-align: left;
+            cursor: pointer;
+            border-radius: 0.5em;
+        }
+
+        .search-payload.active,
+        .search-payload:hover {
+            background-color: $aero-blue;
+            color: $grey-dark;
+            font-weight: bold;
+        }
+    }
+}
+
 // bootstrap alert CSS, translated to the django-standard levels of
 // debug, info, success, warning, error
 //

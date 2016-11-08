@@ -7,6 +7,7 @@ from django.core.exceptions import ValidationError
 from django.db import models
 from django.utils.encoding import python_2_unicode_compatible
 
+from web.search.models import Strain
 from web.users.models import User
 
 
@@ -85,3 +86,18 @@ class BusinessLocation(models.Model):
 
     def __str__(self):
         return '{0} - {1}'.format(self.business, self.location_name)
+
+
+@python_2_unicode_compatible
+class BusinessLocationMenuItem(models.Model):
+    business_location = models.ForeignKey(BusinessLocation, on_delete=models.DO_NOTHING)
+    strain = models.ForeignKey(Strain, on_delete=models.DO_NOTHING)
+
+    price_gram = models.FloatField(max_length=50, blank=True, null=True)
+    price_eighth = models.FloatField(max_length=50, blank=True, null=True)
+    price_quarter = models.FloatField(max_length=50, blank=True, null=True)
+    price_half = models.FloatField(max_length=50, blank=True, null=True)
+
+    in_stock = models.BooleanField(default=True)
+
+    removed_date = models.DateTimeField(blank=True, null=True)

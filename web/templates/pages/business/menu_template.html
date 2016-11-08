@@ -1,0 +1,17 @@
+<script type="x/srx-template" id="menu-template">
+    <div class="menu-wrapper">
+        <h2><%= menuTitle %></h2>
+        <div class="menu-header-wrapper">
+            <div class="header-item strains">Strains</div>
+            <div class="header-item gram">Gram</div>
+            <div class="header-item eighth">Eighth</div>
+            <div class="header-item quarter">Quarter</div>
+            <div class="header-item half">Half</div>
+            <div class="header-item in-stock">In Stock</div>
+            <div class="header-item actions"></div>
+        </div>
+        <% $.each(menuItems, function(index, item) { %>
+        <%= renderStrain({item: item}) %>
+        <% }) %>
+    </div>
+</script>

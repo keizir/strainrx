@@ -4,6 +4,62 @@
 
 {% block title %}Business Menu{% endblock %}
 
+{% block css %}
+    {{ block.super }}
+    <link href="{% static 'css/pages/business/business_menu.css' %}" rel="stylesheet">
+{% endblock %}
+
 {% block business_account_tab_content %}
-    <h1>Menu</h1>
+    <div class="form menu-form">
+        <div class="form-field-group location-field-group">
+            <div class="form-field">
+                <label for="locations">Location:</label>
+                <select class="location-select" id="locations">
+                    {% for l in locations %}
+                        <option value="{{ l.id }}">{{ l.location_name }} - {{ l.street1 }},
+                            {{ l.city }}, {{ l.state }} {{ l.zip_code }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+        </div>
+        <div class="form-field-group add-strain-field-group">
+            <div class="form-field strain-name-field"></div>
+            <div class="form-field price-field">
+                <input type="number" name="price_gram" placeholder="$ / Gram">
+            </div>
+            <div class="form-field price-field">
+                <input type="number" name="price_eighth" placeholder="$ / Eighth">
+            </div>
+            <div class="form-field price-field">
+                <input type="number" name="price_quarter" placeholder="$ / Quarter">
+            </div>
+            <div class="form-field price-field">
+                <input type="number" name="price_half" placeholder="$ / Half">
+            </div>
+            <div class="form-field actions-field">
+                <button type="button" class="btn-primary btn-add-strain">Add</button>
+            </div>
+            <span class="error-message"></span>
+        </div>
+        <div class="menu-strains-wrapper">
+            <div class="sativa-region hidden"></div>
+            <div class="indica-region hidden"></div>
+            <div class="hybrid-region hidden"></div>
+        </div>
+    </div>
+
+    {% include 'common/strain_lookup.html' %}
+    {% include 'pages/business/menu_template.html' %}
+    {% include 'pages/business/menu_item_template.html' %}
+
+{% endblock %}
+
+{% block javascript %}
+    {{ block.super }}
+    <script src="{% static 'js/pages/business/business_menu.js' %}"></script>
+    <script src="{% static 'js/pages/business/business_menu_view.js' %}"></script>
+    <script src="{% static 'js/pages/strain/strain_lookup.js' %}"></script>
+    <script type="text/javascript">
+        W.pages.business.BusinessMenuView.init();
+    </script>
 {% endblock %}

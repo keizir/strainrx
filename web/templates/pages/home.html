@@ -116,21 +116,21 @@
 
                 <form class="search-form">
                     {% csrf_token %}
-                    <div class="form-field">
-                        <input class="lookup-input" type="text"
-                               placeholder="Example: Blue Dream, Maiu Wowie, Pineapple express"/>
-                        <div class="payloads-region"></div>
-                    </div>
+                    <div class="form-field strain-name-field"></div>
                     <button class="btn-primary lookup-submit" type="submit">Look Up Strain</button>
                 </form>
             </div>
         </div>
     </div>
+
+    {% include 'common/strain_lookup.html' %}
+
 {% endblock %}
 
 {% block javascript %}
     {{ block.super }}
     <script src="{% static 'js/pages/home.js' %}"></script>
+    <script src="{% static 'js/pages/strain/strain_lookup.js' %}"></script>
     <script type="text/javascript">
         new W.pages.HomePage();
     </script>

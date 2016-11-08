@@ -93,3 +93,20 @@ class BusinessLocationDetailSerializer(serializers.Serializer):
 
     def create(self, validated_data):
         pass
+
+
+class BusinessLocationMenuItemSerializer(serializers.Serializer):
+    strain_id = serializers.IntegerField()
+
+    price_gram = serializers.FloatField(allow_null=True)
+    price_eighth = serializers.FloatField(allow_null=True)
+    price_quarter = serializers.FloatField(allow_null=True)
+    price_half = serializers.FloatField(allow_null=True)
+
+    in_stock = serializers.BooleanField(default=True)
+
+    def update(self, instance, validated_data):
+        pass
+
+    def create(self, validated_data):
+        pass

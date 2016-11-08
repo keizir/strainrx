@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 import logging
+from datetime import datetime
 
 from boto.s3.connection import S3Connection, Bucket, Key
 from django.conf import settings
@@ -11,11 +12,12 @@ from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
-from web.businesses.api.serializers import BusinessSignUpSerializer, BusinessLocationDetailSerializer
+from web.businesses.api.serializers import *
 from web.businesses.api.services import BusinessSignUpService, BusinessLocationService
 from web.businesses.emails import EmailService
-from web.businesses.models import Business, BusinessLocation
+from web.businesses.models import Business, BusinessLocation, BusinessLocationMenuItem
 from web.businesses.serializers import BusinessSerializer, BusinessLocationSerializer
+from web.search.models import Strain
 
 logger = logging.getLogger(__name__)
 
@@ -126,3 +128,70 @@ class BusinessLocationView(LoginRequiredMixin, APIView):
         serializer.update(existing_location, serializer.validated_data)
 
         return Response({}, status=status.HTTP_200_OK)
+
+
+class BusinessLocationMenuView(LoginRequiredMixin, APIView):
+    def get(self, request, business_id, business_location_id):
+        menu_items_raw = BusinessLocationMenuItem.objects \
+            .filter(business_location__id=business_location_id, removed_date=None) \
+            .order_by('strain__name')
+
+        menu_items = []
+        for mi in menu_items_raw:
+            menu_items.append(self.build_menu_item(mi))
+
+        return Response({'menu': menu_items}, status=status.HTTP_200_OK)
+
+    def post(self, request, business_id, business_location_id):
+        serializer = BusinessLocationMenuItemSerializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        data = serializer.validated_data
+
+        strain = Strain.objects.get(pk=data.get('strain_id'))
+        location = BusinessLocation.objects.get(pk=business_location_id)
+
+        try:
+            print(data.get('price_eighth'))
+            menu_item = BusinessLocationMenuItem.objects.get(business_location=location, strain=strain)
+            menu_item.in_stock = data.get('in_stock')
+            menu_item.price_gram = data.get('price_gram')
+            menu_item.price_eighth = data.get('price_eighth')
+            menu_item.price_quarter = data.get('price_quarter')
+            menu_item.price_half = data.get('price_half')
+            menu_item.removed_date = None
+        except BusinessLocationMenuItem.DoesNotExist:
+            menu_item = BusinessLocationMenuItem(business_location=location, strain=strain,
+                                                 price_gram=data.get('price_gram'),
+                                                 price_eighth=data.get('price_eighth'),
+                                                 price_quarter=data.get('price_quarter'),
+                                                 price_half=data.get('price_half'))
+
+        menu_item.save()
+
+        return Response(self.build_menu_item(menu_item), status=status.HTTP_200_OK)
+
+    def put(self, request, business_id, business_location_id):
+        menu_item = request.data.get('menu_item')
+        item = BusinessLocationMenuItem.objects.get(pk=menu_item.get('id'))
+        item.in_stock = menu_item.get('in_stock')
+        item.save()
+        return Response({}, status=status.HTTP_200_OK)
+
+    def delete(self, request, business_id, business_location_id):
+        menu_item_id = request.data.get('menu_item_id')
+        item = BusinessLocationMenuItem.objects.get(pk=menu_item_id)
+        item.removed_date = datetime.now()
+        item.save()
+        return Response({}, status=status.HTTP_200_OK)
+
+    def build_menu_item(self, menu_item):
+        return {
+            'id': menu_item.id,
+            'strain_name': menu_item.strain.name,
+            'strain_variety': menu_item.strain.variety,
+            'price_gram': menu_item.price_gram,
+            'price_eighth': menu_item.price_eighth,
+            'price_quarter': menu_item.price_quarter,
+            'price_half': menu_item.price_half,
+            'in_stock': menu_item.in_stock
+        }
