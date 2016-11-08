@@ -1,0 +1,76 @@
+<script type="x/srx-template" id="business_location">
+    <div class="location location-<%= l.id %>">
+        <div class="business-info-group">
+            <div class="form-field-group">
+                <div class="form-field">
+                    <label for="location_name__<%= l.id %>">Business Name</label>
+                    <input type="text" name="location_name__<%= l.id %>" id="location_name__<%= l.id %>"
+                           value="<%= l.location_name %>">
+                </div>
+            </div>
+            <div class="form-field-group">
+                <div class="form-field">
+                    <label for="street_address__<%= l.id %>">Street Address</label>
+                    <input type="text" name="street_address__<%= l.id %>" id="street_address__<%= l.id %>"
+                           value="<%= l.street1 %>">
+                </div>
+            </div>
+            <div class="form-field-group city-fields-group">
+                <div class="form-field">
+                    <label for="city__<%= l.id %>">City</label>
+                    <input type="text" name="city__<%= l.id %>" id="city__<%= l.id %>"
+                           value="<%= l.city %>">
+                </div>
+                <div class="form-field">
+                    <label for="state__<%= l.id %>">State</label>
+                    <input type="text" name="state__<%= l.id %>" id="state__<%= l.id %>" maxlength="2"
+                           value="<%= l.state %>">
+                </div>
+                <div class="form-field">
+                    <label for="zip_code__<%= l.id %>">Zip Code</label>
+                    <input type="number" name="zip_code__<%= l.id %>" id="zip_code__<%= l.id %>"
+                           value="<%= l.zip_code %>">
+                </div>
+            </div>
+        </div>
+        <div class="form-field-group business-type-field-group">
+            <h3>Business Type</h3>
+            <div class="form-field">
+                <% if (l.dispensary) { %>
+                <input type="checkbox" name="dispensary__<%= l.id %>" id="dispensary__<%= l.id %>" checked>
+                <% } else { %>
+                <input type="checkbox" name="dispensary__<%= l.id %>" id="dispensary__<%= l.id %>">
+                <% } %>
+                <label for="dispensary__<%= l.id %>">Dispensary</label>
+            </div>
+            <div class="form-field">
+                <% if (l.delivery) { %>
+                <input type="checkbox" name="delivery__<%= l.id %>" id="delivery__<%= l.id %>" checked>
+                <% } else { %>
+                <input type="checkbox" name="delivery__<%= l.id %>" id="delivery__<%= l.id %>">
+                <% } %>
+                <label for="delivery__<%= l.id %>">Delivery</label>
+            </div>
+        </div>
+        <div class="form-field-group trash-field-group btn-trash btn-trash-<%= l.id %>" id="<%= l.id %>">
+            <div class="form-field">
+                <i class="fa fa-trash-o fa-2x" aria-hidden="true"></i>
+            </div>
+        </div>
+        <% if (!l.delivery) { %>
+        <div class="form-field-group slider-area slider-area-<%= l.id %> hidden">
+            <div class="form-field">
+                <div class="slider slider-<%= l.id %>">slider</div>
+            </div>
+        </div>
+        <% } else { %>
+        <div class="form-field-group slider-area slider-area-<%= l.id %>">
+            <div class="form-field">
+                <div class="slider slider-<%= l.id %>">slider</div>
+            </div>
+        </div>
+        <% } %>
+        <span class="error-message location-error error-message-<%= l.id %>"></span>
+        <hr>
+    </div>
+</script>

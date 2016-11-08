@@ -41,8 +41,7 @@ class BusinessDetailView(TemplateView):
         context = super(BusinessDetailView, self).get_context_data(**kwargs)
         business = Business.objects.get(pk=kwargs.get('business_id'))
         context['business'] = business
-        context['primary_location'] = BusinessLocation.objects.get(business=business, primary=True)
-        context['locations'] = BusinessLocation.objects.filter(business=business).order_by('id')
+        context['locations'] = BusinessLocation.objects.filter(business=business, removed_date=None).order_by('id')
         context['tab'] = 'info'
         return context
 
@@ -53,9 +52,8 @@ class BusinessMenuView(TemplateView):
     def get_context_data(self, **kwargs):
         context = super(BusinessMenuView, self).get_context_data(**kwargs)
         business = Business.objects.get(pk=kwargs.get('business_id'))
-        primary_location = BusinessLocation.objects.get(business=business, primary=True)
         context['business'] = business
-        context['primary_location'] = primary_location
+        context['locations'] = BusinessLocation.objects.filter(business=business, removed_date=None).order_by('id')
         context['tab'] = 'menu'
         return context
 
@@ -66,8 +64,7 @@ class BusinessLocationsView(TemplateView):
     def get_context_data(self, **kwargs):
         context = super(BusinessLocationsView, self).get_context_data(**kwargs)
         business = Business.objects.get(pk=kwargs.get('business_id'))
-        primary_location = BusinessLocation.objects.get(business=business, primary=True)
         context['business'] = business
-        context['primary_location'] = primary_location
+        context['locations'] = BusinessLocation.objects.filter(business=business, removed_date=None).order_by('id')
         context['tab'] = 'locations'
         return context

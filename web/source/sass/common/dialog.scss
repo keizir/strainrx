@@ -1,43 +1,57 @@
 @import '../mixins/variables';
 
 .ui-dialog {
-  border-radius: 1em;
-  color: $grey-light;
+    border-radius: 1em;
+    color: $grey-light;
 }
 
 .ui-dialog .ui-dialog-titlebar-close {
-  /* do not optimize this properties */
-  background-size: 2em 2em;
-  background-repeat: no-repeat;
-  background-color: transparent;
-  background-image: url('../../images/close_icon.png');
-  border: none;
-  width: 2em;
-  height: 2em;
-  top: 1.3em;
+    /* do not optimize this properties */
+    background-size: 2em 2em;
+    background-repeat: no-repeat;
+    background-color: transparent;
+    background-image: url('../../images/close_icon.png');
+    border: none;
+    width: 2em;
+    height: 2em;
+    top: 1.3em;
 }
 
 .ui-dialog .ui-dialog-title {
-  font-size: 18px;
+    font-size: 18px;
 }
 
 .ui-dialog .ui-dialog-titlebar {
-  padding: 1em;
+    padding: 1em;
 }
 
 .ui-dialog-titlebar {
-  color: $grey-light;
+    color: $grey-light;
 }
 
 .ui-widget-header {
-  background: none;
-  border: none;
+    background: none;
+    border: none;
 }
 
 .ui-widget.ui-widget-content {
-  border: 2px solid $iris-blue;
+    border: 2px solid $iris-blue;
 }
 
 .ui-widget-content {
-  color: $grey-light;
+    color: $grey-light;
+}
+
+.confirm-dialog {
+    .dialog-actions {
+        display: block;
+        position: absolute;
+        bottom: 0.5em;
+    }
+
+    .btn-primary,
+    .btn-secondary {
+        width: 12em;
+        padding: 0.75em 1.5em;
+    }
 }

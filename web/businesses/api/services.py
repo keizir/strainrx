@@ -1,4 +1,5 @@
 import uuid
+from datetime import datetime
 
 from django.core.exceptions import ValidationError
 
@@ -94,3 +95,38 @@ class BusinessSignUpService:
             sun_close=data.get('sun_close')
         )
         return business_location
+
+
+class BusinessLocationService:
+    def update_locations(self, business_id, to_update_locations):
+        for to_update in to_update_locations:
+            data = to_update.get('data')
+            if to_update.get('location_id'):
+                location = BusinessLocation.objects.get(pk=to_update.get('location_id'))
+                location.location_name = data.get('location_name')
+                location.street1 = data.get('street1')
+                location.city = data.get('city')
+                location.state = data.get('state')
+                location.zip_code = data.get('zip_code')
+                location.delivery = data.get('delivery')
+                location.dispensary = data.get('dispensary')
+                location.save()
+            else:
+                business = Business.objects.get(pk=business_id)
+                location = BusinessLocation(
+                    business=business,
+                    location_name=data.get('location_name'),
+                    street1=data.get('street1'),
+                    city=data.get('city'),
+                    state=data.get('state'),
+                    zip_code=data.get('zip_code'),
+                    delivery=data.get('delivery'),
+                    dispensary=data.get('dispensary')
+                )
+                location.save()
+
+    def remove_location(self, business_location_id, current_user_id):
+        location = BusinessLocation.objects.get(pk=business_location_id)
+        location.removed_by = current_user_id
+        location.removed_date = datetime.now()
+        location.save()

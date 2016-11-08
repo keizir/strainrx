@@ -178,6 +178,8 @@ $(document).on('ajaxSend', function () {
     AJAX_TIMEOUT = setTimeout(function () {
         if (W.isLoading()) {
             $('#loading-spinner').show();
+        } else {
+            $('#loading-spinner').hide();
         }
     }, 500);
 });

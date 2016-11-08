@@ -1,0 +1,132 @@
+@import '../../mixins/variables';
+
+.business-account-container .business-account-page-wrapper .business-account-tab-content {
+    .locations-form {
+        .location {
+            margin-top: 2em;
+
+            label {
+                color: $grey;
+            }
+
+            .business-info-group {
+                display: inline-block;
+                width: 55%;
+
+                .form-field {
+                    width: 90%;
+
+                    input {
+                        width: 100%;
+                        border-radius: 0.5em;
+                    }
+                }
+            }
+
+            .business-type-field-group {
+                display: inline-block;
+                position: absolute;
+                width: 20%;
+
+                h3 {
+                    margin-bottom: 1em;
+                    color: $grey;
+                }
+
+                .form-field {
+                    width: 100%;
+                    margin: 0;
+
+                    label {
+                        display: inline-block;
+                        width: 80%;
+                    }
+
+                    input {
+                        display: inline-block;
+                        width: 15%;
+                    }
+                }
+            }
+
+            .city-fields-group {
+                .form-field {
+                    margin-right: 1%;
+                }
+
+                .form-field:first-child {
+                    width: 51%;
+                }
+
+                .form-field:nth-child(2) {
+                    width: 15%;
+                }
+
+                .form-field:last-child {
+                    width: 20%;
+                }
+            }
+
+            .trash-field-group {
+                display: inline-block;
+                position: absolute;
+                left: 75%;
+                width: 3%;
+                color: $iris-blue;
+                cursor: pointer;
+            }
+
+            .location-error {
+                margin: 2em 0;
+                font-weight: bold;
+            }
+        }
+
+        .common-error-messages {
+            margin: 2em 0;
+        }
+
+        .btn-add-location {
+            padding: 0.75em 2em;
+        }
+    }
+
+    @media (max-width: $screen-sm-min) {
+
+    }
+
+    @media (max-width: $screen-xs-max) {
+        .locations-form {
+            .location {
+                .business-info-group {
+                    display: block;
+                    width: 100%;
+                }
+
+                .business-type-field-group {
+                    position: relative;
+                    width: 40%;
+                }
+
+                .trash-field-group {
+                    .fa-trash-o {
+                        font-size: 4em;
+                    }
+                }
+
+                .location-error {
+                    margin: 2em 0;
+                    font-weight: bold;
+                }
+            }
+
+            .common-error-messages {
+                margin: 2em 0;
+            }
+
+            .btn-add-location {
+                padding: 0.75em 2em;
+            }
+        }
+    }
+}

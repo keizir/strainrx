@@ -26,20 +26,20 @@
                 </div>
                 <div class="business-info">
                     <h2>{{ request.session.business.name }}</h2>
-                    {% if primary_location.dispensary and primary_location.delivery %}
+                    {% if locations.first.dispensary and locations.first.delivery %}
                         <span class="location-type">Dispensary, Delivery</span>
-                    {% elif primary_location.dispensary %}
+                    {% elif locations.first.dispensary %}
                         <span class="location-type">Dispensary</span>
-                    {% elif primary_location.delivery %}
+                    {% elif locations.first.delivery %}
                         <span class="location-type">Delivery</span>
                     {% endif %}
                     <div class="address">
-                        <span>{{ primary_location.street1 }}</span>
-                        <span>{{ primary_location.city }}, {{ primary_location.state }} {{ primary_location.zip_code }}</span>
+                        <span>{{ locations.first.street1 }}</span>
+                        <span>{{ locations.first.city }}, {{ locations.first.state }} {{ locations.first.zip_code }}</span>
                     </div>
                     <div class="phone">
                         <i class="fa fa-phone fa-2x" aria-hidden="true"></i>
-                        <span>Ph: {{ primary_location.phone }}</span>
+                        <span>Ph: {{ locations.first.phone }}</span>
                     </div>
                     <button type="button" class="btn-secondary btn-edit-info hidden">Edit Info</button>
                 </div>

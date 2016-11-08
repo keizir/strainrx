@@ -13,7 +13,7 @@ urlpatterns = [
     url(
         regex=r'^(?P<business_id>[0-9]+)/locations/(?P<business_location_id>[0-9]+)',
         view=user_is_owner(BusinessLocationView.as_view()),
-        name='business_locations'
+        name='business_location'
     ),
     url(
         regex=r'^signup',

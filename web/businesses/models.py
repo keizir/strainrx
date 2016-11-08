@@ -60,8 +60,11 @@ class BusinessLocation(models.Model):
     state = models.CharField(max_length=50)
     zip_code = models.CharField(max_length=10)
 
-    phone = models.CharField(max_length=15)
+    phone = models.CharField(max_length=15, blank=True, null=True)
     ext = models.CharField(max_length=5, blank=True, null=True)
+
+    removed_by = models.CharField(max_length=20, blank=True, null=True)
+    removed_date = models.DateTimeField(blank=True, null=True)
 
     created_date = models.DateTimeField(auto_now_add=True)
 

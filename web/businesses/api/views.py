@@ -12,7 +12,7 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 
 from web.businesses.api.serializers import BusinessSignUpSerializer, BusinessLocationDetailSerializer
-from web.businesses.api.services import BusinessSignUpService
+from web.businesses.api.services import BusinessSignUpService, BusinessLocationService
 from web.businesses.emails import EmailService
 from web.businesses.models import Business, BusinessLocation
 from web.businesses.serializers import BusinessSerializer, BusinessLocationSerializer
@@ -85,38 +85,44 @@ class ResendConfirmationEmailView(LoginRequiredMixin, APIView):
 
 class BusinessLocationView(LoginRequiredMixin, APIView):
     def get(self, request, business_id, business_location_id):
+        if business_location_id == '0':
+            locations_raw = BusinessLocation.objects.filter(business__id=business_id, removed_date=None).order_by('id')
+            locations = []
+
+            for l in locations_raw:
+                serializer = BusinessLocationSerializer(l)
+                locations.append(serializer.data)
+
+            return Response({'locations': locations}, status=status.HTTP_200_OK)
+
         location = BusinessLocation.objects.get(pk=business_location_id)
         serializer = BusinessLocationSerializer(location)
         return Response({'location': serializer.data}, status=status.HTTP_200_OK)
 
     def post(self, request, business_id, business_location_id):
-        serializer = BusinessLocationDetailSerializer(data=request.data)
+        action = request.data.get('action')
+
+        if action and action == 'remove':
+            BusinessLocationService().remove_location(business_location_id, request.user.id)
+            return Response({}, status=status.HTTP_200_OK)
+
+        if action and action == 'update_locations':
+            to_update_locations = []
+
+            for l in request.data.get('locations'):
+                serializer = BusinessLocationSerializer(data=l)
+                serializer.is_valid(raise_exception=True)
+                to_update_locations.append({
+                    'location_id': l.get('id'),
+                    'data': serializer.validated_data
+                })
+
+            BusinessLocationService().update_locations(business_id, to_update_locations)
+            return Response({}, status=status.HTTP_200_OK)
+
+        existing_location = BusinessLocation.objects.get(pk=business_location_id)
+        serializer = BusinessLocationDetailSerializer(existing_location, data=request.data, partial=True)
         serializer.is_valid(raise_exception=True)
-        data = serializer.validated_data
-
-        business_location = BusinessLocation.objects.get(pk=business_location_id)
-        business_location.location_name = data.get('location_name')
-        business_location.manager_name = data.get('manager_name')
-        business_location.location_email = data.get('location_email')
-        business_location.dispensary = data.get('dispensary')
-        business_location.delivery = data.get('delivery')
-        business_location.phone = data.get('phone')
-        business_location.ext = data.get('ext')
-        business_location.mon_open = data.get('mon_open')
-        business_location.mon_close = data.get('mon_close')
-        business_location.tue_open = data.get('tue_open')
-        business_location.tue_close = data.get('tue_close')
-        business_location.wed_open = data.get('wed_open')
-        business_location.wed_close = data.get('wed_close')
-        business_location.thu_open = data.get('thu_open')
-        business_location.thu_close = data.get('thu_close')
-        business_location.fri_open = data.get('fri_open')
-        business_location.fri_close = data.get('fri_close')
-        business_location.sat_open = data.get('sat_open')
-        business_location.sat_close = data.get('sat_close')
-        business_location.sun_open = data.get('sun_open')
-        business_location.sun_close = data.get('sun_close')
-
-        business_location.save()
+        serializer.update(existing_location, serializer.validated_data)
 
         return Response({}, status=status.HTTP_200_OK)
