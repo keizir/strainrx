@@ -82,6 +82,7 @@ W.pages.business.BusinessLocations = Class.extend({
             }
 
             messageRegion.text('');
+            $('.common-error-messages').text('');
 
             $.each(this.locations, function (index) {
                 if (index === locationId.toString()) {
@@ -125,6 +126,7 @@ W.pages.business.BusinessLocations = Class.extend({
                 messageRegion = $('.error-message-{0}'.format(inputNameParts[1]));
 
             messageRegion.text('');
+            $('.common-error-messages').text('');
 
             $.each(this.locations, function (index) {
                 if (index === locationId.toString()) {
@@ -133,12 +135,10 @@ W.pages.business.BusinessLocations = Class.extend({
 
                     if (fieldName === 'dispensary') {
                         that.locations[index].dispensary = $input.is(':checked');
-                        messageRegion.text('');
                     }
 
                     if (fieldName === 'delivery') {
                         that.locations[index].delivery = $input.is(':checked');
-                        messageRegion.text('');
                         $('.slider-area-{0}'.format(locationId)).toggleClass('hidden', !that.locations[index].delivery);
                     }
 
@@ -176,7 +176,6 @@ W.pages.business.BusinessLocations = Class.extend({
             that.registerAllInputEvents($('.location-{0}'.format(locationClientId)).find('input'));
             that.clickRemoveLocation($('.btn-trash-{0}'.format(locationClientId)));
             that.addError(locationClientId, 'delivery__{0}'.format(locationClientId), 'Business type is required');
-            that.addError(locationClientId, 'dispensary__{0}'.format(locationClientId), 'Business type is required');
         });
     },
 
@@ -208,7 +207,7 @@ W.pages.business.BusinessLocations = Class.extend({
                     });
 
                     $('.error-message-{0}'.format(locationId)).html(locationError);
-                    $('.common-error-messages').text('Some locations has errors. Please, review your locations.');
+                    $('.common-error-messages').text('Some locations have errors');
                 });
                 return;
             }
