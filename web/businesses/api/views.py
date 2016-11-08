@@ -102,31 +102,28 @@ class BusinessLocationView(LoginRequiredMixin, APIView):
         return Response({'location': serializer.data}, status=status.HTTP_200_OK)
 
     def post(self, request, business_id, business_location_id):
-        action = request.data.get('action')
-
-        if action and action == 'remove':
-            BusinessLocationService().remove_location(business_location_id, request.user.id)
-            return Response({}, status=status.HTTP_200_OK)
-
-        if action and action == 'update_locations':
-            to_update_locations = []
-
-            for l in request.data.get('locations'):
-                serializer = BusinessLocationSerializer(data=l)
-                serializer.is_valid(raise_exception=True)
-                to_update_locations.append({
-                    'location_id': l.get('id'),
-                    'data': serializer.validated_data
-                })
-
-            BusinessLocationService().update_locations(business_id, to_update_locations)
-            return Response({}, status=status.HTTP_200_OK)
-
         existing_location = BusinessLocation.objects.get(pk=business_location_id)
         serializer = BusinessLocationDetailSerializer(existing_location, data=request.data, partial=True)
         serializer.is_valid(raise_exception=True)
         serializer.update(existing_location, serializer.validated_data)
+        return Response({}, status=status.HTTP_200_OK)
 
+    def put(self, request, business_id, business_location_id):
+        to_update_locations = []
+
+        for l in request.data.get('locations'):
+            serializer = BusinessLocationSerializer(data=l)
+            serializer.is_valid(raise_exception=True)
+            to_update_locations.append({
+                'location_id': l.get('id'),
+                'data': serializer.validated_data
+            })
+
+        BusinessLocationService().update_locations(business_id, to_update_locations)
+        return Response({}, status=status.HTTP_200_OK)
+
+    def delete(self, request, business_id, business_location_id):
+        BusinessLocationService().remove_location(business_location_id, request.user.id)
         return Response({}, status=status.HTTP_200_OK)
 
 

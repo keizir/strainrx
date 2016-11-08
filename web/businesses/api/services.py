@@ -110,6 +110,7 @@ class BusinessLocationService:
                 location.zip_code = data.get('zip_code')
                 location.delivery = data.get('delivery')
                 location.dispensary = data.get('dispensary')
+                location.delivery_radius = data.get('delivery_radius')
                 location.save()
             else:
                 business = Business.objects.get(pk=business_id)
@@ -121,7 +122,8 @@ class BusinessLocationService:
                     state=data.get('state'),
                     zip_code=data.get('zip_code'),
                     delivery=data.get('delivery'),
-                    dispensary=data.get('dispensary')
+                    dispensary=data.get('dispensary'),
+                    delivery_radius=data.get('delivery_radius')
                 )
                 location.save()
 

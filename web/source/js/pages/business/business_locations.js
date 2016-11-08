@@ -29,6 +29,7 @@ W.pages.business.BusinessLocations = Class.extend({
             $.each(locations, function (i, location) {
                 that.locations[location.id] = location;
                 that.regions.$locations.append(that.templates.$location({'l': location}));
+                that.prepareAndShowDeliveryDistanceSlider(location.id, location.delivery);
             });
 
             that.registerAllInputEvents($('input'));
@@ -125,8 +126,8 @@ W.pages.business.BusinessLocations = Class.extend({
                 locationId = inputNameParts[1],
                 messageRegion = $('.error-message-{0}'.format(inputNameParts[1]));
 
-            messageRegion.text('');
             $('.common-error-messages').text('');
+            messageRegion.text('');
 
             $.each(this.locations, function (index) {
                 if (index === locationId.toString()) {
@@ -139,7 +140,7 @@ W.pages.business.BusinessLocations = Class.extend({
 
                     if (fieldName === 'delivery') {
                         that.locations[index].delivery = $input.is(':checked');
-                        $('.slider-area-{0}'.format(locationId)).toggleClass('hidden', !that.locations[index].delivery);
+                        that.prepareAndShowDeliveryDistanceSlider(locationId, that.locations[index].delivery);
                     }
 
                     if (!that.locations[index].dispensary && !that.locations[index].delivery) {
@@ -149,6 +150,34 @@ W.pages.business.BusinessLocations = Class.extend({
                 }
             });
         }
+    },
+
+    prepareAndShowDeliveryDistanceSlider: function prepareAndShowDeliveryDistanceSlider(locationId, isDelivery) {
+        var $sliderArea = $('.slider-area-{0}'.format(locationId));
+        if (isDelivery) {
+            $sliderArea.removeClass('hidden');
+            this.showDeliveryDistanceSlider($sliderArea, locationId);
+        } else {
+            $sliderArea.addClass('hidden');
+        }
+    },
+
+    showDeliveryDistanceSlider: function showDeliveryDistanceSlider($sliderArea, locationId) {
+        var that = this,
+            $sliderValue = $sliderArea.find('.slider-value'),
+            $slider = $sliderArea.find('.slider-{0}'.format(locationId));
+        $slider.slider({
+            range: 'min',
+            value: that.locations[locationId].delivery_radius ? that.locations[locationId].delivery_radius : 5,
+            min: 5, max: 50, step: 0.5,
+            slide: function (event, ui) {
+                $sliderValue.text('{0} Miles'.format(ui.value));
+                that.locations[locationId].delivery_radius = ui.value;
+                that.ui.$btnAddLocation.addClass('hidden');
+                that.ui.$btnUpdateLocations.removeClass('hidden');
+            }
+        });
+        $sliderValue.text('{0} Miles'.format($slider.slider('value')));
     },
 
     clickAddLocation: function clickAddLocation() {
@@ -163,7 +192,7 @@ W.pages.business.BusinessLocations = Class.extend({
             that.locations[locationClientId] = {
                 location_name: null, manager_name: null, location_email: null,
                 phone: null, ext: null,
-                dispensary: false, delivery: false,
+                dispensary: false, delivery: false, delivery_radius: null,
                 mon_open: null, mon_close: null,
                 tue_open: null, tue_close: null,
                 wed_open: null, wed_close: null,
@@ -218,10 +247,10 @@ W.pages.business.BusinessLocations = Class.extend({
             });
 
             $.ajax({
-                method: 'POST',
+                method: 'PUT',
                 url: '/api/v1/businesses/{0}/locations/0'.format(that.ui.$businessId.val()),
                 dataType: 'json',
-                data: JSON.stringify({'action': 'update_locations', 'locations': locationsToSend}),
+                data: JSON.stringify({'locations': locationsToSend}),
                 success: function () {
                     that.ui.$btnAddLocation.removeClass('hidden');
                     that.ui.$btnUpdateLocations.addClass('hidden');
@@ -255,9 +284,8 @@ W.pages.business.BusinessLocations = Class.extend({
             $removeLocationDialog.find('.btn-remove').on('click', function () {
                 $removeLocationDialog.dialog('close');
                 $.ajax({
-                    method: 'POST',
+                    method: 'DELETE',
                     url: '/api/v1/businesses/{0}/locations/{1}'.format(that.ui.$businessId.val(), locationId),
-                    data: JSON.stringify({'action': 'remove'}),
                     success: function () {
                         that.showSuccessMessage('Location was removed');
                         window.location.reload();

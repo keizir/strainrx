@@ -77,6 +77,75 @@
                 cursor: pointer;
             }
 
+            .slider-area {
+                display: block;
+                position: relative;
+                width: 70%;
+                height: 5em;
+                margin: 0 auto;
+                color: $grey;
+
+                .slider-header {
+                    display: block;
+                    position: absolute;
+                    width: 100%;
+                    top: 0;
+
+                    .sub-title {
+                        display: inline-block;
+                        float: left;
+                        font-size: 80%;
+                    }
+
+                    .slider-value {
+                        display: inline-block;
+                        float: right;
+                        font-size: 1.5em;
+                        font-weight: bold;
+                    }
+                }
+
+                .slider {
+                    top: 2.5em;
+                    height: 0.3em;
+                    border: none;
+                    background: $grey-normal;
+                }
+
+                .ui-slider-range {
+                    background: $iris-blue;
+                }
+
+                .ui-slider-handle {
+                    height: 2em;
+                    width: 2em;
+                    border-color: $iris-blue;
+                    cursor: pointer;
+                    top: -0.68em;
+                    background: $iris-blue;
+                    outline: none;
+                }
+
+                .slider-footer {
+                    display: block;
+                    position: absolute;
+                    width: 100%;
+                    bottom: 0;
+
+                    .min-mile {
+                        display: inline-block;
+                        float: left;
+                        font-size: 80%;
+                    }
+
+                    .max-mile {
+                        display: inline-block;
+                        float: right;
+                        font-size: 80%;
+                    }
+                }
+            }
+
             .location-error {
                 margin: 2em 0;
                 font-weight: bold;
@@ -113,6 +182,11 @@
                     .fa-trash-o {
                         font-size: 4em;
                     }
+                }
+
+                .slider-area {
+                    width: 100%;
+                    margin: 0 auto;
                 }
 
                 .location-error {

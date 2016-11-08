@@ -59,14 +59,26 @@
         </div>
         <% if (!l.delivery) { %>
         <div class="form-field-group slider-area slider-area-<%= l.id %> hidden">
-            <div class="form-field">
-                <div class="slider slider-<%= l.id %>">slider</div>
+            <div class="slider-header">
+                <div class="sub-title">Delivery Radius</div>
+                <div class="slider-value"></div>
+            </div>
+            <div class="slider slider-<%= l.id %>"></div>
+            <div class="slider-footer">
+                <div class="min-mile">5 Miles</div>
+                <div class="max-mile">50 Miles</div>
             </div>
         </div>
         <% } else { %>
         <div class="form-field-group slider-area slider-area-<%= l.id %>">
-            <div class="form-field">
-                <div class="slider slider-<%= l.id %>">slider</div>
+            <div class="slider-header">
+                <div class="sub-title">Delivery Radius</div>
+                <div class="slider-value"></div>
+            </div>
+            <div class="slider slider-<%= l.id %>"></div>
+            <div class="slider-footer">
+                <div class="min-mile">5 Miles</div>
+                <div class="max-mile">50 Miles</div>
             </div>
         </div>
         <% } %>

@@ -52,6 +52,8 @@ class BusinessLocationDetailSerializer(serializers.Serializer):
     dispensary = serializers.BooleanField()
     delivery = serializers.BooleanField()
 
+    delivery_radius = serializers.FloatField(allow_null=True)
+
     mon_open = serializers.TimeField(format='%I:%M %p', input_formats=['%I:%M %p'], allow_null=True)
     mon_close = serializers.TimeField(format='%I:%M %p', input_formats=['%I:%M %p'], allow_null=True)
     tue_open = serializers.TimeField(format='%I:%M %p', input_formats=['%I:%M %p'], allow_null=True)
@@ -73,6 +75,7 @@ class BusinessLocationDetailSerializer(serializers.Serializer):
         instance.location_email = validated_data.get('location_email')
         instance.dispensary = validated_data.get('dispensary')
         instance.delivery = validated_data.get('delivery')
+        instance.delivery_radius = validated_data.get('delivery_radius')
         instance.phone = validated_data.get('phone')
         instance.ext = validated_data.get('ext')
         instance.mon_open = validated_data.get('mon_open')

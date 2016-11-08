@@ -56,6 +56,8 @@ class BusinessLocation(models.Model):
     delivery = models.BooleanField(default=False)
     grow_house = models.BooleanField(default=False)
 
+    delivery_radius = models.FloatField(max_length=10, blank=True, null=True)
+
     street1 = models.CharField(max_length=100)
     city = models.CharField(max_length=100)
     state = models.CharField(max_length=50)
