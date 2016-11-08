@@ -52,6 +52,18 @@
                         </div>
                         <div class="nav-menu-content">
                             {% if request.user.type == 'consumer' %}
+                                <div class="action blue-link">
+                                    <a class="nav-link" href="#">
+                                        Find Dispensaries</a>
+                                </div>
+                                <div class="action blue-link">
+                                    <a class="nav-link" href="{% url 'search:strain_wizard' %}">
+                                        Strain Recommendation</a>
+                                </div>
+                                <div class="action blue-link">
+                                    <a class="nav-link" href="{% url 'home' %}">
+                                        Strain Lookup</a>
+                                </div>
                                 <div class="action">
                                     <a class="nav-link" href="{% url 'account_logout' %}">Sign out</a>
                                 </div>

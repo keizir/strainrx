@@ -72,6 +72,7 @@
             img {
                 border-style: none;
                 width: 4em;
+                height: 4em;
                 padding: 0.25em;
             }
         }
@@ -123,6 +124,10 @@
 
             a {
                 color: $white;
+            }
+
+            .blue-link a {
+                color: $iris-blue;
             }
 
             .action {
@@ -282,6 +287,10 @@
 
                     a {
                         color: $white;
+                    }
+
+                    .blue-link a {
+                        color: $iris-blue;
                     }
                 }
             }
