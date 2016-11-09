@@ -79,6 +79,12 @@
                                     <a href="{% url 'businesses:detail' request.session.business.id %}"
                                        class="nav-link">Business Account</a>
                                 </div>
+                                {% if request.user.is_email_verified %}
+                                    <div class="action">
+                                        <a href="{% url 'users:detail' request.user.id %}"
+                                           class="nav-link">My Account</a>
+                                    </div>
+                                {% endif %}
                                 <div class="action">
                                     <a class="nav-link" href="{% url 'account_logout' %}">Sign out</a>
                                 </div>
