@@ -24,6 +24,11 @@ W.pages.business.BusinessMenu = Class.extend({
         this.changeLocation();
         this.addMenuItem();
 
+        $('input[name^="price_"]').on('change', function () {
+            var $input = $(this);
+            $input.val(parseFloat($input.val()).toFixed(2));
+        });
+
         $('input').on('focusin', function (e) {
             e.preventDefault();
             $('.error-message').text('');

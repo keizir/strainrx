@@ -74,8 +74,8 @@ W.pages.strain.StrainDetailPage = Class.extend({
     },
 
     recalculateSimilarStrainsSectionWidth: function recalculateSimilarStrainsSectionWidth() {
-        var $similar = $('.similar-wrapper'),
-            $inner = $('.similar-strains-wrapper'),
+        var $inner = $('.similar-strains-wrapper'),
+            $similar = $inner.find('.similar-wrapper'),
             maxWidth = 0;
 
         $.each($similar, function () {
@@ -85,7 +85,7 @@ W.pages.strain.StrainDetailPage = Class.extend({
             }
         });
 
-        $inner.css("width", maxWidth * $inner.find('.similar-wrapper').length);
+        $inner.css("width", maxWidth * 1.25 * $similar.length); // 1.25 coefficient to include padding to the width
     },
 
     initRating: function initRating() {

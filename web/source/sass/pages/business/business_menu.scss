@@ -17,6 +17,18 @@
             display: block;
             width: 100%;
 
+            .select {
+                display: inline-block;
+                width: 80%;
+
+                .fa-sort-desc {
+                    position: relative;
+                    font-size: 2em;
+                    color: $iris-blue;
+                    left: -1.2em;
+                }
+            }
+
             .form-field {
                 width: 100%;
                 margin: 0;
@@ -29,6 +41,7 @@
                 select {
                     display: inline-block;
                     width: 80%;
+                    cursor: pointer;
                 }
             }
         }
@@ -114,6 +127,10 @@
                     width: 30%;
                 }
 
+                .in-stock {
+                    text-align: center;
+                }
+
                 .actions {
                     width: 5%;
                 }
@@ -138,6 +155,8 @@
                 }
 
                 .in-stock {
+                    text-align: center;
+
                     label {
                         display: inline-block;
                     }
@@ -169,10 +188,10 @@
                     label > input:checked + span:before {
                         content: '\2713';
                         display: block;
-                        width: 1.2em;
+                        width: 0.9em;
                         height: 1.2em;
                         color: $avocado-green;
-                        margin-left: 0.11em;
+                        margin: 0 auto;
                     }
                 }
 
@@ -195,6 +214,18 @@
     @media (max-width: $screen-sm-min) {
         .menu-form {
             .location-field-group {
+                .select {
+                    display: inline-block;
+                    width: 70%;
+
+                    .fa-sort-desc {
+                        position: relative;
+                        font-size: 2em;
+                        color: $iris-blue;
+                        left: -1.2em;
+                    }
+                }
+
                 .form-field {
                     label {
                         width: 20%;
@@ -202,7 +233,7 @@
 
                     select {
                         display: inline-block;
-                        width: 70%;
+                        width: 90%;
                     }
                 }
             }
@@ -234,6 +265,18 @@
     @media (max-width: $screen-xs-max) {
         .menu-form {
             .location-field-group {
+                .select {
+                    display: inline-block;
+                    width: 77%;
+
+                    .fa-sort-desc {
+                        position: relative;
+                        font-size: 2em;
+                        color: $iris-blue;
+                        left: -1.2em;
+                    }
+                }
+
                 .form-field {
                     label {
                         width: 20%;
@@ -241,7 +284,7 @@
 
                     select {
                         display: inline-block;
-                        width: 77%;
+                        width: 90%;
                     }
                 }
             }

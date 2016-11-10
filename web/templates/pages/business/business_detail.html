@@ -9,11 +9,14 @@
         <div class="form-field-group">
             <div class="form-field">
                 <label for="locations">Address:</label>
-                <select class="location-select" id="locations">
-                    {% for l in locations %}
-                        <option value="{{ l.id }}">{{ l.street1 }}, {{ l.city }}, {{ l.state }} {{ l.zip_code }}</option>
-                    {% endfor %}
-                </select>
+                <div class="select">
+                    <select class="location-select" id="locations">
+                        {% for l in locations %}
+                            <option value="{{ l.id }}">{{ l.street1 }}, {{ l.city }}, {{ l.state }} {{ l.zip_code }}</option>
+                        {% endfor %}
+                    </select>
+                    <i class="fa fa-sort-desc" aria-hidden="true"></i>
+                </div>
             </div>
         </div>
         <div class="form-field-group">
@@ -32,7 +35,8 @@
         <div class="form-field-group">
             <div class="form-field">
                 <label for="location_email">Email:</label>
-                <input type="text" name="location_email" id="location_email" value="{{ locations.first.location_email }}">
+                <input type="text" name="location_email" id="location_email"
+                       value="{{ locations.first.location_email }}">
             </div>
         </div>
         <div class="form-field-group phone-field-group">

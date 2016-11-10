@@ -25,7 +25,7 @@
                     </div>
                 </div>
                 <div class="business-info">
-                    <h2>{{ request.session.business.name }}</h2>
+                    <h2>{{ locations.first.location_name }}</h2>
                     {% if locations.first.dispensary and locations.first.delivery %}
                         <span class="location-type">Dispensary, Delivery</span>
                     {% elif locations.first.dispensary %}
