@@ -74,3 +74,12 @@ class BusinessLocationsView(TemplateView):
 class BusinessDispensaryInfoView(TemplateView):
     template_name = 'pages/business/dispensary_info.html'
 
+    def get_context_data(self, **kwargs):
+        context = super(BusinessDispensaryInfoView, self).get_context_data(**kwargs)
+        business = Business.objects.get(pk=kwargs.get('business_id'))
+        context['business'] = business
+        context['businesslocation'] = BusinessLocation.objects.filter(business=business, removed_date=None).order_by('id')
+        context['tab'] = 'dispensary_info'
+        return context
+
+

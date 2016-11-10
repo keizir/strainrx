@@ -37,15 +37,16 @@
                 <div class="header-right mobile">
                    <!--  Contains main Happy Leaf Collective Heading -->
                     <div class="happy-leaf-main-heading mobile">
-                        <h1 id="main-heading" >Happy Leaf Collective</h1>
+                        <h1 id="main-heading"> {{ business.name }} </h1>
                         <i class="fa fa-heart" aria-hidden="true" id="heart"></i>
                     </div>
 
                     <div class="store-info mobile">
-                        <p id="store-address">342342 Maryjane Blvd. Ste. 420, Los Angeles, Ca 90025</p>
+                        <p id="store-address"> {{ businesslocation.first.street1 }} {{ businesslocation.first.city }}
+                            {{ businesslocation.first.state }}, {{ businesslocation.first.zip_code }} </p>
                             <div id="phone-container">
                                 <i class="fa fa-phone" aria-hidden="true"></i>
-                                <p id="store-phone">Ph:310-111-2222</p>
+                                <p id="store-phone"> {{ businesslocation.first.phone }} </p>
                             </div>
                             <div id="delivery-container">
                                 <i class="fa fa-truck" aria-hidden="true"></i>
@@ -70,13 +71,13 @@
                         <div id="hours-container">
                             <ul>
                                 <li id="hour-fix">Closed Now</li>
-                                <li class="sched-fixer">9AM - 6PM</li>
-                                <li>9AM - 6PM</li>
-                                <li>9AM - 6PM</li>
-                                <li>9AM - 6PM</li>
-                                <li>9AM - 6PM</li>
-                                <li>10AM - 5PM</li>
-                                <li>Closed</li>
+                                <li class="sched-fixer"> {{ businesslocation.first.tue_open }} - {{ businesslocation.first.tue_close }}</li>
+                                <li> {{ businesslocation.first.wed_open }} - {{ businesslocation.first.wed_close }}</li>
+                                <li> {{ businesslocation.first.thu_open }} - {{ businesslocation.first.thu_close }}</li>
+                                <li> {{ businesslocation.first.fri_open }} - {{ businesslocation.first.fri_close }}</li>
+                                <li> {{ businesslocation.first.sat_open }} - {{ businesslocation.first.sat_close }}</li>
+                                <li> {{ businesslocation.first.sun_open }} - {{ businesslocation.first.sun_close }}</li>
+                                <li> {{ businesslocation.first.mon_open }} - {{ businesslocation.first.mon_close }}</li>
                             </ul>
                         </div>
 
