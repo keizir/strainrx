@@ -293,7 +293,7 @@
 
             .effect {
                 display: inline-block;
-                width: 90%;
+                width: 89%;
                 height: 2em;
                 background-color: $white-smoke;
             }
@@ -325,15 +325,46 @@
             }
         }
 
-        .strain-similar .similar-wrapper {
-            display: inline-block;
-            padding: 2em;
-            border: 1px solid $grey-light;
-            margin-bottom: 0.25em;
-        }
+        .strain-similar {
+            .also-like-strains-wrapper {
+                overflow: scroll;
+                width: 100%;
 
-        .strain-similar .similar-wrapper span {
-            display: block;
+                .similar-strains-wrapper {
+                    width: 10000px;
+
+                    .similar-wrapper {
+                        display: inline-block;
+                        padding: 0.5em;
+                        border: 1px solid $grey-light;
+                        margin-bottom: 0.25em;
+
+                        .name {
+                            font-weight: bold;
+                            font-size: 0.9em;
+
+                            .image {
+                                margin-bottom: 0.5em;
+                                width: 100%;
+
+                                img {
+                                    display: block;
+                                    height: 100%;
+                                    max-height: 7em;
+                                    max-width: 100%;
+                                    margin: 0 auto;
+                                }
+                            }
+                        }
+
+                        .variety {
+                            color: $grey-normal;
+                            font-size: 0.8em;
+                            margin-top: 0.5em;
+                        }
+                    }
+                }
+            }
         }
 
         .strain-reviews .section-header span {
@@ -446,7 +477,7 @@
 
         .strain-flavors-section .flavor-wrapper {
             display: inline-block;
-            width: 33%;
+            width: 32%;
             height: 10em;
             border: 1px solid $grey-light;
             margin-right: -1px;

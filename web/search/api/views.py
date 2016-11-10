@@ -6,6 +6,7 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 
 from web.search.api.serializers import SearchCriteriaSerializer
+from web.search.api.services import StrainDetailsService
 from web.search.es_service import SearchElasticService
 from web.search.models import Strain, StrainImage, Effect
 
@@ -92,6 +93,12 @@ class StrainUploadImageView(LoginRequiredMixin, APIView):
         image.save()
 
         return Response({}, status=status.HTTP_200_OK)
+
+
+class StrainDetailsView(LoginRequiredMixin, APIView):
+    def get(self, request, strain_id):
+        details = StrainDetailsService().build_strain_details(strain_id, request.user)
+        return Response(details, status=status.HTTP_200_OK)
 
 
 class StrainEffectView(LoginRequiredMixin, APIView):

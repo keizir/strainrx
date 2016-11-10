@@ -5,7 +5,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.generic import TemplateView
 
 from web.search.es_service import SearchElasticService
-from web.search.models import Strain, StrainImage
+from web.search.models import Strain
 
 
 class StrainSearchWizardView(LoginRequiredMixin, TemplateView):
@@ -38,29 +38,6 @@ class StrainDetailView(LoginRequiredMixin, TemplateView):
     def get_context_data(self, **kwargs):
         slug_name = kwargs.get('slug_name')
         strain = Strain.objects.get(strain_slug=slug_name)
-        image = StrainImage.objects.filter(strain=strain)[:1]
-
         context = super(StrainDetailView, self).get_context_data(**kwargs)
-        context['strain'] = strain
-        context['strain_image'] = image[0] if image else None
-        context['strain_rating'] = 4.5  # TODO check strain overall rating
-        context['favorite'] = True  # TODO check user's favorites
-
-        dispensaries = []
-
-        for num in range(0, 5):
-            dispensaries.append({
-                'id': num,
-                'name': 'The Green Shop',
-                'rating': 4.6,
-                'distance': 1.3,
-                'price': {
-                    'gram': 100.00,
-                    'eight': 20.00,
-                    'quarter': 30.00,
-                    'half': 54.98
-                }
-            })
-
-        context['dispensaries'] = dispensaries
+        context['strain_id'] = strain.id
         return context

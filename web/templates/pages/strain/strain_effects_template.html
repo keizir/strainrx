@@ -1,0 +1,30 @@
+<script type="x/srx-template" id="strain_effects">
+    <div class="effects-wrapper">
+        <% if (effects && effects.length > 0) { %>
+        <% _.each(effects, function(effect) { %>
+        <div class="effect-wrapper">
+            <span class="effect-name"><%= effect.name %></span>
+            <div class="effect">
+                <% if (effect.value >= 5) { %>
+                <span class="fill fill-5"></span>
+                <% } %>
+                <% if (effect.value === 4) { %>
+                <span class="fill fill-4"></span>
+                <% } %>
+                <% if (effect.value === 3) { %>
+                <span class="fill fill-3"></span>
+                <% } %>
+                <% if (effect.value === 2) { %>
+                <span class="fill fill-2"></span>
+                <% } %>
+                <% if (effect.value === 1) { %>
+                <span class="fill fill-1"></span>
+                <% } %>
+            </div>
+        </div>
+        <% }); %>
+        <% } else { %>
+        <div class="effect-wrapper">None</div>
+        <% } %>
+    </div>
+</script>

@@ -14,6 +14,11 @@ urlpatterns = [
         name='upload_strain_image'
     ),
     url(
+        regex=r'^strain/(?P<strain_id>[0-9]+)/details',
+        view=StrainDetailsView.as_view(),
+        name='strain_details'
+    ),
+    url(
         regex=r'^strain/like',
         view=StrainLikeView.as_view(),
         name='strain_like'

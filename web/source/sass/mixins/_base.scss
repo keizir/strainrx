@@ -60,6 +60,10 @@ button {
 
 .strains-wrapper {
     height: 100%;
+
+    .main-region {
+        min-height: 25em
+    }
 }
 
 .container {
@@ -386,5 +390,15 @@ fieldset {
 @media (min-width: $screen-xl-min) {
     html, body {
         font-size: 19px;
+    }
+}
+
+@media (min-width: $screen-xxl-min) {
+    html, body {
+        font-size: 19px;
+    }
+
+    .container {
+        max-width: 1600px;
     }
 }

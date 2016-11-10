@@ -1,8 +1,8 @@
 'use strict';
 
-W.ns('W.pages');
+W.ns('W.pages.strain');
 
-W.pages.StrainDetailPage = Class.extend({
+W.pages.strain.StrainDetailPage = Class.extend({
 
     effectNames: W.common.Constants.effectNames,
     benefitNames: W.common.Constants.benefitNames,
@@ -10,42 +10,88 @@ W.pages.StrainDetailPage = Class.extend({
     flavorsNames: W.common.Constants.flavors,
 
     ui: {
-        $strainId: $('.strain-id'),
-        $strainRatingStars: $('.strain-rating-stars'),
-        $strainLike: $('.strain-like'),
-
-        $effectsRegion: $('.effects-region'),
-        $benefitsRegion: $('.benefits-region'),
-        $sideEffectsRegion: $('.side-effects-region'),
-        $flavorsRegion: $('.flavors-region'),
-
-        $addPhotoLink: $('.add-photo-link'),
-
-        $menuExpander: $('.menu-expander'),
-        $menuLocations: $('.locations'),
-        $menuFilter: $('.filter-menu'),
-        $menuLink: $('.menu-link'),
-        $priceExpander: $('.price-expander')
+        $strainId: $('.strain-id')
     },
 
     init: function init() {
-        this.initRating();
+        var that = this;
+        this.retrieveStrain(function (strain_data) {
+            if (strain_data) {
+                that.model = new W.common.Model(strain_data);
+                that.renderStrainDetails();
 
-        this.strainLikeHover();
-        this.strainLikeClick();
+                $(window).resize(function () {
+                    that.recalculateSimilarStrainsSectionWidth();
+                });
+            }
+        });
+    },
+
+    retrieveStrain: function retrieveStrain(success) {
+        $.ajax({
+            method: 'GET',
+            url: '/api/v1/search/strain/{0}/details'.format(this.ui.$strainId.val()),
+            success: function (data) {
+                success(data);
+            }
+        });
+    },
+
+    renderStrainDetails: function renderStrainDetails() {
+        var template = _.template($('#strain_details_page').html());
+        $('.strain-detail-wrapper').append(template({
+            'model': this.model.getData(),
+            'abbreviateStrainName': abbreviateStrainName
+        }));
+
+        function abbreviateStrainName(strainName) {
+            var words = strainName.split(' '),
+                abbreviation = '';
+
+            if (words && words.length == 1) {
+                abbreviation = words[0].substr(0, 2);
+            } else {
+                for (var i = 0; i < words.length; i++) {
+                    abbreviation += words[i].substr(0, 1).toUpperCase();
+                }
+            }
+
+            return abbreviation;
+        }
 
         this.populateEffects();
         this.populateBenefits();
         this.populateSideEffects();
         this.populateFlavors();
 
+        this.initRating();
+        this.strainFavoriteHover();
+        this.strainFavoriteClick();
+
         this.uploadPhotoListener();
         this.buildLocationsMenu();
+        this.recalculateSimilarStrainsSectionWidth();
+    },
+
+    recalculateSimilarStrainsSectionWidth: function recalculateSimilarStrainsSectionWidth() {
+        var $similar = $('.similar-wrapper'),
+            $inner = $('.similar-strains-wrapper'),
+            maxWidth = 0;
+
+        $.each($similar, function () {
+            var width = $(this).width();
+            if (width > maxWidth) {
+                maxWidth = width;
+            }
+        });
+
+        $inner.css("width", maxWidth * $inner.find('.similar-wrapper').length);
     },
 
     initRating: function initRating() {
-        var value = this.ui.$strainRatingStars.text();
-        this.ui.$strainRatingStars.rateYo({
+        var $strainRatingStars = $('.strain-rating-stars'),
+            value = $strainRatingStars.text();
+        $strainRatingStars.rateYo({
             rating: value,
             readOnly: true,
             spacing: '1px',
@@ -55,8 +101,10 @@ W.pages.StrainDetailPage = Class.extend({
         });
     },
 
-    strainLikeHover: function strainLikeHover() {
-        this.ui.$strainLike.mouseenter(function () {
+    strainFavoriteHover: function strainFavoriteHover() {
+        var $strainLike = $('.strain-like');
+
+        $strainLike.mouseenter(function () {
             var $el = $(this);
             if (!$el.hasClass('active')) {
                 $el.removeClass('fa-heart-o');
@@ -65,7 +113,7 @@ W.pages.StrainDetailPage = Class.extend({
             }
         });
 
-        this.ui.$strainLike.mouseleave(function () {
+        $strainLike.mouseleave(function () {
             var $el = $(this);
             if (!$el.hasClass('active')) {
                 $el.addClass('fa-heart-o');
@@ -75,10 +123,11 @@ W.pages.StrainDetailPage = Class.extend({
         });
     },
 
-    strainLikeClick: function strainLikeClick() {
-        var that = this;
+    strainFavoriteClick: function strainFavoriteClick() {
+        var that = this,
+            $strainLike = $('.strain-like');
 
-        this.ui.$strainLike.on('click', function () {
+        $strainLike.on('click', function () {
             var $el = $(this);
             if ($el.hasClass('active')) {
                 that.likeStrain({
@@ -118,13 +167,9 @@ W.pages.StrainDetailPage = Class.extend({
 
     populateEffects: function populateEffects() {
         var that = this,
-            effectsJsonString = this.ui.$effectsRegion.text().replace(/'/g, '\"'),
-            effectsJson = JSON.parse(effectsJsonString),
             effectsToDisplay = [];
 
-        this.ui.$effectsRegion.text('');
-
-        $.each(effectsJson, function (name, value) {
+        $.each(this.model.get('strain').effects, function (name, value) {
             if (value > 0) {
                 effectsToDisplay.push({
                     name: that.effectNames[name],
@@ -134,18 +179,14 @@ W.pages.StrainDetailPage = Class.extend({
         });
 
         effectsToDisplay.sort(this.sortValues);
-        this.ui.$effectsRegion.append(this.effectHtml(effectsToDisplay));
+        $('.effects-region').append(this.effectHtml(effectsToDisplay));
     },
 
     populateBenefits: function populateBenefits() {
         var that = this,
-            benefitsJsonString = this.ui.$benefitsRegion.text().replace(/'/g, '\"'),
-            benefitsJson = JSON.parse(benefitsJsonString),
             benefitsToDisplay = [];
 
-        this.ui.$benefitsRegion.text('');
-
-        $.each(benefitsJson, function (name, value) {
+        $.each(this.model.get('strain').benefits, function (name, value) {
             if (value > 0) {
                 benefitsToDisplay.push({
                     name: that.benefitNames[name],
@@ -155,18 +196,14 @@ W.pages.StrainDetailPage = Class.extend({
         });
 
         benefitsToDisplay.sort(this.sortValues);
-        this.ui.$benefitsRegion.append(this.effectHtml(benefitsToDisplay));
+        $('.benefits-region').append(this.effectHtml(benefitsToDisplay));
     },
 
     populateSideEffects: function populateSideEffects() {
         var that = this,
-            sideEffectsJsonString = this.ui.$sideEffectsRegion.text().replace(/'/g, '\"'),
-            sideEffectsJson = JSON.parse(sideEffectsJsonString),
             sideEffectsToDisplay = [];
 
-        this.ui.$sideEffectsRegion.text('');
-
-        $.each(sideEffectsJson, function (name, value) {
+        $.each(this.model.get('strain').side_effects, function (name, value) {
             if (value > 0) {
                 sideEffectsToDisplay.push({
                     name: that.sideEffectNames[name],
@@ -176,18 +213,14 @@ W.pages.StrainDetailPage = Class.extend({
         });
 
         sideEffectsToDisplay.sort(this.sortValues);
-        this.ui.$sideEffectsRegion.append(this.sideEffectHtml(sideEffectsToDisplay));
+        $('.side-effects-region').append(this.sideEffectHtml(sideEffectsToDisplay));
     },
 
     populateFlavors: function populateFlavors() {
         var that = this,
-            flavorsJsonString = this.ui.$flavorsRegion.text().replace(/'/g, '\"'),
-            flavorsJson = JSON.parse(flavorsJsonString),
             flavorsToDisplay = [];
 
-        this.ui.$flavorsRegion.text('');
-
-        $.each(flavorsJson, function (name, value) {
+        $.each(this.model.get('strain').flavor, function (name, value) {
             if (value > 0) {
                 var flavor = that.flavorsNames[name];
                 flavorsToDisplay.push({
@@ -199,7 +232,7 @@ W.pages.StrainDetailPage = Class.extend({
         });
 
         flavorsToDisplay.sort(this.sortValues);
-        this.ui.$flavorsRegion.append(this.flavorsHtml(flavorsToDisplay));
+        $('.flavors-region').append(this.flavorsHtml(flavorsToDisplay));
     },
 
     sortValues: function sortValues(el1, el2) {
@@ -209,95 +242,23 @@ W.pages.StrainDetailPage = Class.extend({
     },
 
     effectHtml: function effectHtml(toDisplay) {
-        var effectHtml = '<div class="effects-wrapper">';
-
-        $.each(toDisplay, function (index, effect) {
-            effectHtml += '<div class="effect-wrapper">';
-            effectHtml += '<span class="effect-name">' + effect.name + '</span>';
-            effectHtml += '<div class="effect">';
-
-            if (effect.value >= 5) {
-                effectHtml += '<span class="fill fill-5"></span>';
-            }
-
-            if (effect.value === 4) {
-                effectHtml += '<span class="fill fill-4"></span>';
-            }
-
-            if (effect.value === 3) {
-                effectHtml += '<span class="fill fill-3"></span>';
-            }
-
-            if (effect.value === 2) {
-                effectHtml += '<span class="fill fill-2"></span>';
-            }
-
-            if (effect.value === 1) {
-                effectHtml += '<span class="fill fill-1"></span>';
-            }
-
-            effectHtml += '</div></div>';
-        });
-
-        effectHtml += '</div>';
-        return effectHtml;
+        var template = _.template($('#strain_effects').html());
+        return template({'effects': toDisplay});
     },
 
     sideEffectHtml: function sideEffectHtml(toDisplay) {
-        var effectHtml = '<div class="effects-wrapper">';
-
-        $.each(toDisplay, function (index, effect) {
-            effectHtml += '<div class="effect-wrapper">';
-            effectHtml += '<span class="effect-name">' + effect.name + '</span>';
-            effectHtml += '<div class="effect">';
-
-            if (effect.value === 10) {
-                effectHtml += '<span class="fill fill-5"></span>';
-            }
-
-            if (effect.value === 9) {
-                effectHtml += '<span class="fill fill-4"></span>';
-            }
-
-            if (effect.value === 8) {
-                effectHtml += '<span class="fill fill-3"></span>';
-            }
-
-            if (effect.value === 7) {
-                effectHtml += '<span class="fill fill-2"></span>';
-            }
-
-            if (effect.value === 6) {
-                effectHtml += '<span class="fill fill-1"></span>';
-            }
-
-            effectHtml += '</div></div>';
-        });
-
-        effectHtml += '</div>';
-        return effectHtml;
+        var template = _.template($('#strain_side_effects').html());
+        return template({'effects': toDisplay});
     },
 
     flavorsHtml: function flavorsHtml(toDisplay) {
-        var html = '<div class="flavors-wrapper">';
-
-        $.each(toDisplay, function (index, flavor) {
-            html += '<div class="flavor-wrapper">';
-            html += '<div class="flavor">';
-            html += flavor.img;
-            html += '</div>';
-            html += '<span class="flavor-name">' + flavor.name + '</span>';
-            html += '</div>';
-        });
-
-        html += '</div>';
-        return html;
+        var template = _.template($('#strain_flavors').html());
+        return template({'flavors': toDisplay});
     },
 
     uploadPhotoListener: function uploadPhotoListener() {
         var that = this;
-
-        this.ui.$addPhotoLink.on('click', function (e) {
+        $('.add-photo-link').on('click', function (e) {
             e.preventDefault();
             W.common.Dialog($('.upload-image-dialog'));
 
@@ -330,26 +291,29 @@ W.pages.StrainDetailPage = Class.extend({
     },
 
     buildLocationsMenu: function buildLocationsMenu() {
-        var that = this;
+        var $menuExpander = $('.menu-expander'),
+            $menuLocations = $('.locations'),
+            $menuFilter = $('.filter-menu'),
+            $menuLink = $('.menu-link'),
+            $priceExpander = $('.price-expander');
 
-        that.ui.$menuExpander.on('click', function () {
-            that.ui.$menuLocations.toggleClass('hidden');
-            that.ui.$menuFilter.toggleClass('expanded');
+        $menuExpander.on('click', function () {
+            $menuLocations.toggleClass('hidden');
+            $menuFilter.toggleClass('expanded');
         });
 
-        that.ui.$menuFilter.mouseleave(function () {
-            that.ui.$menuLocations.addClass('hidden');
-            that.ui.$menuFilter.removeClass('expanded');
+        $menuFilter.mouseleave(function () {
+            $menuLocations.addClass('hidden');
+            $menuFilter.removeClass('expanded');
         });
 
-        that.ui.$menuLink.on('click', function (e) {
+        $menuLink.on('click', function (e) {
             e.preventDefault();
-            that.ui.$menuActiveLink.text($(this).find('a').text());
-            that.ui.$menuFilter.removeClass('expanded');
-            that.ui.$menuLocations.addClass('hidden');
+            $menuFilter.removeClass('expanded');
+            $menuLocations.addClass('hidden');
         });
 
-        that.ui.$priceExpander.on('click', function () {
+        $priceExpander.on('click', function () {
             $('.prices-wrapper').toggleClass('hidden');
         });
 

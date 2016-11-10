@@ -2,6 +2,7 @@ from __future__ import unicode_literals, absolute_import
 
 import os
 from datetime import datetime
+from json import loads, dumps
 from uuid import uuid4
 
 from django.contrib.postgres.fields import JSONField
@@ -71,6 +72,21 @@ class Strain(models.Model):
             self.strain_slug = '{0}-{1}'.format(slugify(self.name), slugify(self.category))
         super(Strain, self).save(*args, **kwargs)
 
+    def to_search_criteria(self):
+        return {
+            'strain_types': [self.variety],
+            'effects': self.build_criteria_effects(self.effects),
+            'benefits': self.build_criteria_effects(self.benefits),
+            'side_effects': self.build_criteria_effects(self.side_effects)
+        }
+
+    def build_criteria_effects(self, effects_object):
+        effects = []
+        json = loads(dumps(effects_object))
+        for key in json:
+            effects.append({'name': key, 'value': json[key]})
+        return effects
+
     def __str__(self):
         return '{0} - {1}'.format(self.name, self.category)
 
@@ -129,6 +145,14 @@ class UserSearch(models.Model):
     side_effects = JSONField(max_length=1000)
 
     last_modified_date = models.DateTimeField(auto_now=True)
+
+    def to_search_criteria(self):
+        return {
+            'strain_types': self.varieties,
+            'effects': self.effects,
+            'benefits': self.benefits,
+            'side_effects': self.side_effects
+        }
 
     def __str__(self):
         return '{0} - {1}'.format(self.user, self.last_modified_date)

@@ -3,7 +3,7 @@
 {% load staticfiles i18n %}
 {% load search_template_tags %}
 
-{% block title %}Detail{% endblock %}
+{% block title %}Strain Detail{% endblock %}
 
 {% block css %}
     {{ block.super }}
@@ -13,219 +13,24 @@
 {% block content %}
     <div class="container">
         <div class="strain-detail-wrapper">
-            <input type="hidden" class="strain-id" value="{{ strain.id }}"/>
-            <div class="detail-section">
-                <div class="detail-header">
-                    <div class="row">
-                        <div class="strain-data">
-                            <span class="strain-name">{{ strain.name }}</span>
-                            <span class="strain-like-wrapper">
-                                {% if favorite %}
-                                    <i class="strain-like heart-active active fa fa-heart fa-2x" aria-hidden="true"></i>
-                                {% else %}
-                                    <i class="strain-like fa fa-heart-o fa-2x" aria-hidden="true"></i>
-                                {% endif %}
-                            </span>
-                            <div class="rating-row">
-                                <span class="strain-rating-stars">{{ strain_rating }}</span>
-                                <span class="strain-rating">({{ strain_rating }})</span>
-                                <span class="separator"></span>
-                                <span class="rate-link"><a href="#">Rate</a></span>
-                            </div>
-                        </div>
-                        <div class="social-icons">
-                            <span class="social-fb">
-                                <a href="#">
-                                    <i class="fa fa-facebook-square fa-2x" aria-hidden="true"></i>
-                                </a>
-                            </span>
-                            <span class="social-google">
-                                <a href="#">
-                                    <i class="fa fa-google-plus-square fa-2x" aria-hidden="true"></i>
-                                </a>
-                            </span>
-                            <span class="social-twitter">
-                                <a href="#">
-                                    <i class="fa fa-twitter-square fa-2x" aria-hidden="true"></i>
-                                </a>
-                            </span>
-                        </div>
-                    </div>
-                    <div class="row second-row">
-                        <div class="photo-controls">
-                            <span class="view-photos">
-                                <a href="#">View Photos</a>
-                            </span>
-                            <span class="separator"></span>
-                            <span>
-                                <a href="#" class="add-photo-link">+ Add Photo</a>
-                            </span>
-                        </div>
-                        <div class="location-controls">
-                            <div class="filter-menu">
-                                <div class="active-link">
-                                    <span class="menu-active-link">
-                                        <a href="#"><b>AVAILABLE</b> at these locations</a>
-                                    </span>
-                                    <span class="menu-expander">
-                                        <i class="fa fa-caret-down" aria-hidden="true"></i>
-                                    </span>
-                                </div>
-                                <div class="locations hidden">
-                                    <div class="location-header">
-                                        <span class="col-1"></span>
-                                        <span class="col-2"></span>
-                                        <span class="col-3">Distance</span>
-                                        <span class="col-4">
-                                            Price <i class="fa fa-caret-down price-expander" aria-hidden="true"></i>
-                                        </span>
-                                        <span class="col-5"></span>
-                                        <span class="prices-wrapper hidden">
-                                            <span class="price" id="gram">Gram</span>
-                                            <span class="price" id="eight">Eight</span>
-                                            <span class="price" id="quarter">Quarter</span>
-                                            <span class="price" id="half">Half</span>
-                                        </span>
-                                    </div>
-                                    {% for d in dispensaries %}
-                                        <div class="dispensary">
-                                            <span class="col-1">
-                                                <a href="#">{{ d.name }}</a>
-                                            </span>
-                                            <span class="col-2 dispensary-rating">{{ d.rating }}</span>
-                                            <span class="col-3">({{ d.distance }} mi)</span>
-                                            <span class="col-4 price-values">
-                                                <span class="price-value active" id="gram">${{ d.price.gram }}</span>
-                                                <span class="price-value" id="eight">${{ d.price.eight }}</span>
-                                                <span class="price-value" id="quarter">${{ d.price.quarter }}</span>
-                                                <span class="price-value" id="half">${{ d.price.half }}</span>
-                                            </span>
-                                            <span class="col-5">
-                                                <i class="fa fa-2x fa-map-marker location-marker"
-                                                   aria-hidden="true"></i>
-                                                <i class="fa fa-2x fa-truck truck-marker" aria-hidden="true"></i>
-                                            </span>
-                                        </div>
-                                    {% endfor %}
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="detail-section info-image-section">
-                <div class="strain-photo-wrapper">
-                    {% if strain_image %}
-                        <img src="{{ strain_image.image.url }}" alt="Strain Image"/>
-                    {% else %}
-                        <img src="{% static 'images/weed_small.jpg' %}" alt="Strain Image"/>
-                    {% endif %}
-                </div>
-                <div class="strain-info-wrapper">
-                    <div class="popularity-wrapper">
-                        <span class="title">Popularity</span>
-                        <h1>A</h1>
-                    </div>
-                    <div class="match-score-wrapper">
-                        <span class="title">Match Score</span>
-                        <span class="score-value">90</span>
-                        <span class="percent-sign">%</span>
-                    </div>
-                </div>
-            </div>
-            {% if strain.about %}
-                <div class="detail-section">
-                    <div class="strain-about">
-                        <span class="section-header">A Dream To Smoke</span>
-                        <span class="about">{{ strain.about }}</span>
-                    </div>
-                </div>
-            {% endif %}
-            <div class="detail-section">
-                <div class="strain-effects">
-                    <span class="section-header">
-                        <span class="title">Positive Effects</span>
-                        <span class="disagree-link"><a href="#">Disagree?</a></span>
-                    </span>
-                    <span class="effects-region">{{ strain.effects }}</span>
-                </div>
-            </div>
-            <div class="detail-section">
-                <div class="strain-benefits">
-                    <span class="section-header">
-                        <span class="title">Medical Benefits</span>
-                        <span class="disagree-link"><a href="#">Disagree?</a></span>
-                    </span>
-                    <span class="benefits-region">{{ strain.benefits }}</span>
-                </div>
-            </div>
-            <div class="detail-section">
-                <div class="strain-side-effects">
-                    <span class="section-header">
-                        <span class="title">Negative Effects</span>
-                        <span class="disagree-link"><a href="#">Disagree?</a></span>
-                    </span>
-                    <span class="side-effects-region">{{ strain.side_effects }}</span>
-                </div>
-            </div>
-            <div class="detail-section">
-                <div class="strain-similar">
-                    <span class="section-header">
-                        <span class="title">You may also like</span>
-                    </span>
-                    {% for s in strain.origins.all %}
-                        <div class="similar-wrapper">
-                            <span>
-                                <a href="{% url 'search:strain_detail' slug_name=s.strain_slug %}">{{ s.name }}</a>
-                            </span>
-                            <span>{{ s.variety }}</span>
-                        </div>
-                    {% endfor %}
-                </div>
-            </div>
-            <div class="detail-section">
-                <div class="strain-reviews">
-                    <span class="section-header">
-                        <span class="title">{{ strain.name }} Reviews</span>
-                        <span class="all-reviews-link-wrapper"><a href="#">View All Reviews</a></span>
-                    </span>
-                    <span>... reviews goes here ...</span>
-                </div>
-            </div>
-            <div class="detail-section">
-                {% if strain.origins.all %}
-                    <div class="strain-lineage-section">
-                    <span class="section-header">
-                        <span class="title">Lineage</span>
-                    </span>
-                        <div class="lineage-region">
-                            {% for s in strain.origins.all|slice:"5" %}
-                                <a href="{% url 'search:strain_detail' slug_name=s.strain_slug %}">
-                                    <div class="lineage-wrapper">
-                                        <span class="abbreviation">{% abbreviate_strain_name s.name %}</span>
-                                        <span class="name">{{ s.name }}</span>
-                                    </div>
-                                </a>
-                            {% endfor %}
-                        </div>
-                    </div>
-                {% endif %}
-                <div class="strain-flavors-section">
-                    <span class="section-header">
-                        <span class="title">Flavors</span>
-                    </span>
-                    <span class="flavors-region">{{ strain.flavor }}</span>
-                </div>
-            </div>
+            <input type="hidden" class="strain-id" value="{{ strain_id }}"/>
         </div>
+
+        {% include 'pages/strain/strain_detail_sections_template.html' %}
+        {% include 'pages/strain/strain_effects_template.html' %}
+        {% include 'pages/strain/strain_side_effects_template.html' %}
+        {% include 'pages/strain/strain_flavors_template.html' %}
+
     </div>
 {% endblock %}
 
 {% block javascript %}
     {{ block.super }}
+    <script src="{% static 'js/common/model.js' %}"></script>
     <script src="{% static 'js/pages/strain/strain_detail.js' %}"></script>
+    <script src="{% static 'js/pages/strain/strain_detail_view.js' %}"></script>
     <script type="text/javascript">
-        new W.pages.StrainDetailPage();
+        W.pages.strain.StrainDetailView.init();
     </script>
 {% endblock %}
 

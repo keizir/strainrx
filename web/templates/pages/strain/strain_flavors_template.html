@@ -1,0 +1,10 @@
+<script type="x/srx-template" id="strain_flavors">
+    <div class="flavors-wrapper">
+        <% _.each(flavors, function(f) { %>
+        <div class="flavor-wrapper">
+            <div class="flavor"><%= f.img %></div>
+            <span class="flavor-name"><%= f.name %></span>
+        </div>
+        <% }); %>
+    </div>
+</script>
