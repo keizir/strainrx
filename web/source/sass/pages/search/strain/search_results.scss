@@ -179,10 +179,21 @@
                 color: $black;
             }
 
-            .item-percentage-match .percentage {
-                display: block;
-                font-weight: bold;
-                font-size: 1.5em;
+            .item-percentage-match {
+                a {
+                    color: $grey;
+                }
+
+                a:hover {
+                    color: $iris-blue;
+                    cursor: pointer;
+                }
+
+                .percentage {
+                    display: block;
+                    font-weight: bold;
+                    font-size: 2em;
+                }
             }
         }
     }
@@ -267,7 +278,7 @@
 
             .item-percentage-match .percentage {
                 display: block;
-                font-size: 1.2em;
+                font-size: 2em;
                 font-weight: bold;
             }
         }

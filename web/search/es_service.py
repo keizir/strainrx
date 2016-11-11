@@ -104,7 +104,7 @@ class SearchElasticService(BaseElasticService):
 
         return results
 
-    def query_strain_srx_score(self, criteria, size=50, start_from=0):
+    def query_strain_srx_score(self, criteria, size=50, start_from=0, strain_id=None):
         """
             Return strains ranked by SRX score
         """
@@ -120,14 +120,14 @@ class SearchElasticService(BaseElasticService):
             start_from=start_from
         )
 
-        query = self.build_srx_score_es_query(criteria)
+        query = self.build_srx_score_es_query(criteria, strain_id)
         es_response = self._request(method, url, data=json.dumps(query))
 
         # remove extra info returned by ES and do any other necessary transforms
         results = self._transform_strain_results(es_response)
         return results
 
-    def build_srx_score_es_query(self, criteria):
+    def build_srx_score_es_query(self, criteria, strain_id):
         criteria_strain_types = self.parse_criteria_strains(criteria.get('strain_types'))
         effects_data = self.parse_criteria_data(criteria.get('effects'))
         benefits_data = self.parse_criteria_data(criteria.get('benefits'))
@@ -143,12 +143,23 @@ class SearchElasticService(BaseElasticService):
             }
         }
 
+        strain_id_filter = {
+            "filtered": {
+                "filter": {
+                    "terms": {
+                        "id": [strain_id]
+                    }
+                }
+            }
+        }
+
         match_all_varieties = {
             "match_all": {}
         }
 
         # if user skipped picking variety match all strains
         strain_filter = strain_variety_filter if criteria_strain_types else match_all_varieties
+        strain_filter = strain_id_filter if strain_id else strain_filter
 
         return {
             "query": {

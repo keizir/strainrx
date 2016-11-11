@@ -84,8 +84,10 @@
                             </div>
                             <div class="separator inline-block"></div>
                             <div class="item-percentage-match inline-block">
-                                <span class="percentage">{{ strain.match_percentage }}%</span>
-                                <span class="match">match</span>
+                                <a href="{% url 'search:strain_detail' slug_name=strain.strain_slug %}">
+                                    <span class="percentage">{{ strain.match_percentage }}%</span>
+                                    <span class="match">match</span>
+                                </a>
                             </div>
                         </div>
                     </div>
@@ -162,8 +164,10 @@
                 </div>
                 <div class="separator inline-block"></div>
                 <div class="item-percentage-match inline-block">
-                    <span class="percentage">${ strain.match_percentage }%</span>
-                    <span class="match">match</span>
+                    <a href="/search/strain/${ strain.strain_slug }">
+                        <span class="percentage">${ strain.match_percentage }%</span>
+                        <span class="match">match</span>
+                    </a>
                 </div>
             </div>
         </div>

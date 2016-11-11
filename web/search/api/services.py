@@ -12,6 +12,7 @@ class StrainDetailsService:
         also_like_strains = self.get_also_like_strains(strain, current_user)
         dispensaries = self.get_dispensaries()
         rating = self.build_strain_rating(strain)
+        strain_srx_score = self.calculate_srx_score(strain, current_user)
 
         return {
             'strain': StrainDetailSerializer(strain).data,
@@ -19,6 +20,7 @@ class StrainDetailsService:
             'strain_origins': strain_origins,
             'also_like_strains': also_like_strains,
             'strain_rating': rating,
+            'strain_srx_score': strain_srx_score,
             'favorite': True,  # TODO check user's favorites
             'dispensaries': dispensaries
         }
@@ -78,3 +80,15 @@ class StrainDetailsService:
     @staticmethod
     def build_strain_rating(current_strain):  # TODO check strain overall rating
         return 4.55
+
+    @staticmethod
+    def calculate_srx_score(current_strain, current_user):
+        latest_user_search = UserSearch.objects.filter(user=current_user).order_by('-last_modified_date')[:1]
+
+        if latest_user_search and len(latest_user_search) > 0:
+            data = SearchElasticService().query_strain_srx_score(latest_user_search[0].to_search_criteria(),
+                                                                 strain_id=current_strain.id)
+            strain = data.get('list')[0]
+            return strain.get('match_percentage')
+
+        return 0

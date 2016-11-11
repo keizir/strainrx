@@ -70,7 +70,8 @@ W.pages.strain.StrainDetailPage = Class.extend({
 
         this.uploadPhotoListener();
         this.buildLocationsMenu();
-        this.recalculateSimilarStrainsSectionWidth();
+
+        $(window).trigger('resize');
     },
 
     recalculateSimilarStrainsSectionWidth: function recalculateSimilarStrainsSectionWidth() {
@@ -79,13 +80,15 @@ W.pages.strain.StrainDetailPage = Class.extend({
             maxWidth = 0;
 
         $.each($similar, function () {
-            var width = $(this).width();
+            var $el = $(this),
+                padding = parseInt($el.css('padding'), 10),
+                width = (3 * padding) + $el.outerWidth(true);
             if (width > maxWidth) {
                 maxWidth = width;
             }
         });
 
-        $inner.css("width", maxWidth * 1.25 * $similar.length); // 1.25 coefficient to include padding to the width
+        $inner.css("width", maxWidth * $similar.length);
     },
 
     initRating: function initRating() {
