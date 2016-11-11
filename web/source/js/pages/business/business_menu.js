@@ -175,18 +175,28 @@ W.pages.business.BusinessMenu = Class.extend({
         $btnRemove.on('click', function () {
             var $btn = $(this),
                 menuItemId = $btn.attr('id'),
-                menuItemVariety = $btn.attr('variety');
+                menuItemVariety = $btn.attr('variety'),
+                $removeItemDialog = $('.remove-item-dialog');
 
-            $.ajax({
-                method: 'DELETE',
-                url: '/api/v1/businesses/{0}/locations/{1}/menu'.format(that.ui.$businessId.val(), that.ui.$locations.val()),
-                dataType: 'json',
-                data: JSON.stringify({'menu_item_id': menuItemId}),
-                success: function () {
-                    that.deleteMenuItem(menuItemVariety, menuItemId);
-                    that.reRenderVarietyMenu(menuItemVariety);
-                }
+            $removeItemDialog.find('.btn-remove').on('click', function () {
+                $removeItemDialog.dialog('close');
+                $.ajax({
+                    method: 'DELETE',
+                    url: '/api/v1/businesses/{0}/locations/{1}/menu'.format(that.ui.$businessId.val(), that.ui.$locations.val()),
+                    dataType: 'json',
+                    data: JSON.stringify({'menu_item_id': menuItemId}),
+                    success: function () {
+                        that.deleteMenuItem(menuItemVariety, menuItemId);
+                        that.reRenderVarietyMenu(menuItemVariety);
+                    }
+                });
             });
+
+            $removeItemDialog.find('.btn-cancel').on('click', function () {
+                $removeItemDialog.dialog('close');
+            });
+
+            W.common.ConfirmDialog($removeItemDialog);
         });
     },
 

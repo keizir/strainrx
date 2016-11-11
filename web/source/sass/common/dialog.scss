@@ -47,11 +47,12 @@
         display: block;
         position: absolute;
         bottom: 0.5em;
+        width: 100%;
     }
 
     .btn-primary,
     .btn-secondary {
-        width: 12em;
         padding: 0.75em 1.5em;
+        width: 45%;
     }
 }

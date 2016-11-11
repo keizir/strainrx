@@ -14,7 +14,7 @@ W.common.Dialog = function ($el, closeCallback) {
             draggable: false,
             resizable: false,
             create: function () {
-                $(this).css("maxWidth", "450px");
+                $(this).css("maxWidth", "500px");
             },
             close: function (e, ui) {
                 if (closeCallback) {
@@ -31,13 +31,13 @@ W.common.ConfirmDialog = function ($el, closeCallback) {
         $el.removeClass('hidden');
         $el.dialog({
             closeOnEscape: true,
-            height: 200,
+            height: 250,
             width: 'auto',
             modal: true,
             draggable: false,
             resizable: false,
             create: function () {
-                $(this).css("maxWidth", "450px");
+                $(this).css("maxWidth", "500px");
             },
             close: function (e, ui) {
                 if (closeCallback) {

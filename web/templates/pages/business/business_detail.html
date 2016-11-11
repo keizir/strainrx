@@ -46,7 +46,8 @@
             </div>
             <div class="form-field">
                 <label for="ext">Ext.</label>
-                <input type="text" name="ext" id="ext" value="{{ locations.first.ext }}">
+                <input type="text" name="ext" id="ext"
+                       value="{% if locations.first.ext %}{{ locations.first.ext }}{% endif %}">
             </div>
         </div>
         <div class="form-field-group business-type-field-group">

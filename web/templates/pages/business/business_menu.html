@@ -66,3 +66,17 @@
         W.pages.business.BusinessMenuView.init();
     </script>
 {% endblock %}
+
+{% block modal %}
+    <div class="dialog confirm-dialog remove-item-dialog hidden" title="Remove Menu Item">
+        <div class="dialog-text">
+            <span>Are you sure you want to remove this menu item?</span>
+        </div>
+        <div class="dialog-actions">
+            <div class="buttons-section">
+                <button type="button" class="btn-primary btn-remove">Yes</button>
+                <button type="button" class="btn-secondary btn-cancel">Cancel</button>
+            </div>
+        </div>
+    </div>
+{% endblock %}

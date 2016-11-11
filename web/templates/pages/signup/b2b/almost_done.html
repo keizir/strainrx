@@ -40,7 +40,7 @@
                     {% if request.GET.image and request.GET.image == 'fail' %}
                         <span class="error-message">
                             Business logo failed to upload. Please try again on your
-                            <a href="#">profile</a> page.
+                            <a href="{% url 'businesses:detail' request.session.business.id %}">profile</a> page.
                         </span>
                     {% endif %}
                 </div>
