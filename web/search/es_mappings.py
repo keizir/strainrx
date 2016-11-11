@@ -324,3 +324,35 @@ strain_suggester_mapping = {
         }
     }
 }
+
+strain_review_mapping = {
+    "_parent": {
+        "type": "flower"
+    },
+    "properties": {
+        "id": {
+            "type": "long"
+        },
+        "rating": {
+            "type": "float"
+        },
+        "review": {
+            "type": "string"
+        },
+        "review_approved": {
+            "type": "boolean"
+        },
+        "created_date": {
+            "type": "date"
+        },
+        "created_by": {
+            "type": "long"
+        },
+        "last_modified_date": {
+            "type": "date"
+        },
+        "last_modified_by": {
+            "type": "long"
+        }
+    }
+}

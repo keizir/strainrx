@@ -12,6 +12,19 @@ class StrainAdmin(admin.ModelAdmin):
     ordering = ['name']
 
 
+@admin.register(StrainReview)
+class StrainReviewAdmin(admin.ModelAdmin):
+    list_display = ['strain', 'rating', 'review_approved', 'created_date', 'created_by',
+                    'last_modified_date', 'last_modified_by']
+    search_fields = ['strain', 'rating', 'review_approved', 'created_date', 'created_by',
+                     'last_modified_date', 'last_modified_by']
+    list_filter = ['strain', 'rating', 'review_approved', 'created_date', 'created_by',
+                   'last_modified_date', 'last_modified_by']
+    ordering = ['strain', '-created_date']
+    readonly_fields = ['strain', 'rating', 'review', 'created_date', 'created_by',
+                       'last_modified_date', 'last_modified_by']
+
+
 @admin.register(StrainImage)
 class StrainImageAdmin(admin.ModelAdmin):
     pass

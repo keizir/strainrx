@@ -63,7 +63,26 @@
 
     .profile-content {
         display: block;
-        padding: 3em 1em 5em;
+        width: 80%;
+        padding: 2em 1em 5em;
+        margin: 0 auto;
+
+        .sub-tabs {
+            display: block;
+            text-align: left;
+            width: 100%;
+            margin-bottom: 2em;
+            color: $grey;
+
+            .sub-tab {
+                cursor: pointer;
+            }
+
+            .sub-tab.active {
+                font-weight: bold;
+                color: $grey-dark;
+            }
+        }
     }
 
     .user-info {

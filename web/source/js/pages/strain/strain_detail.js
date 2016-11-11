@@ -70,6 +70,8 @@ W.pages.strain.StrainDetailPage = Class.extend({
 
         this.uploadPhotoListener();
         this.buildLocationsMenu();
+        this.showRateStrainDialog();
+        this.submitStrainReview();
 
         $(window).trigger('resize');
     },
@@ -95,7 +97,7 @@ W.pages.strain.StrainDetailPage = Class.extend({
         var $strainRatingStars = $('.strain-rating-stars'),
             value = $strainRatingStars.text();
         $strainRatingStars.rateYo({
-            rating: value,
+            rating: value !== 'Not Rated' ? value : 0,
             readOnly: true,
             spacing: '1px',
             normalFill: '#aaa8a8', // $grey-light
@@ -348,6 +350,48 @@ W.pages.strain.StrainDetailPage = Class.extend({
                 normalFill: '#aaa8a8', // $grey-light
                 ratedFill: '#6bc331', // $avocado-green
                 starWidth: '16px'
+            });
+        });
+    },
+
+    showRateStrainDialog: function showRateStrainDialog() {
+        $('.rate-link').on('click', function (e) {
+            e.preventDefault();
+            W.common.RateDialog($('.rate-strain-dialog'));
+        });
+    },
+
+    submitStrainReview: function submitStrainReview() {
+        var that = this;
+        $('.rate-strain-form').on('submit', function (e) {
+            e.preventDefault();
+            var rating = $('.rate-stars').rateYo('rating'),
+                review = $('.review').val();
+
+            if (rating === 0) {
+                $('.error-message').text('Rating is required');
+                return;
+            }
+
+            if (review && review.length > 500) {
+                $('.error-message').text('Review max length 500 is exceeded');
+                return;
+            }
+
+            $('.loader').removeClass('hidden');
+            $('.btn-review-submit').addClass('hidden');
+
+            $.ajax({
+                type: 'POST',
+                url: '/api/v1/search/strain/{0}/rate'.format(that.ui.$strainId.val()),
+                data: JSON.stringify({rating: rating, review: review !== '' ? review : null}),
+                success: function () {
+                    $('.loader').addClass('hidden');
+                    $('.btn-review-submit').removeClass('hidden');
+                    $('.rate-stars').rateYo('rating', 0);
+                    $('.review').val('');
+                    $('.rate-strain-dialog').dialog('close');
+                }
             });
         });
     }

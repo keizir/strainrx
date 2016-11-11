@@ -156,3 +156,17 @@ class UserSearch(models.Model):
 
     def __str__(self):
         return '{0} - {1}'.format(self.user, self.last_modified_date)
+
+
+@python_2_unicode_compatible
+class StrainReview(models.Model):
+    strain = models.ForeignKey(Strain, on_delete=models.DO_NOTHING)
+
+    rating = models.FloatField()
+    review = models.CharField(max_length=500, null=True)
+    review_approved = models.BooleanField(default=False)
+
+    created_date = models.DateTimeField(auto_now_add=True)
+    created_by = models.ForeignKey(User, on_delete=models.DO_NOTHING, related_name='created_by')
+    last_modified_date = models.DateTimeField(auto_now=True)
+    last_modified_by = models.ForeignKey(User, on_delete=models.DO_NOTHING, null=True, related_name='last_modified_by')

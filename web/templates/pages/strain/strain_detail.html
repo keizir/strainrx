@@ -54,4 +54,27 @@
             </div>
         </form>
     </div>
+    <div class="dialog form-dialog rate-dialog rate-strain-dialog hidden" title="Rate this strain">
+        <form class="rate-strain-form">
+            {% csrf_token %}
+            <div class="form-field-group">
+                <div class="form-field">
+                    <span class="rate-stars"></span>
+                </div>
+            </div>
+            <div class="form-field-group review-textarea-group">
+                <div class="form-field">
+                    <label for="review">Write a review <span>(optional)</span></label>
+                    <textarea class="review" id="review" maxlength="500"></textarea>
+                </div>
+            </div>
+            <span class="error-message"></span>
+            <div class="form-actions">
+                <button class="btn-primary btn-review-submit" type="submit">Submit</button>
+                <div class="loader hidden">
+                    <i class="fa fa-refresh fa-3x rotating" aria-hidden="true"></i>
+                </div>
+            </div>
+        </form>
+    </div>
 {% endblock %}

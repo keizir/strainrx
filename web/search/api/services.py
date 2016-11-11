@@ -1,6 +1,7 @@
 from web.search.api.serializers import StrainDetailSerializer
 from web.search.es_service import SearchElasticService
 from web.search.models import UserSearch, Strain, StrainImage
+from web.search.services import build_strain_rating
 
 
 class StrainDetailsService:
@@ -11,7 +12,7 @@ class StrainDetailsService:
         strain_origins = self.get_strain_origins(strain)
         also_like_strains = self.get_also_like_strains(strain, current_user)
         dispensaries = self.get_dispensaries()
-        rating = self.build_strain_rating(strain)
+        rating = build_strain_rating(strain)
         strain_srx_score = self.calculate_srx_score(strain, current_user)
 
         return {
@@ -76,10 +77,6 @@ class StrainDetailsService:
                 }
             })
         return dispensaries
-
-    @staticmethod
-    def build_strain_rating(current_strain):  # TODO check strain overall rating
-        return 4.55
 
     @staticmethod
     def calculate_srx_score(current_strain, current_user):

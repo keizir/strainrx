@@ -5,10 +5,10 @@ from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
-from web.search.api.serializers import SearchCriteriaSerializer
+from web.search.api.serializers import SearchCriteriaSerializer, StrainReviewFormSerializer
 from web.search.api.services import StrainDetailsService
 from web.search.es_service import SearchElasticService
-from web.search.models import Strain, StrainImage, Effect
+from web.search.models import Strain, StrainImage, Effect, StrainReview
 
 logger = logging.getLogger(__name__)
 
@@ -92,6 +92,21 @@ class StrainUploadImageView(LoginRequiredMixin, APIView):
         image.created_by = request.user
         image.save()
 
+        return Response({}, status=status.HTTP_200_OK)
+
+
+class StrainRateView(LoginRequiredMixin, APIView):
+    def post(self, request, strain_id):
+        strain = Strain.objects.get(pk=strain_id)
+        serializer = StrainReviewFormSerializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+
+        review_text = serializer.validated_data.get('review')
+        is_approved = False if review_text else True
+        review = StrainReview(strain=strain, created_by=request.user,
+                              rating=serializer.validated_data.get('rating'),
+                              review=review_text, review_approved=is_approved)
+        review.save()
         return Response({}, status=status.HTTP_200_OK)
 
 

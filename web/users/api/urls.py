@@ -30,6 +30,11 @@ urlpatterns = [
         name='strain_searches'
     ),
     url(
+        regex=r'^(?P<user_id>\d+)/reviews$',
+        view=user_is_owner(UserStrainReviewsView.as_view()),
+        name='strain_reviews'
+    ),
+    url(
         regex=r'^login',
         view=UserLoginView.as_view(),
         name='login'

@@ -4,6 +4,7 @@ from random import uniform
 
 from web.es_service import BaseElasticService
 from web.search.models import StrainImage, Strain
+from web.search.services import build_strain_rating
 
 logger = logging.getLogger(__name__)
 
@@ -22,10 +23,8 @@ class SearchElasticService(BaseElasticService):
         for s in strains:
             source = s.get('_source', {})
             db_strain = Strain.objects.get(pk=source.get('id'))
-            rating = "{0:.2f}".format(5 * uniform(0.3, 1))  # TODO retrieve overall rating for strain
-
+            rating = build_strain_rating(db_strain)
             strain_image = StrainImage.objects.filter(strain=db_strain)[:1]
-            # TODO  ^ need optimization here in order not to queru strain from DB to get actual image
 
             processed_results.append({
                 'id': source.get('id'),
