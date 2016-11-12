@@ -61,7 +61,6 @@ class BusinessSignUpWizardView(APIView):
 
 class BusinessImageView(LoginRequiredMixin, APIView):
     def post(self, request, business_id):
-        file = request.FILES.get('file')
         business = Business.objects.get(pk=business_id)
 
         if business.image and business.image.url:
@@ -70,6 +69,7 @@ class BusinessImageView(LoginRequiredMixin, APIView):
             k = Key(bucket=bucket, name=business.image.url.split(bucket.name)[1])
             k.delete()
 
+        file = request.FILES.get('file')
         business.image = file
         business.save()
 

@@ -8,15 +8,15 @@
     <div class="form details-form">
         <div class="form-field-group">
             <div class="form-field">
-                <label for="locations">Address:</label>
-                <div class="select">
+                <label class="locations" for="locations">
+                    <span class="label">Address:</span>
                     <select class="location-select" id="locations">
                         {% for l in locations %}
                             <option value="{{ l.id }}">{{ l.street1 }}, {{ l.city }}, {{ l.state }} {{ l.zip_code }}</option>
                         {% endfor %}
                     </select>
-                    <i class="fa fa-sort-desc" aria-hidden="true"></i>
-                </div>
+                    <span class="pointer"><i class="fa fa-sort-desc" aria-hidden="true"></i></span>
+                </label>
             </div>
         </div>
         <div class="form-field-group">
@@ -46,7 +46,7 @@
             </div>
             <div class="form-field">
                 <label for="ext">Ext.</label>
-                <input type="text" name="ext" id="ext"
+                <input type="text" name="ext" id="ext" maxlength="5"
                        value="{% if locations.first.ext %}{{ locations.first.ext }}{% endif %}">
             </div>
         </div>

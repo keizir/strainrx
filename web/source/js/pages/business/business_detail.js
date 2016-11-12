@@ -131,6 +131,11 @@ W.pages.business.BusinessDetail = Class.extend({
             return;
         }
 
+        if (ext && ext.length > 5) {
+            $errorMessage.text('Extension can be 5 symbols max');
+            return;
+        }
+
         if (!dispensary && !delivery) {
             $errorMessage.text('Business Type is required');
             return;
@@ -207,6 +212,7 @@ W.pages.business.BusinessDetail = Class.extend({
                     $errorMessage.addClass('error-message');
                     $errorMessage.removeClass('success-message');
                 }, 3000);
+                window.location.reload();
             },
             error: function (error) {
                 if (error.status === 400) {

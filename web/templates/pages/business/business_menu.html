@@ -13,16 +13,16 @@
     <div class="form menu-form">
         <div class="form-field-group location-field-group">
             <div class="form-field">
-                <label for="locations">Location:</label>
-                <div class="select">
+                <label class="locations" for="locations">
+                    <span class="label">Location:</span>
                     <select class="location-select" id="locations">
                         {% for l in locations %}
                             <option value="{{ l.id }}">{{ l.location_name }} - {{ l.street1 }},
                                 {{ l.city }}, {{ l.state }} {{ l.zip_code }}</option>
                         {% endfor %}
                     </select>
-                    <i class="fa fa-sort-desc" aria-hidden="true"></i>
-                </div>
+                    <span class="pointer"><i class="fa fa-sort-desc" aria-hidden="true"></i></span>
+                </label>
             </div>
         </div>
         <div class="form-field-group add-strain-field-group">
