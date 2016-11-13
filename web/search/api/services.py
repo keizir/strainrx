@@ -1,6 +1,6 @@
 from web.search.api.serializers import StrainDetailSerializer
 from web.search.es_service import SearchElasticService
-from web.search.models import UserSearch, Strain, StrainImage
+from web.search.models import UserSearch, Strain, StrainImage, StrainReview
 from web.search.services import build_strain_rating
 
 
@@ -14,6 +14,7 @@ class StrainDetailsService:
         dispensaries = self.get_dispensaries()
         rating = build_strain_rating(strain)
         strain_srx_score = self.calculate_srx_score(strain, current_user)
+        reviews = self.get_strain_reviews(strain)
 
         return {
             'strain': StrainDetailSerializer(strain).data,
@@ -21,6 +22,7 @@ class StrainDetailsService:
             'strain_origins': strain_origins,
             'also_like_strains': also_like_strains,
             'strain_rating': rating,
+            'strain_reviews': reviews,
             'strain_srx_score': strain_srx_score,
             'favorite': True,  # TODO check user's favorites
             'dispensaries': dispensaries
@@ -89,3 +91,34 @@ class StrainDetailsService:
             return strain.get('match_percentage')
 
         return 0
+
+    def get_strain_reviews(self, current_strain):
+        reviews_raw = StrainReview.objects.filter(strain=current_strain,
+                                                  review_approved=True).order_by('-created_date')[:3]
+        reviews = []
+        for r in reviews_raw:
+            reviews.append(self.build_review(r))
+        return reviews
+
+    def get_all_approved_strain_reviews(self, strain_id):
+        reviews_raw = StrainReview.objects.filter(strain__id=strain_id,
+                                                  review_approved=True).order_by('-created_date')
+        reviews = []
+        for r in reviews_raw:
+            reviews.append(self.build_review(r))
+        return reviews
+
+    @staticmethod
+    def build_review(review):
+        display_user_name = '{0} {1}'.format(review.created_by.first_name, review.created_by.last_name) \
+            if review.created_by.first_name and review.created_by.last_name \
+            else review.created_by.email.split('@')[0]
+
+        return {
+            'id': review.id,
+            'rating': review.rating,
+            'review': review.review,
+            'created_date': review.created_date,
+            'created_by_name': display_user_name,
+            'created_by_image': None  # TODO implement UserImage
+        }

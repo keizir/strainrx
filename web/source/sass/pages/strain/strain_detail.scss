@@ -367,15 +367,88 @@
             }
         }
 
-        .strain-reviews .section-header span {
-            display: inline-block;
-        }
+        .strain-reviews {
+            .section-header {
+                span {
+                    display: inline-block;
+                }
+            }
 
-        .strain-reviews .all-reviews-link-wrapper a {
-            font-size: 0.7em;
-            color: $avocado-green;
-            text-decoration: underline;
-            margin-left: 1em;
+            .all-reviews-link-wrapper a {
+                font-size: 0.7em;
+                color: $avocado-green;
+                text-decoration: underline;
+                margin-left: 1em;
+            }
+
+            .review-wrapper {
+                display: block;
+                position: relative;
+                width: 100%;
+                margin-bottom: 2em;
+
+                .user-info {
+                    display: inline-block;
+                    position: relative;
+                    width: 8%;
+                    text-align: left;
+
+                    .user-image {
+                        display: inline-block;
+                        width: 4em;
+                        height: 4em;
+                        margin: 0 auto;
+                        border: 1px solid $grey-light;
+                        border-radius: 4em;
+
+                        img {
+                            width: 3em;
+                            height: 3em;
+                            margin: 0.3em 0.4em 0.4em 0.46em;
+                        }
+                    }
+                }
+
+                .review {
+                    display: inline-block;
+                    width: 90%;
+                    vertical-align: top;
+
+                    .review-header {
+                        .user-name {
+                            font-weight: bold;
+                        }
+
+                        .rating {
+                            display: inline-block;
+                        }
+
+                        .created-date {
+                            font-weight: bold;
+                            text-decoration: underline;
+                            float: right;
+                        }
+                    }
+
+                    .review-text {
+                        margin-top: 0.5em;
+
+                        .display {
+                            display: block;
+                            height: auto;
+                            max-height: 2.1em;
+                            line-height: 1em;
+                            overflow: hidden;
+
+                            .expander {
+                                cursor: pointer;
+                                color: $avocado-green;
+                                text-decoration: underline;
+                            }
+                        }
+                    }
+                }
+            }
         }
 
         .strain-lineage-section {
@@ -555,7 +628,7 @@
             margin: 0 auto;
         }
 
-        .review {
+        .rate-review {
             resize: none;
             width: 100%;
             height: 100%;

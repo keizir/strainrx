@@ -102,7 +102,7 @@ class StrainRateView(LoginRequiredMixin, APIView):
         serializer.is_valid(raise_exception=True)
 
         review_text = serializer.validated_data.get('review')
-        is_approved = False if review_text else True
+        is_approved = False if review_text and len(review_text) > 0 else True
         review = StrainReview(strain=strain, created_by=request.user,
                               rating=serializer.validated_data.get('rating'),
                               review=review_text, review_approved=is_approved)
@@ -114,6 +114,12 @@ class StrainDetailsView(LoginRequiredMixin, APIView):
     def get(self, request, strain_id):
         details = StrainDetailsService().build_strain_details(strain_id, request.user)
         return Response(details, status=status.HTTP_200_OK)
+
+
+class StrainReviewsView(LoginRequiredMixin, APIView):
+    def get(self, request, strain_id):
+        reviews = StrainDetailsService().get_all_approved_strain_reviews(strain_id)
+        return Response({'reviews': reviews}, status=status.HTTP_200_OK)
 
 
 class StrainEffectView(LoginRequiredMixin, APIView):
