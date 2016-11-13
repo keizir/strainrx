@@ -1,9 +1,9 @@
+from django.db.models import Avg
+
 from web.search.models import StrainReview
 
 
 def build_strain_rating(strain):
-    reviews = StrainReview.objects.filter(strain=strain)
-    rating = 0
-    for r in reviews:
-        rating += r.rating
-    return 'Not Rated' if len(reviews) == 0 else "{0:.2f}".format(round(rating / len(reviews), 2))
+    rating = StrainReview.objects.filter(strain=strain).aggregate(avg_rating=Avg('rating'))
+    rating = rating.get('avg_rating')
+    return 'Not Rated' if rating is None else "{0:.2f}".format(round(rating, 2))
