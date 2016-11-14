@@ -175,7 +175,6 @@ class Command(BaseCommand):
 
         for r in reviews:
             strain_id = r.strain.id
-            print(strain_id)
             strain = strains_cache_map.get(strain_id)
 
             if strain is None or len(strain) == 0:

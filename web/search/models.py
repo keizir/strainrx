@@ -179,7 +179,6 @@ class StrainReview(models.Model):
 @receiver(post_save, sender=StrainReview)
 def create_es_review(sender, **kwargs):
     strain_review = kwargs.get('instance')
-    print(strain_review.id)
     es_serializer = StrainReviewESSerializer(strain_review)
     data = es_serializer.data
     data['created_by'] = strain_review.created_by.id
