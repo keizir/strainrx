@@ -163,7 +163,7 @@ class StrainReview(models.Model):
     strain = models.ForeignKey(Strain, on_delete=models.DO_NOTHING)
 
     rating = models.FloatField()
-    review = models.CharField(max_length=500, blank=True, null=True)
+    review = models.CharField(max_length=500, default='', blank=True)
     review_approved = models.BooleanField(default=False)
 
     created_date = models.DateTimeField(auto_now_add=True)

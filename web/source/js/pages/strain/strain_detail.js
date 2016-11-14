@@ -430,7 +430,7 @@ W.pages.strain.StrainDetailPage = Class.extend({
             $.ajax({
                 type: 'POST',
                 url: '/api/v1/search/strain/{0}/rate'.format(that.ui.$strainId.val()),
-                data: JSON.stringify({rating: rating, review: review !== '' ? review : null}),
+                data: JSON.stringify({rating: rating, review: review}),
                 success: function () {
                     $('.loader').addClass('hidden');
                     $('.btn-review-submit').removeClass('hidden');

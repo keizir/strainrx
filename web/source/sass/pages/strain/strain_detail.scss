@@ -694,6 +694,18 @@
         display: block;
         width: 100%;
     }
+
+    .strain-detail-wrapper .detail-section .strain-reviews {
+        .review-wrapper {
+            .user-info {
+                width: 20%;
+            }
+
+            .review {
+                width: 70%;
+            }
+        }
+    }
 }
 
 @media (max-width: $screen-xs-max) {
@@ -760,6 +772,18 @@
     .strain-detail-wrapper .detail-section .strain-lineage-section {
         display: block;
         width: 100%;
+    }
+
+    .strain-detail-wrapper .detail-section .strain-reviews {
+        .review-wrapper {
+            .user-info {
+                width: 20%;
+            }
+
+            .review {
+                width: 70%;
+            }
+        }
     }
 
     .strain-detail-wrapper .detail-section .strain-flavors-section {
