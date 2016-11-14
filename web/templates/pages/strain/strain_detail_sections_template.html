@@ -182,6 +182,7 @@
             </div>
         </div>
     </div>
+    <% if (model.strain_reviews && model.strain_reviews.length > 0) { %>
     <div class="detail-section">
         <div class="strain-reviews">
             <span class="section-header">
@@ -217,6 +218,7 @@
             <div class="all-reviews-link-wrapper"><a href="#">View All Reviews</a></div>
         </div>
     </div>
+    <% } %>
     <div class="detail-section">
         <% if (model.strain_origins && model.strain_origins.length > 0) { %>
         <div class="strain-lineage-section">

@@ -3,6 +3,7 @@ import logging
 from random import uniform
 
 from web.es_service import BaseElasticService
+from web.search import es_mappings
 from web.search.models import StrainImage, Strain
 from web.search.services import build_strain_rating
 
@@ -20,12 +21,16 @@ class SearchElasticService(BaseElasticService):
         total = results.get('hits', {}).get('total', 0)
         processed_results = []
 
+        strain_rating_aggregation = results.get('aggregations', {}).get('strain_ratings', {})
+        strain_rating_buckets = strain_rating_aggregation.get('buckets', [])
+        strain_overall_rating = strain_rating_buckets[0].get('overall_rating') if len(strain_rating_buckets) > 0 else {}
+        rating = strain_overall_rating.get('avg_rating', {}).get('value')
+
         for s in strains:
             source = s.get('_source', {})
             db_strain = Strain.objects.get(pk=source.get('id'))
-            rating = build_strain_rating(db_strain)
+            rating = rating if len(strains) == 1 else build_strain_rating(db_strain)
             strain_image = StrainImage.objects.filter(strain=db_strain)[:1]
-
             processed_results.append({
                 'id': source.get('id'),
                 'name': source.get('name'),
@@ -114,7 +119,7 @@ class SearchElasticService(BaseElasticService):
         url = '{base}{index}/{type}/_search?size={size}&from={start_from}'.format(
             base=self.BASE_ELASTIC_URL,
             index=self.URLS.get('STRAIN'),
-            type='flower',
+            type=es_mappings.TYPES.get('strain'),
             size=size,
             start_from=start_from
         )
@@ -160,7 +165,29 @@ class SearchElasticService(BaseElasticService):
         strain_filter = strain_variety_filter if criteria_strain_types else match_all_varieties
         strain_filter = strain_id_filter if strain_id else strain_filter
 
+        strain_aggs = {
+            "strain_ratings": {
+                "terms": {
+                    "field": "id",
+                    "include": [strain_id]
+                },
+                "aggs": {
+                    "overall_rating": {
+                        "children": {
+                            "type": "strain_review"
+                        },
+                        "aggs": {
+                            "avg_rating": {
+                                "avg": {"field": "rating"}
+                            }
+                        }
+                    }
+                }
+            }
+        } if strain_id else {}
+
         return {
+            "aggs": strain_aggs,
             "query": {
                 "function_score": {
                     "query": strain_filter,

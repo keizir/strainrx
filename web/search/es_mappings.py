@@ -1,7 +1,12 @@
+TYPES = {
+    'strain': "strain",
+    'strain_review': "strain_review"
+}
+
 strain_mapping = {
     "properties": {
         "id": {
-            "type": "integer",
+            "type": "long",
             "index": "not_analyzed"
         },
         "name": {
@@ -327,7 +332,7 @@ strain_suggester_mapping = {
 
 strain_review_mapping = {
     "_parent": {
-        "type": "flower"
+        "type": TYPES.get('strain')
     },
     "properties": {
         "id": {

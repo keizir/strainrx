@@ -1,6 +1,12 @@
-from django.conf import settings
+import base64
+import json
+import logging
 
-import requests, json, base64
+import requests
+from django.conf import settings
+from requests import HTTPError
+
+logger = logging.getLogger(__name__)
 
 
 class BaseElasticService(object):
@@ -8,7 +14,6 @@ class BaseElasticService(object):
     Base ES Service that other apps should inherit from
     '''
     BASE_ELASTIC_URL = settings.ELASTICSEARCH_URL
-
 
     # all API endpoints
     URLS = {
@@ -18,7 +23,8 @@ class BaseElasticService(object):
     HEADERS = {
         'Content-Type': 'application/json',
         'User-Agent': 'SRX Platform',
-        'Authorization': 'Basic {0}'.format(bytes.decode(base64.b64encode(bytes('{0}:{1}'.format(settings.ELASTICSEARCH_USERNAME, settings.ELASTICSEARCH_PASSWORD), 'utf-8')))),
+        'Authorization': 'Basic {0}'.format(bytes.decode(base64.b64encode(
+            bytes('{0}:{1}'.format(settings.ELASTICSEARCH_USERNAME, settings.ELASTICSEARCH_PASSWORD), 'utf-8')))),
     }
 
     METHODS = {
@@ -28,7 +34,7 @@ class BaseElasticService(object):
         'PUT': 'PUT'
     }
 
-    TIMEOUT = 600 # seconds
+    TIMEOUT = 600  # seconds
 
     def _request(self, method, url, params=None, data=None, json=None):
         """
@@ -42,7 +48,8 @@ class BaseElasticService(object):
         :return: returns json response
         """
         # TODO consider making request non-blocking with https://github.com/kennethreitz/grequests or https://github.com/ross/requests-futures
-        r = requests.request(method, url, params=params, data=data, json=json, headers=self.HEADERS, timeout=self.TIMEOUT)
+        r = requests.request(method, url, params=params, data=data, json=json, headers=self.HEADERS,
+                             timeout=self.TIMEOUT)
         r.raise_for_status()
         return r.json()
 
@@ -127,9 +134,10 @@ class BaseElasticService(object):
         url = '{0}/{1}'.format(self.BASE_ELASTIC_URL, index)
         method = self.METHODS.get('DELETE')
 
-        resp = self._request(method, url)
-
-        return resp
+        try:
+            return self._request(method, url)
+        except HTTPError as e:
+            logger.error("[{0}] index does not exist: {1}", index, e)
 
     def set_alias(self, index, alias):
         '''

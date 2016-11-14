@@ -8,9 +8,13 @@ from uuid import uuid4
 from django.contrib.postgres.fields import JSONField
 from django.core.exceptions import ValidationError
 from django.db import models
+from django.db.models.signals import post_save
+from django.dispatch import receiver
 from django.template.defaultfilters import slugify
 from django.utils.encoding import python_2_unicode_compatible
 
+from web.search.serializers import StrainReviewESSerializer
+from web.search.strain_es_service import StrainESService
 from web.users.models import User
 
 
@@ -170,3 +174,14 @@ class StrainReview(models.Model):
     created_by = models.ForeignKey(User, on_delete=models.DO_NOTHING, related_name='+')
     last_modified_date = models.DateTimeField(auto_now=True)
     last_modified_by = models.ForeignKey(User, on_delete=models.DO_NOTHING, null=True, related_name='+')
+
+
+@receiver(post_save, sender=StrainReview)
+def create_es_review(sender, **kwargs):
+    strain_review = kwargs.get('instance')
+    print(strain_review.id)
+    es_serializer = StrainReviewESSerializer(strain_review)
+    data = es_serializer.data
+    data['created_by'] = strain_review.created_by.id
+    data['last_modified_by'] = strain_review.last_modified_by.id if strain_review.last_modified_by else None
+    StrainESService().save_strain_review(data, strain_review.id, strain_review.strain.id)
