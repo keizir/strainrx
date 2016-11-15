@@ -17,6 +17,7 @@ from web.search.api.serializers import SearchCriteriaSerializer
 from web.search.models import UserSearch, StrainReview, StrainImage
 from web.search.services import build_strain_rating
 from web.users import validators
+from web.users.api.permissions import UserAccountOwner
 from web.users.api.serializers import (UserDetailSerializer, UserSignUpSerializer)
 from web.users.emails import EmailService
 from web.users.models import User, PwResetLink, UserSetting
@@ -40,6 +41,8 @@ class UsersView(APIView):
 
 
 class UserDetailView(LoginRequiredMixin, APIView):
+    permission_classes = (UserAccountOwner,)
+
     def put(self, request, user_id):
         serializer = UserDetailSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
@@ -73,6 +76,8 @@ class UserDetailView(LoginRequiredMixin, APIView):
 
 
 class UserChangePwdView(LoginRequiredMixin, APIView):
+    permission_classes = (UserAccountOwner,)
+
     def post(self, request, user_id):
         user = User.objects.get(pk=user_id)
         current_pwd = request.data.get('curPwd')
@@ -95,6 +100,8 @@ class UserChangePwdView(LoginRequiredMixin, APIView):
 
 
 class UserSettingsView(LoginRequiredMixin, APIView):
+    permission_classes = (UserAccountOwner,)
+
     def get(self, request, user_id):
         user = User.objects.get(pk=user_id)
         settings_raw = UserSetting.objects.filter(user=user)
@@ -323,6 +330,8 @@ class ResetPasswordView(APIView):
 
 
 class UserStrainSearchesView(LoginRequiredMixin, APIView):
+    permission_classes = (UserAccountOwner,)
+
     def get(self, request, user_id):
         try:
             user_search = UserSearch.objects.get(user=request.user)
@@ -359,6 +368,8 @@ class UserStrainSearchesView(LoginRequiredMixin, APIView):
 
 
 class UserStrainReviewsView(LoginRequiredMixin, APIView):
+    permission_classes = (UserAccountOwner,)
+
     def get(self, request, user_id):
         reviews_raw = StrainReview.objects.filter(created_by__id=user_id).order_by('-created_date')
         reviews = []

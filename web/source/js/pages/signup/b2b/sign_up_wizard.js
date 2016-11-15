@@ -84,6 +84,8 @@ W.pages.b2b.SignUpWizard = W.common.Wizard.extend({
                     window.location.href = '/businesses/signup/done/?image=fail';
                 }
             });
+        } else {
+            window.location.href = '/businesses/signup/done/';
         }
     },
 

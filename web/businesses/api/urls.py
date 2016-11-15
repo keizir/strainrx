@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 from django.conf.urls import url
 
-from web.businesses.api.decorators import user_is_owner
 from web.businesses.api.views import *
 
 urlpatterns = [
@@ -12,12 +11,12 @@ urlpatterns = [
     ),
     url(
         regex=r'^(?P<business_id>[0-9]+)/locations/(?P<business_location_id>[0-9]+)/menu',
-        view=user_is_owner(BusinessLocationMenuView.as_view()),
+        view=BusinessLocationMenuView.as_view(),
         name='business_location_menu'
     ),
     url(
         regex=r'^(?P<business_id>[0-9]+)/locations/(?P<business_location_id>[0-9]+)',
-        view=user_is_owner(BusinessLocationView.as_view()),
+        view=BusinessLocationView.as_view(),
         name='business_location'
     ),
     url(
