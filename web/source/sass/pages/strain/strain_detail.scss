@@ -367,15 +367,88 @@
             }
         }
 
-        .strain-reviews .section-header span {
-            display: inline-block;
-        }
+        .strain-reviews {
+            .section-header {
+                span {
+                    display: inline-block;
+                }
+            }
 
-        .strain-reviews .all-reviews-link-wrapper a {
-            font-size: 0.7em;
-            color: $avocado-green;
-            text-decoration: underline;
-            margin-left: 1em;
+            .all-reviews-link-wrapper a {
+                font-size: 0.7em;
+                color: $avocado-green;
+                text-decoration: underline;
+                margin-left: 1em;
+            }
+
+            .review-wrapper {
+                display: block;
+                position: relative;
+                width: 100%;
+                margin-bottom: 2em;
+
+                .user-info {
+                    display: inline-block;
+                    position: relative;
+                    width: 8%;
+                    text-align: left;
+
+                    .user-image {
+                        display: inline-block;
+                        width: 4em;
+                        height: 4em;
+                        margin: 0 auto;
+                        border: 1px solid $grey-light;
+                        border-radius: 4em;
+
+                        img {
+                            width: 3em;
+                            height: 3em;
+                            margin: 0.3em 0.4em 0.4em 0.46em;
+                        }
+                    }
+                }
+
+                .review {
+                    display: inline-block;
+                    width: 90%;
+                    vertical-align: top;
+
+                    .review-header {
+                        .user-name {
+                            font-weight: bold;
+                        }
+
+                        .rating {
+                            display: inline-block;
+                        }
+
+                        .created-date {
+                            font-weight: bold;
+                            text-decoration: underline;
+                            float: right;
+                        }
+                    }
+
+                    .review-text {
+                        margin-top: 0.5em;
+
+                        .display {
+                            display: block;
+                            height: auto;
+                            max-height: 2.1em;
+                            line-height: 1em;
+                            overflow: hidden;
+
+                            .expander {
+                                cursor: pointer;
+                                color: $avocado-green;
+                                text-decoration: underline;
+                            }
+                        }
+                    }
+                }
+            }
         }
 
         .strain-lineage-section {
@@ -500,28 +573,72 @@
     }
 }
 
-.form-dialog form {
-    display: block;
-    width: 100%;
-    height: 90%;
-    text-align: center;
+.upload-image-dialog {
+    form {
+        display: block;
+        width: 100%;
+        height: 90%;
+        text-align: center;
+
+        input {
+            width: 10.5em;
+            margin: 1em 0;
+        }
+
+        .photo-camera-wrapper {
+            display: block;
+            width: 100%;
+            height: 25%;
+            margin: 1em 0;
+            color: $black;
+        }
+
+        .form-actions {
+            margin-top: 2em;
+        }
+    }
 }
 
-.form-dialog form input {
-    width: 10.5em;
-    margin: 1em 0;
-}
+.rate-strain-dialog {
+    form {
+        display: block;
+        position: relative;
+        width: 22em;
+        max-width: 450px;
+        height: 100%;
+        text-align: center;
 
-.form-dialog form .photo-camera-wrapper {
-    display: block;
-    width: 100%;
-    height: 25%;
-    margin: 1em 0;
-    color: $black;
-}
+        .review-textarea-group {
+            margin-top: 2em;
+            text-align: left;
 
-.form-dialog form .form-actions {
-    margin-top: 2em;
+            label {
+                display: block;
+                font-size: 1.5em;
+                color: $grey;
+                margin-bottom: 1em;
+
+                span {
+                    color: $grey-light;
+                }
+            }
+        }
+
+        .rate-stars {
+            margin: 0 auto;
+        }
+
+        .rate-review {
+            resize: none;
+            width: 100%;
+            height: 100%;
+            min-height: 6em;
+        }
+
+        .error-message {
+            text-align: left;
+        }
+    }
 }
 
 @media (min-width: $screen-md-min) {
@@ -576,6 +693,18 @@
     .strain-detail-wrapper .detail-section .effects-wrapper .effect {
         display: block;
         width: 100%;
+    }
+
+    .strain-detail-wrapper .detail-section .strain-reviews {
+        .review-wrapper {
+            .user-info {
+                width: 20%;
+            }
+
+            .review {
+                width: 70%;
+            }
+        }
     }
 }
 
@@ -643,6 +772,18 @@
     .strain-detail-wrapper .detail-section .strain-lineage-section {
         display: block;
         width: 100%;
+    }
+
+    .strain-detail-wrapper .detail-section .strain-reviews {
+        .review-wrapper {
+            .user-info {
+                width: 20%;
+            }
+
+            .review {
+                width: 70%;
+            }
+        }
     }
 
     .strain-detail-wrapper .detail-section .strain-flavors-section {

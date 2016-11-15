@@ -1,0 +1,26 @@
+{% load staticfiles i18n %}
+
+<script type="x/srx-template" id="strain_review_template">
+    <div class="review-wrapper">
+        <div class="user-info">
+            <div class="user-image">
+                <% if (review.created_by_image) { %>
+                <img src="<%= review.created_by_image %>" alt="User Image"/>
+                <% } else { %>
+                <img src="{% static 'images/default-profile-image.png' %}" alt="User Image"/>
+                <% } %>
+            </div>
+        </div>
+        <div class="review">
+            <div class="review-header">
+                <span class="user-name"><%= review.created_by_name %></span>
+                <span class="rating rating-<%= review.id %>"><%= review.rating %></span>
+                <span class="created-date"><%= review.created_date %></span>
+            </div>
+            <div class="review-text">
+                <span class="display display-text-<%= review.id %>"><%= review.review %></span>
+                <span class="full hidden"><%= review.review %></span>
+            </div>
+        </div>
+    </div>
+</script>

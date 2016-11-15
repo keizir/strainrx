@@ -78,8 +78,9 @@ W.pages.StrainSearchResultsPage = Class.extend({
                         }
 
                         for (var i = 0; i < searchResults.length; i++) {
-                            that.ui.$searchResult.append(that.parseSearchResultItem(i, searchResults[i]));
-                            that.initRating($('.loaded-rating-' + i));
+                            var position = '{0}{1}'.format(that.scrollPage, i);
+                            that.ui.$searchResult.append(that.parseSearchResultItem(position, searchResults[i]));
+                            that.initRating($('.loaded-rating-' + position));
                         }
 
                         that.ui.$loadingIcon.removeClass('rotating');
@@ -136,13 +137,15 @@ W.pages.StrainSearchResultsPage = Class.extend({
 
     initRating: function ($el) {
         var rating = $el.text();
-        $el.rateYo({
-            rating: rating,
-            readOnly: true,
-            spacing: '1px',
-            normalFill: '#aaa8a8', // $grey-light
-            ratedFill: '#6bc331', // $avocado-green
-            starWidth: '16px'
-        });
+        if (rating !== 'Not Rated') {
+            $el.rateYo({
+                rating: rating,
+                readOnly: true,
+                spacing: '1px',
+                normalFill: '#aaa8a8', // $grey-light
+                ratedFill: '#6bc331', // $avocado-green
+                starWidth: '16px'
+            });
+        }
     }
 });

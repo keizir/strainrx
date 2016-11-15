@@ -18,6 +18,7 @@ W.pages.strain.StrainDetailPage = Class.extend({
         this.retrieveStrain(function (strain_data) {
             if (strain_data) {
                 that.model = new W.common.Model(strain_data);
+                that.preformatModel();
                 that.renderStrainDetails();
 
                 $(window).resize(function () {
@@ -35,6 +36,20 @@ W.pages.strain.StrainDetailPage = Class.extend({
                 success(data);
             }
         });
+    },
+
+    preformatModel: function preformatModel() {
+        if (this.model.get('strain_reviews')) {
+            $.each(this.model.get('strain_reviews'), function (index, review) {
+                var date = new Date(review.created_date),
+                    year = date.getFullYear() - 2000,
+                    month = date.getMonth() + 1,
+                    day = date.getDate();
+
+                review.review = review.review ? review.review : '(No review written)';
+                review.created_date = '{0}/{1}/{2}'.format(month, day, year);
+            });
+        }
     },
 
     renderStrainDetails: function renderStrainDetails() {
@@ -64,12 +79,15 @@ W.pages.strain.StrainDetailPage = Class.extend({
         this.populateSideEffects();
         this.populateFlavors();
 
-        this.initRating();
+        this.initRatings();
         this.strainFavoriteHover();
         this.strainFavoriteClick();
 
         this.uploadPhotoListener();
         this.buildLocationsMenu();
+        this.showRateStrainDialog();
+        this.submitStrainReview();
+        this.showAllReviews();
 
         $(window).trigger('resize');
     },
@@ -91,16 +109,46 @@ W.pages.strain.StrainDetailPage = Class.extend({
         $inner.css("width", maxWidth * $similar.length);
     },
 
-    initRating: function initRating() {
-        var $strainRatingStars = $('.strain-rating-stars'),
+    initRatings: function initRatings() {
+        var that = this,
+            $strainRatingStars = $('.strain-rating-stars'),
             value = $strainRatingStars.text();
-        $strainRatingStars.rateYo({
-            rating: value,
+
+        this.initRating($strainRatingStars, value);
+        $.each(this.model.get('strain_reviews'), function (index, review) {
+            that.initRating($('.rating-{0}'.format(review.id)), review.rating);
+            that.changeReviewText($('.display-text-{0}'.format(review.id)));
+        });
+        this.expandReviewText();
+    },
+
+    initRating: function initRating($ratingSelector, rating) {
+        $ratingSelector.rateYo({
+            rating: rating !== 'Not Rated' ? rating : 0,
             readOnly: true,
             spacing: '1px',
             normalFill: '#aaa8a8', // $grey-light
             ratedFill: '#6bc331', // $avocado-green
             starWidth: '16px'
+        });
+    },
+
+    changeReviewText: function changeReviewText($review) {
+        var reviewHeight = $review.height(),
+            reviewText = $review.text(),
+            fontSize = parseInt($review.css('font-size'), 10);
+
+        if (reviewHeight / fontSize >= 2) {
+            reviewText = reviewText.substr(0, 150) + '... <span class="expander">Review full review</span>';
+            $review.html(reviewText);
+        }
+    },
+
+    expandReviewText: function expandReviewText() {
+        $('.expander').on('click', function () {
+            var parent = $(this).parent().parent();
+            parent.find('.display').addClass('hidden');
+            parent.find('.full').removeClass('hidden');
         });
     },
 
@@ -348,6 +396,82 @@ W.pages.strain.StrainDetailPage = Class.extend({
                 normalFill: '#aaa8a8', // $grey-light
                 ratedFill: '#6bc331', // $avocado-green
                 starWidth: '16px'
+            });
+        });
+    },
+
+    showRateStrainDialog: function showRateStrainDialog() {
+        $('.rate-link').on('click', function (e) {
+            e.preventDefault();
+            W.common.RateDialog($('.rate-strain-dialog'));
+        });
+    },
+
+    submitStrainReview: function submitStrainReview() {
+        var that = this;
+        $('.rate-strain-form').on('submit', function (e) {
+            e.preventDefault();
+            var rating = $('.rate-stars').rateYo('rating'),
+                review = $('.rate-review').val();
+
+            if (rating === 0) {
+                $('.error-message').text('Rating is required');
+                return;
+            }
+
+            if (review && review.length > 500) {
+                $('.error-message').text('Review max length 500 is exceeded');
+                return;
+            }
+
+            $('.loader').removeClass('hidden');
+            $('.btn-review-submit').addClass('hidden');
+
+            $.ajax({
+                type: 'POST',
+                url: '/api/v1/search/strain/{0}/rate'.format(that.ui.$strainId.val()),
+                data: JSON.stringify({rating: rating, review: review}),
+                success: function () {
+                    $('.loader').addClass('hidden');
+                    $('.btn-review-submit').removeClass('hidden');
+                    $('.rate-stars').rateYo('rating', 0);
+                    $('.review').val('');
+                    $('.rate-strain-dialog').dialog('close');
+                }
+            });
+        });
+    },
+
+    showAllReviews: function showAllReviews() {
+        var that = this;
+        $('.all-reviews-link-wrapper a').on('click', function (e) {
+            e.preventDefault();
+            $.ajax({
+                method: 'GET',
+                url: '/api/v1/search/strain/{0}/reviews'.format(that.ui.$strainId.val()),
+                success: function (data) {
+                    that.model.set('strain_reviews', data.reviews);
+                    $('.all-reviews-link-wrapper').addClass('hidden');
+
+                    var $reviewsRegion = $('.reviews-wrapper'),
+                        reviewTemplate = _.template($('#strain_review_template').html());
+
+                    $reviewsRegion.html('');
+                    $.each(that.model.get('strain_reviews'), function (index, review) {
+                        var date = new Date(review.created_date),
+                            year = date.getFullYear() - 2000,
+                            month = date.getMonth() + 1,
+                            day = date.getDate();
+
+                        review.review = review.review ? review.review : '(No review written)';
+                        review.created_date = '{0}/{1}/{2}'.format(month, day, year);
+
+                        $reviewsRegion.append(reviewTemplate({review: review}));
+                        that.initRating($('.rating-{0}'.format(review.id)), review.rating);
+                        that.changeReviewText($('.display-text-{0}'.format(review.id)));
+                    });
+                    that.expandReviewText();
+                }
             });
         });
     }

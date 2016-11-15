@@ -1,0 +1,36 @@
+{% load static %}
+
+<script type="x/srx-template" id="user_review_template">
+    <div class="review">
+        <div class="strain-info-wrapper">
+            <div class="strain-image">
+                <% if (review.strain_image !== null) { %>
+                <img src="${ review.strain_image }" alt="Strain Image">
+                <% } else { %>
+                <img src="{% static 'images/weed_small.jpg' %}" alt="Strain Image"/>
+                <% } %>
+            </div>
+            <div class="strain-info">
+                    <span class="strain-name">
+                        <a href="/search/strain/${ review.strain_slug }"><%= review.strain_name %></a>
+                    </span>
+                <span class="strain-type">${ review.strain_variety }</span>
+                <span class="strain-rating overall-rating-<%= review.id %>">
+                        ${ review.strain_overall_rating }</span>
+            </div>
+        </div>
+        <div class="strain-review-wrapper">
+            <div class="your-rating">
+                <span class="label">Your rating: </span>
+                <span class="user-rating rating-<%= review.id %>">${ review.rating }</span>
+            </div>
+            <div class="created-date">
+                <span class="date">${ review.created_date }</span>
+            </div>
+            <div class="review-text review-text-<%= review.id %>">
+                <span class="text">${ review.review }</span>
+                <span class="full-text hidden">${ review.review }</span>
+            </div>
+        </div>
+    </div>
+</script>

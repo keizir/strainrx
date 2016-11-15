@@ -7,7 +7,7 @@ from web.businesses.api.views import *
 urlpatterns = [
     url(
         regex=r'^(?P<business_id>[0-9]+)/image',
-        view=user_is_owner(BusinessImageView.as_view()),
+        view=BusinessImageView.as_view(),
         name='upload_business_image'
     ),
     url(

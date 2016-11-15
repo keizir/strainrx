@@ -1,7 +1,12 @@
+TYPES = {
+    'strain': "strain",
+    'strain_review': "strain_review"
+}
+
 strain_mapping = {
     "properties": {
         "id": {
-            "type": "integer",
+            "type": "long",
             "index": "not_analyzed"
         },
         "name": {
@@ -321,6 +326,38 @@ strain_suggester_mapping = {
             "type": "completion",
             "analyzer": "simple",
             "payloads": True
+        }
+    }
+}
+
+strain_review_mapping = {
+    "_parent": {
+        "type": TYPES.get('strain')
+    },
+    "properties": {
+        "id": {
+            "type": "long"
+        },
+        "rating": {
+            "type": "float"
+        },
+        "review": {
+            "type": "string"
+        },
+        "review_approved": {
+            "type": "boolean"
+        },
+        "created_date": {
+            "type": "date"
+        },
+        "created_by": {
+            "type": "long"
+        },
+        "last_modified_date": {
+            "type": "date"
+        },
+        "last_modified_by": {
+            "type": "long"
         }
     }
 }
