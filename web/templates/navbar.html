@@ -38,13 +38,9 @@
                                     <span class="business-active-since">
                                         Active since {% to_active_since_date request.session.business.created_date %}
                                     </span>
-                                    {% if not request.session.business.is_business_verified %}
+                                    {% if not request.user.is_email_verified %}
                                         <span class="business-verify-location">
-                                            {% if not request.user.is_email_verified %}
-                                                <a href="{% url "businesses:signup_done" %}">Verify Email</a>
-                                            {% else %}
-                                                <a href="#">Verify Location</a>
-                                            {% endif %}
+                                            <a href="{% url "businesses:signup_done" %}">Verify Email</a>
                                         </span>
                                     {% endif %}
                                 </div>

@@ -58,8 +58,11 @@
     .dialog-actions {
         display: block;
         position: absolute;
-        bottom: 0.5em;
         width: 100%;
+        bottom: 0.5em;
+        left: 0;
+        padding: 0 1em;
+        text-align: center;
     }
 
     .btn-primary,

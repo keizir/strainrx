@@ -25,6 +25,12 @@ W.pages.b2b.SignUpWizardStep5 = W.common.WizardStep.extend({
         });
     },
 
+    initEventHandlers: function initEventHandlers() {
+        this._super();
+        var phoneMask = W.common.Constants.masks.phone;
+        $('input[name="phone"]').mask(phoneMask.mask, {placeholder: phoneMask.placeholder});
+    },
+
     validate: function validate() {
         var address = $('input[name="address"]').val(),
             city = $('input[name="city"]').val(),

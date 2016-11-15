@@ -1,5 +1,6 @@
 from __future__ import unicode_literals, absolute_import
 
+import re
 from uuid import uuid4
 
 from django.conf import settings
@@ -23,6 +24,12 @@ def validate_business_image(field_file_obj):
         raise ValidationError("Max file size is %sMB" % str(megabyte_limit))
 
 
+def phone_number_validator(value):
+    phone_regex = re.compile('[0-9]{3}-[0-9]{3}-[0-9]{4}')
+    if not phone_regex.match(value):
+        raise ValidationError('Phone number must match the following format: 000-000-0000')
+
+
 @python_2_unicode_compatible
 class Business(models.Model):
     name = models.CharField(max_length=255)
@@ -31,8 +38,6 @@ class Business(models.Model):
                               validators=[validate_business_image])
 
     certified_legal_compliance = models.BooleanField(default=False)
-    is_business_verified = models.BooleanField(default=False)
-
     users = models.ManyToManyField(User, related_name='businesses')
 
     # User who created the Business. Also included in [users] field
@@ -63,7 +68,7 @@ class BusinessLocation(models.Model):
     state = models.CharField(max_length=50)
     zip_code = models.CharField(max_length=10)
 
-    phone = models.CharField(max_length=15, blank=True, null=True)
+    phone = models.CharField(max_length=15, blank=True, null=True, validators=[phone_number_validator])
     ext = models.CharField(max_length=5, blank=True, null=True)
 
     removed_by = models.CharField(max_length=20, blank=True, null=True)

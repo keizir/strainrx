@@ -11,6 +11,13 @@ W.common.Constants = {
         onlyAlpha: /^[a-zA-Z\s]+$/
     },
 
+    masks: {
+        phone: {
+            mask: '000-000-0000',
+            placeholder: '___-___-____'
+        }
+    },
+
     days: [
         {name: 'Monday', value: 'mon'},
         {name: 'Tuesday', value: 'tue'},
