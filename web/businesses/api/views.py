@@ -12,6 +12,7 @@ from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
+from web.businesses.api.permissions import BusinessAccountOwner
 from web.businesses.api.serializers import *
 from web.businesses.api.services import BusinessSignUpService, BusinessLocationService
 from web.businesses.emails import EmailService
@@ -60,6 +61,8 @@ class BusinessSignUpWizardView(APIView):
 
 
 class BusinessImageView(LoginRequiredMixin, APIView):
+    permission_classes = (BusinessAccountOwner,)
+
     def post(self, request, business_id):
         business = Business.objects.get(pk=business_id)
 
@@ -86,6 +89,8 @@ class ResendConfirmationEmailView(LoginRequiredMixin, APIView):
 
 
 class BusinessLocationView(LoginRequiredMixin, APIView):
+    permission_classes = (BusinessAccountOwner,)
+
     def get(self, request, business_id, business_location_id):
         if business_location_id == '0':
             locations_raw = BusinessLocation.objects.filter(business__id=business_id, removed_date=None).order_by('id')
@@ -128,6 +133,8 @@ class BusinessLocationView(LoginRequiredMixin, APIView):
 
 
 class BusinessLocationMenuView(LoginRequiredMixin, APIView):
+    permission_classes = (BusinessAccountOwner,)
+
     def get(self, request, business_id, business_location_id):
         menu_items_raw = BusinessLocationMenuItem.objects \
             .filter(business_location__id=business_location_id, removed_date=None) \
