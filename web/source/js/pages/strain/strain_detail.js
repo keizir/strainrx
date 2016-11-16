@@ -437,6 +437,7 @@ W.pages.strain.StrainDetailPage = Class.extend({
                     $('.rate-stars').rateYo('rating', 0);
                     $('.review').val('');
                     $('.rate-strain-dialog').dialog('close');
+                    window.location.reload();
                 }
             });
         });
