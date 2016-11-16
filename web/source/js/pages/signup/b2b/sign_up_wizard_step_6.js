@@ -21,7 +21,8 @@ W.pages.b2b.SignUpWizardStep6 = W.common.WizardStep.extend({
     },
 
     validate: function validate() {
-        var errorMessage = '{0} close time cannot be earlier than open time',
+        var that = this,
+            dayInvalid = false,
             isOpenBeforeClose = function isOpenBeforeClose(open, close) {
                 if (open && close) {
                     var o = new Date(Date.parse('1/1/1970 {0}'.format(open))),
@@ -31,42 +32,22 @@ W.pages.b2b.SignUpWizardStep6 = W.common.WizardStep.extend({
                 return true;
             };
 
-        if (!isOpenBeforeClose(this.getOpenTime('mon'), this.getCloseTime('mon'))) {
-            $('.error-message').text(errorMessage.format('Monday'));
-            return false;
-        }
+        $.each(W.common.Constants.days, function (index, day) {
+            var openTime = that.getOpenTime(day.value),
+                closeTime = that.getCloseTime(day.value);
 
-        if (!isOpenBeforeClose(this.getOpenTime('tue'), this.getCloseTime('tue'))) {
-            $('.error-message').text(errorMessage.format('Tuesday'));
-            return false;
-        }
+            if (!isOpenBeforeClose(openTime, closeTime)) {
+                $('.error-message').text('{0} close time cannot be earlier than open time'.format(day.name));
+                dayInvalid = true;
+            }
 
-        if (!isOpenBeforeClose(this.getOpenTime('wed'), this.getCloseTime('wed'))) {
-            $('.error-message').text(errorMessage.format('Wednesday'));
-            return false;
-        }
+            if ((openTime && !closeTime) || (!openTime && closeTime)) {
+                $('.error-message').text('{0} should have both open and close time selected.'.format(day.name));
+                dayInvalid = true;
+            }
+        });
 
-        if (!isOpenBeforeClose(this.getOpenTime('thu'), this.getCloseTime('thu'))) {
-            $('.error-message').text(errorMessage.format('Thursday'));
-            return false;
-        }
-
-        if (!isOpenBeforeClose(this.getOpenTime('fri'), this.getCloseTime('fri'))) {
-            $('.error-message').text(errorMessage.format('Friday'));
-            return false;
-        }
-
-        if (!isOpenBeforeClose(this.getOpenTime('sat'), this.getCloseTime('sat'))) {
-            $('.error-message').text(errorMessage.format('Saturday'));
-            return false;
-        }
-
-        if (!isOpenBeforeClose(this.getOpenTime('sun'), this.getCloseTime('sun'))) {
-            $('.error-message').text(errorMessage.format('Sunday'));
-            return false;
-        }
-
-        return true;
+        return !dayInvalid;
     },
 
     getOpenTime: function getOpenTime(day) {

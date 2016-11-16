@@ -97,8 +97,8 @@ W.pages.business.BusinessDetail = Class.extend({
     },
 
     getValidatedData: function getValidatedData() {
-        var $errorMessage = $('.error-message'),
-            hoursErrorMessage = '{0} close time cannot be earlier than open time',
+        var that = this,
+            $errorMessage = $('.error-message'),
             locationName = $('input[name="location_name"]').val(),
             manager = $('input[name="manager"]').val(),
             email = $('input[name="location_email"]').val(),
@@ -145,38 +145,23 @@ W.pages.business.BusinessDetail = Class.extend({
             return;
         }
 
-        if (!isOpenBeforeClose(this.getOpenTime('mon'), this.getCloseTime('mon'))) {
-            $errorMessage.text(hoursErrorMessage.format('Monday'));
-            return;
-        }
+        var dayInvalid = false;
+        $.each(W.common.Constants.days, function (index, day) {
+            var openTime = that.getOpenTime(day.value),
+                closeTime = that.getCloseTime(day.value);
 
-        if (!isOpenBeforeClose(this.getOpenTime('tue'), this.getCloseTime('tue'))) {
-            $errorMessage.text(hoursErrorMessage.format('Tuesday'));
-            return;
-        }
+            if (!isOpenBeforeClose(openTime, closeTime)) {
+                $errorMessage.text('{0} close time cannot be earlier than open time'.format(day.name));
+                dayInvalid = true;
+            }
 
-        if (!isOpenBeforeClose(this.getOpenTime('wed'), this.getCloseTime('wed'))) {
-            $errorMessage.text(hoursErrorMessage.format('Wednesday'));
-            return;
-        }
+            if ((openTime && !closeTime) || (!openTime && closeTime)) {
+                $errorMessage.text('{0} should have both open and close time selected.'.format(day.name));
+                dayInvalid = true;
+            }
+        });
 
-        if (!isOpenBeforeClose(this.getOpenTime('thu'), this.getCloseTime('thu'))) {
-            $errorMessage.text(hoursErrorMessage.format('Thursday'));
-            return;
-        }
-
-        if (!isOpenBeforeClose(this.getOpenTime('fri'), this.getCloseTime('fri'))) {
-            $errorMessage.text(hoursErrorMessage.format('Friday'));
-            return;
-        }
-
-        if (!isOpenBeforeClose(this.getOpenTime('sat'), this.getCloseTime('sat'))) {
-            $errorMessage.text(hoursErrorMessage.format('Saturday'));
-            return;
-        }
-
-        if (!isOpenBeforeClose(this.getOpenTime('sun'), this.getCloseTime('sun'))) {
-            $errorMessage.text(hoursErrorMessage.format('Sunday'));
+        if (dayInvalid) {
             return;
         }
 
