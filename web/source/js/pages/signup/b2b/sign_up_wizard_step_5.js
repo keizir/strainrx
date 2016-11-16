@@ -61,6 +61,11 @@ W.pages.b2b.SignUpWizardStep5 = W.common.WizardStep.extend({
             $('.error-message').text('Enter a valid state abbreviation');
             return false;
         }
+        
+        if (!W.common.Constants.regex.phone.test(phoneNumber)) {
+            $('.error-message').text('Phone number must match the following format: 000-000-0000');
+            return false;
+        }
 
         if (phoneExt && !W.common.Constants.regex.onlyNumeric.test(phoneExt)) {
             $('.error-message').text('Extension must contain only numbers');
