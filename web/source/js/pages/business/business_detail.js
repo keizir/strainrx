@@ -17,11 +17,15 @@ W.pages.business.BusinessDetail = Class.extend({
 
         this.retrieveLocation(currentLocationId, function (location) {
             if (location) {
-                var HoursTemplate = _.template($('#operational-hours-field').html());
+                var HoursTemplate = _.template($('#operational-hours-field').html()),
+                    phoneMask = W.common.Constants.masks.phone;
+
                 that.ui.$locationOperationalHours.html(HoursTemplate({
                     days: W.common.Constants.days,
                     renderHours: _.template($('#operational-hours').html())
                 }));
+
+                $('input[name="phone"]').mask(phoneMask.mask, {placeholder: phoneMask.placeholder});
 
                 that.preselectHours(location);
             }
@@ -216,7 +220,13 @@ W.pages.business.BusinessDetail = Class.extend({
             },
             error: function (error) {
                 if (error.status === 400) {
-                    $errorMessage.text(JSON.parse(error.responseText).error);
+                    if (error.responseJSON) {
+                        $.each(error.responseJSON, function (index, fieldErrors) {
+                            $errorMessage.append(fieldErrors[0]);
+                        });
+                    } else {
+                        $errorMessage.text(JSON.parse(error.responseText).error);
+                    }
                 }
             }
         });

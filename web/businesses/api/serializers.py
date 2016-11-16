@@ -1,5 +1,7 @@
 from rest_framework import serializers
 
+from web.businesses.models import phone_number_validator
+
 
 class BusinessSignUpSerializer(serializers.Serializer):
     name = serializers.CharField()
@@ -46,7 +48,7 @@ class BusinessLocationDetailSerializer(serializers.Serializer):
     manager_name = serializers.CharField(allow_blank=True, allow_null=True)
     location_email = serializers.CharField()
 
-    phone = serializers.CharField()
+    phone = serializers.CharField(validators=[phone_number_validator])
     ext = serializers.CharField(allow_blank=True, allow_null=True)
 
     dispensary = serializers.BooleanField()
