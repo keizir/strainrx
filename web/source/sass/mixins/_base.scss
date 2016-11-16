@@ -175,6 +175,12 @@ input, select {
     width: 30em
 }
 
+input[type=number]::-webkit-inner-spin-button,
+input[type=number]::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
 fieldset {
     border: none
 
