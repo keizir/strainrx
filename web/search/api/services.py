@@ -25,7 +25,8 @@ class StrainDetailsService:
             'strain_reviews': reviews,
             'strain_srx_score': strain_srx_score,
             'favorite': True,  # TODO check user's favorites
-            'dispensaries': dispensaries
+            'dispensaries': dispensaries,
+            'is_rated': StrainReview.objects.filter(strain=strain, created_by=current_user).exists()
         }
 
     @staticmethod
