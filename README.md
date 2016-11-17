@@ -26,7 +26,13 @@ You should have python 3.5.1 installed as well as Nodejs 4.4.7
 1. From within Kibana directory run `./bin/kibana plugin --install elastic/sense` to install sense plugin
 1. From within Kibana directory run `./bin/kibana`
     1. You should now be able to use sense to interact with ES at http://localhost:5601/app/sense
-
+1. In the ES directory under `/config/elasticsearch.yml` add these two lines to enable inline scripts:
+    1. 
+        ```
+           script.engine.groovy.inline.aggs: on
+           script.engine.groovy.inline.search: on
+        ```
+        
 ## Common Management Commands to Init Data
 1. Import all strains to psql: `python manage.py import_strain_csv --csv_path=data/full_strain_db.csv`
 1. Import all strains to ES: `python manage.py etl_strains_to_es --drop_and_rebuild --index=strain --create_or_update_suggester`
