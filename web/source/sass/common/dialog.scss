@@ -71,3 +71,54 @@
         width: 45%;
     }
 }
+
+.srx-dialog {
+    position: relative;
+    border-radius: 0;
+    padding: 0;
+    margin: 0;
+
+    .ui-dialog-titlebar {
+        padding: 0.5em;
+    }
+
+    .ui-dialog-titlebar-close {
+        right: 0.5em;
+    }
+
+    .ui-dialog-content {
+        position: relative;
+        padding: 0 0.5em;
+
+        .dialog-title {
+            display: block;
+            position: relative;
+            width: 100%;
+            text-align: center;
+            font-size: 1.5em;
+            font-weight: bold;
+            padding-bottom: 0.5em;
+            color: $grey-dark;
+        }
+
+        .dialog-header {
+            display: block;
+            position: relative;
+            width: 100%;
+        }
+
+        .dialog-footer {
+            display: block;
+            position: relative;
+            width: 100%;
+            bottom: 0;
+            left: 0;
+            text-align: center;
+            padding: 1em 0;
+        }
+    }
+}
+
+.srx-dialog.ui-widget-content {
+    border: none;
+}

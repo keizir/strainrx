@@ -641,6 +641,154 @@
     }
 }
 
+.strain-review-dialog {
+    color: $grey;
+
+    .dialog-header {
+        padding: 0 1em 0.5em;
+        line-height: 2em;
+
+        .sub-title {
+            display: inline-block;
+            font-size: 1.3em;
+            vertical-align: middle;
+        }
+
+        .add-effect-button-wrapper {
+            display: inline-block;
+            position: absolute;
+            right: 2em;
+            width: 25%;
+            text-align: right;
+
+            .btn-secondary {
+                padding: 0.4em 1em;
+                width: 75%;
+                outline: none;
+            }
+
+            .effects-payload-top-border {
+                position: relative;
+                top: -0.6em;
+                right: 0.15em;
+                height: 1px;
+                width: 25.5%;
+                background-color: $iris-blue;
+                z-index: 4;
+            }
+
+            .effects-payload {
+                display: block;
+                position: absolute;
+                top: 1.8em;
+                right: 0.15em;
+                width: 100%;
+                height: 11em;
+                padding: 1.3em 0;
+                overflow: scroll;
+                text-align: left;
+                background-color: $white;
+                border: 1px solid $iris-blue;
+                border-top: none;
+                z-index: 2;
+
+                .payload-effect {
+                    padding-left: 1.5em;
+                    cursor: pointer;
+                }
+
+                .payload-effect:hover {
+                    background-color: $cyan-blue;
+                    color: $white;
+                }
+
+                .payload-effect.active {
+                    background-color: $cyan-blue;
+                    color: $white;
+                }
+            }
+        }
+    }
+
+    .dialog-content {
+        .review-effect-wrapper {
+            display: block;
+            position: relative;
+            width: 100%;
+            height: 3em;
+            padding: 0 1em;
+
+            .effect-name {
+                display: inline-block;
+                width: 15%;
+                vertical-align: middle;
+                line-height: 1.3em;
+            }
+
+            .effect-slider {
+                display: inline-block;
+                width: 78%;
+                vertical-align: middle;
+
+                .strain-review-effect-slider {
+                    display: flex;
+                    width: 100%;
+
+                    span {
+                        display: inline-block;
+                        margin: 0;
+                        padding: 0;
+                        width: 0;
+                        height: 2em;
+                    }
+
+                    .action {
+                        width: 5%;
+                        height: 1em;
+                        background-color: $iris-blue;
+                        cursor: pointer;
+                        text-align: center;
+                        color: $white;
+                        font-size: 2em;
+                    }
+
+                    .action.action-minus {
+                        line-height: 0.9em;
+                    }
+
+                    .action.action-plus {
+                        line-height: 1em;
+                    }
+
+                    .value {
+                        width: 17.5%;
+                        background-color: $white-smoke;
+                        border-right: 1px solid $grey-light;
+
+                        :last-child {
+                            border-right: none;
+                        }
+                    }
+
+                    .value.active {
+                        background-color: $cyan-blue;
+                    }
+                }
+            }
+
+            .remove-effect {
+                display: inline-block;
+                position: relative;
+                top: 0.5em;
+                left: 2%;
+                width: 3.3%;
+                color: $iris-blue;
+                cursor: pointer;
+            }
+        }
+    }
+}
+
 @media (min-width: $screen-md-min) {
     .strain-detail-wrapper .detail-section .second-row .photo-controls {
         width: 50%;
@@ -873,6 +1021,78 @@
 
             .truck-marker:hover {
                 color: $iris-blue;
+            }
+        }
+    }
+
+    .strain-review-dialog {
+        .dialog-header {
+            .sub-title {
+                font-size: 1em;
+            }
+
+            .add-effect-button-wrapper {
+                position: absolute;
+                right: 1em;
+
+                .btn-secondary {
+                    padding: 0.2em 0.5em;
+                }
+            }
+        }
+
+        .dialog-content {
+            .review-effect-wrapper {
+                height: 5em;
+
+                .effect-name {
+                    display: block;
+                    width: 100%;
+                }
+
+                .effect-slider {
+                    display: inline-block;
+                    width: 90%;
+                    vertical-align: middle;
+
+                    .strain-review-effect-slider {
+                        .action {
+                            width: 10%;
+                        }
+
+                        .action.action-minus {
+                            line-height: 0.9em;
+                        }
+
+                        .action.action-plus {
+                            line-height: 1em;
+                        }
+
+                        .value {
+                            width: 17.5%;
+                            background-color: $white-smoke;
+                            border-right: 1px solid $grey-light;
+
+                            :last-child {
+                                border-right: none;
+                            }
+                        }
+
+                        .value.active {
+                            background-color: $cyan-blue;
+                        }
+                    }
+                }
+
+                .remove-effect {
+                    display: inline-block;
+                    position: relative;
+                    top: 0.5em;
+                    left: 2%;
+                    width: 3.3%;
+                    color: $iris-blue;
+                    cursor: pointer;
+                }
             }
         }
     }

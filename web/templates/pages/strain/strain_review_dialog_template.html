@@ -1,0 +1,27 @@
+<script type="x/srx-template" id="strain_review_dialog_template">
+    <div class="strain-review-dialog hidden">
+        <div class="dialog-title">
+            <span class="title-text">Tell us your experience with this strain</span>
+        </div>
+        <div class="dialog-header">
+            <div class="sub-title">${ subtitle }</div>
+            <div class="add-effect-button-wrapper">
+                <button type="button" class="btn-secondary btn-add-effect">+ Add Effect</button>
+                <div class="effects-payload-top-border hidden"></div>
+                <div class="effects-payload hidden"></div>
+            </div>
+        </div>
+        <div class="dialog-content">
+            <div class="review-effects-holder">
+                <% $.each(effects, function(index, effect) { %>
+                <%= renderReviewEffect(effect) %>
+                <% }) %>
+            </div>
+        </div>
+        <div class="dialog-footer">
+            <div class="dialog-actions">
+                <button type="button" class="btn-primary btn-update-effects">Update</button>
+            </div>
+        </div>
+    </div>
+</script>

@@ -89,6 +89,10 @@ W.pages.strain.StrainDetailPage = Class.extend({
         this.submitStrainReview();
         this.showAllReviews();
 
+        new W.pages.strain.StrainReviewDialog({
+            model: this.model
+        });
+
         $(window).trigger('resize');
     },
 
@@ -216,55 +220,30 @@ W.pages.strain.StrainDetailPage = Class.extend({
         });
     },
 
-    populateEffects: function populateEffects() {
-        var that = this,
-            effectsToDisplay = [];
-
-        $.each(this.model.get('strain').effects, function (name, value) {
+    buildEffectsToDisplay: function buildEffectsToDisplay(rawEffects, effectNames) {
+        var effectsToDisplay = [];
+        $.each(rawEffects, function (name, value) {
             if (value > 0) {
-                effectsToDisplay.push({
-                    name: that.effectNames[name],
-                    value: value
-                });
+                effectsToDisplay.push({name: effectNames[name], value: value});
             }
         });
-
         effectsToDisplay.sort(this.sortValues);
-        $('.effects-region').append(this.effectHtml(effectsToDisplay));
+        return effectsToDisplay
+    },
+
+    populateEffects: function populateEffects() {
+        var toDisplay = this.buildEffectsToDisplay(this.model.get('strain').effects, this.effectNames);
+        $('.effects-region').append(this.effectHtml(toDisplay));
     },
 
     populateBenefits: function populateBenefits() {
-        var that = this,
-            benefitsToDisplay = [];
-
-        $.each(this.model.get('strain').benefits, function (name, value) {
-            if (value > 0) {
-                benefitsToDisplay.push({
-                    name: that.benefitNames[name],
-                    value: value
-                });
-            }
-        });
-
-        benefitsToDisplay.sort(this.sortValues);
-        $('.benefits-region').append(this.effectHtml(benefitsToDisplay));
+        var toDisplay = this.buildEffectsToDisplay(this.model.get('strain').benefits, this.benefitNames);
+        $('.benefits-region').append(this.effectHtml(toDisplay));
     },
 
     populateSideEffects: function populateSideEffects() {
-        var that = this,
-            sideEffectsToDisplay = [];
-
-        $.each(this.model.get('strain').side_effects, function (name, value) {
-            if (value > 0) {
-                sideEffectsToDisplay.push({
-                    name: that.sideEffectNames[name],
-                    value: value
-                });
-            }
-        });
-
-        sideEffectsToDisplay.sort(this.sortValues);
-        $('.side-effects-region').append(this.sideEffectHtml(sideEffectsToDisplay));
+        var toDisplay = this.buildEffectsToDisplay(this.model.get('strain').side_effects, this.sideEffectNames);
+        $('.side-effects-region').append(this.sideEffectHtml(toDisplay));
     },
 
     populateFlavors: function populateFlavors() {
