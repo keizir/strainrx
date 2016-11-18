@@ -123,6 +123,3 @@ HOST = 'http://staging.strainrx.co'
 # TESTING
 # ------------------------------------------------------------------------------
 TEST_RUNNER = 'django.test.runner.DiscoverRunner'
-
-HTTP_USERNAME = 'willie'
-HTTP_PASSWORD = 'pJtAxEC5EiH7Nj8xDc5n'
