@@ -158,7 +158,8 @@ var AJAX_TIMEOUT = undefined;
 $.ajaxSetup({
     // set csrf token globally so we never have to worry about it
     headers: {
-        'X-CSRFToken': W.getCookie('csrftoken')
+        'X-CSRFToken': W.getCookie('csrftoken'),
+        'Authorization': 'Basic ' + btoa(HTTP_USERNAME + ":" + HTTP_PASSWORD)
     },
     // do not cache requests
     cache: false,

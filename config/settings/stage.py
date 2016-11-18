@@ -11,10 +11,7 @@ Stage settings
 """
 
 from __future__ import absolute_import, unicode_literals
-import os
-import socket
 
-from boto.s3.connection import OrdinaryCallingFormat
 from django.utils import six
 
 from .common import *  # noqa
@@ -112,7 +109,6 @@ AWS_PRELOAD_METADATA = True
 
 HOST = 'http://staging.strainrx.co'
 
-
 # DEBUG_TOOLBAR_CONFIG = {
 #     'DISABLE_PANELS': [
 #         'debug_toolbar.panels.redirects.RedirectsPanel',
@@ -122,10 +118,11 @@ HOST = 'http://staging.strainrx.co'
 
 # django-extensions
 # ------------------------------------------------------------------------------
-#INSTALLED_APPS += ('django_extensions',)
+# INSTALLED_APPS += ('django_extensions',)
 
 # TESTING
 # ------------------------------------------------------------------------------
 TEST_RUNNER = 'django.test.runner.DiscoverRunner'
 
-
+HTTP_USERNAME = 'willie'
+HTTP_PASSWORD = 'pJtAxEC5EiH7Nj8xDc5n'

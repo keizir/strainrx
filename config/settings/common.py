@@ -288,6 +288,10 @@ AWS_S3_SECURE_URLS = False  # use http instead of https
 AWS_QUERYSTRING_AUTH = False  # don't add complex authentication-related query parameters for requests
 AWS_S3_CALLING_FORMAT = OrdinaryCallingFormat()
 
+# HTTP auth
+HTTP_USERNAME = env('SRX_HTTP_USERNAME', default='')
+HTTP_PASSWORD = env('SRX_HTTP_PASSWORD', default='')
+
 SERVER_ENV = env('SERVER_ENV', default='dev')
 
 RAVEN_CONFIG = {
