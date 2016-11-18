@@ -31,7 +31,6 @@ class SearchElasticService(BaseElasticService):
             rating = strain_ratings.get(source.get('id'))
             strain_image = StrainImage.objects.filter(strain=db_strain)[:1]
             srx_score = int(round(s.get('_score')))
-            print(srx_score)
             processed_results.append({
                 'id': source.get('id'),
                 'name': source.get('name'),

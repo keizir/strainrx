@@ -1,4 +1,5 @@
 {% load staticfiles i18n %}
+{% load auth_template_tags %}
 
 <!DOCTYPE html>
 <html lang="en">
@@ -15,7 +16,11 @@
       <script src="https://html5shim.googlecode.com/svn/trunk/html5.js"></script>
     <![endif]-->
 
-    <script>var STATIC_URL = '{% static '' %}';</script>
+    <script>
+        var STATIC_URL = '{% static '' %}',
+                HTTP_USERNAME = '{% http_username %}',
+                HTTP_PASSWORD = '{% http_password %}';
+    </script>
 
     {% block css %}
         <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet"
