@@ -5,7 +5,6 @@ from random import uniform
 from web.es_service import BaseElasticService
 from web.search import es_mappings
 from web.search.models import StrainImage, Strain
-from web.search.services import build_strain_rating
 
 logger = logging.getLogger(__name__)
 
@@ -21,25 +20,27 @@ class SearchElasticService(BaseElasticService):
         total = results.get('hits', {}).get('total', 0)
         processed_results = []
 
-        strain_rating_aggregation = results.get('aggregations', {}).get('strain_ratings', {})
-        strain_rating_buckets = strain_rating_aggregation.get('buckets', [])
-        strain_overall_rating = strain_rating_buckets[0].get('overall_rating') if len(strain_rating_buckets) > 0 else {}
-        rating = strain_overall_rating.get('avg_rating', {}).get('value')
+        strain_ratings = {}
+        strain_rating_buckets = results.get('aggregations', {}).get('strain_rating', {}).get('buckets', [])
+        for b in strain_rating_buckets:
+            strain_ratings[b.get('key')] = b.get('child_rating').get('avg_rating').get('value')
 
         for s in strains:
             source = s.get('_source', {})
             db_strain = Strain.objects.get(pk=source.get('id'))
-            rating = rating if len(strains) == 1 else build_strain_rating(db_strain)
+            rating = strain_ratings.get(source.get('id'))
             strain_image = StrainImage.objects.filter(strain=db_strain)[:1]
+            srx_score = int(round(s.get('_score')))
+            print(srx_score)
             processed_results.append({
                 'id': source.get('id'),
                 'name': source.get('name'),
                 'strain_slug': source.get('strain_slug'),
                 'variety': source.get('variety'),
                 'category': source.get('category'),
-                'rating': rating,
+                'rating': "{0:.2f}".format(round(rating, 2)) if rating else 'Not Rated',
                 'image_url': strain_image[0].image.url if len(strain_image) > 0 else None,
-                'match_percentage': int(round(s.get('_score'))),
+                'match_percentage': srx_score if srx_score <= 100 else 100,
                 'delivery_addresses': [  # TODO retrieve deliveries that has this strain for sale
                     {
                         'state': 'CA',
@@ -166,25 +167,34 @@ class SearchElasticService(BaseElasticService):
         strain_filter = strain_id_filter if strain_id else strain_filter
 
         strain_aggs = {
-            "strain_ratings": {
+            "strain_rating": {
                 "terms": {
                     "field": "id",
-                    "include": [strain_id]
+                    "order": {
+                        "srx_score": "desc"
+                    }
                 },
                 "aggs": {
-                    "overall_rating": {
+                    "child_rating": {
                         "children": {
                             "type": "strain_review"
                         },
                         "aggs": {
                             "avg_rating": {
-                                "avg": {"field": "rating"}
+                                "avg": {
+                                    "field": "rating"
+                                }
                             }
+                        }
+                    },
+                    "srx_score": {
+                        "max": {
+                            "script": "_score"
                         }
                     }
                 }
             }
-        } if strain_id else {}
+        }
 
         return {
             "aggs": strain_aggs,
