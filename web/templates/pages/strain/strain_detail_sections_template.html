@@ -129,7 +129,7 @@
     <div class="detail-section">
         <div class="strain-about">
             <span class="section-header">A Dream To Smoke</span>
-            <span class="about"><%= strain.about %></span>
+            <span class="about"><%= model.strain.about %></span>
         </div>
     </div>
     <% } %>
@@ -137,8 +137,18 @@
         <div class="strain-effects">
             <span class="section-header">
                 <span class="title">Positive Effects</span>
-                <span class="disagree-link" id="positive-effects">
-                    <a href="#">Disagree?</a>
+                <span class="disagree-link">
+                    <% if (model.strain_effects_review) { %>
+                    <span class="undo-disagree-wrapper">
+                        Changes submitted. <a href="#" class="undo-disagree" id="positive-effects">Undo</a>
+                    </span>
+                    <a href="#" class="disagree hidden" id="positive-effects">Disagree?</a>
+                    <% } else { %>
+                    <span class="undo-disagree-wrapper hidden">
+                        Changes submitted. <a href="#" class="undo-disagree" id="positive-effects">Undo</a>
+                    </span>
+                    <a href="#" class="disagree" id="positive-effects">Disagree?</a>
+                    <% } %>
                 </span>
             </span>
             <span class="effects-region"></span>
@@ -148,8 +158,18 @@
         <div class="strain-benefits">
             <span class="section-header">
                 <span class="title">Medical Benefits</span>
-                <span class="disagree-link" id="medical-benefits">
-                    <a href="#">Disagree?</a>
+                <span class="disagree-link">
+                    <% if (model.strain_benefits_review) { %>
+                    <span class="undo-disagree-wrapper">
+                        Changes submitted. <a href="#" class="undo-disagree" id="medical-benefits">Undo</a>
+                    </span>
+                    <a href="#" class="disagree hidden" id="medical-benefits">Disagree?</a>
+                    <% } else { %>
+                    <span class="undo-disagree-wrapper hidden">
+                        Changes submitted. <a href="#" class="undo-disagree" id="medical-benefits">Undo</a>
+                    </span>
+                    <a href="#" class="disagree" id="medical-benefits">Disagree?</a>
+                    <% } %>
                 </span>
             </span>
             <span class="benefits-region"></span>
@@ -159,8 +179,18 @@
         <div class="strain-side-effects">
             <span class="section-header">
                 <span class="title">Negative Effects</span>
-                <span class="disagree-link" id="negative-effects">
-                    <a href="#">Disagree?</a>
+                <span class="disagree-link">
+                    <% if (model.strain_side_effects_review) { %>
+                    <span class="undo-disagree-wrapper">
+                        Changes submitted. <a href="#" class="undo-disagree" id="negative-effects">Undo</a>
+                    </span>
+                    <a href="#" class="disagree hidden" id="negative-effects">Disagree?</a>
+                    <% } else { %>
+                    <span class="undo-disagree-wrapper hidden">
+                        Changes submitted. <a href="#" class="undo-disagree" id="negative-effects">Undo</a>
+                    </span>
+                    <a href="#" class="disagree" id="negative-effects">Disagree?</a>
+                    <% } %>
                 </span>
             </span>
             <span class="side-effects-region"></span>

@@ -228,21 +228,27 @@ W.pages.strain.StrainDetailPage = Class.extend({
             }
         });
         effectsToDisplay.sort(this.sortValues);
-        return effectsToDisplay
+        return effectsToDisplay;
     },
 
     populateEffects: function populateEffects() {
-        var toDisplay = this.buildEffectsToDisplay(this.model.get('strain').effects, this.effectNames);
+        var review = this.model.get('strain_effects_review'),
+            effects = review ? review.effects : this.model.get('strain').effects,
+            toDisplay = this.buildEffectsToDisplay(effects, this.effectNames);
         $('.effects-region').append(this.effectHtml(toDisplay));
     },
 
     populateBenefits: function populateBenefits() {
-        var toDisplay = this.buildEffectsToDisplay(this.model.get('strain').benefits, this.benefitNames);
+        var review = this.model.get('strain_benefits_review'),
+            effects = review ? review.effects : this.model.get('strain').benefits,
+            toDisplay = this.buildEffectsToDisplay(effects, this.benefitNames);
         $('.benefits-region').append(this.effectHtml(toDisplay));
     },
 
     populateSideEffects: function populateSideEffects() {
-        var toDisplay = this.buildEffectsToDisplay(this.model.get('strain').side_effects, this.sideEffectNames);
+        var review = this.model.get('strain_side_effects_review'),
+            effects = review ? review.effects : this.model.get('strain').side_effects,
+            toDisplay = this.buildEffectsToDisplay(effects, this.sideEffectNames);
         $('.side-effects-region').append(this.sideEffectHtml(toDisplay));
     },
 

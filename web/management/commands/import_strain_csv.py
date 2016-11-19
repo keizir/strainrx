@@ -8,7 +8,8 @@ from django.core.exceptions import ValidationError
 from django.core.management.base import BaseCommand, CommandError
 from django.utils.text import slugify
 
-from web.search.models import Strain
+from web.search.models import Strain, UserStrainReview
+from web.users.models import User
 
 logger = logging.getLogger(__name__)
 
@@ -113,8 +114,34 @@ class Command(BaseCommand):
                                   .format(name_cleared, s.name, s.category),
                                   file=sys.stderr)
 
+            print('\n4. Creating rate_bot user and default ratings ...')
+            try:
+                rate_bot = User.objects.get(email='tech+rate_bot@strainrx.co')
+            except User.DoesNotExist:
+                rate_bot = User(username='srx_ratebot', email='tech+rate_bot@strainrx.co',
+                                is_email_verified=True, is_age_verified=True, is_superuser=True)
+                rate_bot.set_password('Passw0rd!')  # Default password. Should be changed in admin after import
+                rate_bot.save()
+
+            for s in persisted:
+                if not UserStrainReview.objects.filter(strain=s, effect_type='effects', created_by=rate_bot).exists():
+                    review = UserStrainReview(strain=s, created_by=rate_bot, effects=s.effects,
+                                              effect_type='effects', status='pending')
+                    review.save()
+
+                if not UserStrainReview.objects.filter(strain=s, effect_type='benefits', created_by=rate_bot).exists():
+                    review = UserStrainReview(strain=s, created_by=rate_bot, effects=s.benefits,
+                                              effect_type='benefits', status='pending')
+                    review.save()
+
+                if not UserStrainReview.objects.filter(strain=s, effect_type='side_effects',
+                                                       created_by=rate_bot).exists():
+                    review = UserStrainReview(strain=s, created_by=rate_bot, effects=s.side_effects,
+                                              effect_type='side_effects', status='pending')
+                    review.save()
+
             time_end = time.time()
-            print('\n4. Well Done! Persisted {0} strains in {1}sec!\n'
+            print('\n5. Well Done! Persisted {0} strains in {1}sec!\n'
                   .format(len(persisted), str(time_end - time_start)))
 
     def get_variety(self, row):

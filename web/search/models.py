@@ -176,6 +176,31 @@ class StrainReview(models.Model):
     last_modified_by = models.ForeignKey(User, on_delete=models.DO_NOTHING, null=True, related_name='+')
 
 
+@python_2_unicode_compatible
+class UserStrainReview(models.Model):
+    strain = models.ForeignKey(Strain, on_delete=models.DO_NOTHING)
+
+    EFFECT_TYPE_CHOICES = (
+        ('effects', 'Effects'),
+        ('benefits', 'Benefits'),
+        ('side_effects', 'Side Effects'),
+    )
+
+    STATUS_CHOICES = (
+        ('pending', 'Pending'),
+        ('processed', 'Processed'),
+    )
+
+    effect_type = models.CharField(max_length=20, choices=EFFECT_TYPE_CHOICES)
+    effects = JSONField(default={})
+    status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='pending')
+
+    created_date = models.DateTimeField(auto_now_add=True)
+    created_by = models.ForeignKey(User, on_delete=models.DO_NOTHING, related_name='+')
+    last_modified_date = models.DateTimeField(auto_now=True)
+    last_modified_by = models.ForeignKey(User, on_delete=models.DO_NOTHING, null=True, related_name='+')
+
+
 @receiver(post_save, sender=StrainReview)
 def create_es_review(sender, **kwargs):
     strain_review = kwargs.get('instance')
