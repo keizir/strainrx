@@ -21,6 +21,10 @@
         {% include 'pages/strain/strain_side_effects_template.html' %}
         {% include 'pages/strain/strain_flavors_template.html' %}
         {% include 'pages/strain/strain_review_template.html' %}
+        {% include 'pages/strain/strain_review_dialog_template.html' %}
+        {% include 'pages/strain/strain_review_dialog_effect_slider_template.html' %}
+        {% include 'pages/strain/strain_review_dialog_review_effect_template.html' %}
+        {% include 'pages/strain/strain_review_dialog_effects_payload_template.html' %}
 
     </div>
 {% endblock %}
@@ -29,6 +33,7 @@
     {{ block.super }}
     <script src="{% static 'js/common/model.js' %}"></script>
     <script src="{% static 'js/pages/strain/strain_detail.js' %}"></script>
+    <script src="{% static 'js/pages/strain/strain_detail_review_dialog.js' %}"></script>
     <script src="{% static 'js/pages/strain/strain_detail_view.js' %}"></script>
     <script type="text/javascript">
         W.pages.strain.StrainDetailView.init();
@@ -36,6 +41,8 @@
 {% endblock %}
 
 {% block modal %}
+    <div class="strain-review-dialog-wrapper hidden"></div>
+
     <div class="dialog form-dialog upload-image-dialog hidden" title="Upload Photo">
         <form class="image-upload-form">
             {% csrf_token %}

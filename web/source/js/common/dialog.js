@@ -28,8 +28,12 @@ W.common.ConfirmDialog = function ($el, closeCallback) {
     if ($el) {
         $el.removeClass('hidden');
         $el.dialog({
+            classes: {
+                'ui-dialog': 'srx-dialog'
+            },
             closeOnEscape: true,
-            height: 250,
+            minHeight: 'auto',
+            height: 'auto',
             width: 'auto',
             modal: true,
             draggable: false,
@@ -77,6 +81,32 @@ W.common.RateDialog = function ($el, closeCallback) {
                         }
                     });
                 }
+            },
+            close: function (e, ui) {
+                if (closeCallback) {
+                    closeCallback(e, ui);
+                }
+            }
+        });
+    }
+};
+
+W.common.ReviewDialog = function ($el, closeCallback, options) {
+    if ($el) {
+        $el.removeClass('hidden');
+        $el.dialog({
+            classes: {
+                'ui-dialog': 'srx-dialog'
+            },
+            closeOnEscape: true,
+            minHeight: 'auto',
+            height: 'auto',
+            width: options && options.width || 'auto',
+            modal: true,
+            draggable: false,
+            resizable: false,
+            create: function () {
+                $(this).css("maxWidth", options && options.maxWidth || "450px");
             },
             close: function (e, ui) {
                 if (closeCallback) {
