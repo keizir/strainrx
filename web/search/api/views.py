@@ -132,26 +132,23 @@ class StrainUserReviewsView(LoginRequiredMixin, APIView):
         strain = Strain.objects.get(id=strain_id)
         if 'positive-effects' == effect_type:
             if not UserStrainReview.objects.filter(strain=strain, effect_type='effects',
-                                                   created_by=request.user).exists():
+                                                   created_by=request.user, removed_date=None).exists():
                 review = UserStrainReview(strain=strain, created_by=request.user, effect_type='effects')
                 review.effects = self.build_effects_object(effects, strain.effects)
-                review.removed_date = None
                 review.save()
 
         if 'medical-benefits' == effect_type:
             if not UserStrainReview.objects.filter(strain=strain, effect_type='benefits',
-                                                   created_by=request.user).exists():
+                                                   created_by=request.user, removed_date=None).exists():
                 review = UserStrainReview(strain=strain, created_by=request.user, effect_type='benefits')
                 review.effects = self.build_effects_object(effects, strain.benefits)
-                review.removed_date = None
                 review.save()
 
         if 'negative-effects' == effect_type:
             if not UserStrainReview.objects.filter(strain=strain, effect_type='side_effects',
-                                                   created_by=request.user).exists():
+                                                   created_by=request.user, removed_date=None).exists():
                 review = UserStrainReview(strain=strain, created_by=request.user, effect_type='side_effects')
                 review.effects = self.build_effects_object(effects, strain.side_effects)
-                review.removed_date = None
                 review.save()
 
         return Response({}, status=status.HTTP_200_OK)
@@ -168,7 +165,8 @@ class StrainUserReviewsView(LoginRequiredMixin, APIView):
     def delete(self, request, strain_id):
         effect_type = request.data.get('effect_type')
         strain = Strain.objects.get(id=strain_id)
-        review = UserStrainReview.objects.get(strain=strain, effect_type=effect_type, created_by=request.user)
+        review = UserStrainReview.objects.get(strain=strain, effect_type=effect_type,
+                                              created_by=request.user, removed_date=None)
         review.removed_date = datetime.now()
         review.save()
 
