@@ -128,26 +128,30 @@ class StrainUserReviewsView(LoginRequiredMixin, APIView):
         data = request.data
         effect_type = data.get('type')
         effects = data.get('effects')
-
         strain = Strain.objects.get(id=strain_id)
+        sender_ip = get_client_ip(request)
+
         if 'positive-effects' == effect_type:
             if not UserStrainReview.objects.filter(strain=strain, effect_type='effects',
                                                    created_by=request.user, removed_date=None).exists():
-                review = UserStrainReview(strain=strain, created_by=request.user, effect_type='effects')
+                review = UserStrainReview(strain=strain, created_by=request.user, created_by_ip=sender_ip,
+                                          effect_type='effects')
                 review.effects = self.build_effects_object(effects, strain.effects)
                 review.save()
 
         if 'medical-benefits' == effect_type:
             if not UserStrainReview.objects.filter(strain=strain, effect_type='benefits',
                                                    created_by=request.user, removed_date=None).exists():
-                review = UserStrainReview(strain=strain, created_by=request.user, effect_type='benefits')
+                review = UserStrainReview(strain=strain, created_by=request.user, created_by_ip=sender_ip,
+                                          effect_type='benefits')
                 review.effects = self.build_effects_object(effects, strain.benefits)
                 review.save()
 
         if 'negative-effects' == effect_type:
             if not UserStrainReview.objects.filter(strain=strain, effect_type='side_effects',
                                                    created_by=request.user, removed_date=None).exists():
-                review = UserStrainReview(strain=strain, created_by=request.user, effect_type='side_effects')
+                review = UserStrainReview(strain=strain, created_by=request.user, created_by_ip=sender_ip,
+                                          effect_type='side_effects')
                 review.effects = self.build_effects_object(effects, strain.side_effects)
                 review.save()
 
@@ -164,10 +168,15 @@ class StrainUserReviewsView(LoginRequiredMixin, APIView):
 
     def delete(self, request, strain_id):
         effect_type = request.data.get('effect_type')
+        sender_ip = get_client_ip(request)
         strain = Strain.objects.get(id=strain_id)
         review = UserStrainReview.objects.get(strain=strain, effect_type=effect_type,
                                               created_by=request.user, removed_date=None)
+
         review.removed_date = datetime.now()
+        review.last_modified_ip = sender_ip
+        review.last_modified_by = request.user
+        review.last_modified_date = datetime.now()
         review.save()
 
         if review.status == 'processed':
@@ -175,6 +184,10 @@ class StrainUserReviewsView(LoginRequiredMixin, APIView):
             pass
 
         return Response({}, status=status.HTTP_200_OK)
+
+
+def get_client_ip(request):
+    return request.META.get('X-Real-IP')
 
 
 class StrainEffectView(LoginRequiredMixin, APIView):

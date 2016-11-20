@@ -25,6 +25,34 @@ class StrainReviewAdmin(admin.ModelAdmin):
                        'last_modified_date', 'last_modified_by']
 
 
+def get_client_ip(request):
+    return request.META.get('X-Real-IP')
+
+
+def remove_user_reviews(modeladmin, request, queryset):
+    for review in queryset:
+        review.removed_date = datetime.now()
+        review.last_modified_ip = get_client_ip(request)
+        review.last_modified_by = request.user
+        review.last_modified_date = datetime.now()
+        review.save()
+
+
+remove_user_reviews.short_description = 'Soft delete selected user reviews'
+
+
+@admin.register(UserStrainReview)
+class UserStrainReviewAdmin(admin.ModelAdmin):
+    list_display = ['strain', 'created_by', 'effect_type', 'status', 'created_date', 'removed_date']
+    search_fields = ['strain__name', 'created_by__email', 'created_by__first_name', 'created_by__last_name',
+                     'effect_type', 'status', 'created_date', 'removed_date']
+    list_filter = ['strain', 'created_by', 'effect_type', 'status', 'created_date', 'removed_date']
+    ordering = ['-created_date']
+    readonly_fields = ['strain', 'effect_type', 'effects', 'status', 'removed_date', 'created_by', 'created_date',
+                       'created_by_ip', 'last_modified_date', 'last_modified_by', 'last_modified_by_ip']
+    actions = [remove_user_reviews]
+
+
 @admin.register(StrainImage)
 class StrainImageAdmin(admin.ModelAdmin):
     pass
