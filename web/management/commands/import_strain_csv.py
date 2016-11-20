@@ -3,6 +3,7 @@ import csv
 import logging
 import sys
 import time
+import uuid
 
 from django.core.exceptions import ValidationError
 from django.core.management.base import BaseCommand, CommandError
@@ -119,8 +120,8 @@ class Command(BaseCommand):
                 rate_bot = User.objects.get(email='tech+rate_bot@strainrx.co')
             except User.DoesNotExist:
                 rate_bot = User(username='srx_ratebot', email='tech+rate_bot@strainrx.co',
-                                is_email_verified=True, is_age_verified=True, is_superuser=True)
-                rate_bot.set_password('Passw0rd!')  # Default password. Should be changed in admin after import
+                                is_email_verified=True, is_age_verified=True)
+                rate_bot.set_password(str(uuid.uuid4()))
                 rate_bot.save()
 
             for s in persisted:

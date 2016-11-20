@@ -17,11 +17,11 @@ class StrainDetailsService:
         reviews = self.get_strain_reviews(strain)
 
         effects_review = UserStrainReview.objects.filter(strain=strain, effect_type='effects',
-                                                         created_by=current_user)
+                                                         created_by=current_user, removed_date=None)
         benefits_review = UserStrainReview.objects.filter(strain=strain, effect_type='benefits',
-                                                          created_by=current_user)
+                                                          created_by=current_user, removed_date=None)
         side_effects_review = UserStrainReview.objects.filter(strain=strain, effect_type='side_effects',
-                                                              created_by=current_user)
+                                                              created_by=current_user, removed_date=None)
 
         return {
             'strain': StrainDetailSerializer(strain).data,

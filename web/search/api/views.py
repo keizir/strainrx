@@ -1,4 +1,5 @@
 import logging
+from datetime import datetime
 
 from django.contrib.auth.mixins import LoginRequiredMixin
 from rest_framework import status
@@ -134,6 +135,7 @@ class StrainUserReviewsView(LoginRequiredMixin, APIView):
                                                    created_by=request.user).exists():
                 review = UserStrainReview(strain=strain, created_by=request.user, effect_type='effects')
                 review.effects = self.build_effects_object(effects, strain.effects)
+                review.removed_date = None
                 review.save()
 
         if 'medical-benefits' == effect_type:
@@ -141,6 +143,7 @@ class StrainUserReviewsView(LoginRequiredMixin, APIView):
                                                    created_by=request.user).exists():
                 review = UserStrainReview(strain=strain, created_by=request.user, effect_type='benefits')
                 review.effects = self.build_effects_object(effects, strain.benefits)
+                review.removed_date = None
                 review.save()
 
         if 'negative-effects' == effect_type:
@@ -148,6 +151,7 @@ class StrainUserReviewsView(LoginRequiredMixin, APIView):
                                                    created_by=request.user).exists():
                 review = UserStrainReview(strain=strain, created_by=request.user, effect_type='side_effects')
                 review.effects = self.build_effects_object(effects, strain.side_effects)
+                review.removed_date = None
                 review.save()
 
         return Response({}, status=status.HTTP_200_OK)
@@ -165,7 +169,8 @@ class StrainUserReviewsView(LoginRequiredMixin, APIView):
         effect_type = request.data.get('effect_type')
         strain = Strain.objects.get(id=strain_id)
         review = UserStrainReview.objects.get(strain=strain, effect_type=effect_type, created_by=request.user)
-        review.delete()
+        review.removed_date = datetime.now()
+        review.save()
 
         if review.status == 'processed':
             # TODO recalculate Global score here

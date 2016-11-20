@@ -195,6 +195,8 @@ class UserStrainReview(models.Model):
     effects = JSONField(default={})
     status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='pending')
 
+    removed_date = models.DateTimeField(null=True)
+
     created_date = models.DateTimeField(auto_now_add=True)
     created_by = models.ForeignKey(User, on_delete=models.DO_NOTHING, related_name='+')
     last_modified_date = models.DateTimeField(auto_now=True)
