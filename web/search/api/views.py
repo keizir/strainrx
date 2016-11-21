@@ -9,6 +9,8 @@ from rest_framework.views import APIView
 from web.search.api.serializers import SearchCriteriaSerializer, StrainReviewFormSerializer
 from web.search.api.services import StrainDetailsService
 from web.search.es_service import SearchElasticService
+from web.search.models import Strain, StrainImage, Effect, StrainReview, UserStrainReview
+from web.system.models import SystemProperty
 from web.search.models import Strain, StrainImage, Effect, StrainReview, UserStrainReview, UserFavoriteStrain
 
 logger = logging.getLogger(__name__)
@@ -149,6 +151,7 @@ class StrainUserReviewsView(LoginRequiredMixin, APIView):
                                           effect_type='effects')
                 review.effects = self.build_effects_object(effects, strain.effects)
                 review.save()
+                self.recalculate_global_effects(request, 'effects', strain)
 
         if 'medical-benefits' == effect_type:
             if not UserStrainReview.objects.filter(strain=strain, effect_type='benefits',
@@ -157,6 +160,7 @@ class StrainUserReviewsView(LoginRequiredMixin, APIView):
                                           effect_type='benefits')
                 review.effects = self.build_effects_object(effects, strain.benefits)
                 review.save()
+                self.recalculate_global_effects(request, 'benefits', strain)
 
         if 'negative-effects' == effect_type:
             if not UserStrainReview.objects.filter(strain=strain, effect_type='side_effects',
@@ -165,6 +169,7 @@ class StrainUserReviewsView(LoginRequiredMixin, APIView):
                                           effect_type='side_effects')
                 review.effects = self.build_effects_object(effects, strain.side_effects)
                 review.save()
+                self.recalculate_global_effects(request, 'side_effects', strain)
 
         return Response({}, status=status.HTTP_200_OK)
 
@@ -176,6 +181,54 @@ class StrainUserReviewsView(LoginRequiredMixin, APIView):
         for e in effects:
             effects_to_persist[e.get('name')] = e.get('value')
         return effects_to_persist
+
+    def recalculate_global_effects(self, request, effect_type, strain):
+        try:
+            recalculate_size = int(SystemProperty.objects.get(name='review_recalculation_size').value)
+        except SystemProperty.DoesNotExist:
+            recalculate_size = 10
+
+        reviews = UserStrainReview.objects.filter(strain=strain, effect_type=effect_type,
+                                                  status='pending', removed_date=None)
+
+        # First check if there are "recalculate_size" new reviews
+        if len(reviews) == recalculate_size:
+            sender_ip = get_client_ip(request)
+
+            for r in reviews:
+                r.status = 'processed'
+                r.last_modified_ip = sender_ip
+                r.last_modified_by = request.user
+                r.last_modified_date = datetime.now()
+                r.save()
+
+            if effect_type == 'effects':
+                strain.effects = self.calculate_new_global_values(strain, 'effects')
+                strain.save()
+
+            if effect_type == 'benefits':
+                strain.benefits = self.calculate_new_global_values(strain, 'benefits')
+                strain.save()
+
+            if effect_type == 'side_effects':
+                strain.side_effects = self.calculate_new_global_values(strain, 'side_effects')
+                strain.save()
+
+    def calculate_new_global_values(self, strain, effect_type):
+        # Recalculate Global scores for each review in the system that wasn't removed
+        reviews = UserStrainReview.objects.filter(strain=strain, effect_type=effect_type, removed_date=None)
+        total_strain_effects = {}
+        for r in reviews:
+            for effect_name in r.effects:
+                if total_strain_effects.get(effect_name):
+                    total_strain_effects[effect_name] += r.effects[effect_name]
+                else:
+                    total_strain_effects[effect_name] = r.effects[effect_name]
+
+        for effect_name in total_strain_effects:
+            total_strain_effects[effect_name] /= len(reviews)
+
+        return total_strain_effects
 
     def delete(self, request, strain_id):
         effect_type = request.data.get('effect_type')
@@ -191,8 +244,17 @@ class StrainUserReviewsView(LoginRequiredMixin, APIView):
         review.save()
 
         if review.status == 'processed':
-            # TODO recalculate Global score here
-            pass
+            if effect_type == 'effects':
+                strain.effects = self.calculate_new_global_values(strain, 'effects')
+                strain.save()
+
+            if effect_type == 'benefits':
+                strain.benefits = self.calculate_new_global_values(strain, 'benefits')
+                strain.save()
+
+            if effect_type == 'side_effects':
+                strain.side_effects = self.calculate_new_global_values(strain, 'side_effects')
+                strain.save()
 
         return Response({}, status=status.HTTP_200_OK)
 

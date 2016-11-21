@@ -55,6 +55,7 @@ LOCAL_APPS = (
     'web.users.apps.UsersConfig',
     'web.search.apps.SearchConfig',
     'web.businesses.apps.BusinessConfig',
+    'web.system.apps.SystemConfig',
     # Your stuff: custom apps go here
     'web',
 )
@@ -261,8 +262,8 @@ REST_FRAMEWORK = {
         'rest_framework.permissions.IsAuthenticated'
     ],
     'DEFAULT_AUTHENTICATION_CLASSES': (
-            'rest_framework.authentication.SessionAuthentication',
-        )
+        'rest_framework.authentication.SessionAuthentication',
+    )
 }
 
 LOGGER_NAME = 'web'

@@ -61,7 +61,7 @@ class StrainDetailsService:
         also_like_strains = []
 
         if latest_user_search and len(latest_user_search) > 0:
-            data = SearchElasticService().query_strain_srx_score(latest_user_search[0].to_search_criteria(), 100, 0)
+            data = SearchElasticService().query_strain_srx_score(latest_user_search[0].to_search_criteria(), 2000, 0)
             start_index = 0
             initial = 0
             for index, s in enumerate(data.get('list')):
@@ -72,6 +72,9 @@ class StrainDetailsService:
                 if index + 1 != start_index and 0 < start_index < initial + 5:
                     also_like_strains.append(s)
                     start_index += 1
+
+                if start_index == initial + 5:
+                    break
 
         if len(also_like_strains) == 0:
             search_criteria = current_strain.to_search_criteria()
