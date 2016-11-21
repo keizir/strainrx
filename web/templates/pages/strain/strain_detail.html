@@ -43,6 +43,17 @@
 {% block modal %}
     <div class="strain-review-dialog-wrapper hidden"></div>
 
+    <div class="dialog undo-strain-review-dialog hidden" title="Undo Your Changes">
+        <div class="dialog-text">
+            <span>Are you sure you want to undo your changes?</span>
+        </div>
+        <div class="dialog-actions">
+            <div class="buttons-section">
+                <button type="button" class="btn-primary btn-yes">Yes</button>
+                <button type="button" class="btn-secondary btn-cancel">Cancel</button>
+            </div>
+        </div>
+    </div>
     <div class="dialog form-dialog upload-image-dialog hidden" title="Upload Photo">
         <form class="image-upload-form">
             {% csrf_token %}

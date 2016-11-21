@@ -1,6 +1,6 @@
-from web.search.api.serializers import StrainDetailSerializer
+from web.search.api.serializers import StrainDetailSerializer, UserStrainReviewSerializer
 from web.search.es_service import SearchElasticService
-from web.search.models import UserSearch, Strain, StrainImage, StrainReview
+from web.search.models import UserSearch, Strain, StrainImage, StrainReview, UserStrainReview
 from web.search.services import build_strain_rating
 
 
@@ -16,12 +16,29 @@ class StrainDetailsService:
         strain_srx_score = self.calculate_srx_score(strain, current_user)
         reviews = self.get_strain_reviews(strain)
 
+        effects_review = UserStrainReview.objects.filter(strain=strain, effect_type='effects',
+                                                         created_by=current_user, removed_date=None)
+        benefits_review = UserStrainReview.objects.filter(strain=strain, effect_type='benefits',
+                                                          created_by=current_user, removed_date=None)
+        side_effects_review = UserStrainReview.objects.filter(strain=strain, effect_type='side_effects',
+                                                              created_by=current_user, removed_date=None)
+
         return {
             'strain': StrainDetailSerializer(strain).data,
             'strain_image': image[0].image.url if image else None,
             'strain_origins': strain_origins,
             'also_like_strains': also_like_strains,
             'strain_rating': rating,
+
+            'strain_effects_review': UserStrainReviewSerializer(effects_review[0]).data if len(
+                effects_review) > 0 else None,
+
+            'strain_benefits_review': UserStrainReviewSerializer(benefits_review[0]).data if len(
+                benefits_review) > 0 else None,
+
+            'strain_side_effects_review': UserStrainReviewSerializer(side_effects_review[0]).data if len(
+                side_effects_review) > 0 else None,
+
             'strain_reviews': reviews,
             'strain_srx_score': strain_srx_score,
             'favorite': True,  # TODO check user's favorites

@@ -28,9 +28,6 @@ W.common.ConfirmDialog = function ($el, closeCallback) {
     if ($el) {
         $el.removeClass('hidden');
         $el.dialog({
-            classes: {
-                'ui-dialog': 'srx-dialog'
-            },
             closeOnEscape: true,
             minHeight: 'auto',
             height: 'auto',
@@ -39,7 +36,7 @@ W.common.ConfirmDialog = function ($el, closeCallback) {
             draggable: false,
             resizable: false,
             create: function () {
-                $(this).css("maxWidth", "500px");
+                $(this).css("max-width", "500px");
             },
             close: function (e, ui) {
                 if (closeCallback) {

@@ -25,9 +25,14 @@ W.pages.strain.StrainReviewDialog = Class.extend({
     clickDisagreeLink: function clickDisagreeLink() {
         var that = this;
         this.strainReviewDialogTemplate = _.template($('#strain_review_dialog_template').html());
-        $('.disagree-link').on('click', function (e) {
+        $('.disagree').on('click', function (e) {
             e.preventDefault();
             that.buildAndShowReviewDialog($(this));
+        });
+
+        $('.undo-disagree').on('click', function (e) {
+            e.preventDefault();
+            that.buildAndShowUndoDialog($(this));
         });
     },
 
@@ -66,7 +71,56 @@ W.pages.strain.StrainReviewDialog = Class.extend({
 
         this.initAddButton(effectType);
         this.clickRemoveEffect($('.remove-effect'));
-        this.clickUpdateStrainEffects();
+        this.createStrainReview();
+    },
+
+    buildAndShowUndoDialog: function buildAndShowUndoDialog($link) {
+        var that = this,
+            effectType = $link.prop('id'),
+            $undoDialog = $('.undo-strain-review-dialog');
+
+        effectType = 'positive-effects' === effectType ?
+            'effects' : 'medical-benefits' === effectType ? 'benefits' : 'side_effects';
+
+        $undoDialog.find('.btn-yes').on('click', function () {
+            $.ajax({
+                method: 'DELETE',
+                url: '/api/v1/search/strain/{0}/user_reviews'.format($('.strain-id').val()),
+                data: JSON.stringify({effect_type: effectType}),
+                success: function () {
+                    var $effects, $sectionHeader,
+                        strain = that.model.get('strain');
+
+                    if (effectType === 'effects') {
+                        $effects = $('.effects-region');
+                        $effects.html(that.effectHtml(that.buildEffectsToDisplayOnDetailPage(strain.effects, W.common.Constants.effectNames)));
+                    }
+
+                    if (effectType === 'benefits') {
+                        $effects = $('.benefits-region');
+                        $effects.html(that.effectHtml(that.buildEffectsToDisplayOnDetailPage(strain.benefits, W.common.Constants.benefitNames)));
+                    }
+
+                    if (effectType === 'side_effects') {
+                        $effects = $('.side-effects-region');
+                        $effects.html(that.sideEffectHtml(that.buildEffectsToDisplayOnDetailPage(strain.side_effects, W.common.Constants.sideEffectNames)));
+                    }
+
+                    $sectionHeader = $effects.parent().find('.section-header');
+                    $sectionHeader.find('.undo-disagree-wrapper').addClass('hidden');
+                    $sectionHeader.find('.disagree').removeClass('hidden');
+
+                    $undoDialog.dialog('close');
+                    $undoDialog.find('.btn-yes').off('click');
+                }
+            });
+        });
+
+        $undoDialog.find('.btn-cancel').on('click', function () {
+            $undoDialog.dialog('close');
+        });
+
+        W.common.ConfirmDialog($undoDialog);
     },
 
     buildEffectsToDisplay: function buildEffectsToDisplay(rawEffects, effectNames) {
@@ -77,7 +131,18 @@ W.pages.strain.StrainReviewDialog = Class.extend({
             }
         });
         effectsToDisplay.sort(this.sortValues);
-        return effectsToDisplay
+        return effectsToDisplay;
+    },
+
+    buildEffectsToDisplayOnDetailPage: function buildEffectsToDisplayOnDetailPage(rawEffects, effectNames) {
+        var effectsToDisplay = [];
+        $.each(rawEffects, function (name, value) {
+            if (value > 0) {
+                effectsToDisplay.push({name: effectNames[name], value: value});
+            }
+        });
+        effectsToDisplay.sort(this.sortValues);
+        return effectsToDisplay;
     },
 
     sortValues: function sortValues(el1, el2) {
@@ -264,6 +329,8 @@ W.pages.strain.StrainReviewDialog = Class.extend({
                 effectName = $activePayload.find('.effect-name').text(),
                 effect = this.getReviewEffectValue(effectName);
 
+            $('.error-message').text('');
+
             if (effect === null) {
                 $('.review-effects-holder').append(this.renderReviewEffect({
                     displayName: $activePayload.find('.effect-display-name').text(),
@@ -312,11 +379,68 @@ W.pages.strain.StrainReviewDialog = Class.extend({
         $('.review-effect-wrapper-{0}'.format(effectName)).remove();
     },
 
-    clickUpdateStrainEffects: function clickUpdateStrainEffects() {
+    createStrainReview: function createStrainReview() {
         var that = this;
         $('.btn-update-effects').on('click', function (e) {
             e.preventDefault();
-            console.log(that.reviewEffects); // TODO send via POST when backend is ready
+            if (that.reviewEffects.length > 0) {
+                $.ajax({
+                    method: 'POST',
+                    url: '/api/v1/search/strain/{0}/user_reviews'.format($('.strain-id').val()),
+                    dataType: 'json',
+                    data: JSON.stringify({type: that.effectType, effects: that.reviewEffects}),
+                    success: function () {
+                        if (that.effectType === 'positive-effects') {
+                            var $effects = $('.effects-region'),
+                                $sectionHeader = $effects.parent().find('.section-header');
+                            $effects.html(that.effectHtml(that.changeEffectNames(W.common.Constants.effectNames)));
+                            $sectionHeader.find('.undo-disagree-wrapper').removeClass('hidden');
+                            $sectionHeader.find('.disagree').addClass('hidden');
+                        }
+
+                        if (that.effectType === 'medical-benefits') {
+                            var $benefits = $('.benefits-region'),
+                                $benefitsSectionHeader = $benefits.parent().find('.section-header');
+                            $benefits.html(that.effectHtml(that.changeEffectNames(W.common.Constants.benefitNames)));
+                            $benefitsSectionHeader.find('.undo-disagree-wrapper').removeClass('hidden');
+                            $benefitsSectionHeader.find('.disagree').addClass('hidden');
+                        }
+
+                        if (that.effectType === 'negative-effects') {
+                            var $sideEffects = $('.side-effects-region'),
+                                $sideEffectsSectionHeader = $sideEffects.parent().find('.section-header');
+                            $sideEffects.html(that.sideEffectHtml(that.changeEffectNames(W.common.Constants.sideEffectNames)));
+                            $sideEffectsSectionHeader.find('.undo-disagree-wrapper').removeClass('hidden');
+                            $sideEffectsSectionHeader.find('.disagree').addClass('hidden');
+                        }
+
+                        $('.strain-review-dialog').dialog('close');
+                    }
+                });
+            } else {
+                $('.error-message').text('At least one effect is required');
+            }
         });
+    },
+
+    changeEffectNames: function changeEffectNames(namesMap) {
+        var effectsToDisplay = [];
+        $.each(this.reviewEffects, function (index, effect) {
+            if (effect.value > 0) {
+                effectsToDisplay.push({name: namesMap[effect.name], value: effect.value});
+            }
+        });
+        effectsToDisplay.sort(this.sortValues);
+        return effectsToDisplay;
+    },
+
+    effectHtml: function effectHtml(toDisplay) {
+        var template = _.template($('#strain_effects').html());
+        return template({'effects': toDisplay});
+    },
+
+    sideEffectHtml: function sideEffectHtml(toDisplay) {
+        var template = _.template($('#strain_side_effects').html());
+        return template({'effects': toDisplay});
     }
 });

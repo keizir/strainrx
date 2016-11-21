@@ -29,6 +29,11 @@ urlpatterns = [
         name='strain_reviews'
     ),
     url(
+        regex=r'^strain/(?P<strain_id>[0-9]+)/user_reviews',
+        view=StrainUserReviewsView.as_view(),
+        name='strain_user_reviews'
+    ),
+    url(
         regex=r'^strain/like',
         view=StrainLikeView.as_view(),
         name='strain_like'
