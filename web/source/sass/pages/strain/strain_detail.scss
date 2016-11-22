@@ -331,7 +331,7 @@
                 width: 100%;
 
                 .similar-strains-wrapper {
-                    width: 10000px;
+                    width: auto;
 
                     .similar-wrapper {
                         display: inline-block;
@@ -1021,6 +1021,20 @@
 
             .truck-marker:hover {
                 color: $iris-blue;
+            }
+        }
+    }
+
+    .strain-similar {
+        .also-like-strains-wrapper {
+            .similar-strains-wrapper {
+                text-align: center;
+
+                .similar-wrapper {
+                    display: block;
+                    width: auto;
+                    margin: 0 auto;
+                }
             }
         }
     }

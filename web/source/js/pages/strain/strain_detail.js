@@ -20,10 +20,6 @@ W.pages.strain.StrainDetailPage = Class.extend({
                 that.model = new W.common.Model(strain_data);
                 that.preformatModel();
                 that.renderStrainDetails();
-
-                $(window).resize(function () {
-                    that.recalculateSimilarStrainsSectionWidth();
-                });
             }
         });
     },
@@ -92,25 +88,6 @@ W.pages.strain.StrainDetailPage = Class.extend({
         new W.pages.strain.StrainReviewDialog({
             model: this.model
         });
-
-        $(window).trigger('resize');
-    },
-
-    recalculateSimilarStrainsSectionWidth: function recalculateSimilarStrainsSectionWidth() {
-        var $inner = $('.similar-strains-wrapper'),
-            $similar = $inner.find('.similar-wrapper'),
-            maxWidth = 0;
-
-        $.each($similar, function () {
-            var $el = $(this),
-                padding = parseInt($el.css('padding'), 10),
-                width = (3 * padding) + $el.outerWidth(true);
-            if (width > maxWidth) {
-                maxWidth = width;
-            }
-        });
-
-        $inner.css("width", maxWidth * $similar.length);
     },
 
     initRatings: function initRatings() {
