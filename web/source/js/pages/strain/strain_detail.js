@@ -184,9 +184,10 @@ W.pages.strain.StrainDetailPage = Class.extend({
     },
 
     likeStrain: function likeStrain(data, successCallback) {
+        var that = this;
         $.ajax({
             method: 'POST',
-            url: '/api/v1/search/strain/like',
+            url: '/api/v1/search/strain/{0}/like'.format(that.ui.$strainId.val()),
             dataType: 'json',
             data: JSON.stringify(data),
             success: function () {

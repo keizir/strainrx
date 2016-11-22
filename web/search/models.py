@@ -213,3 +213,10 @@ def create_es_review(sender, **kwargs):
     data['created_by'] = strain_review.created_by.id
     data['last_modified_by'] = strain_review.last_modified_by.id if strain_review.last_modified_by else None
     StrainESService().save_strain_review(data, strain_review.id, strain_review.strain.id)
+
+
+@python_2_unicode_compatible
+class UserFavoriteStrain(models.Model):
+    strain = models.ForeignKey(Strain, on_delete=models.DO_NOTHING, null=True)
+    created_by = models.ForeignKey(User, on_delete=models.DO_NOTHING)
+    created_date = models.DateTimeField(auto_now=True)

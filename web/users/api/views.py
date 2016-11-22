@@ -14,7 +14,7 @@ from rest_framework.views import APIView
 from web.businesses.models import Business
 from web.businesses.serializers import BusinessSerializer
 from web.search.api.serializers import SearchCriteriaSerializer
-from web.search.models import UserSearch, StrainReview, StrainImage
+from web.search.models import UserSearch, StrainReview, StrainImage, UserFavoriteStrain
 from web.search.services import build_strain_rating
 from web.users import validators
 from web.users.api.permissions import UserAccountOwner
@@ -388,3 +388,29 @@ class UserStrainReviewsView(LoginRequiredMixin, APIView):
                 'created_date': r.created_date
             })
         return Response({'reviews': reviews}, status=status.HTTP_200_OK)
+
+
+class UserFavoritesView(LoginRequiredMixin, APIView):
+    permission_classes = (UserAccountOwner,)
+
+    def get(self, request, user_id):
+        type = request.GET.get('type')
+
+        if 'strain' == type:
+            favorites_raw = UserFavoriteStrain.objects.filter(created_by__id=user_id).order_by('-created_date')
+            favorites = []
+            for r in favorites_raw:
+                images = StrainImage.objects.filter(strain=r.strain)
+                favorites.append({
+                    'id': r.id,
+                    'strain_id': r.strain.id,
+                    'strain_name': r.strain.name,
+                    'strain_slug': r.strain.strain_slug,
+                    'strain_variety': r.strain.variety,
+                    'strain_image': images[0] if len(images) > 0 else None,
+                    'strain_overall_rating': build_strain_rating(r.strain),
+                    'created_date': r.created_date
+                })
+            return Response({'favorites': favorites}, status=status.HTTP_200_OK)
+
+        return Response({}, status=status.HTTP_400_BAD_REQUEST)
