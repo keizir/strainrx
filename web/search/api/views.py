@@ -77,9 +77,8 @@ class StrainFavoriteView(LoginRequiredMixin, APIView):
                 created_by=request.user
             )
             favorite_strain.save()
-        else:
-            if len(favorite_strain) > 0:
-                favorite_strain[0].delete()
+        elif len(favorite_strain) > 0:
+            favorite_strain[0].delete()
 
         return Response({}, status=status.HTTP_200_OK)
 

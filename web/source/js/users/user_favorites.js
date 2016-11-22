@@ -30,7 +30,7 @@ W.users.FavoritesPage = Class.extend({
         var that = this;
         $.ajax({
             method: 'GET',
-            url: '/api/v1/users/{0}/favorites?type=strain'.format(that.ui.$userId.val()),
+            url: '/api/v1/users/{0}/favorites/strain'.format(that.ui.$userId.val()),
             success: function (data) {
                 if (data.favorites) {
                     success(data.favorites);

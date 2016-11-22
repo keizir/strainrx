@@ -393,10 +393,8 @@ class UserStrainReviewsView(LoginRequiredMixin, APIView):
 class UserFavoritesView(LoginRequiredMixin, APIView):
     permission_classes = (UserAccountOwner,)
 
-    def get(self, request, user_id):
-        type = request.GET.get('type')
-
-        if 'strain' == type:
+    def get(self, request, user_id, favorite_type):
+        if 'strain' == favorite_type:
             favorites_raw = UserFavoriteStrain.objects.filter(created_by__id=user_id).order_by('-created_date')
             favorites = []
             for r in favorites_raw:
