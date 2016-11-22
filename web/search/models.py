@@ -217,6 +217,6 @@ def create_es_review(sender, **kwargs):
 
 @python_2_unicode_compatible
 class UserFavoriteStrain(models.Model):
-    strain = models.ForeignKey(Strain, on_delete=models.DO_NOTHING, null=True)
+    strain = models.ForeignKey(Strain, on_delete=models.DO_NOTHING)
     created_by = models.ForeignKey(User, on_delete=models.DO_NOTHING)
     created_date = models.DateTimeField(auto_now=True)

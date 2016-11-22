@@ -187,7 +187,7 @@ W.pages.strain.StrainDetailPage = Class.extend({
         var that = this;
         $.ajax({
             method: 'POST',
-            url: '/api/v1/search/strain/{0}/like'.format(that.ui.$strainId.val()),
+            url: '/api/v1/search/strain/{0}/favorite'.format(that.ui.$strainId.val()),
             dataType: 'json',
             data: JSON.stringify(data),
             success: function () {

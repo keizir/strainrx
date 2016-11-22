@@ -66,7 +66,7 @@ class StrainSearchResultsView(LoginRequiredMixin, APIView):
         }, status=status.HTTP_400_BAD_REQUEST)
 
 
-class StrainLikeView(LoginRequiredMixin, APIView):
+class StrainFavoriteView(LoginRequiredMixin, APIView):
     def post(self, request, strain_id):
         add_to_favorites = request.data.get('like')
         favorite_strain = UserFavoriteStrain.objects.filter(strain__id=strain_id, created_by=request.user)

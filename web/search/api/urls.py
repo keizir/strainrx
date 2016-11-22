@@ -34,8 +34,8 @@ urlpatterns = [
         name='strain_user_reviews'
     ),
     url(
-        regex=r'^strain/(?P<strain_id>[0-9]+)/like',
-        view=StrainLikeView.as_view(),
+        regex=r'^strain/(?P<strain_id>[0-9]+)/favorite',
+        view=StrainFavoriteView.as_view(),
         name='strain_favorite'
     ),
     url(
