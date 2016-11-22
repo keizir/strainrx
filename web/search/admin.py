@@ -12,17 +12,26 @@ class StrainAdmin(admin.ModelAdmin):
     ordering = ['name']
 
 
+def approve_selected_ratings(modeladmin, request, queryset):
+    for rating in queryset:
+        rating.review_approved = True
+        rating.last_modified_by = request.user
+        rating.save()
+
+
+approve_selected_ratings.short_description = 'Approve selected ratings'
+
+
 @admin.register(StrainReview)
 class StrainReviewAdmin(admin.ModelAdmin):
-    list_display = ['strain', 'rating', 'review_approved', 'created_date', 'created_by',
-                    'last_modified_date', 'last_modified_by']
-    search_fields = ['strain', 'rating', 'review_approved', 'created_date', 'created_by',
-                     'last_modified_date', 'last_modified_by']
+    list_display = ['strain', 'rating', 'review', 'review_approved', 'created_date', 'created_by']
+    search_fields = ['strain', 'rating', 'review_approved', 'created_date', 'created_by']
     list_filter = ['strain', 'rating', 'review_approved', 'created_date', 'created_by',
                    'last_modified_date', 'last_modified_by']
     ordering = ['strain', '-created_date']
     readonly_fields = ['strain', 'rating', 'review', 'created_date', 'created_by',
                        'last_modified_date', 'last_modified_by']
+    actions = [approve_selected_ratings]
 
 
 def get_client_ip(request):
