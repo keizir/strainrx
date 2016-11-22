@@ -34,6 +34,11 @@ urlpatterns = [
         name='strain_reviews'
     ),
     url(
+        regex=r'^(?P<user_id>\d+)/favorites/(?P<favorite_type>\w+)$',
+        view=UserFavoritesView.as_view(),
+        name='strain_favorites'
+    ),
+    url(
         regex=r'^login',
         view=UserLoginView.as_view(),
         name='login'

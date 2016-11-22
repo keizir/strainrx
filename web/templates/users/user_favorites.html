@@ -1,9 +1,31 @@
 {% extends "users/base_profile.html" %}
 
+{% load static %}
+
+{% block css %}
+    {{ block.super }}
+    <link href="{% static 'css/users/user_favorites.css' %}" rel="stylesheet">
+{% endblock %}
+
 {% block profile-tab %}
-    <div class="user-favorites">
-        {% if object == request.user %}
-            <h1>Favorites</h1>
-        {% endif %}
+    <div class="sub-tabs user-favorites-sub-tabs">
+        <span class="sub-tab strains-tab active">Strains</span>
+        <span class="separator"></span>
+        <span class="sub-tab dispensaries-tab">Dispensaries</span>
+        <span class="separator"></span>
+        <span class="sub-tab deliveries-tab">Delivery Services</span>
     </div>
+    <div class="user-favorites"></div>
+
+    {% include 'users/user_favourite_strain_template.html' %}
+
+{% endblock %}
+
+{% block javascript %}
+    {{ block.super }}
+    <script src="{% static 'js/users/user_favorites.js' %}"></script>
+    <script src="{% static 'js/users/user_favorites_view.js' %}"></script>
+    <script type="text/javascript">
+        W.users.FavoritesView.init();
+    </script>
 {% endblock %}

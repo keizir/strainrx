@@ -1,0 +1,28 @@
+{% load static %}
+
+<script type="x/srx-template" id="user_favorite_strain_template">
+    <div class="favorite">
+        <div class="strain-info-wrapper">
+            <div class="strain-image">
+                <% if (favorite.strain_image !== null) { %>
+                <img src="${ favorite.strain_image }" alt="Strain Image">
+                <% } else { %>
+                <img src="{% static 'images/weed_small.jpg' %}" alt="Strain Image"/>
+                <% } %>
+            </div>
+            <div class="strain-info">
+                    <span class="strain-name">
+                        <a href="/search/strain/${ favorite.strain_slug }"><%= favorite.strain_name %></a>
+                    </span>
+                <span class="strain-type">${ favorite.strain_variety }</span>
+                <span class="strain-rating overall-rating-<%= favorite.id %>">
+                        ${ favorite.strain_overall_rating }</span>
+            </div>
+        </div>
+        <div class="strain-favorite-wrapper">
+            <div class="created-date">
+                <span class="date">${ favorite.created_date }</span>
+            </div>
+        </div>
+    </div>
+</script>

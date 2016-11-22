@@ -1,6 +1,6 @@
 from web.search.api.serializers import StrainDetailSerializer, UserStrainReviewSerializer
 from web.search.es_service import SearchElasticService
-from web.search.models import UserSearch, Strain, StrainImage, StrainReview, UserStrainReview
+from web.search.models import UserSearch, Strain, StrainImage, StrainReview, UserStrainReview, UserFavoriteStrain
 from web.search.services import build_strain_rating
 
 
@@ -23,6 +23,8 @@ class StrainDetailsService:
         side_effects_review = UserStrainReview.objects.filter(strain=strain, effect_type='side_effects',
                                                               created_by=current_user, removed_date=None)
 
+        favorite = UserFavoriteStrain.objects.filter(strain=strain, created_by=current_user).exists()
+
         return {
             'strain': StrainDetailSerializer(strain).data,
             'strain_image': image[0].image.url if image else None,
@@ -41,7 +43,7 @@ class StrainDetailsService:
 
             'strain_reviews': reviews,
             'strain_srx_score': strain_srx_score,
-            'favorite': True,  # TODO check user's favorites
+            'favorite': favorite,
             'dispensaries': dispensaries,
             'is_rated': StrainReview.objects.filter(strain=strain, created_by=current_user).exists()
         }

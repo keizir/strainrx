@@ -9,7 +9,7 @@ from rest_framework.views import APIView
 from web.search.api.serializers import SearchCriteriaSerializer, StrainReviewFormSerializer
 from web.search.api.services import StrainDetailsService
 from web.search.es_service import SearchElasticService
-from web.search.models import Strain, StrainImage, Effect, StrainReview, UserStrainReview
+from web.search.models import Strain, StrainImage, Effect, StrainReview, UserStrainReview, UserFavoriteStrain
 
 logger = logging.getLogger(__name__)
 
@@ -66,9 +66,20 @@ class StrainSearchResultsView(LoginRequiredMixin, APIView):
         }, status=status.HTTP_400_BAD_REQUEST)
 
 
-class StrainLikeView(LoginRequiredMixin, APIView):
-    def post(self, request):
+class StrainFavoriteView(LoginRequiredMixin, APIView):
+    def post(self, request, strain_id):
         add_to_favorites = request.data.get('like')
+        favorite_strain = UserFavoriteStrain.objects.filter(strain__id=strain_id, created_by=request.user)
+
+        if add_to_favorites and len(favorite_strain) == 0:
+            favorite_strain = UserFavoriteStrain(
+                strain=Strain.objects.get(id=strain_id),
+                created_by=request.user
+            )
+            favorite_strain.save()
+        elif len(favorite_strain) > 0:
+            favorite_strain[0].delete()
+
         return Response({}, status=status.HTTP_200_OK)
 
 
