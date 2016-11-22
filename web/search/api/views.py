@@ -9,9 +9,8 @@ from rest_framework.views import APIView
 from web.search.api.serializers import SearchCriteriaSerializer, StrainReviewFormSerializer
 from web.search.api.services import StrainDetailsService
 from web.search.es_service import SearchElasticService
-from web.search.models import Strain, StrainImage, Effect, StrainReview, UserStrainReview
-from web.system.models import SystemProperty
 from web.search.models import Strain, StrainImage, Effect, StrainReview, UserStrainReview, UserFavoriteStrain
+from web.system.models import SystemProperty
 
 logger = logging.getLogger(__name__)
 
@@ -144,32 +143,36 @@ class StrainUserReviewsView(LoginRequiredMixin, APIView):
         strain = Strain.objects.get(id=strain_id)
         sender_ip = get_client_ip(request)
 
-        if 'positive-effects' == effect_type:
-            if not UserStrainReview.objects.filter(strain=strain, effect_type='effects',
-                                                   created_by=request.user, removed_date=None).exists():
-                review = UserStrainReview(strain=strain, created_by=request.user, created_by_ip=sender_ip,
-                                          effect_type='effects')
-                review.effects = self.build_effects_object(effects, strain.effects)
-                review.save()
-                self.recalculate_global_effects(request, 'effects', strain)
+        if UserStrainReview.objects.filter(strain=strain, created_by=request.user, removed_date=None).exists():
+            review = UserStrainReview.objects.get(strain=strain, created_by=request.user, removed_date=None)
+        else:
+            review = UserStrainReview(strain=strain, effects=strain.effects, benefits=strain.benefits,
+                                      side_effects=strain.side_effects, created_by=request.user,
+                                      created_by_ip=sender_ip)
 
-        if 'medical-benefits' == effect_type:
-            if not UserStrainReview.objects.filter(strain=strain, effect_type='benefits',
-                                                   created_by=request.user, removed_date=None).exists():
-                review = UserStrainReview(strain=strain, created_by=request.user, created_by_ip=sender_ip,
-                                          effect_type='benefits')
-                review.effects = self.build_effects_object(effects, strain.benefits)
-                review.save()
-                self.recalculate_global_effects(request, 'benefits', strain)
+        if 'effects' == effect_type:
+            review.effects = self.build_effects_object(effects, strain.effects)
+            review.effects_changed = True
+            review.last_modified_by = request.user
+            review.last_modified_by_ip = sender_ip
+            review.save()
+            self.recalculate_global_effects(request, strain)
 
-        if 'negative-effects' == effect_type:
-            if not UserStrainReview.objects.filter(strain=strain, effect_type='side_effects',
-                                                   created_by=request.user, removed_date=None).exists():
-                review = UserStrainReview(strain=strain, created_by=request.user, created_by_ip=sender_ip,
-                                          effect_type='side_effects')
-                review.effects = self.build_effects_object(effects, strain.side_effects)
-                review.save()
-                self.recalculate_global_effects(request, 'side_effects', strain)
+        if 'benefits' == effect_type:
+            review.benefits = self.build_effects_object(effects, strain.benefits)
+            review.benefits_changed = True
+            review.last_modified_by = request.user
+            review.last_modified_by_ip = sender_ip
+            review.save()
+            self.recalculate_global_effects(request, strain)
+
+        if 'side_effects' == effect_type:
+            review.side_effects = self.build_effects_object(effects, strain.side_effects)
+            review.side_effects_changed = True
+            review.last_modified_by = request.user
+            review.last_modified_by_ip = sender_ip
+            review.save()
+            self.recalculate_global_effects(request, strain)
 
         return Response({}, status=status.HTTP_200_OK)
 
@@ -182,14 +185,13 @@ class StrainUserReviewsView(LoginRequiredMixin, APIView):
             effects_to_persist[e.get('name')] = e.get('value')
         return effects_to_persist
 
-    def recalculate_global_effects(self, request, effect_type, strain):
+    def recalculate_global_effects(self, request, strain):
         try:
             recalculate_size = int(SystemProperty.objects.get(name='review_recalculation_size').value)
         except SystemProperty.DoesNotExist:
             recalculate_size = 10
 
-        reviews = UserStrainReview.objects.filter(strain=strain, effect_type=effect_type,
-                                                  status='pending', removed_date=None)
+        reviews = UserStrainReview.objects.filter(strain=strain, status='pending', removed_date=None)
 
         # First check if there are "recalculate_size" new reviews
         if len(reviews) == recalculate_size:
@@ -199,31 +201,42 @@ class StrainUserReviewsView(LoginRequiredMixin, APIView):
                 r.status = 'processed'
                 r.last_modified_ip = sender_ip
                 r.last_modified_by = request.user
-                r.last_modified_date = datetime.now()
                 r.save()
 
-            if effect_type == 'effects':
-                strain.effects = self.calculate_new_global_values(strain, 'effects')
-                strain.save()
+            # Recalculate Global scores for each review in the system that wasn't removed
+            reviews = UserStrainReview.objects.filter(strain=strain, removed_date=None)
 
-            if effect_type == 'benefits':
-                strain.benefits = self.calculate_new_global_values(strain, 'benefits')
-                strain.save()
+            strain.effects = self.calculate_new_global_values(reviews, 'effects')
+            strain.benefits = self.calculate_new_global_values(reviews, 'benefits')
+            strain.side_effects = self.calculate_new_global_values(reviews, 'side_effects')
+            strain.save()
 
-            if effect_type == 'side_effects':
-                strain.side_effects = self.calculate_new_global_values(strain, 'side_effects')
-                strain.save()
-
-    def calculate_new_global_values(self, strain, effect_type):
-        # Recalculate Global scores for each review in the system that wasn't removed
-        reviews = UserStrainReview.objects.filter(strain=strain, effect_type=effect_type, removed_date=None)
+    def calculate_new_global_values(self, reviews, effect_type):
         total_strain_effects = {}
-        for r in reviews:
-            for effect_name in r.effects:
-                if total_strain_effects.get(effect_name):
-                    total_strain_effects[effect_name] += r.effects[effect_name]
-                else:
-                    total_strain_effects[effect_name] = r.effects[effect_name]
+
+        if effect_type == 'effects':
+            for r in reviews:
+                for effect_name in r.effects:
+                    if total_strain_effects.get(effect_name):
+                        total_strain_effects[effect_name] += r.effects[effect_name]
+                    else:
+                        total_strain_effects[effect_name] = r.effects[effect_name]
+
+        if effect_type == 'benefits':
+            for r in reviews:
+                for effect_name in r.benefits:
+                    if total_strain_effects.get(effect_name):
+                        total_strain_effects[effect_name] += r.benefits[effect_name]
+                    else:
+                        total_strain_effects[effect_name] = r.benefits[effect_name]
+
+        if effect_type == 'side_effects':
+            for r in reviews:
+                for effect_name in r.side_effects:
+                    if total_strain_effects.get(effect_name):
+                        total_strain_effects[effect_name] += r.side_effects[effect_name]
+                    else:
+                        total_strain_effects[effect_name] = r.side_effects[effect_name]
 
         for effect_name in total_strain_effects:
             total_strain_effects[effect_name] /= len(reviews)
@@ -234,27 +247,32 @@ class StrainUserReviewsView(LoginRequiredMixin, APIView):
         effect_type = request.data.get('effect_type')
         sender_ip = get_client_ip(request)
         strain = Strain.objects.get(id=strain_id)
-        review = UserStrainReview.objects.get(strain=strain, effect_type=effect_type,
-                                              created_by=request.user, removed_date=None)
+        review = UserStrainReview.objects.get(strain=strain, created_by=request.user, removed_date=None)
 
-        review.removed_date = datetime.now()
+        if effect_type == 'effects':
+            review.effects = strain.effects
+            review.effects_changed = False
+
+        if effect_type == 'benefits':
+            review.benefits = strain.benefits
+            review.benefits_changed = False
+
+        if effect_type == 'side_effects':
+            review.side_effects = strain.side_effects
+            review.side_effects_changed = False
+
+        if not review.effects_changed and not review.benefits_changed and not review.side_effects_changed:
+            review.removed_date = datetime.now()
+
         review.last_modified_ip = sender_ip
         review.last_modified_by = request.user
-        review.last_modified_date = datetime.now()
         review.save()
 
         if review.status == 'processed':
-            if effect_type == 'effects':
-                strain.effects = self.calculate_new_global_values(strain, 'effects')
-                strain.save()
-
-            if effect_type == 'benefits':
-                strain.benefits = self.calculate_new_global_values(strain, 'benefits')
-                strain.save()
-
-            if effect_type == 'side_effects':
-                strain.side_effects = self.calculate_new_global_values(strain, 'side_effects')
-                strain.save()
+            strain.effects = self.calculate_new_global_values(strain, 'effects')
+            strain.benefits = self.calculate_new_global_values(strain, 'benefits')
+            strain.side_effects = self.calculate_new_global_values(strain, 'side_effects')
+            strain.save()
 
         return Response({}, status=status.HTTP_200_OK)
 

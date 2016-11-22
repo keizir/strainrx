@@ -178,23 +178,23 @@ class StrainReview(models.Model):
 
 @python_2_unicode_compatible
 class UserStrainReview(models.Model):
-    strain = models.ForeignKey(Strain, on_delete=models.DO_NOTHING)
-
-    EFFECT_TYPE_CHOICES = (
-        ('effects', 'Effects'),
-        ('benefits', 'Benefits'),
-        ('side_effects', 'Side Effects'),
-    )
-
     STATUS_CHOICES = (
         ('pending', 'Pending'),
         ('processed', 'Processed'),
     )
 
-    effect_type = models.CharField(max_length=20, choices=EFFECT_TYPE_CHOICES)
-    effects = JSONField(default={})
-    status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='pending')
+    strain = models.ForeignKey(Strain, on_delete=models.DO_NOTHING)
 
+    effects = JSONField(default={})
+    effects_changed = models.BooleanField(default=False)
+
+    benefits = JSONField(default={})
+    benefits_changed = models.BooleanField(default=False)
+
+    side_effects = JSONField(default={})
+    side_effects_changed = models.BooleanField(default=False)
+
+    status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='pending')
     removed_date = models.DateTimeField(null=True)
 
     created_date = models.DateTimeField(auto_now_add=True)

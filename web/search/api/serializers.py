@@ -26,7 +26,8 @@ class StrainDetailSerializer(serializers.ModelSerializer):
 class UserStrainReviewSerializer(serializers.ModelSerializer):
     class Meta:
         model = UserStrainReview
-        fields = ('effects', 'effect_type', 'status')
+        fields = ('effects', 'effects_changed', 'benefits', 'benefits_changed', 'side_effects', 'side_effects_changed',
+                  'status')
 
 
 class StrainReviewFormSerializer(serializers.ModelSerializer):

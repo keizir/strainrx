@@ -138,7 +138,7 @@
             <span class="section-header">
                 <span class="title">Positive Effects</span>
                 <span class="disagree-link">
-                    <% if (model.strain_effects_review) { %>
+                    <% if (model.user_strain_review && model.user_strain_review.effects_changed) { %>
                     <span class="undo-disagree-wrapper">
                         Changes submitted. <a href="#" class="undo-disagree" id="positive-effects">Undo</a>
                     </span>
@@ -159,7 +159,7 @@
             <span class="section-header">
                 <span class="title">Medical Benefits</span>
                 <span class="disagree-link">
-                    <% if (model.strain_benefits_review) { %>
+                    <% if (model.user_strain_review && model.user_strain_review.benefits_changed) { %>
                     <span class="undo-disagree-wrapper">
                         Changes submitted. <a href="#" class="undo-disagree" id="medical-benefits">Undo</a>
                     </span>
@@ -180,7 +180,7 @@
             <span class="section-header">
                 <span class="title">Negative Effects</span>
                 <span class="disagree-link">
-                    <% if (model.strain_side_effects_review) { %>
+                    <% if (model.user_strain_review && model.user_strain_review.side_effects_changed) { %>
                     <span class="undo-disagree-wrapper">
                         Changes submitted. <a href="#" class="undo-disagree" id="negative-effects">Undo</a>
                     </span>

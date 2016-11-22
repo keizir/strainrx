@@ -125,20 +125,15 @@ class Command(BaseCommand):
                 rate_bot.save()
 
             for s in persisted:
-                if not UserStrainReview.objects.filter(strain=s, effect_type='effects', created_by=rate_bot).exists():
-                    review = UserStrainReview(strain=s, created_by=rate_bot, effects=s.effects,
-                                              effect_type='effects', status='pending')
+                if not UserStrainReview.objects.filter(strain=s, created_by=rate_bot, removed_date=None).exists():
+                    review = UserStrainReview(strain=s, created_by=rate_bot, effects=s.effects, benefits=s.benefits,
+                                              side_effects=s.side_effects, status='pending')
                     review.save()
-
-                if not UserStrainReview.objects.filter(strain=s, effect_type='benefits', created_by=rate_bot).exists():
-                    review = UserStrainReview(strain=s, created_by=rate_bot, effects=s.benefits,
-                                              effect_type='benefits', status='pending')
-                    review.save()
-
-                if not UserStrainReview.objects.filter(strain=s, effect_type='side_effects',
-                                                       created_by=rate_bot).exists():
-                    review = UserStrainReview(strain=s, created_by=rate_bot, effects=s.side_effects,
-                                              effect_type='side_effects', status='pending')
+                else:
+                    review = UserStrainReview.objects.get(strain=s, created_by=rate_bot, removed_date=None)
+                    review.effects = s.effects
+                    review.benefits = s.benefits
+                    review.side_effects = s.side_effects
                     review.save()
 
             time_end = time.time()

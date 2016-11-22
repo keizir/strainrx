@@ -5,21 +5,7 @@
         <div class="effect-wrapper">
             <span class="effect-name"><%= effect.name %></span>
             <div class="effect">
-                <% if (effect.value === 10) { %>
-                <span class="fill fill-5"></span>
-                <% } %>
-                <% if (effect.value === 9) { %>
-                <span class="fill fill-4"></span>
-                <% } %>
-                <% if (effect.value === 8) { %>
-                <span class="fill fill-3"></span>
-                <% } %>
-                <% if (effect.value === 7) { %>
-                <span class="fill fill-2"></span>
-                <% } %>
-                <% if (effect.value === 6) { %>
-                <span class="fill fill-1"></span>
-                <% } %>
+                <%= sideEffectFillHtml(effect.value) %>
             </div>
         </div>
         <% }); %>

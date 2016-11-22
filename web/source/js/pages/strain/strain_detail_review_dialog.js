@@ -380,7 +380,10 @@ W.pages.strain.StrainReviewDialog = Class.extend({
     },
 
     createStrainReview: function createStrainReview() {
-        var that = this;
+        var that = this,
+            effectType = 'positive-effects' === this.effectType ?
+                'effects' : 'medical-benefits' === this.effectType ? 'benefits' : 'side_effects';
+
         $('.btn-update-effects').on('click', function (e) {
             e.preventDefault();
             if (that.reviewEffects.length > 0) {
@@ -388,7 +391,7 @@ W.pages.strain.StrainReviewDialog = Class.extend({
                     method: 'POST',
                     url: '/api/v1/search/strain/{0}/user_reviews'.format($('.strain-id').val()),
                     dataType: 'json',
-                    data: JSON.stringify({type: that.effectType, effects: that.reviewEffects}),
+                    data: JSON.stringify({type: effectType, effects: that.reviewEffects}),
                     success: function () {
                         if (that.effectType === 'positive-effects') {
                             var $effects = $('.effects-region'),

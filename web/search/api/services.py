@@ -15,14 +15,7 @@ class StrainDetailsService:
         rating = build_strain_rating(strain)
         strain_srx_score = self.calculate_srx_score(strain, current_user)
         reviews = self.get_strain_reviews(strain)
-
-        effects_review = UserStrainReview.objects.filter(strain=strain, effect_type='effects',
-                                                         created_by=current_user, removed_date=None)
-        benefits_review = UserStrainReview.objects.filter(strain=strain, effect_type='benefits',
-                                                          created_by=current_user, removed_date=None)
-        side_effects_review = UserStrainReview.objects.filter(strain=strain, effect_type='side_effects',
-                                                              created_by=current_user, removed_date=None)
-
+        strain_review = UserStrainReview.objects.filter(strain=strain, created_by=current_user, removed_date=None)
         favorite = UserFavoriteStrain.objects.filter(strain=strain, created_by=current_user).exists()
 
         return {
@@ -31,16 +24,7 @@ class StrainDetailsService:
             'strain_origins': strain_origins,
             'also_like_strains': also_like_strains,
             'strain_rating': rating,
-
-            'strain_effects_review': UserStrainReviewSerializer(effects_review[0]).data if len(
-                effects_review) > 0 else None,
-
-            'strain_benefits_review': UserStrainReviewSerializer(benefits_review[0]).data if len(
-                benefits_review) > 0 else None,
-
-            'strain_side_effects_review': UserStrainReviewSerializer(side_effects_review[0]).data if len(
-                side_effects_review) > 0 else None,
-
+            'user_strain_review': UserStrainReviewSerializer(strain_review[0]).data if len(strain_review) > 0 else None,
             'strain_reviews': reviews,
             'strain_srx_score': strain_srx_score,
             'favorite': favorite,
