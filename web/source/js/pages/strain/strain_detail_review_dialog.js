@@ -439,11 +439,21 @@ W.pages.strain.StrainReviewDialog = Class.extend({
 
     effectHtml: function effectHtml(toDisplay) {
         var template = _.template($('#strain_effects').html());
-        return template({'effects': toDisplay});
+        return template({'effects': toDisplay, 'effectFillHtml': this.effectFillHtml});
     },
 
     sideEffectHtml: function sideEffectHtml(toDisplay) {
         var template = _.template($('#strain_side_effects').html());
-        return template({'effects': toDisplay});
+        return template({'effects': toDisplay, 'sideEffectFillHtml': this.sideEffectFillHtml});
+    },
+
+    effectFillHtml: function effectFillHtml(effectValue) {
+        var fillWidth = effectValue * 0.2 * 100; // 1 point should take 20% of parent width
+        return '<span class="fill" style="width: {0}%"></span>'.format(fillWidth);
+    },
+
+    sideEffectFillHtml: function sideEffectFillHtml(effectValue) {
+        var fillWidth = (effectValue >= 6 ? effectValue - 5 : effectValue) * 0.2 * 100; // 1 point should take 20% of parent width
+        return '<span class="fill" style="width: {0}%"></span>'.format(fillWidth);
     }
 });

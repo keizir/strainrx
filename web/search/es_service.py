@@ -108,6 +108,63 @@ class SearchElasticService(BaseElasticService):
 
         return results
 
+    def query_user_review_srx_score(self, criteria, strain_id=None, user_id=None):
+        method = self.METHODS.get('GET')
+        url = '{base}{index}/{type}/_search'.format(base=self.BASE_ELASTIC_URL, index=self.URLS.get('USER_REVIEWS'),
+                                                    type=es_mappings.TYPES.get('strain_user_review'))
+
+        query = self.build_srx_score_user_review_es_query(criteria, strain_id, user_id)
+        es_response = self._request(method, url, data=json.dumps(query))
+
+        # remove extra info returned by ES and do any other necessary transforms
+        results = self.transform_user_review_results(es_response)
+        return results
+
+    def build_srx_score_user_review_es_query(self, criteria, strain_id, user_id):
+        effects_data = self.parse_criteria_data(criteria.get('effects'))
+        benefits_data = self.parse_criteria_data(criteria.get('benefits'))
+        side_effects_data = self.parse_criteria_data(criteria.get('side_effects'))
+
+        strain_filter = {
+            "query": {
+                "bool": {
+                    "must": [
+                        {"term": {"strain_id": strain_id}},
+                        {"term": {"user_id": user_id}}
+                    ],
+                    "filter": {
+                        "missing": {"field": "removed_date"}
+                    }
+                }
+            }
+        }
+
+        return {
+            "query": {
+                "function_score": {
+                    "query": strain_filter,
+                    "functions": [
+                        {
+                            "script_score": {
+                                "params": {
+                                    "effectSum": effects_data.get('sum'),
+                                    "benefitSum": benefits_data.get('sum'),
+                                    "userEffects": effects_data.get('data'),
+                                    "userBenefits": benefits_data.get('data'),
+                                    "userNegEffects": side_effects_data.get('data')
+                                },
+                                "script": "def psa=effectSum+benefitSum;def benefitPoints=0;def effectPoints=0;def negEffectPoints=0;def distLookup=[(-5):-1,(-4):-0.8,(-3):-0.51,(-2):-0.33,(-1):-0.14,(0):0,(1):-0.01,(2):-0.01,(3):-0.01,(4):-0.01,(5):-0.01];for(e in userEffects){e=e.key;def strainE=_source['effects'][e];def userE=userEffects[e];def effectBonus=0.0;dist=strainE-userE;if(distLookup[dist]==null){npe=0;}else{npe=distLookup[dist]*userE;};if(userE==strainE){switch(strainE){case 3:effectBonus=0.3;break;case 4:effectBonus=0.5;break;case 5:effectBonus=1.0;break;}};effectPoints+=effectBonus+userE+npe;};for(b in userBenefits){b=b.key;def strainB=_source['benefits'][b];def userB=userBenefits[b];def benefitBonus=0.0;dist=strainB-userB;if(distLookup[dist]==null){npb=0;}else{npb=distLookup[dist]*userB;};if(userB==strainB){switch(strainB){case 3:benefitBonus=0.3;break;case 4:benefitBonus=0.5;break;case 5:benefitBonus=1.0;break;}};benefitPoints+=benefitBonus+userB+npb;};for(ne in userNegEffects){ne=ne.key;def strainNE=_source['side_effects'][ne];def userNE=userNegEffects[ne];negPoints=0;if(userNE==0||strainNE==0){negPoints=0;}else{negPoints=(((userNE-strainNE)**2)*-1)/psa;};negEffectPoints+=negPoints;};def tp=effectPoints+negEffectPoints+benefitPoints;return(tp/psa)*100;"
+                            }
+                        }
+                    ]
+                }
+            }
+        }
+
+    def transform_user_review_results(self, results):
+        strains = results.get('hits', {}).get('hits', [])
+        return int(round(strains[0].get('_score'))) if len(strains) > 0 else 'n/a'
+
     def query_strain_srx_score(self, criteria, size=50, start_from=0, strain_id=None):
         """
             Return strains ranked by SRX score
@@ -210,7 +267,7 @@ class SearchElasticService(BaseElasticService):
                                     "userBenefits": benefits_data.get('data'),
                                     "userNegEffects": side_effects_data.get('data')
                                 },
-                                "script": "def psa=effectSum+benefitSum;def benefitPoints=0;def effectPoints=0;def negEffectPoints=0;def distLookup=[(-5):-1,(-4):-0.8,(-3):-0.51,(-2):-0.33,(-1):-0.14,(0):0,(1):-0.01,(2):-0.01,(3):-0.01,(4):-0.01,(5):-0.01];for(e in userEffects){e=e.key;def strainE=_source['effects'][e];def userE=userEffects[e];def effectBonus=0.0;dist=strainE-userE;npe=distLookup[dist]*userE;if(userE==strainE){switch(strainE){case 3:effectBonus=0.3;break;case 4:effectBonus=0.5;break;case 5:effectBonus=1.0;break;}};effectPoints+=effectBonus+userE+npe;};for(b in userBenefits){b=b.key;def strainB=_source['benefits'][b];def userB=userBenefits[b];def benefitBonus=0.0;dist=strainB-userB;npb=distLookup[dist]*userB;if(userB==strainB){switch(strainB){case 3:benefitBonus=0.3;break;case 4:benefitBonus=0.5;break;case 5:benefitBonus=1.0;break;}};benefitPoints+=benefitBonus+userB+npb;};for(ne in userNegEffects){ne=ne.key;def strainNE=_source['side_effects'][ne];def userNE=userNegEffects[ne];negPoints=0;if(userNE==0||strainNE==0){negPoints=0;}else{negPoints=(((userNE-strainNE)**2)*-1)/psa;};negEffectPoints+=negPoints;};def tp=effectPoints+negEffectPoints+benefitPoints;return(tp/psa)*100;"
+                                "script": "def psa=effectSum+benefitSum;def benefitPoints=0;def effectPoints=0;def negEffectPoints=0;def distLookup=[(-5):-1,(-4):-0.8,(-3):-0.51,(-2):-0.33,(-1):-0.14,(0):0,(1):-0.01,(2):-0.01,(3):-0.01,(4):-0.01,(5):-0.01];for(e in userEffects){e=e.key;def strainE=_source['effects'][e];def userE=userEffects[e];def effectBonus=0.0;dist=strainE-userE;if(distLookup[dist]==null){npe=0;}else{npe=distLookup[dist]*userE;};if(userE==strainE){switch(strainE){case 3:effectBonus=0.3;break;case 4:effectBonus=0.5;break;case 5:effectBonus=1.0;break;}};effectPoints+=effectBonus+userE+npe;};for(b in userBenefits){b=b.key;def strainB=_source['benefits'][b];def userB=userBenefits[b];def benefitBonus=0.0;dist=strainB-userB;if(distLookup[dist]==null){npb=0;}else{npb=distLookup[dist]*userB;};if(userB==strainB){switch(strainB){case 3:benefitBonus=0.3;break;case 4:benefitBonus=0.5;break;case 5:benefitBonus=1.0;break;}};benefitPoints+=benefitBonus+userB+npb;};for(ne in userNegEffects){ne=ne.key;def strainNE=_source['side_effects'][ne];def userNE=userNegEffects[ne];negPoints=0;if(userNE==0||strainNE==0){negPoints=0;}else{negPoints=(((userNE-strainNE)**2)*-1)/psa;};negEffectPoints+=negPoints;};def tp=effectPoints+negEffectPoints+benefitPoints;return(tp/psa)*100;"
                             }
                         }
                     ]
@@ -362,8 +419,11 @@ for (e in userEffects) {
     def effectBonus = 0.0;
 
     dist = strainE - userE;
-    npe = distLookup[dist] * userE;
-
+    if (distLookup[dist] == null) {
+        npe = 0;
+    } else {
+        npe = distLookup[dist] * userE;
+    };
 
     if (userE == strainE) {
         switch (strainE) {
@@ -391,8 +451,11 @@ for (b in userBenefits) {
     def benefitBonus = 0.0;
 
     dist = strainB - userB;
-    npb = distLookup[dist] * userB;
-
+    if (distLookup[dist] == null) {
+        npb = 0;
+    } else {
+        npb = distLookup[dist] * userB;
+    };
 
     if (userB == strainB) {
         switch (strainB) {

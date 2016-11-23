@@ -1,5 +1,6 @@
 import logging
 from datetime import datetime
+from operator import itemgetter
 
 from django.contrib.auth.mixins import LoginRequiredMixin
 from rest_framework import status
@@ -9,7 +10,10 @@ from rest_framework.views import APIView
 from web.search.api.serializers import SearchCriteriaSerializer, StrainReviewFormSerializer
 from web.search.api.services import StrainDetailsService
 from web.search.es_service import SearchElasticService
-from web.search.models import Strain, StrainImage, Effect, StrainReview, UserStrainReview, UserFavoriteStrain
+from web.search.models import Strain, StrainImage, Effect, StrainReview, UserStrainReview, UserFavoriteStrain, \
+    UserSearch
+from web.search.strain_es_service import StrainESService
+from web.search.strain_user_review_es_service import StrainUserReviewESService
 from web.system.models import SystemProperty
 
 logger = logging.getLogger(__name__)
@@ -55,8 +59,14 @@ class StrainSearchResultsView(LoginRequiredMixin, APIView):
         search_criteria = request.session.get('search_criteria')
 
         if search_criteria:
+            user_strain_reviews = UserStrainReview.objects.filter(created_by=request.user, removed_date=None)
             data = SearchElasticService().query_strain_srx_score(search_criteria, size, start_from)
             result_list = data.get('list')
+
+            if len(user_strain_reviews) > 0:
+                print('--- Recalculation')
+                result_list = self.change_strain_scores(result_list, user_strain_reviews, request.user)
+
             return Response({
                 'search_results': result_list,
                 'search_results_total': data.get('total')
@@ -65,6 +75,49 @@ class StrainSearchResultsView(LoginRequiredMixin, APIView):
         return Response({
             "error": "Cannot determine a search criteria."
         }, status=status.HTTP_400_BAD_REQUEST)
+
+    @staticmethod
+    def change_strain_scores(result_list, user_strain_reviews, current_user):
+        latest_user_search = UserSearch.objects.filter(user=current_user).order_by('-last_modified_date')[:1]
+
+        user_review_scores = {}
+        user_review_strain_ids = []
+        for r in user_strain_reviews:
+            new_score = SearchElasticService().query_user_review_srx_score(latest_user_search[0].to_search_criteria(),
+                                                                           strain_id=r.strain.id,
+                                                                           user_id=current_user.id)
+            user_review_strain_ids.append(r.strain.id)
+            user_review_scores[r.strain.id] = new_score
+
+        current_scores = []
+        for s in result_list:
+            current_scores.append(s.get('match_percentage'))
+
+        min_score = min(current_scores)
+        max_score = max(current_scores)
+
+        to_remove = []
+        for s in result_list:
+            if s.get('id') in user_review_strain_ids:
+                current_score = s.get('match_percentage')
+                if current_score > max_score or current_score < min_score:
+                    to_remove.append(s)
+
+        if len(to_remove) > 0:
+            for rem in to_remove:
+                result_list.remove(rem)
+
+        for k, v in user_review_scores.items():
+            if max_score > v > min_score:
+                strain = Strain.objects.get(id=k)
+                data = SearchElasticService().query_strain_srx_score(strain.to_search_criteria(),
+                                                                     strain_id=strain.id)
+                users_strain = data.get('list')[0]
+                users_strain['match_percentage'] = user_review_scores.get(k)
+                result_list.append(users_strain)
+
+        result_list = sorted(result_list, key=itemgetter('match_percentage'), reverse=True)
+        return result_list
 
 
 class StrainFavoriteView(LoginRequiredMixin, APIView):
@@ -174,6 +227,8 @@ class StrainUserReviewsView(LoginRequiredMixin, APIView):
             review.save()
             self.recalculate_global_effects(request, strain)
 
+        StrainUserReviewESService().save_strain_review(review, strain.id, request.user.id)
+
         return Response({}, status=status.HTTP_200_OK)
 
     def build_effects_object(self, effects, strain_default_effects):
@@ -210,6 +265,8 @@ class StrainUserReviewsView(LoginRequiredMixin, APIView):
             strain.benefits = self.calculate_new_global_values(reviews, 'benefits')
             strain.side_effects = self.calculate_new_global_values(reviews, 'side_effects')
             strain.save()
+
+            StrainESService().save_strain(strain)
 
     def calculate_new_global_values(self, reviews, effect_type):
         total_strain_effects = {}
@@ -267,6 +324,8 @@ class StrainUserReviewsView(LoginRequiredMixin, APIView):
         review.last_modified_ip = sender_ip
         review.last_modified_by = request.user
         review.save()
+
+        StrainUserReviewESService().save_strain_review(review, strain.id, request.user.id)
 
         if review.status == 'processed':
             strain.effects = self.calculate_new_global_values(strain, 'effects')

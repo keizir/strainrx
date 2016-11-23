@@ -17,7 +17,8 @@ class BaseElasticService(object):
 
     # all API endpoints
     URLS = {
-        'STRAIN': '/strain'
+        'STRAIN': '/strain',
+        'USER_REVIEWS': '/user_reviews'
     }
 
     HEADERS = {

@@ -78,7 +78,7 @@ class Strain(models.Model):
 
     def to_search_criteria(self):
         return {
-            'strain_types': [self.variety],
+            'strain_types': 'skipped',
             'effects': self.build_criteria_effects(self.effects),
             'benefits': self.build_criteria_effects(self.benefits),
             'side_effects': self.build_criteria_effects(self.side_effects)

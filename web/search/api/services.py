@@ -92,10 +92,17 @@ class StrainDetailsService:
         latest_user_search = UserSearch.objects.filter(user=current_user).order_by('-last_modified_date')[:1]
 
         if latest_user_search and len(latest_user_search) > 0:
-            data = SearchElasticService().query_strain_srx_score(latest_user_search[0].to_search_criteria(),
-                                                                 strain_id=current_strain.id)
-            strain = data.get('list')[0]
-            return strain.get('match_percentage')
+            if UserStrainReview.objects.filter(strain=current_strain, created_by=current_user,
+                                               removed_date=None).exists():
+                score = SearchElasticService().query_user_review_srx_score(latest_user_search[0].to_search_criteria(),
+                                                                           strain_id=current_strain.id,
+                                                                           user_id=current_user.id)
+                return score
+            else:
+                data = SearchElasticService().query_strain_srx_score(latest_user_search[0].to_search_criteria(),
+                                                                     strain_id=current_strain.id)
+                strain = data.get('list')[0]
+                return strain.get('match_percentage')
 
         return 0
 

@@ -1,6 +1,7 @@
 TYPES = {
     'strain': "strain",
-    'strain_review': "strain_review"
+    'strain_review': "strain_review",
+    'strain_user_review': "strain_user_review"
 }
 
 strain_mapping = {
@@ -358,6 +359,143 @@ strain_review_mapping = {
         },
         "last_modified_by": {
             "type": "long"
+        }
+    }
+}
+
+strain_user_review_mapping = {
+    "properties": {
+        "id": {
+            "type": "long"
+        },
+        "strain_id": {
+            "type": "long"
+        },
+        "user_id": {
+            "type": "long"
+        },
+        "effects": {
+            "properties": {
+                "happy": {
+                    "type": "short"
+                },
+                "uplifted": {
+                    "type": "short"
+                },
+                "stimulated": {
+                    "type": "short"
+                },
+                "energetic": {
+                    "type": "short"
+                },
+                "creative": {
+                    "type": "short"
+                },
+                "focused": {
+                    "type": "short"
+                },
+                "relaxed": {
+                    "type": "short"
+                },
+                "sleepy": {
+                    "type": "short"
+                },
+                "talkative": {
+                    "type": "short"
+                },
+                "euphoric": {
+                    "type": "short"
+                },
+                "hungry": {
+                    "type": "short"
+                },
+                "tingly": {
+                    "type": "short"
+                },
+                "good_humored": {
+                    "type": "short"
+                }
+            }
+        },
+        "effects_changed": {
+            "type": "boolean"
+        },
+        "benefits": {
+            "properties": {
+                "reduce_stress": {
+                    "type": "short"
+                },
+                "help_depression": {
+                    "type": "short"
+                },
+                "relieve_pain": {
+                    "type": "short"
+                },
+                "reduce_fatigue": {
+                    "type": "short"
+                },
+                "reduce_headaches": {
+                    "type": "short"
+                },
+                "help_muscles_spasms": {
+                    "type": "short"
+                },
+                "lower_eye_pressure": {
+                    "type": "short"
+                },
+                "reduce_nausea": {
+                    "type": "short"
+                },
+                "reduce_inflammation": {
+                    "type": "short"
+                },
+                "relieve_cramps": {
+                    "type": "short"
+                },
+                "help_with_seizures": {
+                    "type": "short"
+                },
+                "restore_appetite": {
+                    "type": "short"
+                },
+                "help_with_insomnia": {
+                    "type": "short"
+                }
+            }
+        },
+        "benefits_changed": {
+            "type": "boolean"
+        },
+        "side_effects": {
+            "properties": {
+                "anxiety": {
+                    "type": "short"
+                },
+                "dry_mouth": {
+                    "type": "short"
+                },
+                "paranoia": {
+                    "type": "short"
+                },
+                "headache": {
+                    "type": "short"
+                },
+                "dizziness": {
+                    "type": "short"
+                },
+                "dry_eyes": {
+                    "type": "short"
+                }
+            }
+        },
+        "side_effects_changed": {
+            "type": "boolean"
+        },
+        "status": {
+            "type": "string"
+        },
+        "removed_date": {
+            "type": "date"
         }
     }
 }
