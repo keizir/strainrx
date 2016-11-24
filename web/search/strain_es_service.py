@@ -56,3 +56,22 @@ class StrainESService(BaseElasticService):
             es_response = self._request(self.METHODS.get('POST'), url, data=json.dumps(data))
 
         return es_response
+
+    def save_strain(self, strain):
+        es_response = self.get_strain_by_db_id(strain.id)
+        es_strains = es_response.get('hits', {}).get('hits', [])
+
+        if len(es_strains) > 0:
+            es_strain = es_strains[0]
+            es_strain_source = es_strain.get('_source')
+
+            es_strain_source['effects'] = strain.effects
+            es_strain_source['benefits'] = strain.benefits
+            es_strain_source['side_effects'] = strain.side_effects
+
+            url = '{base}{index}/{type}/{es_id}'.format(base=self.BASE_ELASTIC_URL, index=self.URLS.get('STRAIN'),
+                                                        type=es_mappings.TYPES.get('strain'),
+                                                        es_id=es_strain.get('_id'))
+            es_response = self._request(self.METHODS.get('PUT'), url, data=json.dumps(es_strain_source))
+
+        return es_response

@@ -380,7 +380,10 @@ W.pages.strain.StrainReviewDialog = Class.extend({
     },
 
     createStrainReview: function createStrainReview() {
-        var that = this;
+        var that = this,
+            effectType = 'positive-effects' === this.effectType ?
+                'effects' : 'medical-benefits' === this.effectType ? 'benefits' : 'side_effects';
+
         $('.btn-update-effects').on('click', function (e) {
             e.preventDefault();
             if (that.reviewEffects.length > 0) {
@@ -388,7 +391,7 @@ W.pages.strain.StrainReviewDialog = Class.extend({
                     method: 'POST',
                     url: '/api/v1/search/strain/{0}/user_reviews'.format($('.strain-id').val()),
                     dataType: 'json',
-                    data: JSON.stringify({type: that.effectType, effects: that.reviewEffects}),
+                    data: JSON.stringify({type: effectType, effects: that.reviewEffects}),
                     success: function () {
                         if (that.effectType === 'positive-effects') {
                             var $effects = $('.effects-region'),
@@ -436,11 +439,21 @@ W.pages.strain.StrainReviewDialog = Class.extend({
 
     effectHtml: function effectHtml(toDisplay) {
         var template = _.template($('#strain_effects').html());
-        return template({'effects': toDisplay});
+        return template({'effects': toDisplay, 'effectFillHtml': this.effectFillHtml});
     },
 
     sideEffectHtml: function sideEffectHtml(toDisplay) {
         var template = _.template($('#strain_side_effects').html());
-        return template({'effects': toDisplay});
+        return template({'effects': toDisplay, 'sideEffectFillHtml': this.sideEffectFillHtml});
+    },
+
+    effectFillHtml: function effectFillHtml(effectValue) {
+        var fillWidth = effectValue * 0.2 * 100; // 1 point should take 20% of parent width
+        return '<span class="fill" style="width: {0}%"></span>'.format(fillWidth);
+    },
+
+    sideEffectFillHtml: function sideEffectFillHtml(effectValue) {
+        var fillWidth = (effectValue >= 6 ? effectValue - 5 : effectValue) * 0.2 * 100; // 1 point should take 20% of parent width
+        return '<span class="fill" style="width: {0}%"></span>'.format(fillWidth);
     }
 });

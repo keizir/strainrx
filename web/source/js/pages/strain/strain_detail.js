@@ -210,22 +210,22 @@ W.pages.strain.StrainDetailPage = Class.extend({
     },
 
     populateEffects: function populateEffects() {
-        var review = this.model.get('strain_effects_review'),
+        var review = this.model.get('user_strain_review'),
             effects = review ? review.effects : this.model.get('strain').effects,
             toDisplay = this.buildEffectsToDisplay(effects, this.effectNames);
         $('.effects-region').append(this.effectHtml(toDisplay));
     },
 
     populateBenefits: function populateBenefits() {
-        var review = this.model.get('strain_benefits_review'),
-            effects = review ? review.effects : this.model.get('strain').benefits,
+        var review = this.model.get('user_strain_review'),
+            effects = review ? review.benefits : this.model.get('strain').benefits,
             toDisplay = this.buildEffectsToDisplay(effects, this.benefitNames);
         $('.benefits-region').append(this.effectHtml(toDisplay));
     },
 
     populateSideEffects: function populateSideEffects() {
-        var review = this.model.get('strain_side_effects_review'),
-            effects = review ? review.effects : this.model.get('strain').side_effects,
+        var review = this.model.get('user_strain_review'),
+            effects = review ? review.side_effects : this.model.get('strain').side_effects,
             toDisplay = this.buildEffectsToDisplay(effects, this.sideEffectNames);
         $('.side-effects-region').append(this.sideEffectHtml(toDisplay));
     },
@@ -257,12 +257,22 @@ W.pages.strain.StrainDetailPage = Class.extend({
 
     effectHtml: function effectHtml(toDisplay) {
         var template = _.template($('#strain_effects').html());
-        return template({'effects': toDisplay});
+        return template({'effects': toDisplay, 'effectFillHtml': this.effectFillHtml});
+    },
+
+    effectFillHtml: function effectFillHtml(effectValue) {
+        var fillWidth = effectValue * 0.2 * 100; // 1 point should take 20% of parent width
+        return '<span class="fill" style="width: {0}%"></span>'.format(fillWidth);
+    },
+
+    sideEffectFillHtml: function sideEffectFillHtml(effectValue) {
+        var fillWidth = (effectValue >= 6 ? effectValue - 5 : effectValue) * 0.2 * 100; // 1 point should take 20% of parent width
+        return '<span class="fill" style="width: {0}%"></span>'.format(fillWidth);
     },
 
     sideEffectHtml: function sideEffectHtml(toDisplay) {
         var template = _.template($('#strain_side_effects').html());
-        return template({'effects': toDisplay});
+        return template({'effects': toDisplay, 'sideEffectFillHtml': this.sideEffectFillHtml});
     },
 
     flavorsHtml: function flavorsHtml(toDisplay) {

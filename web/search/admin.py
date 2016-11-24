@@ -52,12 +52,13 @@ remove_user_reviews.short_description = 'Soft delete selected user reviews'
 
 @admin.register(UserStrainReview)
 class UserStrainReviewAdmin(admin.ModelAdmin):
-    list_display = ['strain', 'created_by', 'effect_type', 'status', 'created_date', 'removed_date']
+    list_display = ['strain', 'created_by', 'status', 'created_date', 'removed_date']
     search_fields = ['strain__name', 'created_by__email', 'created_by__first_name', 'created_by__last_name',
-                     'effect_type', 'status', 'created_date', 'removed_date']
-    list_filter = ['strain', 'created_by', 'effect_type', 'status', 'created_date', 'removed_date']
+                     'status', 'created_date', 'removed_date']
+    list_filter = ['strain', 'created_by', 'status', 'created_date', 'removed_date']
     ordering = ['-created_date']
-    readonly_fields = ['strain', 'effect_type', 'effects', 'status', 'removed_date', 'created_by', 'created_date',
+    readonly_fields = ['strain', 'effects', 'effects_changed', 'benefits', 'benefits_changed',
+                       'side_effects', 'side_effects_changed', 'status', 'removed_date', 'created_by', 'created_date',
                        'created_by_ip', 'last_modified_date', 'last_modified_by', 'last_modified_by_ip']
     actions = [remove_user_reviews]
 

@@ -1,5 +1,6 @@
 import logging
 from datetime import datetime
+from operator import itemgetter
 
 from django.contrib.auth.mixins import LoginRequiredMixin
 from rest_framework import status
@@ -9,7 +10,11 @@ from rest_framework.views import APIView
 from web.search.api.serializers import SearchCriteriaSerializer, StrainReviewFormSerializer
 from web.search.api.services import StrainDetailsService
 from web.search.es_service import SearchElasticService
-from web.search.models import Strain, StrainImage, Effect, StrainReview, UserStrainReview, UserFavoriteStrain
+from web.search.models import Strain, StrainImage, Effect, StrainReview, UserStrainReview, UserFavoriteStrain, \
+    UserSearch
+from web.search.strain_es_service import StrainESService
+from web.search.strain_user_review_es_service import StrainUserReviewESService
+from web.system.models import SystemProperty
 
 logger = logging.getLogger(__name__)
 
@@ -54,8 +59,14 @@ class StrainSearchResultsView(LoginRequiredMixin, APIView):
         search_criteria = request.session.get('search_criteria')
 
         if search_criteria:
+            user_strain_reviews = UserStrainReview.objects.filter(created_by=request.user, removed_date=None)
             data = SearchElasticService().query_strain_srx_score(search_criteria, size, start_from)
             result_list = data.get('list')
+
+            if len(user_strain_reviews) > 0:
+                print('--- Recalculation')
+                result_list = self.change_strain_scores(result_list, user_strain_reviews, request.user)
+
             return Response({
                 'search_results': result_list,
                 'search_results_total': data.get('total')
@@ -64,6 +75,49 @@ class StrainSearchResultsView(LoginRequiredMixin, APIView):
         return Response({
             "error": "Cannot determine a search criteria."
         }, status=status.HTTP_400_BAD_REQUEST)
+
+    @staticmethod
+    def change_strain_scores(result_list, user_strain_reviews, current_user):
+        latest_user_search = UserSearch.objects.filter(user=current_user).order_by('-last_modified_date')[:1]
+
+        user_review_scores = {}
+        user_review_strain_ids = []
+        for r in user_strain_reviews:
+            new_score = SearchElasticService().query_user_review_srx_score(latest_user_search[0].to_search_criteria(),
+                                                                           strain_id=r.strain.id,
+                                                                           user_id=current_user.id)
+            user_review_strain_ids.append(r.strain.id)
+            user_review_scores[r.strain.id] = new_score
+
+        current_scores = []
+        for s in result_list:
+            current_scores.append(s.get('match_percentage'))
+
+        min_score = min(current_scores)
+        max_score = max(current_scores)
+
+        to_remove = []
+        for s in result_list:
+            if s.get('id') in user_review_strain_ids:
+                current_score = s.get('match_percentage')
+                if current_score > max_score or current_score < min_score:
+                    to_remove.append(s)
+
+        if len(to_remove) > 0:
+            for rem in to_remove:
+                result_list.remove(rem)
+
+        for k, v in user_review_scores.items():
+            if max_score > v > min_score:
+                strain = Strain.objects.get(id=k)
+                data = SearchElasticService().query_strain_srx_score(strain.to_search_criteria(),
+                                                                     strain_id=strain.id)
+                users_strain = data.get('list')[0]
+                users_strain['match_percentage'] = user_review_scores.get(k)
+                result_list.append(users_strain)
+
+        result_list = sorted(result_list, key=itemgetter('match_percentage'), reverse=True)
+        return result_list
 
 
 class StrainFavoriteView(LoginRequiredMixin, APIView):
@@ -142,29 +196,38 @@ class StrainUserReviewsView(LoginRequiredMixin, APIView):
         strain = Strain.objects.get(id=strain_id)
         sender_ip = get_client_ip(request)
 
-        if 'positive-effects' == effect_type:
-            if not UserStrainReview.objects.filter(strain=strain, effect_type='effects',
-                                                   created_by=request.user, removed_date=None).exists():
-                review = UserStrainReview(strain=strain, created_by=request.user, created_by_ip=sender_ip,
-                                          effect_type='effects')
-                review.effects = self.build_effects_object(effects, strain.effects)
-                review.save()
+        if UserStrainReview.objects.filter(strain=strain, created_by=request.user, removed_date=None).exists():
+            review = UserStrainReview.objects.get(strain=strain, created_by=request.user, removed_date=None)
+        else:
+            review = UserStrainReview(strain=strain, effects=strain.effects, benefits=strain.benefits,
+                                      side_effects=strain.side_effects, created_by=request.user,
+                                      created_by_ip=sender_ip)
 
-        if 'medical-benefits' == effect_type:
-            if not UserStrainReview.objects.filter(strain=strain, effect_type='benefits',
-                                                   created_by=request.user, removed_date=None).exists():
-                review = UserStrainReview(strain=strain, created_by=request.user, created_by_ip=sender_ip,
-                                          effect_type='benefits')
-                review.effects = self.build_effects_object(effects, strain.benefits)
-                review.save()
+        if 'effects' == effect_type:
+            review.effects = self.build_effects_object(effects, strain.effects)
+            review.effects_changed = True
+            review.last_modified_by = request.user
+            review.last_modified_by_ip = sender_ip
+            review.save()
+            self.recalculate_global_effects(request, strain)
 
-        if 'negative-effects' == effect_type:
-            if not UserStrainReview.objects.filter(strain=strain, effect_type='side_effects',
-                                                   created_by=request.user, removed_date=None).exists():
-                review = UserStrainReview(strain=strain, created_by=request.user, created_by_ip=sender_ip,
-                                          effect_type='side_effects')
-                review.effects = self.build_effects_object(effects, strain.side_effects)
-                review.save()
+        if 'benefits' == effect_type:
+            review.benefits = self.build_effects_object(effects, strain.benefits)
+            review.benefits_changed = True
+            review.last_modified_by = request.user
+            review.last_modified_by_ip = sender_ip
+            review.save()
+            self.recalculate_global_effects(request, strain)
+
+        if 'side_effects' == effect_type:
+            review.side_effects = self.build_effects_object(effects, strain.side_effects)
+            review.side_effects_changed = True
+            review.last_modified_by = request.user
+            review.last_modified_by_ip = sender_ip
+            review.save()
+            self.recalculate_global_effects(request, strain)
+
+        StrainUserReviewESService().save_strain_review(review, strain.id, request.user.id)
 
         return Response({}, status=status.HTTP_200_OK)
 
@@ -177,22 +240,98 @@ class StrainUserReviewsView(LoginRequiredMixin, APIView):
             effects_to_persist[e.get('name')] = e.get('value')
         return effects_to_persist
 
+    def recalculate_global_effects(self, request, strain):
+        try:
+            recalculate_size = int(SystemProperty.objects.get(name='review_recalculation_size').value)
+        except SystemProperty.DoesNotExist:
+            recalculate_size = 10
+
+        reviews = UserStrainReview.objects.filter(strain=strain, status='pending', removed_date=None)
+
+        # First check if there are "recalculate_size" new reviews
+        if len(reviews) == recalculate_size:
+            sender_ip = get_client_ip(request)
+
+            for r in reviews:
+                r.status = 'processed'
+                r.last_modified_ip = sender_ip
+                r.last_modified_by = request.user
+                r.save()
+
+            # Recalculate Global scores for each review in the system that wasn't removed
+            reviews = UserStrainReview.objects.filter(strain=strain, removed_date=None)
+
+            strain.effects = self.calculate_new_global_values(reviews, 'effects')
+            strain.benefits = self.calculate_new_global_values(reviews, 'benefits')
+            strain.side_effects = self.calculate_new_global_values(reviews, 'side_effects')
+            strain.save()
+
+            StrainESService().save_strain(strain)
+
+    def calculate_new_global_values(self, reviews, effect_type):
+        total_strain_effects = {}
+
+        if effect_type == 'effects':
+            for r in reviews:
+                for effect_name in r.effects:
+                    if total_strain_effects.get(effect_name):
+                        total_strain_effects[effect_name] += r.effects[effect_name]
+                    else:
+                        total_strain_effects[effect_name] = r.effects[effect_name]
+
+        if effect_type == 'benefits':
+            for r in reviews:
+                for effect_name in r.benefits:
+                    if total_strain_effects.get(effect_name):
+                        total_strain_effects[effect_name] += r.benefits[effect_name]
+                    else:
+                        total_strain_effects[effect_name] = r.benefits[effect_name]
+
+        if effect_type == 'side_effects':
+            for r in reviews:
+                for effect_name in r.side_effects:
+                    if total_strain_effects.get(effect_name):
+                        total_strain_effects[effect_name] += r.side_effects[effect_name]
+                    else:
+                        total_strain_effects[effect_name] = r.side_effects[effect_name]
+
+        for effect_name in total_strain_effects:
+            total_strain_effects[effect_name] /= len(reviews)
+
+        return total_strain_effects
+
     def delete(self, request, strain_id):
         effect_type = request.data.get('effect_type')
         sender_ip = get_client_ip(request)
         strain = Strain.objects.get(id=strain_id)
-        review = UserStrainReview.objects.get(strain=strain, effect_type=effect_type,
-                                              created_by=request.user, removed_date=None)
+        review = UserStrainReview.objects.get(strain=strain, created_by=request.user, removed_date=None)
 
-        review.removed_date = datetime.now()
+        if effect_type == 'effects':
+            review.effects = strain.effects
+            review.effects_changed = False
+
+        if effect_type == 'benefits':
+            review.benefits = strain.benefits
+            review.benefits_changed = False
+
+        if effect_type == 'side_effects':
+            review.side_effects = strain.side_effects
+            review.side_effects_changed = False
+
+        if not review.effects_changed and not review.benefits_changed and not review.side_effects_changed:
+            review.removed_date = datetime.now()
+
         review.last_modified_ip = sender_ip
         review.last_modified_by = request.user
-        review.last_modified_date = datetime.now()
         review.save()
 
+        StrainUserReviewESService().save_strain_review(review, strain.id, request.user.id)
+
         if review.status == 'processed':
-            # TODO recalculate Global score here
-            pass
+            strain.effects = self.calculate_new_global_values(strain, 'effects')
+            strain.benefits = self.calculate_new_global_values(strain, 'benefits')
+            strain.side_effects = self.calculate_new_global_values(strain, 'side_effects')
+            strain.save()
 
         return Response({}, status=status.HTTP_200_OK)
 
