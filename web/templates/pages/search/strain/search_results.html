@@ -39,63 +39,7 @@
             </div>
         </div>
         <div class="search-result-body-wrapper">
-            <div class="search-result">
-                {% for strain in search_results %}
-                    <div class="result-item">
-                        <div class="pull-left">
-                            <div class="item-info-wrapper inline-block">
-                                <div class="item-image inline-block">
-                                    {% if strain.image_url %}
-                                        <img src="{{ strain.image_url }}" alt="Strain Image">
-                                    {% else %}
-                                        <img src="{% static 'images/weed_small.jpg' %}" alt="Strain Image"/>
-                                    {% endif %}
-                                </div>
-                                <div class="item-info inline-block">
-                                <span class="strain-name">
-                                    <a href="{% url 'search:strain_detail' slug_name=strain.strain_slug %}">{{ strain.name }}</a>
-                                </span>
-                                    <span class="strain-type">{{ strain.variety }}</span>
-                                    <span class="strain-rating">{{ strain.rating }}</span>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="pull-right">
-                            <div class="separator inline-block"></div>
-                            <div class="item-locations inline-block">
-                                <span class="locations-icon">
-                                    <i class="fa fa-map-marker fa-2x" aria-hidden="true"></i>
-                                </span>
-                                <span class="locations">
-                                    <span>{{ strain.delivery_addresses|length }} Locations</span>
-                                    <span>{% find_closest_delivery_distance strain.delivery_addresses %}</span>
-                                    <span>{% count_open_close_deliveries strain.delivery_addresses %}</span>
-                                </span>
-                            </div>
-                            <div class="separator inline-block"></div>
-                            <div class="item-deliveries inline-block">
-                                <div class="deliveries-icon">
-                                    <i class="fa fa-truck fa-2x" aria-hidden="true"></i>
-                                </div>
-                                <div class="deliveries">
-                                    <span>1 Delivery Service</span>
-                                    <span>Closed</span>
-                                </div>
-                            </div>
-                            <div class="separator inline-block"></div>
-                            <div class="item-percentage-match inline-block">
-                                <a href="{% url 'search:strain_detail' slug_name=strain.strain_slug %}">
-                                    <span class="percentage">{{ strain.match_percentage }}%</span>
-                                    <span class="match">match</span>
-                                </a>
-                            </div>
-                        </div>
-                    </div>
-
-                    {% empty %}
-                    <p>Sorry, no results found.</p>
-                {% endfor %}
-            </div>
+            <div class="search-result"></div>
         </div>
         <div class="search-result-footer-wrapper {% if search_results_total <= 8 %}hidden{% endif %}">
             <div class="scroll-down-wrapper">
