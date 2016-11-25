@@ -35,10 +35,15 @@ class StrainReviewAdmin(admin.ModelAdmin):
 
 
 def get_client_ip(request):
-    return request.META.get('X-Real-IP')
+    if request.META.get('HTTP_X_FORWARDED_FOR'):
+        return request.META.get('HTTP_X_FORWARDED_FOR').split(',')[-1].strip()
+    elif request.META.get('HTTP_X_REAL_IP'):
+        return request.META.get('HTTP_X_REAL_IP')
+    else:
+        return request.META.get('REMOTE_ADDR')
 
 
-def remove_user_reviews(modeladmin, request, queryset):
+def remove_user_ratings(modeladmin, request, queryset):
     for review in queryset:
         review.removed_date = datetime.now()
         review.last_modified_ip = get_client_ip(request)
@@ -47,11 +52,11 @@ def remove_user_reviews(modeladmin, request, queryset):
         review.save()
 
 
-remove_user_reviews.short_description = 'Soft delete selected user reviews'
+remove_user_ratings.short_description = 'Soft delete selected user ratings'
 
 
-@admin.register(UserStrainReview)
-class UserStrainReviewAdmin(admin.ModelAdmin):
+@admin.register(StrainRating)
+class StrainRatingAdmin(admin.ModelAdmin):
     list_display = ['strain', 'created_by', 'status', 'created_date', 'removed_date']
     search_fields = ['strain__name', 'created_by__email', 'created_by__first_name', 'created_by__last_name',
                      'status', 'created_date', 'removed_date']
@@ -60,7 +65,7 @@ class UserStrainReviewAdmin(admin.ModelAdmin):
     readonly_fields = ['strain', 'effects', 'effects_changed', 'benefits', 'benefits_changed',
                        'side_effects', 'side_effects_changed', 'status', 'removed_date', 'created_by', 'created_date',
                        'created_by_ip', 'last_modified_date', 'last_modified_by', 'last_modified_by_ip']
-    actions = [remove_user_reviews]
+    actions = [remove_user_ratings]
 
 
 @admin.register(StrainImage)

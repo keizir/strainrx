@@ -1,6 +1,6 @@
-from web.search.api.serializers import StrainDetailSerializer, UserStrainReviewSerializer
+from web.search.api.serializers import StrainDetailSerializer, StrainRatingSerializer
 from web.search.es_service import SearchElasticService
-from web.search.models import UserSearch, Strain, StrainImage, StrainReview, UserStrainReview, UserFavoriteStrain
+from web.search.models import UserSearch, Strain, StrainImage, StrainReview, StrainRating, UserFavoriteStrain
 from web.search.services import build_strain_rating
 
 
@@ -15,7 +15,7 @@ class StrainDetailsService:
         rating = build_strain_rating(strain)
         strain_srx_score = self.calculate_srx_score(strain, current_user)
         reviews = self.get_strain_reviews(strain)
-        strain_review = UserStrainReview.objects.filter(strain=strain, created_by=current_user, removed_date=None)
+        strain_review = StrainRating.objects.filter(strain=strain, created_by=current_user, removed_date=None)
         favorite = UserFavoriteStrain.objects.filter(strain=strain, created_by=current_user).exists()
 
         return {
@@ -24,7 +24,7 @@ class StrainDetailsService:
             'strain_origins': strain_origins,
             'also_like_strains': also_like_strains,
             'strain_rating': rating,
-            'user_strain_review': UserStrainReviewSerializer(strain_review[0]).data if len(strain_review) > 0 else None,
+            'user_strain_review': StrainRatingSerializer(strain_review[0]).data if len(strain_review) > 0 else None,
             'strain_reviews': reviews,
             'strain_srx_score': strain_srx_score,
             'favorite': favorite,
@@ -92,8 +92,8 @@ class StrainDetailsService:
         latest_user_search = UserSearch.objects.filter(user=current_user).order_by('-last_modified_date')[:1]
 
         if latest_user_search and len(latest_user_search) > 0:
-            if UserStrainReview.objects.filter(strain=current_strain, created_by=current_user,
-                                               removed_date=None).exists():
+            if StrainRating.objects.filter(strain=current_strain, created_by=current_user,
+                                           removed_date=None).exists():
                 score = SearchElasticService().query_user_review_srx_score(latest_user_search[0].to_search_criteria(),
                                                                            strain_id=current_strain.id,
                                                                            user_id=current_user.id)

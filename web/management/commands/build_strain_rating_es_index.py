@@ -5,9 +5,9 @@ import logging
 from django.core.management.base import BaseCommand, CommandError
 
 from web.search import es_mappings
-from web.search.es_mappings import strain_user_review_mapping
+from web.search.es_mappings import strain_rating_mapping
 from web.search.es_service import SearchElasticService as ElasticService
-from web.search.models import UserStrainReview
+from web.search.models import StrainRating
 
 logger = logging.getLogger(__name__)
 
@@ -50,7 +50,7 @@ class Command(BaseCommand):
         # create custom analyzer for strain names
         index_settings = {
             "mappings": {
-                es_mappings.TYPES.get('strain_user_review'): strain_user_review_mapping
+                es_mappings.TYPES.get('strain_rating'): strain_rating_mapping
             }
         }
 
@@ -64,12 +64,12 @@ class Command(BaseCommand):
 
     def load_user_strains_reviews(self):
         es = ElasticService()
-        user_reviews = UserStrainReview.objects.all()
+        user_ratings = StrainRating.objects.all()
 
         bulk_data = []
 
         # build up bulk update
-        for ur in user_reviews:
+        for ur in user_ratings:
             action_data = json.dumps({
                 'index': {}
             })
@@ -94,7 +94,7 @@ class Command(BaseCommand):
 
         transformed_bulk_data = '{0}\n'.format('\n'.join(bulk_data))
         results = es.bulk_index(transformed_bulk_data, index=self.INDEX,
-                                index_type=es_mappings.TYPES.get('strain_user_review'))
+                                index_type=es_mappings.TYPES.get('strain_rating'))
 
         if results.get('success') is False:
             # keep track of any errors we get
@@ -102,4 +102,4 @@ class Command(BaseCommand):
                 index=self.INDEX, index_type=es_mappings.TYPES.get('strain'), errors=results.get('errors')
             )))
 
-        self.stdout.write('2. Updated [{0}] index with {1} user reviews'.format(self.INDEX, len(user_reviews)))
+        self.stdout.write('2. Updated [{0}] index with {1} user reviews'.format(self.INDEX, len(user_ratings)))

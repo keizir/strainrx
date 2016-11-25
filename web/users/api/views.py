@@ -367,15 +367,15 @@ class UserStrainSearchesView(LoginRequiredMixin, APIView):
         return Response({}, status=status.HTTP_200_OK)
 
 
-class UserStrainReviewsView(LoginRequiredMixin, APIView):
+class StrainRatingView(LoginRequiredMixin, APIView):
     permission_classes = (UserAccountOwner,)
 
     def get(self, request, user_id):
-        reviews_raw = StrainReview.objects.filter(created_by__id=user_id).order_by('-created_date')
-        reviews = []
-        for r in reviews_raw:
+        raw = StrainReview.objects.filter(created_by__id=user_id).order_by('-created_date')
+        ratings = []
+        for r in raw:
             images = StrainImage.objects.filter(strain=r.strain)
-            reviews.append({
+            ratings.append({
                 'id': r.id,
                 'strain_id': r.strain.id,
                 'strain_name': r.strain.name,
@@ -387,7 +387,7 @@ class UserStrainReviewsView(LoginRequiredMixin, APIView):
                 'review': r.review,
                 'created_date': r.created_date
             })
-        return Response({'reviews': reviews}, status=status.HTTP_200_OK)
+        return Response({'reviews': ratings}, status=status.HTTP_200_OK)
 
 
 class UserFavoritesView(LoginRequiredMixin, APIView):

@@ -1,7 +1,7 @@
 TYPES = {
     'strain': "strain",
     'strain_review': "strain_review",
-    'strain_user_review': "strain_user_review"
+    'strain_rating': "strain_rating"
 }
 
 strain_mapping = {
@@ -363,7 +363,7 @@ strain_review_mapping = {
     }
 }
 
-strain_user_review_mapping = {
+strain_rating_mapping = {
     "properties": {
         "id": {
             "type": "long"

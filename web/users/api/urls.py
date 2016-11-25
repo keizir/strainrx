@@ -30,7 +30,7 @@ urlpatterns = [
     ),
     url(
         regex=r'^(?P<user_id>\d+)/reviews$',
-        view=UserStrainReviewsView.as_view(),
+        view=StrainRatingView.as_view(),
         name='strain_reviews'
     ),
     url(

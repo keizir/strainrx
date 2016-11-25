@@ -10,6 +10,8 @@ logger = logging.getLogger(__name__)
 
 
 class SearchElasticService(BaseElasticService):
+    srx_score_script_min = "def psa=effectSum+benefitSum;def benefitPoints=0;def effectPoints=0;def negEffectPoints=0;for(e in userEffects){e=e.key;def strainE=_source['effects'][e];def userE=userEffects[e];def effectBonus=0.0;dist=strainE-userE;if(dist>0){npe=-0.01;}else{npe=dist*0.2*userE;};if(userE==strainE){switch(strainE){case 3:effectBonus=0.3;break;case 4:effectBonus=0.5;break;case 5:effectBonus=1.0;break;}};effectPoints+=effectBonus+userE+npe;};for(b in userBenefits){b=b.key;def strainB=_source['benefits'][b];def userB=userBenefits[b];def benefitBonus=0.0;dist=strainB-userB;if(dist>0){npb=-0.01;}else{npb=dist*0.2*userB;};if(userB==strainB){switch(strainB){case 3:benefitBonus=0.3;break;case 4:benefitBonus=0.5;break;case 5:benefitBonus=1.0;break;}};benefitPoints+=benefitBonus+userB+npb;};for(ne in userNegEffects){ne=ne.key;def strainNE=_source['side_effects'][ne];def userNE=userNegEffects[ne];negPoints=0;if(userNE==0||strainNE==0){negPoints=0;}else{negPoints=(((userNE-strainNE)**2)*-1)/psa;};negEffectPoints+=negPoints;};def tp=effectPoints+negEffectPoints+benefitPoints;return(tp/psa)*100;"
+
     def _transform_strain_results(self, results):
         """
 
@@ -110,8 +112,8 @@ class SearchElasticService(BaseElasticService):
 
     def query_user_review_srx_score(self, criteria, strain_id=None, user_id=None):
         method = self.METHODS.get('GET')
-        url = '{base}{index}/{type}/_search'.format(base=self.BASE_ELASTIC_URL, index=self.URLS.get('USER_REVIEWS'),
-                                                    type=es_mappings.TYPES.get('strain_user_review'))
+        url = '{base}{index}/{type}/_search'.format(base=self.BASE_ELASTIC_URL, index=self.URLS.get('USER_RATINGS'),
+                                                    type=es_mappings.TYPES.get('strain_rating'))
 
         query = self.build_srx_score_user_review_es_query(criteria, strain_id, user_id)
         es_response = self._request(method, url, data=json.dumps(query))
@@ -153,7 +155,7 @@ class SearchElasticService(BaseElasticService):
                                     "userBenefits": benefits_data.get('data'),
                                     "userNegEffects": side_effects_data.get('data')
                                 },
-                                "script": "def psa=effectSum+benefitSum;def benefitPoints=0;def effectPoints=0;def negEffectPoints=0;def distLookup=[(-5):-1,(-4):-0.8,(-3):-0.51,(-2):-0.33,(-1):-0.14,(0):0,(1):-0.01,(2):-0.01,(3):-0.01,(4):-0.01,(5):-0.01];for(e in userEffects){e=e.key;def strainE=_source['effects'][e];def userE=userEffects[e];def effectBonus=0.0;dist=strainE-userE;if(distLookup[dist]==null){npe=0;}else{npe=distLookup[dist]*userE;};if(userE==strainE){switch(strainE){case 3:effectBonus=0.3;break;case 4:effectBonus=0.5;break;case 5:effectBonus=1.0;break;}};effectPoints+=effectBonus+userE+npe;};for(b in userBenefits){b=b.key;def strainB=_source['benefits'][b];def userB=userBenefits[b];def benefitBonus=0.0;dist=strainB-userB;if(distLookup[dist]==null){npb=0;}else{npb=distLookup[dist]*userB;};if(userB==strainB){switch(strainB){case 3:benefitBonus=0.3;break;case 4:benefitBonus=0.5;break;case 5:benefitBonus=1.0;break;}};benefitPoints+=benefitBonus+userB+npb;};for(ne in userNegEffects){ne=ne.key;def strainNE=_source['side_effects'][ne];def userNE=userNegEffects[ne];negPoints=0;if(userNE==0||strainNE==0){negPoints=0;}else{negPoints=(((userNE-strainNE)**2)*-1)/psa;};negEffectPoints+=negPoints;};def tp=effectPoints+negEffectPoints+benefitPoints;return(tp/psa)*100;"
+                                "script": self.srx_score_script_min
                             }
                         }
                     ]
@@ -272,7 +274,7 @@ class SearchElasticService(BaseElasticService):
                                     "userBenefits": benefits_data.get('data'),
                                     "userNegEffects": side_effects_data.get('data')
                                 },
-                                "script": "def psa=effectSum+benefitSum;def benefitPoints=0;def effectPoints=0;def negEffectPoints=0;def distLookup=[(-5):-1,(-4):-0.8,(-3):-0.51,(-2):-0.33,(-1):-0.14,(0):0,(1):-0.01,(2):-0.01,(3):-0.01,(4):-0.01,(5):-0.01];for(e in userEffects){e=e.key;def strainE=_source['effects'][e];def userE=userEffects[e];def effectBonus=0.0;dist=strainE-userE;if(distLookup[dist]==null){npe=0;}else{npe=distLookup[dist]*userE;};if(userE==strainE){switch(strainE){case 3:effectBonus=0.3;break;case 4:effectBonus=0.5;break;case 5:effectBonus=1.0;break;}};effectPoints+=effectBonus+userE+npe;};for(b in userBenefits){b=b.key;def strainB=_source['benefits'][b];def userB=userBenefits[b];def benefitBonus=0.0;dist=strainB-userB;if(distLookup[dist]==null){npb=0;}else{npb=distLookup[dist]*userB;};if(userB==strainB){switch(strainB){case 3:benefitBonus=0.3;break;case 4:benefitBonus=0.5;break;case 5:benefitBonus=1.0;break;}};benefitPoints+=benefitBonus+userB+npb;};for(ne in userNegEffects){ne=ne.key;def strainNE=_source['side_effects'][ne];def userNE=userNegEffects[ne];negPoints=0;if(userNE==0||strainNE==0){negPoints=0;}else{negPoints=(((userNE-strainNE)**2)*-1)/psa;};negEffectPoints+=negPoints;};def tp=effectPoints+negEffectPoints+benefitPoints;return(tp/psa)*100;"
+                                "script": self.srx_score_script_min
                             }
                         }
                     ]
@@ -359,18 +361,18 @@ def benefitSum = 1;
 
 def _source = [
     'effects': [
-        'happy': 5,
-        'relaxed': 4,
-        'creative': 2,
-        'talkative': 2,
-        'energetic': 2,
-        'sleepy': 5
+        'happy': 4.5,
+        'relaxed': 4.0,
+        'creative': 2.23,
+        'talkative': 2.123,
+        'energetic': 1.564,
+        'sleepy': 3.23
     ],
     'side_effects': [
-        'dry_mouth': 1
+        'dry_mouth': 7.4
     ],
     'benefits': [
-        'relieve_pain': 2
+        'relieve_pain': 2.0
     ]
 ];
 
@@ -384,11 +386,11 @@ def userEffects = [
 ];
 
 def userBenefits = [
-    //'relieve_pain': 4
+    'relieve_pain': 4
 ];
 
 def userNegEffects = [
-    //'dry_mouth': 3
+    'dry_mouth': 3
 ];
 
 
@@ -402,19 +404,6 @@ def psa = effectSum + benefitSum;
 def benefitPoints = 0;
 def effectPoints = 0;
 def negEffectPoints = 0;
-def distLookup = [
-    (-5): -1,
-    (-4): -0.8,
-    (-3): -0.51,
-    (-2): -0.33,
-    (-1): -0.14,
-    (0): 0,
-    (1): -0.01,
-    (2): -0.01,
-    (3): -0.01,
-    (4): -0.01,
-    (5): -0.01
-];
 
 // calc all effect points awarded
 for (e in userEffects) {
@@ -424,10 +413,10 @@ for (e in userEffects) {
     def effectBonus = 0.0;
 
     dist = strainE - userE;
-    if (distLookup[dist] == null) {
-        npe = 0;
+    if (dist > 0) {
+        npe = -0.01;
     } else {
-        npe = distLookup[dist] * userE;
+        npe = dist * 0.2 * userE;
     };
 
     if (userE == strainE) {
@@ -456,10 +445,10 @@ for (b in userBenefits) {
     def benefitBonus = 0.0;
 
     dist = strainB - userB;
-    if (distLookup[dist] == null) {
-        npb = 0;
+    if (dist > 0) {
+        npb = -0.01;
     } else {
-        npb = distLookup[dist] * userB;
+        npb = dist * 0.2 * userB;
     };
 
     if (userB == strainB) {
@@ -505,5 +494,5 @@ for (ne in userNegEffects) {
 //println negEffectPoints;
 
 def tp = effectPoints + negEffectPoints + benefitPoints;
-return (tp / psa) * 100;
+return (tp / psa) * 100;​
 """
