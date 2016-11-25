@@ -63,8 +63,8 @@ class StrainDetailsService:
         if len(also_like_strains) == 0:
             search_criteria = current_strain.to_search_criteria()
             search_criteria['strain_types'] = 'skipped'
-            data = SearchElasticService().query_strain_srx_score(search_criteria, 5, 0)
-            for s in data.get('list'):
+            data = SearchElasticService().query_strain_srx_score(search_criteria, 6, 0)
+            for s in data.get('list')[1:]:
                 also_like_strains.append(s)
 
         return also_like_strains

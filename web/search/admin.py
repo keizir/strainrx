@@ -25,9 +25,9 @@ approve_selected_ratings.short_description = 'Approve selected ratings'
 @admin.register(StrainReview)
 class StrainReviewAdmin(admin.ModelAdmin):
     list_display = ['strain', 'rating', 'review', 'review_approved', 'created_date', 'created_by']
-    search_fields = ['strain', 'rating', 'review_approved', 'created_date', 'created_by']
-    list_filter = ['strain', 'rating', 'review_approved', 'created_date', 'created_by',
-                   'last_modified_date', 'last_modified_by']
+    search_fields = ['strain__name', 'rating', 'review_approved', 'created_date',
+                     'created_by__email', 'created_by__first_name', 'created_by__last_name']
+    list_filter = ['rating', 'review_approved', 'created_date', 'last_modified_date']
     ordering = ['strain', '-created_date']
     readonly_fields = ['strain', 'rating', 'review', 'created_date', 'created_by',
                        'last_modified_date', 'last_modified_by']
