@@ -64,8 +64,7 @@ class StrainSearchResultsView(LoginRequiredMixin, APIView):
             result_list = data.get('list')
 
             if len(user_strain_reviews) > 0:
-                print('--- Recalculation')
-                result_list = self.change_strain_scores(result_list, user_strain_reviews, request.user)
+                result_list = self.change_strain_scores(result_list, user_strain_reviews, request.user, page)
 
             return Response({
                 'search_results': result_list,
@@ -77,7 +76,7 @@ class StrainSearchResultsView(LoginRequiredMixin, APIView):
         }, status=status.HTTP_400_BAD_REQUEST)
 
     @staticmethod
-    def change_strain_scores(result_list, user_strain_reviews, current_user):
+    def change_strain_scores(result_list, user_strain_reviews, current_user, page):
         latest_user_search = UserSearch.objects.filter(user=current_user).order_by('-last_modified_date')[:1]
 
         user_review_scores = {}
@@ -100,18 +99,27 @@ class StrainSearchResultsView(LoginRequiredMixin, APIView):
         for s in result_list:
             if s.get('id') in user_review_strain_ids:
                 current_score = s.get('match_percentage')
-                if current_score > max_score or current_score < min_score:
+                review_score = user_review_scores.get(s.get('id'))
+                if review_score != current_score:
                     to_remove.append(s)
 
         if len(to_remove) > 0:
             for rem in to_remove:
                 result_list.remove(rem)
 
+        to_remove = []
         for k, v in user_review_scores.items():
-            if max_score > v > min_score:
+            if max_score < v and int(page) != 1:
+                to_remove.append(k)
+
+        if len(to_remove) > 0:
+            for key in to_remove:
+                del user_review_scores[key]
+
+        for k, v in user_review_scores.items():
+            if (max_score <= v and int(page) == 1) or max_score >= v > min_score or v == min_score:
                 strain = Strain.objects.get(id=k)
-                data = SearchElasticService().query_strain_srx_score(strain.to_search_criteria(),
-                                                                     strain_id=strain.id)
+                data = SearchElasticService().query_strain_srx_score(strain.to_search_criteria(), strain_id=strain.id)
                 users_strain = data.get('list')[0]
                 users_strain['match_percentage'] = user_review_scores.get(k)
                 result_list.append(users_strain)

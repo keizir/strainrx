@@ -4,7 +4,7 @@ W.ns('W.pages');
 
 W.pages.StrainSearchResultsPage = Class.extend({
 
-    scrollPage: 2, // start from 2nd page because we already have 1st
+    scrollPage: 1,
     scrollSize: 8,
 
     ui: {
@@ -24,9 +24,43 @@ W.pages.StrainSearchResultsPage = Class.extend({
     },
 
     init: function () {
-        this.buildSortMenu();
-        this.handleScrollPage();
-        this.initRatings();
+        var that = this;
+        this.getSearchResults(function () {
+            that.buildSortMenu();
+            that.handleScrollPage();
+            that.initRatings();
+        });
+    },
+
+    getSearchResults: function getSearchResults(success) {
+        var that = this;
+        this.ui.$loadingIcon.addClass('rotating');
+        $.ajax({
+            method: 'GET',
+            url: '/api/v1/search/result/?page={0}&size={1}'.format(that.scrollPage, that.scrollSize),
+            dataType: 'json',
+            success: function (data) {
+                that.scrollPage += 1;
+                var searchResults = data.search_results,
+                    searchResultsTotal = data.search_results_total;
+
+                if (that.scrollPage * that.scrollSize >= searchResultsTotal) {
+                    $('.search-result-footer-wrapper').addClass('hidden');
+                }
+
+                for (var i = 0; i < searchResults.length; i++) {
+                    var position = '{0}{1}'.format(that.scrollPage, i);
+                    that.ui.$searchResult.append(that.parseSearchResultItem(position, searchResults[i]));
+                    that.initRating($('.loaded-rating-' + position));
+                }
+
+                that.ui.$loadingIcon.removeClass('rotating');
+
+                if (success) {
+                    success();
+                }
+            }
+        });
     },
 
     buildSortMenu: function () {
@@ -57,35 +91,11 @@ W.pages.StrainSearchResultsPage = Class.extend({
 
     handleScrollPage: function () {
         var that = this;
-
         this.ui.$window.on('scroll', function () {
             // End of the document reached?
             var hasMoreResultToShow = !that.ui.$searchResultFooterRegion.hasClass('hidden');
             if (that.ui.$document.height() - that.ui.$window.height() == that.ui.$window.scrollTop() && hasMoreResultToShow) {
-                $('.scroll-icon i').addClass('rotating');
-
-                $.ajax({
-                    method: 'GET',
-                    url: '/api/v1/search/result/?page={0}&size={1}'.format(that.scrollPage, that.scrollSize),
-                    dataType: 'json',
-                    success: function (data) {
-                        that.scrollPage += 1;
-                        var searchResults = data.search_results,
-                            searchResultsTotal = data.search_results_total;
-
-                        if (that.scrollPage * that.scrollSize >= searchResultsTotal) {
-                            $('.search-result-footer-wrapper').addClass('hidden');
-                        }
-
-                        for (var i = 0; i < searchResults.length; i++) {
-                            var position = '{0}{1}'.format(that.scrollPage, i);
-                            that.ui.$searchResult.append(that.parseSearchResultItem(position, searchResults[i]));
-                            that.initRating($('.loaded-rating-' + position));
-                        }
-
-                        that.ui.$loadingIcon.removeClass('rotating');
-                    }
-                });
+                that.getSearchResults();
             }
         });
     },

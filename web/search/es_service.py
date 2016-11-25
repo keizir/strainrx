@@ -163,7 +163,12 @@ class SearchElasticService(BaseElasticService):
 
     def transform_user_review_results(self, results):
         strains = results.get('hits', {}).get('hits', [])
-        return int(round(strains[0].get('_score'))) if len(strains) > 0 else 'n/a'
+        score = int(round(strains[0].get('_score'))) if len(strains) > 0 else 'n/a'
+
+        if score != 'n/a':
+            return score if score <= 100 else 100
+        else:
+            return score
 
     def query_strain_srx_score(self, criteria, size=50, start_from=0, strain_id=None):
         """
