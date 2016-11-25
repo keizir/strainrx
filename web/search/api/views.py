@@ -257,7 +257,7 @@ class StrainRatingsView(LoginRequiredMixin, APIView):
         ratings = StrainRating.objects.filter(strain=strain, status='pending', removed_date=None)
 
         # First check if there are "recalculate_size" new ratings
-        if len(ratings) == recalculate_size:
+        if len(ratings) >= recalculate_size:
             sender_ip = get_client_ip(request)
 
             for r in ratings:
