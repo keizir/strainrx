@@ -47,6 +47,21 @@
     }
 }
 
+.nav-tabs-wrapper {
+    display: inline-block;
+    position: relative;
+    width: 50%;
+    margin-left: 3em;
+
+    .action {
+        display: inline-block;
+    }
+
+    .separator {
+        color: $white;
+    }
+}
+
 .nav-list {
     list-style: none;
 
@@ -154,6 +169,14 @@
     .nav-menu-btn-wrapper .nav-menu-btn {
         color: $black;
     }
+
+    .pointer {
+        cursor: pointer;
+        color: $iris-blue;
+        margin-left: 0.3em;
+        position: relative;
+        top: -0.15em;
+    }
 }
 
 @media (min-width: $screen-xxl-min) {
@@ -204,6 +227,12 @@
     }
 }
 
+@media (max-width: $screen-sm-max) {
+    .nav-tabs-wrapper {
+        display: none;
+    }
+}
+
 @media (max-width: $screen-xs-max) {
     .mobile-menu {
         display: inline-block !important;
@@ -219,6 +248,10 @@
         background: $white;
         top: 2em;
         width: 50%;
+    }
+
+    .nav-tabs-wrapper {
+        display: none;
     }
 
     .nav-container {
