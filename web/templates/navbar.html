@@ -6,6 +6,26 @@
         <div class="nav-brand-wrapper">
             <a class="navbar-brand logo" href="{% url 'home' %}">Strains</a>
         </div>
+        {% if request.user.is_authenticated %}
+            {% if request.user.type == 'consumer' %}
+                <div class="nav-tabs-wrapper">
+                    <div class="action blue-link">
+                        <a class="nav-link" href="#">
+                            Find Dispensaries</a>
+                    </div>
+                    <span class="separator"></span>
+                    <div class="action blue-link">
+                        <a class="nav-link" href="{% url 'search:strain_wizard' %}">
+                            Strain Recommendation</a>
+                    </div>
+                    <span class="separator"></span>
+                    <div class="action blue-link">
+                        <a class="nav-link" href="{% url 'home' %}">
+                            Strain Lookup</a>
+                    </div>
+                </div>
+            {% endif %}
+        {% endif %}
         <div class="nav-list-wrapper">
             <a href="#" class="mobile-menu hidden">
                 <i class="fa fa-align-justify fa-2x" aria-hidden="true"></i>
@@ -16,15 +36,16 @@
                         <div class="nav-menu-btn-wrapper">
                             {% if request.user.type == 'consumer' %}
                                 <a class="nav-menu-btn">
-                                    <i class="fa fa-user" aria-hidden="true"></i>
-                                    Welcome <span class="user-name">{{ request.user.first_name }}</span>
+                                    <i class="fa fa-user" aria-hidden="true"></i>Welcome
+                                    <a href="#">
+                                        <span class="user-name">{{ request.user.first_name }}</span>
+                                    </a>
+                                    <span class="pointer">
+                                        <i class="fa fa-sort-desc" aria-hidden="true"></i>
+                                    </span>
                                     {% if not request.user.is_email_verified %}
                                         <span class="separator"></span>
                                         <a href="{% url "users:signup_done" %}">Verify Email</a>
-                                    {% else %}
-                                        <span class="separator"></span>
-                                        <a class="nav-link" href="{% url 'users:detail' request.user.id %}">
-                                            My Account</a>
                                     {% endif %}
                                 </a>
                             {% elif request.user.type == 'business' %}
@@ -48,6 +69,10 @@
                         </div>
                         <div class="nav-menu-content">
                             {% if request.user.type == 'consumer' %}
+                                <div class="action blue-link">
+                                    <a class="nav-link" href="{% url 'users:detail' request.user.id %}">
+                                        My Account</a>
+                                </div>
                                 <div class="action blue-link">
                                     <a class="nav-link" href="#">
                                         Find Dispensaries</a>

@@ -1,63 +1,122 @@
 @import '../mixins/variables';
 
+.nav-region {
+    background-color: $grey-dark;
+
+    .nav-menu-btn-wrapper .nav-menu-btn a,
+    .nav-menu-btn-wrapper .nav-menu-btn {
+        color: $white;
+    }
+}
+
+.user-account-header-background {
+    display: block;
+    position: relative;
+    height: 16em;
+    width: 100%;
+    left: 0;
+    background-color: $grey-blue;
+}
+
 .user-profile {
     display: block;
     color: $grey-light;
     text-align: center;
+    margin-top: -16em;
 
     .profile-header {
         display: block;
-        padding: 1em;
+        position: relative;
+        padding: 0 1em;
+        height: 16em;
 
-        .row {
+        .info-wrapper {
             display: block;
-        }
-
-        .user-image-wrapper {
-            display: inline-block;
-            text-align: center;
-            width: 8em;
-            height: 10em;
-
-            .user-image {
-                width: 8em;
-                height: 8em;
-                margin: 0 auto;
-                border: 1px solid $grey-light;
-                border-radius: 4em;
-            }
-
-            .user-image img {
-                width: 5em;
-                height: 5em;
-                margin: 1.5em;
-            }
-
-            .user-image-actions {
-                margin-top: 1em;
-            }
-        }
-
-        .active-since {
-            display: inline-block;
             position: relative;
-            bottom: 6em;
-            left: 3em;
+            width: 100%;
+            height: 13em;
+
+            .user-image-wrapper {
+                display: inline-block;
+                text-align: center;
+                width: 8em;
+                height: 100%;
+
+                .user-image {
+                    width: 8em;
+                    height: 8em;
+                    margin: 1em auto 0;
+                    border: 1px solid $grey-light;
+                    border-radius: 4em;
+                }
+
+                .user-image img {
+                    width: 5em;
+                    height: 5em;
+                    margin: 1.5em;
+                }
+
+                .user-image-actions {
+                    margin-top: 1em;
+                }
+            }
+
+            .user-info {
+                display: inline-block;
+                height: 100%;
+                vertical-align: top;
+                color: $white;
+                text-align: left;
+                margin-left: 2em;
+
+                .user-name {
+                    display: block;
+                    margin-top: 1.5em;
+                    font-size: 2em;
+                }
+
+                .active-since {
+                    display: block;
+                    margin-top: 1em;
+                }
+            }
         }
 
         .profile-tabs {
             display: inline-block;
-            position: relative;
-            right: 12em;
-        }
+            position: absolute;
+            width: 100%;
+            text-align: center;
+            bottom: 0;
+            left: 0;
 
-        .profile-tabs span a {
-            color: $grey-normal;
-            font-weight: bold;
-        }
+            .profile-tab {
+                display: inline-block;
+                width: 12em;
+                line-height: 3em;
+                margin-right: -0.4em;
+                border: 1px solid $grey-light;
+                text-align: center;
+                background-color: $iris-blue;
+                cursor: pointer;
 
-        .profile-tabs span.active a {
-            color: $avocado-green;
+                a {
+                    display: block;
+                    width: 12em;
+                    line-height: 3em;
+                    color: $white;
+                }
+            }
+
+            .profile-tab.active {
+                background-color: $white;
+                font-weight: bold;
+
+                a {
+                    color: $grey-dark;
+                    font-weight: bold;
+                }
+            }
         }
     }
 
@@ -147,18 +206,7 @@
     }
 
     .user-profile .profile-header .profile-tabs {
-        left: 5em;
-        width: 14em;
-        bottom: 5em;
-        line-height: 1.4em;
-    }
 
-    .user-profile .profile-header .profile-tabs span {
-        display: block;
-    }
-
-    .user-profile .profile-header .profile-tabs span.separator {
-        display: none;
     }
 
     .user-profile .form fieldset {
@@ -184,8 +232,7 @@
 
 @media (max-width: $screen-sm-max) {
     .user-profile .profile-header .profile-tabs {
-        right: 0;
-        margin: 3em auto 0;
+
     }
 
     .user-profile .user-info .form fieldset {
@@ -221,9 +268,7 @@
 
 @media (max-width: $screen-md-max) {
     .user-profile .profile-header .profile-tabs {
-        right: 0;
-        width: 100%;
-        margin: 2em auto;
+
     }
 
     .user-profile .form .form-field {
