@@ -736,8 +736,16 @@
                         line-height: 0.9em;
                     }
 
+                    .action.action-minus::before {
+                        content: '-';
+                    }
+
                     .action.action-plus {
                         line-height: 1em;
+                    }
+
+                    .action.action-plus::before {
+                        content: '+';
                     }
 
                     .value {

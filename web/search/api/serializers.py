@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-from web.search.models import Strain, StrainReview, UserStrainReview
+from web.search.models import Strain, StrainReview, StrainRating
 
 
 class SearchCriteriaSerializer(serializers.Serializer):
@@ -23,9 +23,9 @@ class StrainDetailSerializer(serializers.ModelSerializer):
                   'effects', 'benefits', 'side_effects', 'flavor', 'about')
 
 
-class UserStrainReviewSerializer(serializers.ModelSerializer):
+class StrainRatingSerializer(serializers.ModelSerializer):
     class Meta:
-        model = UserStrainReview
+        model = StrainRating
         fields = ('effects', 'effects_changed', 'benefits', 'benefits_changed', 'side_effects', 'side_effects_changed',
                   'status')
 

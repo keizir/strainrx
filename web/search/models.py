@@ -164,6 +164,9 @@ class UserSearch(models.Model):
 
 @python_2_unicode_compatible
 class StrainReview(models.Model):
+    """
+        A 5-star rating
+    """
     strain = models.ForeignKey(Strain, on_delete=models.DO_NOTHING)
 
     rating = models.FloatField()
@@ -177,7 +180,10 @@ class StrainReview(models.Model):
 
 
 @python_2_unicode_compatible
-class UserStrainReview(models.Model):
+class StrainRating(models.Model):
+    """
+        A user's strain review, that user left via Disagree link in SPD
+    """
     STATUS_CHOICES = (
         ('pending', 'Pending'),
         ('processed', 'Processed'),

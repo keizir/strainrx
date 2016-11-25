@@ -85,7 +85,7 @@ W.pages.strain.StrainReviewDialog = Class.extend({
         $undoDialog.find('.btn-yes').on('click', function () {
             $.ajax({
                 method: 'DELETE',
-                url: '/api/v1/search/strain/{0}/user_reviews'.format($('.strain-id').val()),
+                url: '/api/v1/search/strain/{0}/ratings'.format($('.strain-id').val()),
                 data: JSON.stringify({effect_type: effectType}),
                 success: function () {
                     var $effects, $sectionHeader,
@@ -389,7 +389,7 @@ W.pages.strain.StrainReviewDialog = Class.extend({
             if (that.reviewEffects.length > 0) {
                 $.ajax({
                     method: 'POST',
-                    url: '/api/v1/search/strain/{0}/user_reviews'.format($('.strain-id').val()),
+                    url: '/api/v1/search/strain/{0}/ratings'.format($('.strain-id').val()),
                     dataType: 'json',
                     data: JSON.stringify({type: effectType, effects: that.reviewEffects}),
                     success: function () {

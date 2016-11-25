@@ -9,7 +9,7 @@ from django.core.exceptions import ValidationError
 from django.core.management.base import BaseCommand, CommandError
 from django.utils.text import slugify
 
-from web.search.models import Strain, UserStrainReview
+from web.search.models import Strain, StrainRating
 from web.users.models import User
 
 logger = logging.getLogger(__name__)
@@ -125,16 +125,16 @@ class Command(BaseCommand):
                 rate_bot.save()
 
             for s in persisted:
-                if not UserStrainReview.objects.filter(strain=s, created_by=rate_bot, removed_date=None).exists():
-                    review = UserStrainReview(strain=s, created_by=rate_bot, effects=s.effects, benefits=s.benefits,
-                                              side_effects=s.side_effects, status='pending')
-                    review.save()
+                if not StrainRating.objects.filter(strain=s, created_by=rate_bot, removed_date=None).exists():
+                    r = StrainRating(strain=s, created_by=rate_bot, effects=s.effects, benefits=s.benefits,
+                                     side_effects=s.side_effects, status='pending')
+                    r.save()
                 else:
-                    review = UserStrainReview.objects.get(strain=s, created_by=rate_bot, removed_date=None)
-                    review.effects = s.effects
-                    review.benefits = s.benefits
-                    review.side_effects = s.side_effects
-                    review.save()
+                    r = StrainRating.objects.get(strain=s, created_by=rate_bot, removed_date=None)
+                    r.effects = s.effects
+                    r.benefits = s.benefits
+                    r.side_effects = s.side_effects
+                    r.save()
 
             time_end = time.time()
             print('\n5. Well Done! Persisted {0} strains in {1}sec!\n'
