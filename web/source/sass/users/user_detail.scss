@@ -45,7 +45,7 @@
                 .user-image {
                     width: 8em;
                     height: 8em;
-                    margin: 0 auto;
+                    margin: 1em auto 0;
                     border: 1px solid $grey-light;
                     border-radius: 4em;
                 }
@@ -61,13 +61,25 @@
                 }
             }
 
-            .active-since {
+            .user-info {
                 display: inline-block;
-                position: relative;
-                bottom: 6em;
-                left: 3em;
-            }
+                height: 100%;
+                vertical-align: top;
+                color: $white;
+                text-align: left;
+                margin-left: 2em;
 
+                .user-name {
+                    display: block;
+                    margin-top: 1.5em;
+                    font-size: 2em;
+                }
+
+                .active-since {
+                    display: block;
+                    margin-top: 1em;
+                }
+            }
         }
 
         .profile-tabs {

@@ -27,10 +27,10 @@
                             <a href="#" class="edit-photo">+ Edit Photo</a>
                         </div>
                     </div>
-                    <div class="active-since">
+                    <div class="user-info">
                         <span class="user-name">{{ request.user.first_name }} {{ request.user.last_name }}</span>
                         {% if request.user.date_joined %}
-                            <span>Active since {{ request.user.date_joined|date:"F Y" }}</span>
+                            <span class="active-since">Active since {{ request.user.date_joined|date:"F Y" }}</span>
                         {% endif %}
                     </div>
                 </div>
