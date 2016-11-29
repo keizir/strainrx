@@ -4,7 +4,7 @@ from django.db import models
 from django.utils.encoding import python_2_unicode_compatible
 
 SYSTEM_PROPERTY_NAME = (
-    ('review_recalculation_size', 'Review Recalculation Size'),
+    ('rating_recalculation_size', 'Rating Recalculation Size'),
 )
 
 

@@ -250,7 +250,7 @@ class StrainRatingsView(LoginRequiredMixin, APIView):
 
     def recalculate_global_effects(self, request, strain):
         try:
-            recalculate_size = int(SystemProperty.objects.get(name='review_recalculation_size').value)
+            recalculate_size = int(SystemProperty.objects.get(name='rating_recalculation_size').value)
         except SystemProperty.DoesNotExist:
             recalculate_size = 10
 
@@ -336,9 +336,9 @@ class StrainRatingsView(LoginRequiredMixin, APIView):
         StrainUserRatingESService().save_strain_review(rating, strain.id, request.user.id)
 
         if rating.status == 'processed':
-            strain.effects = self.calculate_new_global_values(strain, 'effects')
-            strain.benefits = self.calculate_new_global_values(strain, 'benefits')
-            strain.side_effects = self.calculate_new_global_values(strain, 'side_effects')
+            strain.effects = self.calculate_new_global_values([strain], 'effects')
+            strain.benefits = self.calculate_new_global_values([strain], 'benefits')
+            strain.side_effects = self.calculate_new_global_values([strain], 'side_effects')
             strain.save()
 
         return Response({}, status=status.HTTP_200_OK)
