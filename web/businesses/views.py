@@ -5,7 +5,7 @@ from datetime import datetime
 
 from django.views.generic import TemplateView
 
-from web.businesses.models import Business, BusinessLocation
+from web.businesses.models import Business, BusinessLocation, BusinessLocationMenuItem
 from web.users.models import User
 
 
@@ -77,6 +77,9 @@ class BusinessDispensaryInfoView(TemplateView):
         context = super(BusinessDispensaryInfoView, self).get_context_data(**kwargs)
         business = Business.objects.get(pk=kwargs.get('business_id'))
         context['business'] = business
-        context['businesslocation'] = BusinessLocation.objects.filter(business=business, removed_date=None).order_by('id')
+        locationid = kwargs.get('location_id')
+        businesslocationmenuitem = BusinessLocationMenuItem.objects.filter(business_location=locationid, removed_date=None).order_by('id')
+        context['businesslocationmenuitem'] = businesslocationmenuitem
+        context['businesslocation'] = BusinessLocation.objects.get(business=business, removed_date=None)
         context['tab'] = 'dispensary_info'
         return context
