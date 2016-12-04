@@ -20,6 +20,7 @@ W.pages.search.strain.SearchWizardStep1 = W.pages.search.strain.SearchWizardStep
         this._super();
         this.clickTypeCheckbox();
         this.clickTypeInfo();
+        this.clickResetSearch();
     },
 
     clickTypeCheckbox: function clickTypeCheckbox() {
@@ -45,6 +46,17 @@ W.pages.search.strain.SearchWizardStep1 = W.pages.search.strain.SearchWizardStep
         $('.type-info').on('click', function (e) {
             e.preventDefault();
             W.common.Dialog($('.' + $(this).parent().find('.type').attr('id') + '-dialog'));
+        });
+    },
+
+    clickResetSearch: function clickResetSearch() {
+        var that = this;
+        $('.btn-reset-search').on('click', function () {
+            that.model.setData({});
+            that.checkedTypes.length = 0;
+            $('input[type="checkbox"]').prop('checked', false);
+            $.publish('update_step_data', {step: that.step, data: {}});
+            that.toggleButtonsState();
         });
     },
 
