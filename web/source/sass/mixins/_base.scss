@@ -397,6 +397,10 @@ fieldset {
     html, body {
         font-size: 19px;
     }
+
+    .container {
+        max-width: 1480px;
+    }
 }
 
 @media (min-width: $screen-xxl-min) {

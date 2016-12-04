@@ -45,15 +45,15 @@ class UserReviewsView(LoginRequiredMixin, DetailView):
         return context
 
 
-class UserSubscriptionsView(LoginRequiredMixin, DetailView):
+class UserNotificationsView(LoginRequiredMixin, DetailView):
     model = User
     slug_field = 'id'
     slug_url_kwarg = 'user_id'
-    template_name_suffix = '_subscriptions'
+    template_name_suffix = '_notifications'
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['tab'] = 'subscriptions'
+        context['tab'] = 'notifications'
         return context
 
 

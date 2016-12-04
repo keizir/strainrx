@@ -38,9 +38,9 @@ urlpatterns = [
         name='reviews'
     ),
     url(
-        regex=r'^(?P<user_id>[0-9]{1,})/subscriptions',
-        view=user_is_owner(views.UserSubscriptionsView.as_view()),
-        name='subscriptions'
+        regex=r'^(?P<user_id>[0-9]{1,})/notifications',
+        view=user_is_owner(views.UserNotificationsView.as_view()),
+        name='notifications'
     ),
     url(
         regex=r'^(?P<user_id>[0-9]{1,})/proximity',

@@ -38,31 +38,38 @@
 
             .user-image-wrapper {
                 display: inline-block;
-                text-align: center;
+                position: relative;
+                left: -10%;
                 width: 8em;
                 height: 100%;
 
                 .user-image {
                     width: 8em;
                     height: 8em;
-                    margin: 1em auto 0;
-                    border: 1px solid $grey-light;
-                    border-radius: 4em;
-                }
+                    margin: 2em auto 0;
+                    background-color: $white;
 
-                .user-image img {
-                    width: 5em;
-                    height: 5em;
-                    margin: 1.5em;
-                }
+                    a {
+                        display: block;
+                        width: 8em;
+                        height: 8em;
+                    }
 
-                .user-image-actions {
-                    margin-top: 1em;
+                    img {
+                        width: 6em;
+                        height: 6em;
+                        margin: 1em;
+                        border: 1px solid $grey-light;
+                        border-radius: 4em;
+                        padding: 0.5em;
+                    }
                 }
             }
 
             .user-info {
                 display: inline-block;
+                position: relative;
+                left: -8%;
                 height: 100%;
                 vertical-align: top;
                 color: $white;
@@ -122,7 +129,7 @@
 
     .profile-content {
         display: block;
-        width: 80%;
+        width: 100%;
         padding: 2em 1em 5em;
         margin: 0 auto;
 

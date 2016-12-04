@@ -1,9 +1,9 @@
 {% extends "users/base_profile.html" %}
 
 {% block profile-tab %}
-    <div class="user-subscriptions">
+    <div class="user-notifications">
         {% if object == request.user %}
-            <h1>Subscriptions</h1>
+            <h1>Notifications</h1>
         {% endif %}
     </div>
 {% endblock %}
