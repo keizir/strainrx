@@ -21,7 +21,12 @@ W.pages.search.strain.SearchWizardStep3 = W.pages.search.strain.SearchWizardStep
     initEventHandlers: function initEventHandlers() {
         this._super();
         this.clickStrainEffect(this.selectedBenefits);
-        this.clickRemoveEffect(this.selectedBenefits)
+        this.clickRemoveEffect(this.selectedBenefits);
+
+        if (this.isStepSkipped(2)) {
+            $(this.submit_el).attr('disabled', 'disabled');
+            $(this.skip_el).attr('disabled', 'disabled');
+        }
     },
 
     renderHTML: function renderHTML() {
