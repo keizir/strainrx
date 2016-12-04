@@ -17,14 +17,13 @@
                 <div class="info-wrapper">
                     <div class="user-image-wrapper">
                         <div class="user-image">
-                            {% if request.user.user_image_path %}
-                                <img src="{{ request.user.user_image_path }}" alt="User Image"/>
-                            {% else %}
-                                <img src="{% static 'images/default-profile-image.png' %}" alt="User Image"/>
-                            {% endif %}
-                        </div>
-                        <div class="user-image-actions">
-                            <a href="#" class="edit-photo">+ Edit Photo</a>
+                            <a class="edit-photo">
+                                {% if request.user.user_image_path %}
+                                    <img src="{{ request.user.user_image_path }}" alt="User Image"/>
+                                {% else %}
+                                    <img src="{% static 'images/default-profile-image.png' %}" alt="User Image"/>
+                                {% endif %}
+                            </a>
                         </div>
                     </div>
                     <div class="user-info">
@@ -36,7 +35,7 @@
                 </div>
                 <div class="profile-tabs">
                     <span class="profile-tab user-profile-tab {% if tab == 'info' %}active{% endif %}">
-                        <a href="{% url 'users:detail' request.user.id %}">User Information</a>
+                        <a href="{% url 'users:detail' request.user.id %}">User Info</a>
                     </span>
                     <span class="profile-tab favorites-tab {% if tab == 'favorites' %}active{% endif %}">
                         <a href="{% url 'users:favorites' request.user.id %}">Favorites</a>
@@ -44,8 +43,8 @@
                     <span class="profile-tab my-reviews-tab {% if tab == 'reviews' %}active{% endif %}">
                         <a href="{% url 'users:reviews' request.user.id %}">My Reviews</a>
                     </span>
-                    <span class="profile-tab subscriptions-tab {% if tab == 'subscriptions' %}active{% endif %}">
-                        <a href="{% url 'users:subscriptions' request.user.id %}">Subscriptions</a>
+                    <span class="profile-tab notifications-tab {% if tab == 'notifications' %}active{% endif %}">
+                        <a href="{% url 'users:notifications' request.user.id %}">Notifications</a>
                     </span>
                     <span class="profile-tab proximity-settings-tab {% if tab == 'proximity' %}active{% endif %}">
                         <a href="{% url 'users:proximity' request.user.id %}">Proximity</a>
