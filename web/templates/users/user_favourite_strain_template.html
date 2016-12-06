@@ -11,15 +11,18 @@
                 <% } %>
             </div>
             <div class="strain-info">
-                    <span class="strain-name">
-                        <a href="/search/strain/${ favorite.strain_slug }"><%= favorite.strain_name %></a>
-                    </span>
+                <span class="strain-name">
+                    <a href="/search/strain/${ favorite.strain_slug }"><%= favorite.strain_name %></a>
+                </span>
                 <span class="strain-type">${ favorite.strain_variety }</span>
-                <span class="strain-rating overall-rating-<%= favorite.id %>">
-                        ${ favorite.strain_overall_rating }</span>
+                <span class="strain-rating overall-rating-<%= favorite.id %>">${ favorite.strain_overall_rating }</span>
             </div>
         </div>
         <div class="strain-favorite-wrapper">
+            <div class="remove-icon">
+                <span class="text">Delete</span>
+                <span class="removable" id="<%= favorite.id %>"></span>
+            </div>
             <div class="created-date">
                 <span class="date">${ favorite.created_date }</span>
             </div>

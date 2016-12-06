@@ -22,6 +22,7 @@ W.users.FavoritesPage = Class.extend({
         var that = this;
         this.retrieveStrainFavorites(function (favorites) {
             that.renderStrainFavorites(favorites);
+            that.removeStrainFavorite();
         });
         this.initSubTabs();
     },
@@ -48,7 +49,9 @@ W.users.FavoritesPage = Class.extend({
     },
 
     renderStrainFavorites: function renderStrainFavorites(favorites) {
-        var that = this;
+        var that = this,
+            template = _.template($('#user_favorite_strain_template').html());
+
         this.regions.$favorites.html('');
 
         if (favorites && favorites.length === 0) {
@@ -57,7 +60,6 @@ W.users.FavoritesPage = Class.extend({
 
         $.each(favorites, function (index, favorite) {
             that.preformatFavorite(favorite);
-            var template = _.template($('#user_favorite_strain_template').html());
             that.regions.$favorites.append(template({'favorite': favorite}));
             that.initRating($('.overall-rating-{0}'.format(favorite.id)), favorite.strain_overall_rating);
         });
@@ -74,6 +76,19 @@ W.users.FavoritesPage = Class.extend({
                 starWidth: '16px'
             });
         }
+    },
+
+    removeStrainFavorite: function removeStrainFavorite() {
+        var that = this;
+        $('.removable').on('click', function () {
+            $.ajax({
+                method: 'DELETE',
+                url: '/api/v1/users/{0}/favorites/strain/{1}'.format(that.ui.$userId.val(), $(this).prop('id')),
+                success: function () {
+                    window.location.reload();
+                }
+            });
+        });
     },
 
     renderDispensariesFavorites: function renderDispensariesFavorites(favorites) {

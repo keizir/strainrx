@@ -34,7 +34,7 @@ urlpatterns = [
         name='strain_reviews'
     ),
     url(
-        regex=r'^(?P<user_id>\d+)/favorites/(?P<favorite_type>\w+)$',
+        regex=r'^(?P<user_id>\d+)/favorites/(?P<favorite_type>\w+)/(?P<favorite_id>\d+)?$',
         view=UserFavoritesView.as_view(),
         name='strain_favorites'
     ),

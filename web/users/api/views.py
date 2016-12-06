@@ -393,7 +393,7 @@ class StrainRatingView(LoginRequiredMixin, APIView):
 class UserFavoritesView(LoginRequiredMixin, APIView):
     permission_classes = (UserAccountOwner,)
 
-    def get(self, request, user_id, favorite_type):
+    def get(self, request, user_id, favorite_type, favorite_id):
         if 'strain' == favorite_type:
             favorites_raw = UserFavoriteStrain.objects.filter(created_by__id=user_id).order_by('-created_date')
             favorites = []
@@ -410,5 +410,13 @@ class UserFavoritesView(LoginRequiredMixin, APIView):
                     'created_date': r.created_date
                 })
             return Response({'favorites': favorites}, status=status.HTTP_200_OK)
+
+        return Response({}, status=status.HTTP_400_BAD_REQUEST)
+
+    def delete(self, request, user_id, favorite_type, favorite_id):
+        if 'strain' == favorite_type:
+            favorite = UserFavoriteStrain.objects.get(pk=favorite_id)
+            favorite.delete()
+            return Response({}, status=status.HTTP_200_OK)
 
         return Response({}, status=status.HTTP_400_BAD_REQUEST)
