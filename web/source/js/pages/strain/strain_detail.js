@@ -15,6 +15,11 @@ W.pages.strain.StrainDetailPage = Class.extend({
 
     init: function init() {
         var that = this;
+
+        $(window).on('resize', _.debounce(function () {
+            that.recalculateSimilarStrainsSectionWidth();
+        }, 250));
+
         this.retrieveStrain(function (strain_data) {
             if (strain_data) {
                 that.model = new W.common.Model(strain_data);
@@ -88,6 +93,44 @@ W.pages.strain.StrainDetailPage = Class.extend({
         new W.pages.strain.StrainReviewDialog({
             model: this.model
         });
+
+        setTimeout(function () {
+            $(window).trigger('resize');
+        }, 500);
+    },
+
+    recalculateSimilarStrainsSectionWidth: function recalculateSimilarStrainsSectionWidth() {
+        var $parent = $('.similar-strains-wrapper'),
+            $parentWidth = $parent.outerWidth(true),
+            $parentFirstHidden = $('.similar-wrapper.similar-hidden', $parent).first();
+
+        while (this.getVisibleSimilarWidth($parent) > $parentWidth) {
+            var last = $('.similar-wrapper.similar-visible', $parent).last();
+            last.addClass('similar-hidden');
+            last.removeClass('similar-visible');
+            last.css('visibility', 'hidden');
+            last.css('position', 'absolute');
+        }
+
+        var padding = parseInt($('.similar-wrapper.similar-visible', $parent).first().css('padding'), 10),
+            newTotalWidth = this.getVisibleSimilarWidth($parent) + $parentFirstHidden.outerWidth(true) + (3 * padding);
+
+        if ($parentFirstHidden && $parentWidth > newTotalWidth) {
+            $parentFirstHidden.removeClass('similar-hidden');
+            $parentFirstHidden.addClass('similar-visible');
+            $parentFirstHidden.css('visibility', 'visible');
+            $parentFirstHidden.css('position', 'relative');
+        }
+    },
+
+    getVisibleSimilarWidth: function getVisibleSimilarWidth($parent) {
+        var totalVisibleSimilarWidth = 0;
+        $.each($parent.find('.similar-wrapper.similar-visible'), function () {
+            var $el = $(this),
+                padding = parseInt($el.css('padding'), 10);
+            totalVisibleSimilarWidth += (2 * padding) + $el.outerWidth(true);
+        });
+        return totalVisibleSimilarWidth;
     },
 
     initRatings: function initRatings() {
