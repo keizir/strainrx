@@ -109,7 +109,7 @@
 
                 a {
                     display: block;
-                    width: 12em;
+                    width: 100%;
                     line-height: 3em;
                     color: $white;
                 }
@@ -203,43 +203,62 @@
     }
 }
 
-@media (max-width: $screen-xs-min) {
+@media (max-width: $screen-md-max) {
     .user-profile .profile-header {
-        height: 16em;
+        .info-wrapper {
+            top: 0;
+
+            .user-image-wrapper {
+                left: -10%;
+            }
+
+            .user-info {
+                left: -8%;
+            }
+        }
+
+        .profile-tabs .profile-tab {
+            width: 15%;
+        }
     }
-
-    .user-profile .profile-header .active-since {
-        left: 1em;
-    }
-
-    .user-profile .profile-header .profile-tabs {
-
-    }
-
-    .user-profile .form fieldset {
-        width: 25em;
-        margin: 0 auto;
+    .user-profile .form .form-field {
+        display: inline-block;
+        margin: 0 1em;
+        width: 18em;
     }
 
     .user-profile .user-info .form .form-field.date-field {
         display: inline-block;
-        width: 18em;
-    }
-
-    .user-profile .user-info .form .form-field.date-field select {
-        display: inline-block;
-        width: 18em;
-        margin-right: 1em;
+        width: 34.5em;
+        margin-left: 1.21em;
     }
 
     .user-profile .user-info .form .form-field.gender-field {
-        margin: 0;
+        margin-right: 1.23em;
     }
 }
 
 @media (max-width: $screen-sm-max) {
-    .user-profile .profile-header .profile-tabs {
+    .user-account-header-background {
+        height: 19em;
+    }
 
+    .user-profile .profile-header {
+        .info-wrapper {
+            top: -3em;
+        }
+
+        .profile-tabs {
+            bottom: 3em;
+
+            .profile-tab {
+                width: 33%;
+            }
+        }
+    }
+
+    .user-profile .profile-header {
+        height: 19em;
     }
 
     .user-profile .user-info .form fieldset {
@@ -273,24 +292,52 @@
     }
 }
 
-@media (max-width: $screen-md-max) {
-    .user-profile .profile-header .profile-tabs {
+@media (max-width: $screen-xs-max) {
+    .user-profile .profile-header {
+        height: 16em;
 
+        .profile-tabs {
+            bottom: 0;
+        }
     }
 
-    .user-profile .form .form-field {
-        display: inline-block;
-        margin: 0 1em;
-        width: 18em;
+    .user-profile .profile-header .active-since {
+        left: 1em;
+    }
+
+    .user-profile .profile-header {
+        .info-wrapper {
+            .user-image-wrapper {
+                left: 0;
+                float: left;
+                width: 32%;
+            }
+
+            .user-info {
+                left: 0;
+                float: right;
+                width: 50%;
+            }
+        }
+    }
+
+    .user-profile .form fieldset {
+        width: 25em;
+        margin: 0 auto;
     }
 
     .user-profile .user-info .form .form-field.date-field {
         display: inline-block;
-        width: 34.5em;
-        margin-left: 1.21em;
+        width: 18em;
+    }
+
+    .user-profile .user-info .form .form-field.date-field select {
+        display: inline-block;
+        width: 18em;
+        margin-right: 1em;
     }
 
     .user-profile .user-info .form .form-field.gender-field {
-        margin-right: 1.23em;
+        margin: 0;
     }
 }
