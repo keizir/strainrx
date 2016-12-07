@@ -77,9 +77,10 @@ class BusinessDispensaryInfoView(TemplateView):
         context = super(BusinessDispensaryInfoView, self).get_context_data(**kwargs)
         business = Business.objects.get(pk=kwargs.get('business_id'))
         context['business'] = business
-        locationid = kwargs.get('location_id')
+        locationid = BusinessLocation.objects.get(pk=kwargs.get('location_id'))
         businesslocationmenuitem = BusinessLocationMenuItem.objects.filter(business_location=locationid, removed_date=None).order_by('id')
         context['businesslocationmenuitem'] = businesslocationmenuitem
-        context['businesslocation'] = BusinessLocation.objects.get(business=business, removed_date=None)
+        context['businesslocation'] = locationid
+        context['locations'] = BusinessLocation.objects.filter(business=business, removed_date=None).order_by('id')
         context['tab'] = 'dispensary_info'
         return context
