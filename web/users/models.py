@@ -39,6 +39,8 @@ class User(AbstractUser):
 
     gender = models.CharField(_('Gender'), choices=GENDER, blank=True, null=True, max_length=10)
 
+    proximity = models.FloatField(_('Proximity'), null=True)
+
     def clean(self):
         validators.validate_email(self.email)
 

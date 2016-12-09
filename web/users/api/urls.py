@@ -44,6 +44,11 @@ urlpatterns = [
         name='geo_locations'
     ),
     url(
+        regex=r'^(?P<user_id>\d+)/proximity$',
+        view=UserProximityView.as_view(),
+        name='proximity'
+    ),
+    url(
         regex=r'^login',
         view=UserLoginView.as_view(),
         name='login'

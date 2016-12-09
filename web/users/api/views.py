@@ -485,3 +485,13 @@ class UserGeoLocationView(LoginRequiredMixin, APIView):
 
         location.save()
         return Response({}, status=status.HTTP_200_OK)
+
+
+class UserProximityView(LoginRequiredMixin, APIView):
+    permission_classes = (UserAccountOwner,)
+
+    def post(self, request, user_id):
+        user = User.objects.get(pk=user_id)
+        user.proximity = request.data.get('proximity')
+        user.save()
+        return Response({}, status=status.HTTP_200_OK)
