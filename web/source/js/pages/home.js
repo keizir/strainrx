@@ -24,7 +24,6 @@ W.pages.HomePage = Class.extend({
     },
 
     clickLookupSubmit: function clickLookupSubmit() {
-        var that = this;
         $('.lookup-submit').on('click', function (e) {
             e.preventDefault();
             var $input = $('.lookup-input'),
@@ -38,9 +37,21 @@ W.pages.HomePage = Class.extend({
     },
 
     preFillUserLocation: function preFillUserLocation() {
-        var l = this.location;
+        var l = this.location, location = '';
         if (l) {
-            $('.your-location-value').val('{0}, {1}, {2}'.format(l.street1, l.city, l.state));
+            if (l.street1) {
+                location += l.street1 + ', ';
+            }
+
+            if (l.city) {
+                location += l.city + ', ';
+            }
+
+            if (l.state) {
+                location += l.state;
+            }
+
+            $('.your-location-value').val(location);
         }
     },
 
@@ -49,43 +60,54 @@ W.pages.HomePage = Class.extend({
             $locationInput = $('#location').get(0),
             autocomplete = new google.maps.places.Autocomplete($locationInput);
 
-        autocomplete.addListener('place_changed', function () {
-            var place = autocomplete.getPlace(),
-                street1 = '', zipcode = '', state = '', city = '';
-
-            if (place.address_components) {
-                $.each(place.address_components, function (i, address_comp) {
-                    if (_.includes(address_comp.types, 'street_number')) {
-                        street1 += address_comp.long_name + ' ';
-                    }
-
-                    if (_.includes(address_comp.types, 'route')) {
-                        street1 += address_comp.long_name;
-                    }
-
-                    if (_.includes(address_comp.types, 'postal_code') && zipcode === '') {
-                        zipcode = address_comp.long_name;
-                    }
-
-                    if (_.includes(address_comp.types, 'administrative_area_level_1') && state === '') {
-                        state = address_comp.short_name;
-                    }
-
-                    if (_.includes(address_comp.types, 'locality') && city === '') {
-                        city = address_comp.long_name;
-                    }
-                });
+        google.maps.event.addDomListener($locationInput, 'keydown', function (e) {
+            if (e.keyCode == 13) {
+                e.preventDefault();
+                that.onLocationChange(autocomplete);
             }
+        });
+        
+        autocomplete.addListener('place_changed', function () {
+            that.onLocationChange(autocomplete);
+        });
+    },
 
-            that.saveUserLocation({
-                street1: street1,
-                city: city,
-                state: state,
-                zipcode: zipcode,
-                lat: place.geometry && place.geometry.location.lat(),
-                lng: place.geometry && place.geometry.location.lng(),
-                location_raw: JSON.stringify(place)
+    onLocationChange: function onLocationChange(autocomplete) {
+        var place = autocomplete.getPlace(),
+            street1 = '', zipcode = '', state = '', city = '';
+
+        if (place.address_components) {
+            $.each(place.address_components, function (i, address_comp) {
+                if (_.includes(address_comp.types, 'street_number')) {
+                    street1 += address_comp.long_name + ' ';
+                }
+
+                if (_.includes(address_comp.types, 'route')) {
+                    street1 += address_comp.long_name;
+                }
+
+                if (_.includes(address_comp.types, 'postal_code') && zipcode === '') {
+                    zipcode = address_comp.long_name;
+                }
+
+                if (_.includes(address_comp.types, 'administrative_area_level_1') && state === '') {
+                    state = address_comp.short_name;
+                }
+
+                if (_.includes(address_comp.types, 'locality') && city === '') {
+                    city = address_comp.long_name;
+                }
             });
+        }
+
+        this.saveUserLocation({
+            street1: street1,
+            city: city,
+            state: state,
+            zipcode: zipcode,
+            lat: place.geometry && place.geometry.location.lat(),
+            lng: place.geometry && place.geometry.location.lng(),
+            location_raw: JSON.stringify(place)
         });
     },
 
