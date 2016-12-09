@@ -71,7 +71,7 @@ class User(AbstractUser):
                 "zipcode": location.zipcode
             }
 
-        return None
+        return {"street1": "", "city": "", "state": "", "zipcode": ""}
 
 
 @python_2_unicode_compatible
