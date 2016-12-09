@@ -5,7 +5,7 @@ from django.core.exceptions import ValidationError
 
 from web.businesses.models import BusinessLocation, Business
 from web.users import validators
-from web.users.models import User
+from web.users.models import User, UserLocation
 
 
 class BusinessSignUpService:
@@ -31,15 +31,18 @@ class BusinessSignUpService:
         user = User(
             email=data.get('email'),
             username=str(uuid.uuid4())[:30],
-            city=data.get('city'),
-            state=data.get('state'),
-            zipcode=data.get('zip_code'),
             is_age_verified=True,
             is_email_verified=False,
             type='business'
         )
         user.set_password(data.get('pwd'))
         user.save()
+
+        location = UserLocation(user=user, street1=data.get('street1'), city=data.get('city'),
+                                state=data.get('state'), zipcode=data.get('zip_code'),
+                                lat=data.get('lat'), lng=data.get('lng'), location_raw=data.get('location_raw'))
+        location.save()
+
         return user
 
     def validate_and_create_business(self, data, user):
@@ -79,6 +82,9 @@ class BusinessSignUpService:
             zip_code=data.get('zip_code'),
             phone=data.get('phone'),
             ext=data.get('ext'),
+            lat=data.get('lat'),
+            lng=data.get('lng'),
+            location_raw=data.get('location_raw'),
             mon_open=data.get('mon_open'),
             mon_close=data.get('mon_close'),
             tue_open=data.get('tue_open'),
@@ -111,6 +117,9 @@ class BusinessLocationService:
                 location.delivery = data.get('delivery')
                 location.dispensary = data.get('dispensary')
                 location.delivery_radius = data.get('delivery_radius')
+                location.lat = data.get('lat')
+                location.lng = data.get('lng')
+                location.location_raw = data.get('location_raw')
                 location.save()
             else:
                 business = Business.objects.get(pk=business_id)
@@ -123,7 +132,10 @@ class BusinessLocationService:
                     zip_code=data.get('zip_code'),
                     delivery=data.get('delivery'),
                     dispensary=data.get('dispensary'),
-                    delivery_radius=data.get('delivery_radius')
+                    delivery_radius=data.get('delivery_radius'),
+                    lat=data.get('lat'),
+                    lng=data.get('lng'),
+                    location_raw=data.get('location_raw')
                 )
                 location.save()
 

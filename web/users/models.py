@@ -33,10 +33,6 @@ class User(AbstractUser):
     is_email_verified = models.BooleanField(default=False)
     type = models.CharField(max_length=10, choices=USER_TYPE, default='consumer')
 
-    city = models.CharField(_('City'), blank=True, null=True, max_length=100)
-    state = models.CharField(_('State'), blank=True, null=True, max_length=50)
-    zipcode = models.CharField(_('Zip Code'), blank=True, null=True, max_length=10)
-
     birth_month = models.CharField(_('Birth Month'), blank=True, null=True, max_length=20)
     birth_day = models.IntegerField(_('Birth Day'), blank=True, null=True)
     birth_year = models.IntegerField(_('Birth Year'), blank=True, null=True)
@@ -59,6 +55,24 @@ class User(AbstractUser):
     def get_absolute_url(self):
         return reverse('users:detail', kwargs={'username': self.username})
 
+    def get_location(self):
+        if UserLocation.objects.filter(user__id=self.pk).exists():
+            return UserLocation.objects.get(user__id=self.pk)
+
+        return None
+
+    def get_location_json(self):
+        if UserLocation.objects.filter(user__id=self.pk).exists():
+            location = UserLocation.objects.get(user__id=self.pk)
+            return {
+                "street1": location.street1,
+                "city": location.city,
+                "state": location.state,
+                "zipcode": location.zipcode
+            }
+
+        return None
+
 
 @python_2_unicode_compatible
 class PwResetLink(models.Model):
@@ -75,4 +89,19 @@ class UserSetting(models.Model):
     user = models.ForeignKey(User, on_delete=models.DO_NOTHING)
     setting_name = models.CharField(max_length=100)
     setting_value = JSONField(max_length=4096, default={})
+    last_modified_date = models.DateTimeField(auto_now=True)
+
+
+@python_2_unicode_compatible
+class UserLocation(models.Model):
+    user = models.OneToOneField(User, on_delete=models.DO_NOTHING)
+
+    street1 = models.CharField(_('Street'), blank=True, null=True, max_length=100)
+    city = models.CharField(_('City'), blank=True, null=True, max_length=100)
+    state = models.CharField(_('State'), blank=True, null=True, max_length=50)
+    zipcode = models.CharField(_('Zip Code'), blank=True, null=True, max_length=10)
+
+    lat = models.FloatField(_('Latitude'), blank=True, null=True, max_length=50)
+    lng = models.FloatField(_('Longitude'), blank=True, null=True, max_length=50)
+    location_raw = JSONField(_('Location Raw JSON'), default={}, max_length=20000)
     last_modified_date = models.DateTimeField(auto_now=True)

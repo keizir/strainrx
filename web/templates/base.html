@@ -58,15 +58,41 @@
     <script src="{% static 'js/vendor/lodash.min.js' %}"></script>
     <script src="{% static 'js/vendor/class.js' %}"></script>
     <script src="{% static 'js/vendor/jquery.rateyo.min.js' %}"></script>
+    <script src="{% static 'js/vendor/js.cookie.js' %}"></script>
     <script src="{% static 'js/pages/common.js' %}"></script>
     <script src="{% static 'js/views/base_view.js' %}"></script>
     <script src="{% static 'js/pages/base.js' %}"></script>
     <script src="{% static 'js/common/constants.js' %}"></script>
     <script src="{% static 'js/common/dialog.js' %}"></script>
     <script src="{% static 'js/users/user_settings.js' %}"></script>
+
+    <script src="{% google_maps_api_url %}"></script>
+
     <script type="text/javascript">
         W.Base.init();
     </script>
+
+    {% if request.user.is_authenticated and request.user.get_location == None %}
+        <script src="{% static 'js/views/location_view.js' %}"></script>
+        <script src="{% static 'js/pages/location.js' %}"></script>
+        <script type="text/javascript">
+            W.Location.init({
+                authenticated: true,
+                userId: '{{ request.user.id }}'
+            });
+        </script>
+    {% endif %}
+
+    {% if not request.user.is_authenticated %}
+        <script src="{% static 'js/views/location_view.js' %}"></script>
+        <script src="{% static 'js/pages/location.js' %}"></script>
+        <script type="text/javascript">
+            W.Location.init({
+                authenticated: false,
+                userId: null
+            });
+        </script>
+    {% endif %}
 {% endblock javascript %}
 
 </body>

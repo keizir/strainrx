@@ -132,6 +132,11 @@
     <script src="{% static 'js/pages/home.js' %}"></script>
     <script src="{% static 'js/pages/strain/strain_lookup.js' %}"></script>
     <script type="text/javascript">
-        new W.pages.HomePage();
+        new W.pages.HomePage({
+            location: {% if request.user.is_authenticated %}
+                {{ request.user.get_location_json | safe }} {% else %} null {% endif %},
+            authenticated: '{{ request.user.is_authenticated }}' == 'True',
+            userId: {% if request.user.is_authenticated %} {{ request.user.id }} {% else %} null {% endif %}
+        });
     </script>
 {% endblock %}

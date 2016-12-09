@@ -21,24 +21,24 @@ W.users.DetailPage = Class.extend({
 
     clickUpdateUserInfo: function clickUpdateUserInfo() {
         var that = this;
-
         $('.btn-update-user-info').on('click', function (e) {
             e.preventDefault();
 
             var data = collectUserData();
-
             if (isValid(data)) {
-                $.ajax({
-                    method: 'PUT',
-                    url: '/api/v1/users/' + $('input[name="uid"]').val() + '/',
-                    dataType: 'json',
-                    data: JSON.stringify(data),
-                    success: function () {
-                        that.showSuccessMessage('You profile information has been successfully updated');
-                    },
-                    error: function (error) {
-                        that.showErrorMessage(error);
-                    }
+                updateLocationData(data, function () {
+                    $.ajax({
+                        method: 'PUT',
+                        url: '/api/v1/users/' + $('input[name="uid"]').val() + '/',
+                        dataType: 'json',
+                        data: JSON.stringify(data),
+                        success: function () {
+                            that.showSuccessMessage('You profile information has been successfully updated');
+                        },
+                        error: function (error) {
+                            that.showErrorMessage(error);
+                        }
+                    });
                 });
             }
 
@@ -53,13 +53,16 @@ W.users.DetailPage = Class.extend({
                     'first_name': $('input[name="first_name"]').val(),
                     'last_name': $('input[name="last_name"]').val(),
                     'email': $('input[name="email"]').val(),
-                    'city': $('input[name="city"]').val(),
-                    'state': $('input[name="state"]').val(),
-                    'zipcode': $('input[name="zipcode"]').val(),
                     'birth_month': birthMonth !== defaultSelectValue ? birthMonth : null,
                     'birth_day': birthDay !== defaultSelectValue ? birthDay : null,
                     'birth_year': birthYear !== defaultSelectValue ? birthYear : null,
-                    'gender': gender !== defaultSelectValue ? gender : null
+                    'gender': gender !== defaultSelectValue ? gender : null,
+                    'location': {
+                        'street1': '',
+                        'city': $('input[name="city"]').val() || '',
+                        'state': $('input[name="state"]').val() || '',
+                        'zipcode': $('input[name="zipcode"]').val() || ''
+                    }
                 };
             }
 
@@ -73,6 +76,27 @@ W.users.DetailPage = Class.extend({
                 }
 
                 return true;
+            }
+
+            function updateLocationData(data, callback) {
+                var l = data.location;
+                if (l.city || l.state || l.zipcode) {
+                    var geoCoder = new google.maps.Geocoder();
+                    geoCoder.geocode({'address': '{0}, {1}, {2}'.format(l.zipcode, l.city, l.state)},
+                        function (results, status) {
+                            if (status === 'OK') {
+                                if (results && results[0].geometry) {
+                                    data.location.lat = results[0].geometry.location.lat();
+                                    data.location.lng = results[0].geometry.location.lng();
+                                    data.location.location_raw = JSON.stringify(results);
+                                }
+                            } else {
+                                console.log('Geocoder failed due to: ' + status);
+                            }
+
+                            callback();
+                        });
+                }
             }
         });
     },

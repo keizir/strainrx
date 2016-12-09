@@ -61,7 +61,7 @@ W.pages.b2b.SignUpWizardStep5 = W.common.WizardStep.extend({
             $('.error-message').text('Enter a valid state abbreviation');
             return false;
         }
-        
+
         if (!W.common.Constants.regex.phone.test(phoneNumber)) {
             $('.error-message').text('Phone number must match the following format: 000-000-0000');
             return false;
@@ -76,16 +76,32 @@ W.pages.b2b.SignUpWizardStep5 = W.common.WizardStep.extend({
     },
 
     submit: function submit() {
-        var data = {
-            address: $('input[name="address"]').val().trim(),
-            city: $('input[name="city"]').val().trim(),
-            state: $('input[name="state"]').val().trim(),
-            zipcode: $('input[name="zipcode"]').val().trim(),
-            phone: $('input[name="phone"]').val().trim(),
-            ext: $('input[name="ext"]').val()
-        };
-        $.publish('update_step_data', {step: this.step, data: data});
-        $.publish('show_step', {step: 6});
+        var that = this,
+            geoCoder = new google.maps.Geocoder(),
+            data = {
+                address: $('input[name="address"]').val().trim(),
+                city: $('input[name="city"]').val().trim(),
+                state: $('input[name="state"]').val().trim(),
+                zipcode: $('input[name="zipcode"]').val().trim(),
+                phone: $('input[name="phone"]').val().trim(),
+                ext: $('input[name="ext"]').val()
+            };
+
+        geoCoder.geocode({'address': '{0} {1} {2} {3}'.format(data.address, data.city, data.state, data.zipcode)},
+            function (results, status) {
+                if (status === 'OK') {
+                    if (results && results[0].geometry) {
+                        data.lat = results[0].geometry.location.lat();
+                        data.lng = results[0].geometry.location.lng();
+                        data.location_raw = JSON.stringify(results);
+                    }
+                } else {
+                    console.log('Geocoder failed due to: ' + status);
+                }
+
+                $.publish('update_step_data', {step: that.step, data: data});
+                $.publish('show_step', {step: 6});
+            });
     }
 
 });

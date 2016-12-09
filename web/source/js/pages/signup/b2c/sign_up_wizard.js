@@ -27,6 +27,9 @@ W.pages.b2c.SignUpWizard = W.common.Wizard.extend({
     },
 
     _on_submit_form: function _on_submit_form(ev, data) {
+        var userGeoLocation = Cookies.get('user_geo_location');
+        userGeoLocation = userGeoLocation ? JSON.parse(userGeoLocation) : {};
+
         $.ajax({
             method: 'POST',
             url: '/api/v1/users/signup',
@@ -36,7 +39,16 @@ W.pages.b2c.SignUpWizard = W.common.Wizard.extend({
                 is_age_verified: data[2].is_age_verified,
                 email: data[3].email,
                 pwd: data[4].pwd, pwd2: data[4].pwd2,
-                is_terms_accepted: data[5].terms
+                is_terms_accepted: data[5].terms,
+                location: {
+                    street1: userGeoLocation.street1 || '',
+                    city: userGeoLocation.city || '',
+                    state: userGeoLocation.state || '',
+                    zipcode: userGeoLocation.zipcode || '',
+                    lat: userGeoLocation.lat || '',
+                    lng: userGeoLocation.lng || '',
+                    location_raw: {}
+                }
             }),
             success: function () {
                 window.location.href = '/users/signup/done';

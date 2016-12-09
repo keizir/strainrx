@@ -96,25 +96,45 @@ W.pages.business.BusinessLocations = Class.extend({
 
                     if (fieldName === 'street_address') {
                         that.locations[index].street1 = inputValue;
+                        that.updateLocationCoordinates(that.locations[index]);
                         return;
                     }
 
                     if (fieldName === 'city') {
                         that.locations[index].city = inputValue;
+                        that.updateLocationCoordinates(that.locations[index]);
                         return;
                     }
 
                     if (fieldName === 'state') {
                         that.locations[index].state = inputValue;
+                        that.updateLocationCoordinates(that.locations[index]);
                         return;
                     }
 
                     if (fieldName === 'zip_code') {
                         that.locations[index].zip_code = inputValue;
+                        that.updateLocationCoordinates(that.locations[index]);
                     }
                 }
             });
         }
+    },
+
+    updateLocationCoordinates: function updateLocationCoordinates(location) {
+        var geoCoder = new google.maps.Geocoder();
+        geoCoder.geocode({'address': '{0} {1} {2} {3}'.format(location.street1, location.city, location.state, location.zip_code)},
+            function (results, status) {
+                if (status === 'OK') {
+                    if (results && results[0].geometry) {
+                        location.lat = results[0].geometry.location.lat();
+                        location.lng = results[0].geometry.location.lng();
+                        location.location_raw = JSON.stringify(results);
+                    }
+                } else {
+                    console.log('Geocoder failed due to: ' + status);
+                }
+            });
     },
 
     updateLocationCheckboxFields: function updateLocationCheckboxFields($input) {

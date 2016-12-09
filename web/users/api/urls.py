@@ -39,6 +39,11 @@ urlpatterns = [
         name='strain_favorites'
     ),
     url(
+        regex=r'^(?P<user_id>\d+)/geo_locations$',
+        view=UserGeoLocationView.as_view(),
+        name='geo_locations'
+    ),
+    url(
         regex=r'^login',
         view=UserLoginView.as_view(),
         name='login'

@@ -4,9 +4,11 @@ import re
 from uuid import uuid4
 
 from django.conf import settings
+from django.contrib.postgres.fields import JSONField
 from django.core.exceptions import ValidationError
 from django.db import models
 from django.utils.encoding import python_2_unicode_compatible
+from django.utils.translation import ugettext_lazy as _
 
 from web.search.models import Strain
 from web.users.models import User
@@ -67,6 +69,10 @@ class BusinessLocation(models.Model):
     city = models.CharField(max_length=100)
     state = models.CharField(max_length=50)
     zip_code = models.CharField(max_length=10)
+
+    lat = models.FloatField(_('Latitude'), blank=True, null=True, max_length=50)
+    lng = models.FloatField(_('Longitude'), blank=True, null=True, max_length=50)
+    location_raw = JSONField(_('Location Raw JSON'), default={}, max_length=20000)
 
     phone = models.CharField(max_length=15, blank=True, null=True, validators=[phone_number_validator])
     ext = models.CharField(max_length=5, blank=True, null=True)

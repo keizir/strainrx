@@ -18,9 +18,9 @@ from web.search.models import UserSearch, StrainReview, StrainImage, UserFavorit
 from web.search.services import build_strain_rating
 from web.users import validators
 from web.users.api.permissions import UserAccountOwner
-from web.users.api.serializers import (UserDetailSerializer, UserSignUpSerializer)
+from web.users.api.serializers import (UserDetailSerializer, UserSignUpSerializer, UserLocationSerializer)
 from web.users.emails import EmailService
-from web.users.models import User, PwResetLink, UserSetting
+from web.users.models import User, PwResetLink, UserSetting, UserLocation
 
 logger = logging.getLogger(__name__)
 
@@ -44,7 +44,12 @@ class UserDetailView(LoginRequiredMixin, APIView):
     permission_classes = (UserAccountOwner,)
 
     def put(self, request, user_id):
-        serializer = UserDetailSerializer(data=request.data)
+        request_data = request.data
+        location_data = request.data.get('location')
+
+        del request_data['location']
+
+        serializer = UserDetailSerializer(data=request_data)
         serializer.is_valid(raise_exception=True)
 
         user = User.objects.get(pk=user_id)
@@ -63,15 +68,34 @@ class UserDetailView(LoginRequiredMixin, APIView):
         user.first_name = serializer.validated_data.get('first_name')
         user.last_name = serializer.validated_data.get('last_name')
         user.email = serializer.validated_data.get('email').lower()
-        user.city = serializer.validated_data.get('city')
-        user.state = serializer.validated_data.get('state')
-        user.zipcode = serializer.validated_data.get('zipcode')
         user.birth_month = serializer.validated_data.get('birth_month')
         user.birth_day = serializer.validated_data.get('birth_day')
         user.birth_year = serializer.validated_data.get('birth_year')
         user.gender = serializer.validated_data.get('gender')
         user.save()
 
+        serializer = UserLocationSerializer(data=location_data)
+        serializer.is_valid(raise_exception=True)
+        data = serializer.validated_data
+
+        try:
+            location = UserLocation.objects.get(user__id=user_id)
+            location.street1 = data.get('street1')
+            location.city = data.get('city')
+            location.state = data.get('state')
+            location.zipcode = data.get('zipcode')
+            location.lat = data.get('lat')
+            location.lng = data.get('lng')
+            location.location_raw = data.get('location_raw')
+        except UserLocation.DoesNotExist:
+            location = UserLocation(
+                user=request.user,
+                street1=data.get('street1'), city=data.get('city'),
+                state=data.get('state'), zipcode=data.get('zipcode'),
+                lat=data.get('lat'), lng=data.get('lng'), location_raw=data.get('location_raw')
+            )
+
+        location.save()
         return Response({}, status=status.HTTP_200_OK)
 
 
@@ -167,8 +191,11 @@ class UserSignUpWizardView(APIView):
     permission_classes = (permissions.AllowAny,)
 
     def post(self, request):
-        serializer = UserSignUpSerializer(data=request.data)
+        request_data = request.data
+        location_data = request.data.get('location')
+        del request_data['location']
 
+        serializer = UserSignUpSerializer(data=request_data)
         is_valid = self.validate_user(serializer)
         if isinstance(is_valid, Response):
             return is_valid
@@ -188,6 +215,15 @@ class UserSignUpWizardView(APIView):
             return bad_request('Cannot authenticate user')
 
         login(request, authenticated)
+
+        serializer = UserLocationSerializer(data=location_data)
+        serializer.is_valid(raise_exception=True)
+        data = serializer.validated_data
+        location = UserLocation(user=request.user, street1=data.get('street1'), city=data.get('city'),
+                                state=data.get('state'), zipcode=data.get('zipcode'),
+                                lat=data.get('lat'), lng=data.get('lng'), location_raw=data.get('location_raw'))
+        location.save()
+
         return Response({}, status=status.HTTP_200_OK)
 
     def validate_user(self, serializer):
@@ -420,3 +456,32 @@ class UserFavoritesView(LoginRequiredMixin, APIView):
             return Response({}, status=status.HTTP_200_OK)
 
         return Response({}, status=status.HTTP_400_BAD_REQUEST)
+
+
+class UserGeoLocationView(LoginRequiredMixin, APIView):
+    permission_classes = (UserAccountOwner,)
+
+    def post(self, request, user_id):
+        serializer = UserLocationSerializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        data = serializer.validated_data
+
+        try:
+            location = UserLocation.objects.get(user__id=user_id)
+            location.street1 = data.get('street1')
+            location.city = data.get('city')
+            location.state = data.get('state')
+            location.zipcode = data.get('zipcode')
+            location.lat = data.get('lat')
+            location.lng = data.get('lng')
+            location.location_raw = data.get('location_raw')
+        except UserLocation.DoesNotExist:
+            location = UserLocation(
+                user=request.user,
+                street1=data.get('street1'), city=data.get('city'),
+                state=data.get('state'), zipcode=data.get('zipcode'),
+                lat=data.get('lat'), lng=data.get('lng'), location_raw=data.get('location_raw')
+            )
+
+        location.save()
+        return Response({}, status=status.HTTP_200_OK)

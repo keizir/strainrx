@@ -21,6 +21,10 @@ class BusinessSignUpSerializer(serializers.Serializer):
     phone = serializers.CharField()
     ext = serializers.CharField(allow_blank=True, allow_null=True)
 
+    lat = serializers.FloatField(allow_null=True)
+    lng = serializers.FloatField(allow_null=True)
+    location_raw = serializers.JSONField()
+
     mon_open = serializers.TimeField(format='%I:%M %p', input_formats=['%I:%M %p'], allow_null=True)
     mon_close = serializers.TimeField(format='%I:%M %p', input_formats=['%I:%M %p'], allow_null=True)
     tue_open = serializers.TimeField(format='%I:%M %p', input_formats=['%I:%M %p'], allow_null=True)
@@ -56,6 +60,10 @@ class BusinessLocationDetailSerializer(serializers.Serializer):
 
     delivery_radius = serializers.FloatField(allow_null=True)
 
+    lat = serializers.FloatField(allow_null=True)
+    lng = serializers.FloatField(allow_null=True)
+    location_raw = serializers.JSONField(default={})
+
     mon_open = serializers.TimeField(format='%I:%M %p', input_formats=['%I:%M %p'], allow_null=True)
     mon_close = serializers.TimeField(format='%I:%M %p', input_formats=['%I:%M %p'], allow_null=True)
     tue_open = serializers.TimeField(format='%I:%M %p', input_formats=['%I:%M %p'], allow_null=True)
@@ -80,6 +88,9 @@ class BusinessLocationDetailSerializer(serializers.Serializer):
         instance.delivery_radius = validated_data.get('delivery_radius')
         instance.phone = validated_data.get('phone')
         instance.ext = validated_data.get('ext')
+        instance.lat = validated_data.get('lat')
+        instance.lng = validated_data.get('lng')
+        instance.location_raw = validated_data.get('location_raw')
         instance.mon_open = validated_data.get('mon_open')
         instance.mon_close = validated_data.get('mon_close')
         instance.tue_open = validated_data.get('tue_open')

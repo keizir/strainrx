@@ -296,6 +296,9 @@ AWS_S3_CALLING_FORMAT = OrdinaryCallingFormat()
 HTTP_USERNAME = env('SRX_HTTP_USERNAME', default='')
 HTTP_PASSWORD = env('SRX_HTTP_PASSWORD', default='')
 
+# GOOGLE
+GOOGLE_API_KEY = env('SRX_GOOGLE_API_KEY', default='')
+
 SERVER_ENV = env('SERVER_ENV', default='dev')
 
 RAVEN_CONFIG = {

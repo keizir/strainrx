@@ -92,8 +92,12 @@
                                     <span>
                                         <i class="fa fa-dot-circle-o" aria-hidden="true"></i> UPDATE LOCATION
                                     </span>
-                                    <span>12345, Santa Monica, LA</span>
-                                    <a class="update-location-href" href="#">Update location</a>
+                                    {% with l=request.user.get_location_json %}
+                                        <span>{{ l.street1 }}</span>
+                                        <span>{{ l.city }}, {{ l.state }}, {{ l.zipcode }}</span>
+                                    {% endwith %}
+                                    <a class="update-location-href" href="{% url 'users:detail' request.user.id %}">
+                                        Update location</a>
                                 </div>
                             {% elif request.user.type == 'business' %}
                                 <div class="action">
