@@ -1,7 +1,8 @@
 TYPES = {
     'strain': "strain",
     'strain_review': "strain_review",
-    'strain_rating': "strain_rating"
+    'strain_rating': "strain_rating",
+    'business_location': "business_location"
 }
 
 strain_mapping = {
@@ -496,6 +497,60 @@ strain_rating_mapping = {
         },
         "removed_date": {
             "type": "date"
+        }
+    }
+}
+
+business_location_mapping = {
+    "properties": {
+        "business_id": {"type": "long"},
+        "business_location_id": {"type": "long"},
+        "location_name": {"type": "string"},
+        "manager_name": {"type": "string"},
+        "location_email": {"type": "string"},
+        "dispensary": {"type": "boolean"},
+        "delivery": {"type": "boolean"},
+        "grow_house": {"type": "boolean"},
+        "delivery_radius": {"type": "float"},
+        "street1": {"type": "string"},
+        "city": {"type": "string"},
+        "state": {"type": "string"},
+        "zip_code": {"type": "string"},
+        "lat": {"type": "float"},
+        "lng": {"type": "float"},
+        "location_raw": {"type": "string"},
+        "phone": {"type": "string"},
+        "ext": {"type": "string"},
+        "removed_by_id": {"type": "long"},
+        "removed_date": {"type": "date"},
+        "created_date": {"type": "date"},
+        "mon_open": {"type": "string"},
+        "mon_close": {"type": "string"},
+        "tue_open": {"type": "string"},
+        "tue_close": {"type": "string"},
+        "wed_open": {"type": "string"},
+        "wed_close": {"type": "string"},
+        "thu_open": {"type": "string"},
+        "thu_close": {"type": "string"},
+        "fri_open": {"type": "string"},
+        "fri_close": {"type": "string"},
+        "sat_open": {"type": "string"},
+        "sat_close": {"type": "string"},
+        "sun_open": {"type": "string"},
+        "sun_close": {"type": "string"},
+        "menu_items": {
+            "type": "nested",
+            "properties": {
+                "id": {"type": "long"},
+                "strain_id": {"type": "long"},
+                "strain_name": {"type": "string"},
+                "price_gram": {"type": "float"},
+                "price_eighth": {"type": "float"},
+                "price_quarter": {"type": "float"},
+                "price_half": {"type": "float"},
+                "in_stock": {"type": "boolean"},
+                "removed_date": {"type": "date"}
+            }
         }
     }
 }

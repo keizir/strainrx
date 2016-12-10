@@ -7,9 +7,13 @@ from django.conf import settings
 from django.contrib.postgres.fields import JSONField
 from django.core.exceptions import ValidationError
 from django.db import models
+from django.db.models.signals import post_save
+from django.dispatch import receiver
 from django.utils.encoding import python_2_unicode_compatible
 from django.utils.translation import ugettext_lazy as _
 
+from web.businesses.es_serializers import BusinessLocationESSerializer, MenuItemESSerializer
+from web.businesses.es_service import BusinessLocationESService
 from web.search.models import Strain
 from web.users.models import User
 
@@ -101,6 +105,17 @@ class BusinessLocation(models.Model):
         return '{0} - {1}'.format(self.business, self.location_name)
 
 
+@receiver(post_save, sender=BusinessLocation)
+def save_es_business_location(sender, **kwargs):
+    business_location = kwargs.get('instance')
+    es_serializer = BusinessLocationESSerializer(business_location)
+    data = es_serializer.data
+    data['business_id'] = business_location.business.pk
+    data['business_location_id'] = business_location.pk
+    data['removed_by_id'] = business_location.removed_by
+    BusinessLocationESService().save_business_location(data, business_location.pk)
+
+
 @python_2_unicode_compatible
 class BusinessLocationMenuItem(models.Model):
     business_location = models.ForeignKey(BusinessLocation, on_delete=models.DO_NOTHING)
@@ -114,3 +129,16 @@ class BusinessLocationMenuItem(models.Model):
     in_stock = models.BooleanField(default=True)
 
     removed_date = models.DateTimeField(blank=True, null=True)
+
+
+@receiver(post_save, sender=BusinessLocationMenuItem)
+def save_es_menu_item(sender, **kwargs):
+    menu_item = kwargs.get('instance')
+    es_serializer = MenuItemESSerializer(menu_item)
+    d = es_serializer.data
+
+    strain = menu_item.strain
+    d['id'] = menu_item.pk
+    d['strain_id'] = strain.pk
+    d['strain_name'] = strain.name
+    BusinessLocationESService().save_menu_item(d, menu_item.pk, menu_item.business_location.pk)

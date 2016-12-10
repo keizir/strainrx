@@ -108,19 +108,19 @@ class BusinessLocationService:
         for to_update in to_update_locations:
             data = to_update.get('data')
             if to_update.get('location_id'):
-                location = BusinessLocation.objects.get(pk=to_update.get('location_id'))
-                location.location_name = data.get('location_name')
-                location.street1 = data.get('street1')
-                location.city = data.get('city')
-                location.state = data.get('state')
-                location.zip_code = data.get('zip_code')
-                location.delivery = data.get('delivery')
-                location.dispensary = data.get('dispensary')
-                location.delivery_radius = data.get('delivery_radius')
-                location.lat = data.get('lat')
-                location.lng = data.get('lng')
-                location.location_raw = data.get('location_raw')
-                location.save()
+                l = BusinessLocation.objects.get(pk=to_update.get('location_id'))
+                l.location_name = data.get('location_name')
+                l.street1 = data.get('street1')
+                l.city = data.get('city')
+                l.state = data.get('state')
+                l.zip_code = data.get('zip_code')
+                l.delivery = data.get('delivery')
+                l.dispensary = data.get('dispensary')
+                l.delivery_radius = data.get('delivery_radius')
+                l.lat = data.get('lat') if data.get('lat') else l.lat
+                l.lng = data.get('lng') if data.get('lng') else l.lng
+                l.location_raw = data.get('location_raw') if data.get('location_raw') else l.location_raw
+                l.save()
             else:
                 business = Business.objects.get(pk=business_id)
                 location = BusinessLocation(

@@ -155,7 +155,6 @@ class BusinessLocationMenuView(LoginRequiredMixin, APIView):
         location = BusinessLocation.objects.get(pk=business_location_id)
 
         try:
-            print(data.get('price_eighth'))
             menu_item = BusinessLocationMenuItem.objects.get(business_location=location, strain=strain)
             menu_item.in_stock = data.get('in_stock')
             menu_item.price_gram = data.get('price_gram')

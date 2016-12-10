@@ -49,7 +49,6 @@ W.pages.business.BusinessMenu = Class.extend({
             success: function (data) {
                 if (data.menu) {
                     $.each(data.menu, function (i, item) {
-                        console.log(item);
                         that.preformatMenuItem(item);
                         that.pushMenuItem(item.strain_variety, item);
                     });

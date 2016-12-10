@@ -18,7 +18,8 @@ class BaseElasticService(object):
     # all API endpoints
     URLS = {
         'STRAIN': '/strain',
-        'USER_RATINGS': '/user_ratings'
+        'USER_RATINGS': '/user_ratings',
+        'BUSINESS_LOCATION': '/business_location'
     }
 
     HEADERS = {
@@ -94,7 +95,7 @@ class BaseElasticService(object):
 
         for r in resp.get('items', []):
             # add any non 2XX response to errors list
-            if r.get('status') > 299:
+            if r.get('status') and r.get('status') > 299:
                 errors.append(r)
 
         return success, errors
