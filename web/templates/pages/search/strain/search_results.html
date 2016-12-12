@@ -17,45 +17,36 @@
             <div class="filter-menu-wrapper">
                 <div class="filter-menu">
                     <div class="active-link">
-                        <span class="menu-active-link">
-                            <a href="#">Show All</a>
-                        </span>
-                        <span class="menu-expander">
-                            <i class="fa fa-caret-down" aria-hidden="true"></i>
-                        </span>
+                        <span class="menu-active-link"><a href="#" filter="all">Show All</a></span>
+                        <span class="menu-expander"><i class="fa fa-caret-down" aria-hidden="true"></i></span>
                     </div>
                     <div class="hidden-links hidden">
-                        <span class="menu-link">
-                            <a href="#">Show All</a>
-                        </span>
-                        <span class="menu-link">
-                            <a href="#">Available Locally</a>
-                        </span>
-                        <span class="menu-link">
-                            <a href="#">Deliveries Only</a>
-                        </span>
+                        <span class="menu-link" filter="all"><a href="#">Show All</a></span>
+                        <span class="menu-link" filter="local"><a href="#">Available Locally</a></span>
+                        <span class="menu-link" filter="delivery"><a href="#">Deliveries Only</a></span>
                     </div>
                 </div>
             </div>
         </div>
+
         <div class="search-result-body-wrapper">
             <div class="search-result"></div>
         </div>
+
         <div class="search-result-footer-wrapper {% if search_results_total <= 8 %}hidden{% endif %}">
             <div class="scroll-down-wrapper">
                 <div class="inline-block">
-                    <span class="scroll-icon">
-                        <i class="fa fa-refresh fa-2x" aria-hidden="true"></i>
-                    </span>
+                    <span class="scroll-icon"><i class="fa fa-refresh fa-2x" aria-hidden="true"></i></span>
                 </div>
                 <div class="inline-block">
-                    <span class="scroll-text">
-                        Scroll down to load more results
-                    </span>
+                    <span class="scroll-text">Scroll down to load more results</span>
                 </div>
             </div>
         </div>
     </div>
+
+    {% include 'pages/search/strain/search_results_expanded_locations_template.html' %}
+
 {% endblock %}
 
 {% block javascript %}
@@ -77,7 +68,7 @@
                     </div>
                     <div class="item-info inline-block">
                         <span class="strain-name">
-                            <a href="/search/strain/${ strain.strain_slug }"><%= strain.name %></a>
+                            <a href="/search/strain/${ strain.strain_slug }">${ strain.name }</a>
                         </span>
                         <span class="strain-type">${ strain.variety }</span>
                         <span class="strain-rating loaded-rating-<%= position %>">${ strain.rating }</span>
@@ -86,26 +77,29 @@
             </div>
             <div class="pull-right">
                 <div class="separator inline-block"></div>
-                <div class="item-locations inline-block">
+                <div class="item-locations inline-block locations-<%= position %>" position="<%= position %>">
                     <span class="locations-icon">
                         <i class="fa fa-map-marker fa-2x" aria-hidden="true"></i>
                     </span>
                     <span class="locations">
-                        <span>${ strain.delivery_addresses.length } Locations</span>
-                        <span>${ closestDeliveryDistance }</span>
-                        <span>${ openClosedCount }</span>
+                        <span><% if (strain.locations.length > 0) { %>${ strain.locations.length } Locations<% } else { %>No Locations<% } %></span>
+                        <span>${ closestDistance(strain.locations) }</span>
+                        <span>${ openClosedCount(strain.locations) }</span>
                     </span>
                 </div>
+                <div class="locations-expanded locations-expanded-<%= position %> hidden"></div>
                 <div class="separator inline-block"></div>
-                <div class="item-deliveries inline-block">
+                <div class="item-deliveries inline-block deliveries-<%= position %>" position="<%= position %>">
                     <div class="deliveries-icon">
                         <i class="fa fa-truck fa-2x" aria-hidden="true"></i>
                     </div>
                     <div class="deliveries">
-                        <span>1 Delivery Service</span>
-                        <span>Closed</span>
+                        <span><% if (strain.deliveries.length > 0) { %>${ strain.deliveries.length } Delivery Service<% } else { %>No Delivery Services<% } %></span>
+                        <span>${ closestDistance(strain.deliveries) }</span>
+                        <span>${ openClosedCount(strain.deliveries) }</span>
                     </div>
                 </div>
+                <div class="locations-expanded deliveries-expanded-<%= position %> hidden"></div>
                 <div class="separator inline-block"></div>
                 <div class="item-percentage-match inline-block">
                     <a href="/search/strain/${ strain.strain_slug }">

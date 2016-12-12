@@ -101,6 +101,7 @@
 
         .result-item {
             display: block;
+            position: relative;
             height: 7em;
             margin: 2em auto 0;
             width: 100%;
@@ -160,6 +161,147 @@
                 text-align: center;
                 vertical-align: top;
                 color: $grey;
+            }
+
+            .item-locations,
+            .item-deliveries {
+                position: relative;
+                cursor: pointer;
+            }
+
+            .item-locations:hover {
+                .locations-icon {
+                    color: $iris-blue;
+                }
+            }
+
+            .item-deliveries:hover {
+                .deliveries-icon {
+                    color: $iris-blue;
+                }
+            }
+
+            .locations-expanded {
+                display: block;
+                position: absolute;
+                top: -0.5em;
+                padding: 0 1em 1em;
+                width: 30em;
+                background: $white-smoke;
+                border: 1px solid $grey-normal;
+                text-align: left;
+                z-index: 10;
+
+                .locations-wrapper {
+                    position: relative;
+                    margin-top: 7em;
+                }
+
+                .price-expander {
+                    cursor: pointer;
+                }
+
+                .prices-wrapper {
+                    position: absolute;
+                    right: 0;
+                    top: 16%;
+                    background: #fff;
+                    border: 1px solid $black;
+                    padding: 10px;
+
+                    .price {
+                        display: block;
+                        cursor: pointer;
+                    }
+
+                    .price:hover {
+                        color: $iris-blue;
+                    }
+                }
+
+                .price-values {
+                    .price-value {
+                        display: none;
+                    }
+
+                    .price-value.active {
+                        display: block;
+                    }
+                }
+
+                .exp-location-header {
+                    display: block;
+                    width: 100%;
+
+                    div {
+                        display: inline-block;
+                        vertical-align: top;
+                    }
+
+                    .location-name {
+                        width: 38%;
+                    }
+
+                    .location-rating {
+                        width: 24%;
+                    }
+
+                    .location-distance {
+                        width: 18%;
+                        text-align: center;
+                    }
+
+                    .location-price {
+                        width: 14%;
+                        text-align: center;
+                    }
+                }
+
+                .exp-location {
+                    display: block;
+                    width: 100%;
+                    margin-top: 1em;
+
+                    div {
+                        display: inline-block;
+                        vertical-align: top;
+                    }
+
+                    .location-name {
+                        width: 40%;
+
+                        .name {
+                            display: block;
+                            font-size: 1.2em;
+                        }
+
+                        .opened {
+                            display: block;
+                            font-size: 0.8em;
+                            color: $avocado-green;
+                        }
+
+                        .closed {
+                            display: block;
+                            font-size: 0.8em;
+                            color: $light-red;
+                        }
+                    }
+
+                    .location-rating {
+                        width: 25%;
+                    }
+
+                    .location-distance {
+                        width: 20%;
+                        text-align: center;
+                    }
+
+                    .location-price {
+                        width: 14%;
+                        text-align: center;
+                    }
+                }
             }
 
             .item-deliveries .deliveries span,

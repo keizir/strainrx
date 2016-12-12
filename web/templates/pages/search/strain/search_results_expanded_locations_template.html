@@ -1,0 +1,36 @@
+<script type="x/srx-template" id="expanded-locations-template">
+    <div class="locations-wrapper">
+        <div class="exp-location-header">
+            <div class="location-name"></div>
+            <div class="location-rating"></div>
+            <div class="location-distance">Distance</div>
+            <div class="location-price">Price <i class="fa fa-caret-down price-expander" aria-hidden="true"></i></div>
+            <div class="prices-wrapper hidden">
+                <span class="price" id="gram">Gram</span>
+                <span class="price" id="half">Half</span>
+                <span class="price" id="quarter">Quarter</span>
+                <span class="price" id="eight">Eight</span>
+            </div>
+        </div>
+        <% _.each(locations, function(l) { %>
+        <div class="exp-location">
+            <div class="location-name">
+                <span class="name"><a href="#">${ l.location_name }</a></span>
+                <% if (l.open) { %>
+                <span class="opened">Open</span>
+                <% } else { %>
+                <span class="closed">Closed</span>
+                <% } %>
+            </div>
+            <div class="location-rating-exp">${ l.rating }</div>
+            <div class="location-distance">${ formatDistance(l.distance) }</div>
+            <div class="location-price price-values">
+                <span class="price-value active" id="gram">${ formatPrice(l.price_gram) }</span>
+                <span class="price-value" id="half">${ formatPrice(l.price_half) }</span>
+                <span class="price-value" id="quarter">${ formatPrice(l.price_quarter) }</span>
+                <span class="price-value" id="eight">${ formatPrice(l.price_eight) }</span>
+            </div>
+        </div>
+        <% }); %>
+    </div>
+</script>

@@ -52,6 +52,7 @@ class StrainSearchWizardView(LoginRequiredMixin, APIView):
 
 class StrainSearchResultsView(LoginRequiredMixin, APIView):
     def get(self, request):
+        result_filter = request.GET.get('filter')
         page = request.GET.get('page')
         size = request.GET.get('size')
         start_from = (int(page) - 1) * int(size)
@@ -60,7 +61,9 @@ class StrainSearchResultsView(LoginRequiredMixin, APIView):
 
         if search_criteria:
             user_strain_ratings = StrainRating.objects.filter(created_by=request.user, removed_date=None)
-            data = SearchElasticService().query_strain_srx_score(search_criteria, size, start_from)
+            data = SearchElasticService().query_strain_srx_score(search_criteria, size, start_from,
+                                                                 current_user=request.user,
+                                                                 result_filter=result_filter)
             result_list = data.get('list')
 
             if len(user_strain_ratings) > 0:
@@ -119,7 +122,8 @@ class StrainSearchResultsView(LoginRequiredMixin, APIView):
         for k, v in user_review_scores.items():
             if v != 'n/a' and ((max_score <= v and int(page) == 1) or max_score >= v > min_score or v == min_score):
                 strain = Strain.objects.get(id=k)
-                data = SearchElasticService().query_strain_srx_score(strain.to_search_criteria(), strain_id=strain.id)
+                data = SearchElasticService().query_strain_srx_score(strain.to_search_criteria(), strain_id=strain.id,
+                                                                     current_user=current_user)
                 users_strain = data.get('list')[0]
                 users_strain['match_percentage'] = user_review_scores.get(k)
                 result_list.append(users_strain)

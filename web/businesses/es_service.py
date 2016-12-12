@@ -46,8 +46,10 @@ class BusinessLocationESService(BaseElasticService):
         existing_data['city'] = new_data.get('city')
         existing_data['state'] = new_data.get('state')
         existing_data['zip_code'] = new_data.get('zip_code')
-        existing_data['lat'] = new_data.get('lat')
-        existing_data['lng'] = new_data.get('lng')
+        existing_data['location'] = {
+            "lat": new_data.get('lat') if new_data.get('lat') else 0,
+            "lon": new_data.get('lng') if new_data.get('lng') else 0
+        }
         existing_data['location_raw'] = new_data.get('location_raw')
         existing_data['phone'] = new_data.get('phone')
         existing_data['ext'] = new_data.get('ext')
