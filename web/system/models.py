@@ -5,6 +5,7 @@ from django.utils.encoding import python_2_unicode_compatible
 
 SYSTEM_PROPERTY_NAME = (
     ('rating_recalculation_size', 'Rating Recalculation Size'),
+    ('max_delivery_radius', 'Max Delivery/Proximity Radius'),
 )
 
 

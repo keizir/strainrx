@@ -48,7 +48,6 @@ W.pages.StrainSearchResultsPage = Class.extend({
             url: '/api/v1/search/result/?filter={0}&page={1}&size={2}'.format(filterType, that.scrollPage, that.scrollSize),
             dataType: 'json',
             success: function (data) {
-                that.scrollPage += 1;
                 var searchResults = data.search_results,
                     searchResultsTotal = data.search_results_total;
 
@@ -70,6 +69,7 @@ W.pages.StrainSearchResultsPage = Class.extend({
                 }
 
                 that.ui.$loadingIcon.removeClass('rotating');
+                that.scrollPage += 1;
 
                 if (success) {
                     success();
@@ -115,6 +115,7 @@ W.pages.StrainSearchResultsPage = Class.extend({
         this.deliveries = {};
         this.ui.$searchResult.html('');
         this.currentFilter = filter;
+        this.ui.$searchResultFooterRegion.removeClass('hidden');
         this.getSearchResults(this.currentFilter);
     },
 
@@ -171,7 +172,7 @@ W.pages.StrainSearchResultsPage = Class.extend({
             }
 
             if (opened.length == 0 && closed.length > 0) {
-                return '{1} Closed'.format(closed.length);
+                return '{0} Closed'.format(closed.length);
             }
         }
     },
@@ -231,9 +232,9 @@ W.pages.StrainSearchResultsPage = Class.extend({
                         $('.prices-wrapper').toggleClass('hidden');
                     });
 
-                    // $('.prices-wrapper').mouseleave(function () {
-                    //     $(this).addClass('hidden');
-                    // });
+                    $('.prices-wrapper').mouseleave(function () {
+                        $(this).addClass('hidden');
+                    });
 
                     $('.price').on('click', function () {
                         $('.prices-wrapper').addClass('hidden');
