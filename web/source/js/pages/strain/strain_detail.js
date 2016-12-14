@@ -358,62 +358,82 @@ W.pages.strain.StrainDetailPage = Class.extend({
     },
 
     buildLocationsMenu: function buildLocationsMenu() {
-        var $menuExpander = $('.menu-expander'),
+        var that = this,
+            $menuExpander = $('.menu-expander'),
             $menuLocations = $('.locations'),
             $menuFilter = $('.filter-menu'),
-            $menuLink = $('.menu-link'),
-            $priceExpander = $('.price-expander');
+            menuTemplate = _.template($('#strain_detail_available_locations').html());
 
         $menuExpander.on('click', function () {
             $menuLocations.toggleClass('hidden');
             $menuFilter.toggleClass('expanded');
+
+            that.getDispensaries(function (dispensaries) {
+                $menuLocations.html(menuTemplate({dispensaries: dispensaries}));
+
+                $('.price-expander').on('click', function () {
+                    $('.prices-wrapper').toggleClass('hidden');
+                });
+
+                $('.prices-wrapper').mouseleave(function () {
+                    $(this).addClass('hidden');
+                });
+
+                $('.price').on('click', function () {
+                    $('.prices-wrapper').addClass('hidden');
+                    var priceType = $(this).attr('id');
+                    $('.price-value').each(function (index, $el) {
+                        var $price = $($el);
+                        if ($price.attr('id') === priceType) {
+                            $price.addClass('active');
+                        } else {
+                            $price.removeClass('active');
+                        }
+                    });
+                });
+
+                $('.dispensary-rating').each(function () {
+                    var $this = $(this),
+                        rating = $this.text();
+
+                    $this.rateYo({
+                        rating: rating,
+                        readOnly: true,
+                        spacing: '1px',
+                        normalFill: '#aaa8a8', // $grey-light
+                        ratedFill: '#6bc331', // $avocado-green
+                        starWidth: '16px'
+                    });
+                });
+            });
         });
 
-        $menuFilter.mouseleave(function () {
-            $menuLocations.addClass('hidden');
-            $menuFilter.removeClass('expanded');
-        });
+        // $menuFilter.mouseleave(function () {
+        //     $menuLocations.addClass('hidden');
+        //     $menuFilter.removeClass('expanded');
+        // });
 
-        $menuLink.on('click', function (e) {
-            e.preventDefault();
-            $menuFilter.removeClass('expanded');
-            $menuLocations.addClass('hidden');
-        });
+        // $menuLink.on('click', function (e) {
+        //     e.preventDefault();
+        //     $menuFilter.removeClass('expanded');
+        //     $menuLocations.addClass('hidden');
+        // });
+    },
 
-        $priceExpander.on('click', function () {
-            $('.prices-wrapper').toggleClass('hidden');
-        });
-
-        $('.prices-wrapper').mouseleave(function () {
-            $(this).addClass('hidden');
-        });
-
-        $('.price').on('click', function () {
-            $('.prices-wrapper').addClass('hidden');
-            var priceType = $(this).attr('id');
-            $('.price-value').each(function (index, $el) {
-                var $price = $($el);
-                if ($price.attr('id') === priceType) {
-                    $price.addClass('active');
-                } else {
-                    $price.removeClass('active');
+    getDispensaries: function getDispensaries(success) {
+        var that = this;
+        if (this.locations) {
+            success(this.locations);
+        } else {
+            $.ajax({
+                method: 'GET',
+                url: '/api/v1/search/strain/{0}/deliveries'.format(this.ui.$strainId.val()),
+                success: function (data) {
+                    that.locations = data.locations;
+                    success(data.locations);
                 }
             });
-        });
-
-        $('.dispensary-rating').each(function () {
-            var $this = $(this),
-                rating = $this.text();
-
-            $this.rateYo({
-                rating: rating,
-                readOnly: true,
-                spacing: '1px',
-                normalFill: '#aaa8a8', // $grey-light
-                ratedFill: '#6bc331', // $avocado-green
-                starWidth: '16px'
-            });
-        });
+        }
     },
 
     showRateStrainDialog: function showRateStrainDialog() {

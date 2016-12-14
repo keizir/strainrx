@@ -194,6 +194,12 @@ class StrainDetailsView(LoginRequiredMixin, APIView):
         return Response(details, status=status.HTTP_200_OK)
 
 
+class StrainDeliveriesView(LoginRequiredMixin, APIView):
+    def get(self, request, strain_id):
+        l = StrainDetailsService().build_strain_locations(strain_id, request.user)
+        return Response(l, status=status.HTTP_200_OK)
+
+
 class StrainReviewsView(LoginRequiredMixin, APIView):
     def get(self, request, strain_id):
         reviews = StrainDetailsService().get_all_approved_strain_reviews(strain_id)

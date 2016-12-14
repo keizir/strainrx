@@ -2,6 +2,7 @@ from web.search.api.serializers import StrainDetailSerializer, StrainRatingSeria
 from web.search.es_service import SearchElasticService
 from web.search.models import UserSearch, Strain, StrainImage, StrainReview, StrainRating, UserFavoriteStrain
 from web.search.services import build_strain_rating
+from web.system.models import SystemProperty
 
 
 class StrainDetailsService:
@@ -11,7 +12,6 @@ class StrainDetailsService:
 
         strain_origins = self.get_strain_origins(strain)
         also_like_strains = self.get_also_like_strains(strain, current_user)
-        dispensaries = self.get_dispensaries()
         rating = build_strain_rating(strain)
         strain_srx_score = self.calculate_srx_score(strain, current_user)
         reviews = self.get_strain_reviews(strain)
@@ -28,7 +28,6 @@ class StrainDetailsService:
             'strain_reviews': reviews,
             'strain_srx_score': strain_srx_score,
             'favorite': favorite,
-            'dispensaries': dispensaries,
             'is_rated': StrainReview.objects.filter(strain=strain, created_by=current_user).exists()
         }
 
@@ -68,24 +67,6 @@ class StrainDetailsService:
                 also_like_strains.append(s)
 
         return also_like_strains
-
-    @staticmethod
-    def get_dispensaries():  # TODO retrieve real dispensaries
-        dispensaries = []
-        for num in range(0, 5):
-            dispensaries.append({
-                'id': num,
-                'name': 'The Green Shop',
-                'rating': 4.6,
-                'distance': 1.3,
-                'price': {
-                    'gram': 100.00,
-                    'eight': 20.00,
-                    'quarter': 30.00,
-                    'half': 54.98
-                }
-            })
-        return dispensaries
 
     @staticmethod
     def calculate_srx_score(current_strain, current_user):
@@ -136,3 +117,23 @@ class StrainDetailsService:
             'created_by_name': display_user_name,
             'created_by_image': None  # TODO implement UserImage
         }
+
+    def build_strain_locations(self, strain_id, current_user):
+        location = current_user.get_location()
+        lat = None
+        lon = None
+
+        if location:
+            lat = location.lat
+            lon = location.lng
+
+        if current_user.proximity:
+            proximity = current_user.proximity
+        else:
+            proximity = SystemProperty.objects.get(name='max_delivery_radius')
+            proximity = int(proximity.value)
+
+        service = SearchElasticService()
+        es_response = service.get_locations(strain_id=strain_id, lat=lat, lon=lon, proximity=proximity)
+        locations = service.transform_location_results(es_response, strain_id=strain_id)
+        return {'locations': locations}
