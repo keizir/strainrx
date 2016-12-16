@@ -125,7 +125,8 @@ class SearchElasticService(BaseElasticService):
 
         for l in locations:
             s = l.get('_source')
-            distance = l.get('sort')[1] if l.get('sort') else None
+            sort = l.get('sort')
+            distance = sort[1] if sort and len(sort) >= 2 else None
 
             if result_filter == 'delivery':
                 delivery_radius = s.get('delivery_radius')
