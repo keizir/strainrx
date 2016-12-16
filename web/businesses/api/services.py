@@ -135,7 +135,7 @@ class BusinessLocationService:
                     delivery_radius=data.get('delivery_radius'),
                     lat=data.get('lat'),
                     lng=data.get('lng'),
-                    location_raw=data.get('location_raw')
+                    location_raw=data.get('location_raw') if data.get('location_raw') else {}
                 )
                 location.save()
 

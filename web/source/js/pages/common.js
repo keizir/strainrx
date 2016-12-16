@@ -191,3 +191,10 @@ $(document).on('ajaxComplete', function () {
         $('#loading-spinner').hide();
     }
 });
+
+$(document).on('click', function (e) {
+    var elem = $(e.target);
+    if (!(elem.parents('.popup-container').length || elem.hasClass('.popup-container'))) {
+        $.publish('close_popup');
+    }
+});

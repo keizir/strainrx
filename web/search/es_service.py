@@ -28,16 +28,6 @@ class SearchElasticService(BaseElasticService):
         for b in strain_rating_buckets:
             strain_ratings[b.get('key')] = b.get('child_rating').get('avg_rating').get('value')
 
-        lat = None
-        lon = None
-        proximity = None
-        if current_user:
-            proximity = current_user.proximity
-            l = current_user.get_location()
-            if l:
-                lat = l.lat
-                lon = l.lng
-
         for s in strains:
             source = s.get('_source', {})
             db_strain = Strain.objects.get(pk=source.get('id'))
@@ -45,11 +35,11 @@ class SearchElasticService(BaseElasticService):
             strain_image = StrainImage.objects.filter(strain=db_strain)[:1]
             srx_score = int(round(s.get('_score')))
 
-            dispensaries = self.get_locations(source.get('id'), "dispensary", lat, lon, proximity)
-            dispensaries = self.transform_location_results(dispensaries, source.get('id'), result_filter)
+            dispensaries = self.get_locations(source.get('id'), "dispensary", current_user, result_filter)
+            dispensaries = self.transform_location_results(dispensaries, source.get('id'), result_filter, current_user)
 
-            deliveries = self.get_locations(source.get('id'), "delivery", lat, lon, proximity)
-            deliveries = self.transform_location_results(deliveries, source.get('id'), result_filter)
+            deliveries = self.get_locations(source.get('id'), "delivery", current_user, result_filter)
+            deliveries = self.transform_location_results(deliveries, source.get('id'), result_filter, current_user)
 
             if result_filter == 'delivery' and len(deliveries) == 0:
                 # means user is not in delivery radius of any delivery
@@ -75,9 +65,24 @@ class SearchElasticService(BaseElasticService):
 
         return response_data
 
-    def get_locations(self, strain_id=None, location_type=None, lat=None, lon=None, proximity=None):
+    def get_locations(self, strain_id=None, location_type=None, current_user=None, result_filter=None,
+                      order_field="menu_items.price_gram", order_dir="asc"):
+
         method = self.METHODS.get('GET')
         url = '{0}{1}{2}'.format(self.BASE_ELASTIC_URL, self.URLS.get('BUSINESS_LOCATION'), '/_search')
+
+        lat = None
+        lon = None
+        proximity = None
+
+        if current_user:
+            l = current_user.get_location()
+            if l:
+                lat = l.lat
+                lon = l.lng
+
+            if result_filter == 'local':
+                proximity = current_user.proximity if current_user.proximity else 10
 
         if not proximity:
             proximity = SystemProperty.objects.get(name='max_delivery_radius')
@@ -88,11 +93,11 @@ class SearchElasticService(BaseElasticService):
             "distance_type": "plane", "location": {"lat": lat, "lon": lon}
         }} if lat and lon else {}
 
-        sort_query = [{
-            "_geo_distance": {
+        sort_query = [{order_field: {"order": order_dir}}]
+        if lat and lon:
+            sort_query.append({"_geo_distance": {
                 "location": {"lat": lat, "lon": lon}, "order": "asc", "unit": "mi", "distance_type": "plane"
-            }
-        }] if lat and lon else []
+            }})
 
         menu_items_must_query = [{"missing": {"field": "menu_items.removed_date"}}]
         if strain_id:
@@ -114,19 +119,21 @@ class SearchElasticService(BaseElasticService):
 
         return self._request(method, url, data=json.dumps(query))
 
-    def transform_location_results(self, es_response, strain_id=None, result_filter=None):
+    def transform_location_results(self, es_response, strain_id=None, result_filter=None, current_user=None):
         locations = es_response.get('hits', {}).get('hits', [])
         processed_results = []
-        proximity = SystemProperty.objects.get(name='max_delivery_radius')
-        proximity = int(proximity.value)
 
         for l in locations:
             s = l.get('_source')
-            distance = l.get('sort')[0] if l.get('sort') else None
+            distance = l.get('sort')[1] if l.get('sort') else None
 
             if result_filter == 'delivery':
                 delivery_radius = s.get('delivery_radius')
-                if delivery_radius and (delivery_radius <= distance or delivery_radius <= proximity):
+                if delivery_radius and delivery_radius >= distance:
+                    self.add_location(processed_results, s, strain_id, distance)
+            elif result_filter == 'local' and current_user:
+                proximity = current_user.proximity if current_user.proximity else 10
+                if distance <= proximity:
                     self.add_location(processed_results, s, strain_id, distance)
             else:
                 self.add_location(processed_results, s, strain_id, distance)
@@ -142,7 +149,7 @@ class SearchElasticService(BaseElasticService):
         price_eighth = None
 
         for mi in s.get('menu_items'):
-            if mi.get('strain_id') == strain_id:
+            if int(mi.get('strain_id')) == int(strain_id):
                 menu_item_id = mi.get('id')
                 in_stock = mi.get('in_stock')
                 price_gram = mi.get('price_gram')
@@ -151,6 +158,7 @@ class SearchElasticService(BaseElasticService):
                 price_eighth = mi.get('price_eighth')
 
         processed_results.append({
+            'business_id': s.get('business_id'), 'location_id': s.get('business_location_id'),
             'location_name': s.get('location_name'), 'distance': distance,
             'menu_item_id': menu_item_id, 'in_stock': in_stock,
             'price_gram': price_gram, 'price_half': price_half,
@@ -472,13 +480,13 @@ class SearchElasticService(BaseElasticService):
 
             if l and l.lat and l.lng:
                 if not only_deliveries:
-                    dispensaries = self.get_locations(location_type="dispensary", lat=l.lat, lon=l.lng, proximity=p)
+                    dispensaries = self.get_locations(location_type="dispensary", current_user=current_user)
                     strain_ids_id_dispensaries = self.get_strain_ids_from_locations(dispensaries)
                     for i in strain_ids_id_dispensaries:
                         if i not in strain_ids:
                             strain_ids.append(i)
 
-                deliveries = self.get_locations(location_type="delivery", lat=l.lat, lon=l.lng, proximity=p)
+                deliveries = self.get_locations(location_type="delivery", current_user=current_user)
                 strain_ids_id_deliveries = self.get_strain_ids_from_locations(deliveries)
                 for i in strain_ids_id_deliveries:
                     if i not in strain_ids:

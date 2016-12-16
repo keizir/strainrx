@@ -37,6 +37,7 @@ class UserSignUpSerializer(serializers.ModelSerializer):
             username=str(uuid.uuid4())[:30],
             is_age_verified=validated_data.get('is_age_verified'),
             is_email_verified=False,
+            proximity=10,
             type='consumer'
         )
         user.set_password(validated_data.get('pwd'))

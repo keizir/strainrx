@@ -51,6 +51,7 @@
     </div>
 
     {% include 'pages/search/strain/search_results_expanded_locations_template.html' %}
+    {% include 'pages/search/strain/search_results_expanded_location_template.html' %}
 
 {% endblock %}
 
@@ -62,6 +63,7 @@
     </script>
     <script type="x/srx-template" id="strain-item-template">
         <div class="result-item">
+            <input type="hidden" id="strain-id-<%= position %>" value="${ strain.id }">
             <div class="pull-left">
                 <div class="item-info-wrapper inline-block">
                     <div class="item-image inline-block">
@@ -82,7 +84,8 @@
             </div>
             <div class="pull-right">
                 <div class="separator inline-block"></div>
-                <div class="item-locations inline-block locations-<%= position %>" position="<%= position %>">
+                <div class="item-locations inline-block locations-<%= position %> popup-container"
+                     position="<%= position %>">
                     <span class="locations-icon">
                         <i class="fa fa-map-marker fa-2x" aria-hidden="true"></i>
                     </span>
@@ -92,9 +95,10 @@
                         <span>${ openClosedCount(strain.locations) }</span>
                     </span>
                 </div>
-                <div class="locations-expanded locations-expanded-<%= position %> hidden"></div>
+                <div class="locations-expanded locations-expanded-<%= position %> hidden popup-container"></div>
                 <div class="separator inline-block"></div>
-                <div class="item-deliveries inline-block deliveries-<%= position %>" position="<%= position %>">
+                <div class="item-deliveries inline-block deliveries-<%= position %> popup-container"
+                     position="<%= position %>">
                     <div class="deliveries-icon">
                         <i class="fa fa-truck fa-2x" aria-hidden="true"></i>
                     </div>
@@ -104,7 +108,7 @@
                         <span>${ openClosedCount(strain.deliveries) }</span>
                     </div>
                 </div>
-                <div class="locations-expanded deliveries-expanded-<%= position %> hidden"></div>
+                <div class="locations-expanded deliveries-expanded-<%= position %> hidden popup-container"></div>
                 <div class="separator inline-block"></div>
                 <div class="item-percentage-match inline-block">
                     <a href="/search/strain/${ strain.strain_slug }">

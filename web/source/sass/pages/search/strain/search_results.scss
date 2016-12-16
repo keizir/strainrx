@@ -187,9 +187,10 @@
                 top: -0.5em;
                 padding: 0 1em 1em;
                 width: 30em;
-                background: $white-smoke;
+                background: $white;
                 border: 1px solid $grey-normal;
                 text-align: left;
+                box-shadow: 4px 4px 8px $grey-light;
                 z-index: 10;
 
                 .locations-wrapper {
@@ -199,6 +200,11 @@
 
                 .price-expander {
                     cursor: pointer;
+                }
+
+                .price-sort {
+                    cursor: pointer;
+                    color: $iris-blue;
                 }
 
                 .prices-wrapper {
@@ -249,11 +255,13 @@
                     .location-distance {
                         width: 18%;
                         text-align: center;
+                        font-weight: bold;
                     }
 
                     .location-price {
                         width: 14%;
                         text-align: center;
+                        font-weight: bold;
                     }
                 }
 

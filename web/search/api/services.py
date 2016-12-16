@@ -2,7 +2,6 @@ from web.search.api.serializers import StrainDetailSerializer, StrainRatingSeria
 from web.search.es_service import SearchElasticService
 from web.search.models import UserSearch, Strain, StrainImage, StrainReview, StrainRating, UserFavoriteStrain
 from web.search.services import build_strain_rating
-from web.system.models import SystemProperty
 
 
 class StrainDetailsService:
@@ -118,22 +117,9 @@ class StrainDetailsService:
             'created_by_image': None  # TODO implement UserImage
         }
 
-    def build_strain_locations(self, strain_id, current_user):
-        location = current_user.get_location()
-        lat = None
-        lon = None
-
-        if location:
-            lat = location.lat
-            lon = location.lng
-
-        if current_user.proximity:
-            proximity = current_user.proximity
-        else:
-            proximity = SystemProperty.objects.get(name='max_delivery_radius')
-            proximity = int(proximity.value)
-
+    def build_strain_locations(self, strain_id, current_user, result_filter=None, order_field=None, order_dir=None):
         service = SearchElasticService()
-        es_response = service.get_locations(strain_id=strain_id, lat=lat, lon=lon, proximity=proximity)
-        locations = service.transform_location_results(es_response, strain_id=strain_id)
+        es_response = service.get_locations(strain_id=strain_id, current_user=current_user, result_filter=result_filter,
+                                            order_field=order_field, order_dir=order_dir)
+        locations = service.transform_location_results(es_response, strain_id=strain_id, result_filter=result_filter)
         return {'locations': locations}

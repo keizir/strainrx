@@ -12,7 +12,8 @@ W.pages.StrainSearchResultsPage = Class.extend({
     deliveries: {},
 
     templates: {
-        expandedLocations: _.template($('#expanded-locations-template').html())
+        expandedLocations: _.template($('#expanded-locations-template').html()),
+        expandedLocation: _.template($('#expanded-location-template').html())
     },
 
     ui: {
@@ -33,10 +34,35 @@ W.pages.StrainSearchResultsPage = Class.extend({
 
     init: function () {
         var that = this;
+        this.name = 'StrainSearchResultsPage';
+
         this.getSearchResults('all', function () {
             that.buildSortMenu();
             that.handleScrollPage();
             that.initRatings();
+        });
+
+        W.subscribe.apply(this);
+    },
+
+    _on_close_popup: function _on_close_popup() {
+        this.closeOpenedLocationDropdowns();
+    },
+
+    closeOpenedLocationDropdowns: function closeOpenedLocationDropdowns() {
+        var $menuExpanderButtons = $('.item-locations, .item-deliveries'),
+            $expandedAreas = $('.locations-expanded');
+
+        $.each($menuExpanderButtons, function (i, el) {
+            var $this = $(el);
+            $this.removeClass('expanded');
+            $this.css('z-index', 0);
+        });
+
+        $.each($expandedAreas, function (i, el) {
+            var $this = $(el);
+            $this.addClass('hidden');
+            $this.html('');
         });
     },
 
@@ -204,8 +230,7 @@ W.pages.StrainSearchResultsPage = Class.extend({
             var $this = $(this),
                 position = $this.attr('position'),
                 locations = isLocations ? that.locations[position] : that.deliveries[position],
-                $exp = isLocations ? $('.locations-expanded-{0}'.format(position)) : $('.deliveries-expanded-{0}'.format(position)),
-                $priceExpander;
+                $exp = isLocations ? $('.locations-expanded-{0}'.format(position)) : $('.deliveries-expanded-{0}'.format(position));
 
             if (locations.length > 0) {
                 if ($this.hasClass('expanded')) {
@@ -214,39 +239,98 @@ W.pages.StrainSearchResultsPage = Class.extend({
                     $exp.addClass('hidden');
                     $exp.html('');
                 } else {
-                    $this.addClass('expanded');
-                    $this.css('z-index', 11);
-                    $exp.removeClass('hidden');
-                    $exp.html(that.templates.expandedLocations({
-                        'locations': locations,
-                        'formatDistance': that.formatDistance,
-                        'formatPrice': that.formatPrice
-                    }));
+                    that.closeOpenedLocationDropdowns();
+                    that.showLocations($this, $exp, isLocations, locations, position);
+                }
+            } else {
+                that.closeOpenedLocationDropdowns();
+            }
+        });
+    },
 
-                    $.each($exp.find('.location-rating-exp'), function (i, el) {
+    showLocations: function showLocations($this, $exp, isLocations, locations, position) {
+        var that = this, $priceExpander, $priceSort;
+
+        $this.addClass('expanded');
+        $this.css('z-index', 11);
+        $exp.removeClass('hidden');
+        $exp.html(that.templates.expandedLocations({
+            'locations': locations,
+            'formatDistance': that.formatDistance,
+            'formatPrice': that.formatPrice,
+            'renderLocation': that.templates.expandedLocation
+        }));
+
+        $.each($exp.find('.location-rating-exp'), function (i, el) {
+            that.initRating($(el));
+        });
+
+        $priceExpander = $('.price-expander');
+        $priceExpander.on('click', function () {
+            $('.prices-wrapper').toggleClass('hidden');
+        });
+
+        $('.prices-wrapper').mouseleave(function () {
+            $(this).addClass('hidden');
+        });
+
+        $('.price').on('click', function () {
+            $('.prices-wrapper').addClass('hidden');
+            var priceType = $(this).attr('id');
+            $('.price-value').each(function (index, $el) {
+                var $price = $($el);
+                if ($price.attr('id') === priceType) {
+                    $price.addClass('active');
+                } else {
+                    $price.removeClass('active');
+                }
+            });
+        });
+
+        $priceSort = $('.price-sort');
+        $priceSort.on('click', function () {
+            that.sortByPrice($priceSort, isLocations, position);
+        });
+    },
+
+    renderLocation: function renderLocation(location) {
+        return this.templates.expandedLocation({
+            'l': location,
+            'formatDistance': this.formatDistance,
+            'formatPrice': this.formatPrice
+        });
+    },
+
+    sortByPrice: function sortByPrice($priceSort, isLocations, position) {
+        var that = this, newSort, fieldName = $('.price-value.active').attr('id'), url;
+
+        if ($priceSort.hasClass('fa-caret-down')) {
+            newSort = 'desc';
+            $priceSort.removeClass('fa-caret-down');
+            $priceSort.addClass('fa-caret-up');
+        } else {
+            newSort = 'asc';
+            $priceSort.removeClass('fa-caret-up');
+            $priceSort.addClass('fa-caret-down');
+        }
+
+        url = '/api/v1/search/strain/{0}/deliveries?filter={1}&order_field={2}&order_dir={3}'
+            .format($('#strain-id-{0}'.format(position)).val(), this.ui.$menuActiveLink.attr('filter'), fieldName, newSort);
+
+        $.ajax({
+            method: 'GET',
+            url: url,
+            success: function (data) {
+                if (data && data.locations) {
+                    var $expandedHolder = $('.expanded-locations-holder');
+                    $expandedHolder.html('');
+
+                    $.each(data.locations, function (i, l) {
+                        $expandedHolder.append(that.renderLocation(l));
+                    });
+
+                    $.each($expandedHolder.find('.location-rating-exp'), function (i, el) {
                         that.initRating($(el));
-                    });
-
-                    $priceExpander = $('.price-expander');
-                    $priceExpander.on('click', function () {
-                        $('.prices-wrapper').toggleClass('hidden');
-                    });
-
-                    $('.prices-wrapper').mouseleave(function () {
-                        $(this).addClass('hidden');
-                    });
-
-                    $('.price').on('click', function () {
-                        $('.prices-wrapper').addClass('hidden');
-                        var priceType = $(this).attr('id');
-                        $('.price-value').each(function (index, $el) {
-                            var $price = $($el);
-                            if ($price.attr('id') === priceType) {
-                                $price.addClass('active');
-                            } else {
-                                $price.removeClass('active');
-                            }
-                        });
                     });
                 }
             }
@@ -258,6 +342,6 @@ W.pages.StrainSearchResultsPage = Class.extend({
     },
 
     formatPrice: function formatPrice(p) {
-        return p ? '${0}'.format(p) : '--';
+        return p ? '${0}'.format(p) : 'n/a';
     }
 });
