@@ -55,10 +55,13 @@ class StrainDetailsService:
         latest_user_search = UserSearch.objects.filter(user=current_user).order_by('-last_modified_date')[:1]
         also_like_strains = []
 
+        logger.debug('Latest user search len: {0}'.format(len(latest_user_search)))
+
         if latest_user_search and len(latest_user_search) > 0:
             data = SearchElasticService().query_strain_srx_score(latest_user_search[0].to_search_criteria(), 2000, 0)
             start_index = 0
             initial = 0
+            logger.debug('ES query strain srx score data list len: {0}'.format(len(data.get('list'))))
             for index, s in enumerate(data.get('list')):
                 if s.get('id') == current_strain.id:
                     start_index = index + 1
@@ -75,6 +78,7 @@ class StrainDetailsService:
             search_criteria = current_strain.to_search_criteria()
             search_criteria['strain_types'] = 'skipped'
             data = SearchElasticService().query_strain_srx_score(search_criteria, 6, 0)
+            logger.debug('2nd ES query strain srx score data list len {0}'.format(len(data.get('list'))))
             for s in data.get('list')[1:]:
                 also_like_strains.append(s)
 
