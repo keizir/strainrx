@@ -4,6 +4,10 @@ W.ns('W.common');
 
 W.common.Constants = {
 
+    html: {
+        loader: '<i class="fa fa-spinner fa-pulse" aria-hidden="true"></i>'
+    },
+
     regex: {
         email: /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
         phone: /^[0-9]{3}-[0-9]{3}-[0-9]{4}$/,

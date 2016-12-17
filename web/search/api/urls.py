@@ -44,6 +44,11 @@ urlpatterns = [
         name='strain_favorite'
     ),
     url(
+        regex=r'^strain/(?P<strain_id>[0-9]+)/srx_score',
+        view=StrainSRXScoreView.as_view(),
+        name='strain_srx_score'
+    ),
+    url(
         regex=r'^strain/lookup/$',
         view=StrainLookupView.as_view(),
         name='strain_lookup'

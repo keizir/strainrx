@@ -112,6 +112,8 @@ W.pages.strain.StrainReviewDialog = Class.extend({
 
                     $undoDialog.dialog('close');
                     $undoDialog.find('.btn-yes').off('click');
+
+                    that.recalculateSRXScore();
                 }
             });
         });
@@ -121,6 +123,28 @@ W.pages.strain.StrainReviewDialog = Class.extend({
         });
 
         W.common.ConfirmDialog($undoDialog);
+    },
+
+    recalculateSRXScore: function recalculateSRXScore() {
+        var $scoreContainer = $('.score-value'),
+            $percentSign = $('.percent-sign');
+
+        $scoreContainer.html(W.common.Constants.html.loader);
+        $percentSign.addClass('hidden');
+
+        // Give here a 1 sec delay to let backend update all necessary entities
+        setTimeout(function () {
+            $.ajax({
+                method: 'GET',
+                url: '/api/v1/search/strain/{0}/srx_score'.format($('.strain-id').val()),
+                success: function (data) {
+                    if (data && data.srx_score) {
+                        $scoreContainer.html(data.srx_score);
+                        $percentSign.removeClass('hidden');
+                    }
+                }
+            });
+        }, 1000);
     },
 
     buildEffectsToDisplay: function buildEffectsToDisplay(rawEffects, effectNames) {
@@ -418,6 +442,8 @@ W.pages.strain.StrainReviewDialog = Class.extend({
                         }
 
                         $('.strain-review-dialog').dialog('close');
+
+                        that.recalculateSRXScore();
                     }
                 });
             } else {

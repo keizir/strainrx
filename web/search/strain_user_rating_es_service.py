@@ -34,13 +34,13 @@ class StrainUserRatingESService(BaseElasticService):
             review_es_id = es_reviews[0].get('_id')
             review = es_reviews[0].get('_source')
 
-            review["effects"] = updated_review.effects,
-            review["effects_changed"] = updated_review.effects_changed,
-            review["benefits"] = updated_review.benefits,
-            review["benefits_changed"] = updated_review.benefits_changed,
-            review["side_effects"] = updated_review.side_effects,
-            review["side_effects_changed"] = updated_review.side_effects_changed,
-            review["status"] = updated_review.status,
+            review["effects"] = updated_review.effects
+            review["effects_changed"] = updated_review.effects_changed
+            review["benefits"] = updated_review.benefits
+            review["benefits_changed"] = updated_review.benefits_changed
+            review["side_effects"] = updated_review.side_effects
+            review["side_effects_changed"] = updated_review.side_effects_changed
+            review["status"] = updated_review.status
             review["removed_date"] = updated_review.removed_date.isoformat() if updated_review.removed_date else None
 
             url = '{base}{index}/{type}/{es_id}'.format(base=self.BASE_ELASTIC_URL, index=self.URLS.get('USER_RATINGS'),
