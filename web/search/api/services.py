@@ -3,19 +3,32 @@ from web.search.es_service import SearchElasticService
 from web.search.models import UserSearch, Strain, StrainImage, StrainReview, StrainRating, UserFavoriteStrain
 from web.search.services import build_strain_rating
 
+import logging
+
+logger = logging.getLogger(__name__)
+
 
 class StrainDetailsService:
     def build_strain_details(self, strain_id, current_user):
+        logger.debug('Build strain details. Strain {0} user {1}'.format(strain_id, current_user.id))
         strain = Strain.objects.get(pk=strain_id)
         image = StrainImage.objects.filter(strain=strain)[:1]
+        logger.debug('Image OK. Len {0}'.format(len(image)))
 
         strain_origins = self.get_strain_origins(strain)
+        logger.debug('Strain origins OK')
         also_like_strains = self.get_also_like_strains(strain, current_user)
+        logger.debug('Also like strains OK')
         rating = build_strain_rating(strain)
+        logger.debug('Strain ratings OK')
         strain_srx_score = self.calculate_srx_score(strain, current_user)
+        logger.debug('Calc SRX OK')
         reviews = self.get_strain_reviews(strain)
+        logger.debug('Strain reviews OK')
         strain_review = StrainRating.objects.filter(strain=strain, created_by=current_user, removed_date=None)
+        logger.debug('Strain ratings 2 OK. Len: {0}'.format(len(strain_review)))
         favorite = UserFavoriteStrain.objects.filter(strain=strain, created_by=current_user).exists()
+        logger.debug('Strain Favs OK')
 
         return {
             'strain': StrainDetailSerializer(strain).data,
