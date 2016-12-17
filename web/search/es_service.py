@@ -323,14 +323,16 @@ class SearchElasticService(BaseElasticService):
             query = self.build_srx_score_es_query(criteria, strain_ids)
 
         logger.debug('ES url: {0}'.format(url))
-        logger.debug('ES SRX Score query: {0}'.format(query))
+        logger.debug('Result filter: {0}'.format(result_filter))
         es_response = self._request(method, url, data=json.dumps(query))
-        logger.debug('ES SRX Score results: {0}'.format(es_response))
+        logger.debug('ES SRX Score results OK')
         results = self._transform_strain_results(es_response, current_user, result_filter)
         logger.debug('ES SRX score transform OK')
         return results
 
     def build_srx_score_es_query(self, criteria, strain_ids):
+        logger.debug('SRX Score criteria: {0}'.format(criteria))
+        logger.debug('SRX Score strain_ids: {0}'.format(strain_ids))
         criteria_strain_types = self.parse_criteria_strains(criteria.get('strain_types'))
         effects_data = self.parse_criteria_data(criteria.get('effects'))
         benefits_data = self.parse_criteria_data(criteria.get('benefits'))

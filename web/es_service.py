@@ -52,6 +52,7 @@ class BaseElasticService(object):
         # TODO consider making request non-blocking with https://github.com/kennethreitz/grequests or https://github.com/ross/requests-futures
         r = requests.request(method, url, params=params, data=data, json=json, headers=self.HEADERS,
                              timeout=self.TIMEOUT)
+        logger.debug('ES status: {0}'.format(r.status_code))
         r.raise_for_status()
         return r.json()
 
