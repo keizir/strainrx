@@ -90,12 +90,19 @@ W.users.DetailPage = Class.extend({
                                     data.location.lng = results[0].geometry.location.lng();
                                     data.location.location_raw = JSON.stringify(results);
                                 }
+
+                                callback();
+                            } else if (status === 'ZERO_RESULTS') {
+                                alert('Invalid location');
                             } else {
                                 console.log('Geocoder failed due to: ' + status);
                             }
-
-                            callback();
                         });
+                } else {
+                    data.location.lat = null;
+                    data.location.lng = null;
+                    data.location.location_raw = JSON.stringify({});
+                    callback();
                 }
             }
         });

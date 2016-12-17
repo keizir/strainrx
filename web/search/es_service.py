@@ -43,6 +43,7 @@ class SearchElasticService(BaseElasticService):
 
             if result_filter == 'delivery' and len(deliveries) == 0:
                 # means user is not in delivery radius of any delivery
+                total = 0
                 pass
             else:
                 processed_results.append({
@@ -93,10 +94,14 @@ class SearchElasticService(BaseElasticService):
             "distance_type": "plane", "location": {"lat": lat, "lon": lon}
         }} if lat and lon else {}
 
-        sort_query = [{order_field: {"order": order_dir}}]
+        sort_query = []
+        if order_field != 'distance' and order_field != 'rating':
+            sort_query.append({order_field: {"order": order_dir}})
+
         if lat and lon:
             sort_query.append({"_geo_distance": {
-                "location": {"lat": lat, "lon": lon}, "order": "asc", "unit": "mi", "distance_type": "plane"
+                "location": {"lat": lat, "lon": lon}, "order": order_dir if order_dir else "asc",
+                "unit": "mi", "distance_type": "plane"
             }})
 
         menu_items_must_query = [{"missing": {"field": "menu_items.removed_date"}}]
@@ -126,7 +131,7 @@ class SearchElasticService(BaseElasticService):
         for l in locations:
             s = l.get('_source')
             sort = l.get('sort')
-            distance = sort[1] if sort and len(sort) >= 2 else None
+            distance = sort[1] if sort and len(sort) >= 2 else sort[0] if sort and len(sort) == 1 else None
 
             if result_filter == 'delivery':
                 delivery_radius = s.get('delivery_radius')

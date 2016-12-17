@@ -81,21 +81,25 @@ W.pages.StrainSearchResultsPage = Class.extend({
                     $('.search-result-footer-wrapper').addClass('hidden');
                 }
 
-                for (var i = 0; i < searchResults.length; i++) {
-                    var position = '{0}{1}'.format(that.scrollPage, i);
+                if (searchResults.length === 0 && searchResultsTotal === 0) {
+                    that.ui.$searchResult.append('<h2>No Results Found</h2>');
+                } else {
+                    for (var i = 0; i < searchResults.length; i++) {
+                        var position = '{0}{1}'.format(that.scrollPage, i);
 
-                    that.ui.$searchResult.append(that.parseSearchResultItem(position, searchResults[i]));
+                        that.ui.$searchResult.append(that.parseSearchResultItem(position, searchResults[i]));
 
-                    that.locations[position] = searchResults[i].locations;
-                    that.deliveries[position] = searchResults[i].deliveries;
+                        that.locations[position] = searchResults[i].locations;
+                        that.deliveries[position] = searchResults[i].deliveries;
 
-                    that.initRating($('.loaded-rating-{0}'.format(position)));
-                    that.clickLocations($('.locations-{0}'.format(position)), position, true);
-                    that.clickLocations($('.deliveries-{0}'.format(position)), position, false);
+                        that.initRating($('.loaded-rating-{0}'.format(position)));
+                        that.clickLocations($('.locations-{0}'.format(position)), position, true);
+                        that.clickLocations($('.deliveries-{0}'.format(position)), position, false);
+                    }
+
+                    that.ui.$loadingIcon.removeClass('rotating');
+                    that.scrollPage += 1;
                 }
-
-                that.ui.$loadingIcon.removeClass('rotating');
-                that.scrollPage += 1;
 
                 if (success) {
                     success();

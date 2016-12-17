@@ -37,21 +37,32 @@ W.pages.HomePage = Class.extend({
     },
 
     preFillUserLocation: function preFillUserLocation() {
-        var l = this.location, location = '';
+        var l = this.location, location = [];
         if (l) {
             if (l.street1) {
-                location += l.street1 + ', ';
+                location.push(l.street1);
             }
 
             if (l.city) {
-                location += l.city + ', ';
+                location.push(l.city);
             }
 
             if (l.state) {
-                location += l.state;
+                location.push(l.state);
             }
 
-            $('.your-location-value').val(location);
+            if (l.zipcode) {
+                location.push(l.zipcode);
+            }
+
+            if (location.length === 0 && l.location_raw) {
+                var parsed = JSON.parse(l.location_raw);
+                if (parsed && parsed[0] && parsed[0].formatted_address) {
+                    location.push(parsed[0].formatted_address);
+                }
+            }
+
+            $('.your-location-value').val(location.join(', '));
         }
     },
 
@@ -66,7 +77,7 @@ W.pages.HomePage = Class.extend({
                 that.onLocationChange(autocomplete);
             }
         });
-        
+
         autocomplete.addListener('place_changed', function () {
             that.onLocationChange(autocomplete);
         });
@@ -76,7 +87,7 @@ W.pages.HomePage = Class.extend({
         var place = autocomplete.getPlace(),
             street1 = '', zipcode = '', state = '', city = '';
 
-        if (place.address_components) {
+        if (place && place.address_components) {
             $.each(place.address_components, function (i, address_comp) {
                 if (_.includes(address_comp.types, 'street_number')) {
                     street1 += address_comp.long_name + ' ';
@@ -98,17 +109,19 @@ W.pages.HomePage = Class.extend({
                     city = address_comp.long_name;
                 }
             });
-        }
 
-        this.saveUserLocation({
-            street1: street1,
-            city: city,
-            state: state,
-            zipcode: zipcode,
-            lat: place.geometry && place.geometry.location.lat(),
-            lng: place.geometry && place.geometry.location.lng(),
-            location_raw: JSON.stringify(place)
-        });
+            this.saveUserLocation({
+                street1: street1,
+                city: city,
+                state: state,
+                zipcode: zipcode,
+                lat: place.geometry && place.geometry.location.lat(),
+                lng: place.geometry && place.geometry.location.lng(),
+                location_raw: JSON.stringify(place)
+            });
+        } else {
+            alert('Invalid Location');
+        }
     },
 
     saveUserLocation: function saveUserLocation(data) {

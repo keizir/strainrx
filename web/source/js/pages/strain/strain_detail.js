@@ -13,8 +13,13 @@ W.pages.strain.StrainDetailPage = Class.extend({
         $strainId: $('.strain-id')
     },
 
+    templates: {
+        expandedLocation: _.template($('#strain_detail_available_location').html())
+    },
+
     init: function init() {
         var that = this;
+        this.name = 'StrainDetailPage';
 
         $(window).on('resize', _.debounce(function () {
             that.recalculateSimilarStrainsSectionWidth();
@@ -27,6 +32,13 @@ W.pages.strain.StrainDetailPage = Class.extend({
                 that.renderStrainDetails();
             }
         });
+
+        W.subscribe.apply(this);
+    },
+
+    _on_close_popup: function _on_close_popup() {
+        $('.locations').addClass('hidden');
+        $('.filter-menu').removeClass('expanded');
     },
 
     retrieveStrain: function retrieveStrain(success) {
@@ -369,7 +381,12 @@ W.pages.strain.StrainDetailPage = Class.extend({
             $menuFilter.toggleClass('expanded');
 
             that.getDispensaries(function (dispensaries) {
-                $menuLocations.html(menuTemplate({dispensaries: dispensaries}));
+                $menuLocations.html(menuTemplate({
+                    dispensaries: dispensaries,
+                    renderLocation: that.templates.expandedLocation,
+                    formatDistance: that.formatDistance,
+                    formatPrice: that.formatPrice
+                }));
 
                 $('.price-expander').on('click', function () {
                     $('.prices-wrapper').toggleClass('hidden');
@@ -405,19 +422,18 @@ W.pages.strain.StrainDetailPage = Class.extend({
                         starWidth: '16px'
                     });
                 });
+
+                that.initSortActions();
             });
         });
+    },
 
-        // $menuFilter.mouseleave(function () {
-        //     $menuLocations.addClass('hidden');
-        //     $menuFilter.removeClass('expanded');
-        // });
-
-        // $menuLink.on('click', function (e) {
-        //     e.preventDefault();
-        //     $menuFilter.removeClass('expanded');
-        //     $menuLocations.addClass('hidden');
-        // });
+    renderLocation: function renderLocation(location) {
+        return this.templates.expandedLocation({
+            'd': location,
+            'formatDistance': this.formatDistance,
+            'formatPrice': this.formatPrice
+        });
     },
 
     getDispensaries: function getDispensaries(success) {
@@ -427,12 +443,67 @@ W.pages.strain.StrainDetailPage = Class.extend({
         } else {
             $.ajax({
                 method: 'GET',
-                url: '/api/v1/search/strain/{0}/deliveries'.format(this.ui.$strainId.val()),
+                url: '/api/v1/search/strain/{0}/deliveries?filter=all&order_field=menu_items.price_gram&order_dir=asc'.format(this.ui.$strainId.val()),
                 success: function (data) {
                     that.locations = data.locations;
                     success(data.locations);
                 }
             });
+        }
+    },
+
+    initSortActions: function initSortActions() {
+        var that = this,
+            $sort = $('.sort'),
+            $priceSort = $('.price-sort');
+
+        $sort.on('click', function () {
+            var $this = $(this);
+            that.sortBy($this, $this.attr('id'));
+        });
+
+        $priceSort.on('click', function () {
+            that.sortBy($priceSort, $('.price-value.active').attr('id'));
+        });
+    },
+
+    sortBy: function sortBy($sort, sortFieldName) {
+        var that = this, newSort, url;
+
+        this.changeSortArrow($sort);
+
+        newSort = $sort.hasClass('fa-caret-up') ? 'desc' : 'asc';
+        url = '/api/v1/search/strain/{0}/deliveries?filter={1}&order_field={2}&order_dir={3}'
+            .format(this.ui.$strainId.val(), 'all', sortFieldName, newSort);
+
+        $.ajax({
+            method: 'GET',
+            url: url,
+            success: function (data) {
+                if (data && data.locations) {
+                    var $expandedHolder = $('.locations-area-body');
+                    $expandedHolder.html('');
+
+                    $.each(data.locations, function (i, l) {
+                        $expandedHolder.append(that.renderLocation(l));
+                    });
+
+                    $.each($expandedHolder.find('.dispensary-rating'), function (i, el) {
+                        var $ratingSelector = $(el);
+                        that.initRating($ratingSelector, $ratingSelector.text());
+                    });
+                }
+            }
+        });
+    },
+
+    changeSortArrow: function changeSortArrow($el) {
+        if ($el.hasClass('fa-caret-down')) {
+            $el.removeClass('fa-caret-down');
+            $el.addClass('fa-caret-up');
+        } else {
+            $el.removeClass('fa-caret-up');
+            $el.addClass('fa-caret-down');
         }
     },
 
@@ -511,5 +582,13 @@ W.pages.strain.StrainDetailPage = Class.extend({
                 }
             });
         });
+    },
+
+    formatDistance: function formatDistance(d) {
+        return d ? '({0}mi)'.format(Math.round(d * 100) / 100) : 'n/a';
+    },
+
+    formatPrice: function formatPrice(p) {
+        return p ? '${0}'.format(p) : 'n/a';
     }
 });

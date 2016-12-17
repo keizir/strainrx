@@ -1,52 +1,35 @@
 {% load staticfiles i18n %}
 
 <script type="x/srx-template" id="strain_detail_available_locations">
-    <div class="locations-area">
+    <div class="locations-area popup-container">
         <% if (dispensaries.length >0) { %>
         <div class="locations-area-header">
             <div class="column col-1">
                 <div class="col-name">Store Name</div>
-                <i class="fa fa-caret-down" aria-hidden="true"></i>
+                <i class="fa fa-caret-down sort" id="location_name" aria-hidden="true"></i>
             </div>
             <div class="column col-2">
                 <div class="col-name">Rating</div>
-                <i class="fa fa-caret-down" aria-hidden="true"></i>
+                <i class="fa fa-caret-down sort" id="rating" aria-hidden="true"></i>
             </div>
             <div class="column col-3">
                 <div class="col-name">Distance</div>
-                <i class="fa fa-caret-down" aria-hidden="true"></i>
+                <i class="fa fa-caret-down sort" id="distance" aria-hidden="true"></i>
             </div>
             <div class="column col-4">
-                <div class="col-name" id="col-price">Price</div>
-                <i class="fa fa-caret-down price-expander" aria-hidden="true"></i>
+                <div class="col-name price-expander">Price</div>
+                <i class="fa fa-caret-down price-sort" aria-hidden="true"></i>
             </div>
             <div class="prices-wrapper hidden">
-                <span class="price" id="gram">Gram</span>
-                <span class="price" id="eight">Eight</span>
-                <span class="price" id="quarter">Quarter</span>
-                <span class="price" id="half">Half</span>
+                <span class="price" id="menu_items.price_gram">Gram</span>
+                <span class="price" id="menu_items.price_eighth">Eighth</span>
+                <span class="price" id="menu_items.price_quarter">Quarter</span>
+                <span class="price" id="menu_items.price_half">Half</span>
             </div>
         </div>
         <div class="locations-area-body">
             <% $.each(dispensaries, function(index, d) { %>
-            <div class="dispensary">
-                <div class="location-name col-1">
-                    <div class="name"><a href="#"><%= d.location_name %></a></div>
-                    <div class="icon">
-                        <% if (d.is_delivery) { %>
-                        <i class="fa fa-2x fa-truck truck-marker" aria-hidden="true"></i>
-                        <% } %>
-                    </div>
-                </div>
-                <div class="col-2 dispensary-rating"><%= d.rating %></div>
-                <div class="col-3">(<%= d.distance %> mi)</div>
-                <div class="col-4 price-values">
-                    <span class="price-value active" id="gram">$<%= d.price_gram %></span>
-                    <span class="price-value" id="eight">$<%= d.price_eight %></span>
-                    <span class="price-value" id="quarter">$<%= d.price_quarter %></span>
-                    <span class="price-value" id="half">$<%= d.price_half %></span>
-                </div>
-            </div>
+            <%= renderLocation({d: d, formatDistance: formatDistance, formatPrice: formatPrice}) %>
             <% }) %>
         </div>
         <% } else { %>

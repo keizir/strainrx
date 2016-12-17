@@ -65,51 +65,38 @@
                         font-weight: bold;
                         text-align: center;
 
-                        .col-1 {
+                        .column {
                             display: inline-block;
-                            width: 30%;
+                            text-align: left;
+                            font-weight: bold;
+
+                            .col-name {
+                                display: inline-block;
+                            }
+
+                            i {
+                                display: inline-block;
+                                color: $iris-blue;
+                                cursor: pointer;
+                            }
+                        }
+
+                        .col-1 {
+                            width: 40%;
                         }
 
                         .col-2 {
-                            display: inline-block;
-                            width: 15%;
+                            width: 20%;
                         }
 
                         .col-3 {
-                            display: inline-block;
-                            width: 15%;
+                            width: 17%;
+                            text-align: center;
                         }
 
                         .col-4 {
-                            display: inline-block;
-                            width: 15%;
-                        }
-                    }
-
-                    .locations-area-body {
-                        display: block;
-                        line-height: 2.5em;
-                        text-align: center;
-
-                        .col-1 {
-                            display: inline-block;
-                            width: 30%;
-                            color: $iris-blue;
-                        }
-
-                        .col-2 {
-                            display: inline-block;
-                            width: 15%;
-                        }
-
-                        .col-3 {
-                            display: inline-block;
-                            width: 15%;
-                        }
-
-                        .col-4 {
-                            display: inline-block;
-                            width: 15%;
+                            width: 17%;
+                            text-align: center;
                         }
 
                         .price-expander {
@@ -118,7 +105,7 @@
 
                         .prices-wrapper {
                             position: absolute;
-                            right: 23%;
+                            right: 1em;
                             top: 16%;
                             background: #fff;
                             border: 1px solid $black;
@@ -133,40 +120,67 @@
                                 color: $iris-blue;
                             }
                         }
+                    }
 
-                        .price-values {
-                            .price-value {
-                                display: none;
+                    .locations-area-body {
+                        display: block;
+                        line-height: 2.5em;
+                        text-align: center;
+
+                        .dispensary {
+                            margin-bottom: 1em;
+
+                            .col-1 {
+                                display: inline-block;
+                                width: 40%;
+                                color: $iris-blue;
+                                text-align: left;
+                                vertical-align: top;
+
+                                .name {
+                                    display: inline-block;
+                                    float: left;
+                                    width: 78%;
+                                }
+
+                                .icon {
+                                    display: inline-block;
+                                    float: right;
+                                    margin-right: 20px;
+                                    color: $black;
+                                }
                             }
 
-                            .price-value.active {
-                                display: block;
+                            .col-2 {
+                                display: inline-block;
+                                width: 20%;
+                                text-align: left;
+                            }
+
+                            .col-3 {
+                                display: inline-block;
+                                width: 17%;
+                                text-align: right;
+                            }
+
+                            .col-4 {
+                                display: inline-block;
+                                width: 17%;
+                                text-align: right;
+                            }
+
+                            .price-values {
+                                .price-value {
+                                    display: none;
+                                }
+
+                                .price-value.active {
+                                    display: block;
+                                }
                             }
                         }
-
-                        //.col-5 {
-                        //    display: inline-block;
-                        //    width: 18%;
-                        //}
                     }
                 }
-
-                //.location-marker {
-                //    cursor: pointer;
-                //    margin-right: 10px;
-                //}
-                //
-                //.location-marker:hover {
-                //    color: $iris-blue;
-                //}
-                //
-                //.truck-marker {
-                //    cursor: pointer;
-                //}
-                //
-                //.truck-marker:hover {
-                //    color: $iris-blue;
-                //}
             }
         }
 

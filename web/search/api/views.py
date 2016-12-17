@@ -80,6 +80,9 @@ class StrainSearchResultsView(LoginRequiredMixin, APIView):
 
     @staticmethod
     def change_strain_scores(result_list, user_strain_reviews, current_user, page):
+        if len(result_list) == 0:
+            return []
+
         latest_user_search = UserSearch.objects.filter(user=current_user).order_by('-last_modified_date')[:1]
 
         user_review_scores = {}

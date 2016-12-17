@@ -70,10 +70,11 @@ class User(AbstractUser):
                 "street1": location.street1,
                 "city": location.city,
                 "state": location.state,
-                "zipcode": location.zipcode
+                "zipcode": location.zipcode,
+                "location_raw": location.location_raw
             }
 
-        return {"street1": "", "city": "", "state": "", "zipcode": ""}
+        return {"street1": "", "city": "", "state": "", "zipcode": "", "location_raw": ""}
 
 
 @python_2_unicode_compatible
