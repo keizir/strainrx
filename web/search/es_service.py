@@ -10,7 +10,8 @@ from web.system.models import SystemProperty
 class SearchElasticService(BaseElasticService):
     srx_score_script_min = "def psa=effectSum+benefitSum;def benefitPoints=0;def effectPoints=0;def negEffectPoints=0;for(e in userEffects){e=e.key;def strainE=_source['effects'][e];def userE=userEffects[e];def effectBonus=0.0;dist=strainE-userE;if(dist>0){npe=-0.01;}else{if(dist==0){npe=0;};if(dist<0&&dist>=-1){npe=-0.14*userE;};if(dist<-1&&dist>=-2){npe=-0.33*userE;};if(dist<-2&&dist>=-3){npe=-0.51*userE;};if(dist<-3&&dist>=-4){npe=-0.8*userE;};if(dist<-4&&dist>=-5){npe=-1*userE;};};if(userE==strainE){switch(strainE){case 3:effectBonus=0.3;break;case 4:effectBonus=0.5;break;case 5:effectBonus=1.0;break;}};effectPoints+=effectBonus+userE+npe;};for(b in userBenefits){b=b.key;def strainB=_source['benefits'][b];def userB=userBenefits[b];def benefitBonus=0.0;dist=strainB-userB;if(dist>0){npb=-0.01;}else{if(dist==0){npb=0;};if(dist<0&&dist>=-1){npb=-0.14*userB;};if(dist<-1&&dist>=-2){npb=-0.33*userB;};if(dist<-2&&dist>=-3){npb=-0.51*userB;};if(dist<-3&&dist>=-4){npb=-0.8*userB;};if(dist<-4&&dist>=-5){npb=-1*userB;};};if(userB==strainB){switch(strainB){case 3:benefitBonus=0.3;break;case 4:benefitBonus=0.5;break;case 5:benefitBonus=1.0;break;}};benefitPoints+=benefitBonus+userB+npb;};for(ne in userNegEffects){ne=ne.key;def strainNE=_source['side_effects'][ne];def userNE=userNegEffects[ne];negPoints=0;if(userNE==0||strainNE==0){negPoints=0;}else{negPoints=(((userNE-strainNE)**2)*-1)/psa;};negEffectPoints+=negPoints;};def tp=effectPoints+negEffectPoints+benefitPoints;return(tp/psa)*100;"
 
-    def _transform_strain_results(self, results, current_user=None, result_filter=None, include_locations=True):
+    def _transform_strain_results(self, results, current_user=None, result_filter=None, include_locations=True,
+                                  is_similar=False, similar_strain_id=None):
         """
 
         :param results:
@@ -25,7 +26,20 @@ class SearchElasticService(BaseElasticService):
         for b in strain_rating_buckets:
             strain_ratings[b.get('key')] = b.get('child_rating').get('avg_rating').get('value')
 
-        for s in strains:
+        to_transform = []
+        if is_similar:
+            start_index = 0
+            for index, s in enumerate(strains):
+                source = s.get('_source', {})
+                if int(source.get('id')) == int(similar_strain_id):
+                    start_index = index
+
+            if start_index > 0:
+                to_transform = strains[start_index:start_index + 6]
+        else:
+            to_transform = strains
+
+        for s in to_transform:
             source = s.get('_source', {})
             db_strain = Strain.objects.get(pk=source.get('id'))
             rating = strain_ratings.get(source.get('id'))
@@ -290,7 +304,7 @@ class SearchElasticService(BaseElasticService):
             return score
 
     def query_strain_srx_score(self, criteria, size=50, start_from=0, strain_id=None, current_user=None,
-                               result_filter=None, include_locations=True):
+                               result_filter=None, include_locations=True, is_similar=False, similar_strain_id=None):
         """
             Return strains ranked by SRX score
         """
@@ -326,7 +340,8 @@ class SearchElasticService(BaseElasticService):
 
         es_response = self._request(method, url, data=json.dumps(query))
         results = self._transform_strain_results(es_response, current_user, result_filter,
-                                                 include_locations=include_locations)
+                                                 include_locations=include_locations, is_similar=is_similar,
+                                                 similar_strain_id=similar_strain_id)
         return results
 
     def build_srx_score_es_query(self, criteria, strain_ids):

@@ -42,7 +42,9 @@ class StrainDetailsService:
 
         if latest_user_search and len(latest_user_search) > 0:
             data = SearchElasticService().query_strain_srx_score(latest_user_search[0].to_search_criteria(), 2000, 0,
-                                                                 include_locations=False)
+                                                                 include_locations=False, is_similar=True,
+                                                                 similar_strain_id=current_strain.id)
+
             start_index = 0
             initial = 0
             for index, s in enumerate(data.get('list')):
