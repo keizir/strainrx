@@ -567,6 +567,20 @@
                                 </select>
                             </div>
                         </div>
+                        <div class="form-field-group">
+                            <div class="form-field timezone-form-field">
+                                <label for="timezone">Timezone</label>
+                                <select id="timezone" name="timezone">
+                                    <option {% if request.user.timezone == None %}selected{% endif %}>- Select One -
+                                    </option>
+                                    {% for tz in timezones %}
+                                        <option value="{{ tz }}"
+                                                {% if request.user.timezone == tz %}selected="selected"{% endif %}>{{ tz }}
+                                        </option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                        </div>
                     </fieldset>
                     <span class="messages"></span>
                     <div class="form-actions">

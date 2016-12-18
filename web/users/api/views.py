@@ -2,10 +2,12 @@ import datetime
 import logging
 import uuid
 
+import pytz
 from django.contrib.auth import authenticate, login
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.core.exceptions import ValidationError
 from django.core.validators import EmailValidator
+from django.utils import timezone
 from rest_framework import permissions
 from rest_framework import status
 from rest_framework.response import Response
@@ -72,6 +74,7 @@ class UserDetailView(LoginRequiredMixin, APIView):
         user.birth_day = serializer.validated_data.get('birth_day')
         user.birth_year = serializer.validated_data.get('birth_year')
         user.gender = serializer.validated_data.get('gender')
+        user.timezone = serializer.validated_data.get('timezone')
         user.save()
 
         serializer = UserLocationSerializer(data=location_data)
@@ -183,6 +186,11 @@ class UserLoginView(APIView):
             request.session['business_image'] = business[0].image.url if business[0].image and business[0].image.url \
                 else None
 
+        if user.timezone:
+            timezone.activate(pytz.timezone(user.timezone))
+        else:
+            timezone.activate(pytz.timezone('America/Los_Angeles'))
+
         login(request, authenticated)
         return Response({}, status=status.HTTP_200_OK)
 
@@ -213,6 +221,11 @@ class UserSignUpWizardView(APIView):
         authenticated = authenticate(username=user.email, password=serializer.validated_data.get('pwd'))
         if authenticated is None:
             return bad_request('Cannot authenticate user')
+
+        if user.timezone:
+            timezone.activate(pytz.timezone(user.timezone))
+        else:
+            timezone.activate(pytz.timezone('America/Los_Angeles'))
 
         login(request, authenticated)
 

@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals, absolute_import
 
+import pytz
 from django.contrib.auth.models import AbstractUser
 from django.contrib.postgres.fields import JSONField
 from django.core.exceptions import ValidationError
@@ -38,8 +39,9 @@ class User(AbstractUser):
     birth_year = models.IntegerField(_('Birth Year'), blank=True, null=True)
 
     gender = models.CharField(_('Gender'), choices=GENDER, blank=True, null=True, max_length=10)
-
     proximity = models.FloatField(_('Proximity'), null=True)
+    timezone = models.CharField(_('Timezone'), null=True, max_length=100,
+                                choices=zip(pytz.common_timezones, pytz.common_timezones))
 
     def clean(self):
         validators.validate_email(self.email)

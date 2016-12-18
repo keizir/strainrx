@@ -47,7 +47,8 @@ W.users.DetailPage = Class.extend({
                     birthMonth = $('select[name="birth_month"]').val(),
                     birthDay = $('select[name="birth_day"]').val(),
                     birthYear = $('select[name="birth_year"]').val(),
-                    gender = $('select[name="gender"]').val();
+                    gender = $('select[name="gender"]').val(),
+                    timezone = $('select[name="timezone"]').val();
 
                 return {
                     'first_name': $('input[name="first_name"]').val(),
@@ -57,6 +58,7 @@ W.users.DetailPage = Class.extend({
                     'birth_day': birthDay !== defaultSelectValue ? birthDay : null,
                     'birth_year': birthYear !== defaultSelectValue ? birthYear : null,
                     'gender': gender !== defaultSelectValue ? gender : null,
+                    'timezone': timezone !== defaultSelectValue ? timezone : null,
                     'location': {
                         'street1': '',
                         'city': $('input[name="city"]').val() || '',
@@ -89,9 +91,23 @@ W.users.DetailPage = Class.extend({
                                     data.location.lat = results[0].geometry.location.lat();
                                     data.location.lng = results[0].geometry.location.lng();
                                     data.location.location_raw = JSON.stringify(results);
-                                }
 
-                                callback();
+                                    if (data.timezone === null) {
+                                        var xsr = new XMLHttpRequest();
+                                        xsr.open("GET", 'https://maps.googleapis.com/maps/api/timezone/json?location={0},{1}&timestamp={2}&key={3}'
+                                            .format(data.location.lat, data.location.lng, '1458000000', GOOGLE_API_KEY));
+                                        xsr.onload = function () {
+                                            var d = JSON.parse(xsr.responseText);
+                                            data.timezone = d.timeZoneId;
+                                            callback();
+                                        };
+                                        xsr.send();
+                                    } else {
+                                        callback();
+                                    }
+                                } else {
+                                    callback();
+                                }
                             } else if (status === 'ZERO_RESULTS') {
                                 alert('Invalid location');
                             } else {

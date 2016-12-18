@@ -190,6 +190,14 @@
 
     .form .form-field-group {
         width: 100%;
+
+        select {
+            cursor: pointer;
+        }
+
+        .timezone-form-field {
+            float: left;
+        }
     }
 
     .user-change-pwd .form .form-field {
