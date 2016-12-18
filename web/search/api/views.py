@@ -159,6 +159,13 @@ class StrainSRXScoreView(LoginRequiredMixin, APIView):
         return Response({'srx_score': score}, status=status.HTTP_200_OK)
 
 
+class StrainAlsoLikeView(LoginRequiredMixin, APIView):
+    def get(self, request, strain_id):
+        strain = Strain.objects.get(pk=strain_id)
+        also_like_strains = StrainDetailsService().get_also_like_strains(strain, request.user)
+        return Response({'also_like_strains': also_like_strains}, status=status.HTTP_200_OK)
+
+
 class StrainLookupView(LoginRequiredMixin, APIView):
     def get(self, request):
         query = request.GET.get('q')

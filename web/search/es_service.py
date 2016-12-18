@@ -1,5 +1,4 @@
 import json
-import logging
 from datetime import datetime
 
 from web.es_service import BaseElasticService
@@ -7,13 +6,11 @@ from web.search import es_mappings
 from web.search.models import StrainImage, Strain
 from web.system.models import SystemProperty
 
-logger = logging.getLogger(__name__)
-
 
 class SearchElasticService(BaseElasticService):
     srx_score_script_min = "def psa=effectSum+benefitSum;def benefitPoints=0;def effectPoints=0;def negEffectPoints=0;for(e in userEffects){e=e.key;def strainE=_source['effects'][e];def userE=userEffects[e];def effectBonus=0.0;dist=strainE-userE;if(dist>0){npe=-0.01;}else{npe=dist*0.2*userE;};if(userE==strainE){switch(strainE){case 3:effectBonus=0.3;break;case 4:effectBonus=0.5;break;case 5:effectBonus=1.0;break;}};effectPoints+=effectBonus+userE+npe;};for(b in userBenefits){b=b.key;def strainB=_source['benefits'][b];def userB=userBenefits[b];def benefitBonus=0.0;dist=strainB-userB;if(dist>0){npb=-0.01;}else{npb=dist*0.2*userB;};if(userB==strainB){switch(strainB){case 3:benefitBonus=0.3;break;case 4:benefitBonus=0.5;break;case 5:benefitBonus=1.0;break;}};benefitPoints+=benefitBonus+userB+npb;};for(ne in userNegEffects){ne=ne.key;def strainNE=_source['side_effects'][ne];def userNE=userNegEffects[ne];negPoints=0;if(userNE==0||strainNE==0){negPoints=0;}else{negPoints=(((userNE-strainNE)**2)*-1)/psa;};negEffectPoints+=negPoints;};def tp=effectPoints+negEffectPoints+benefitPoints;return(tp/psa)*100;"
 
-    def _transform_strain_results(self, results, current_user=None, result_filter=None):
+    def _transform_strain_results(self, results, current_user=None, result_filter=None, include_locations=True):
         """
 
         :param results:
@@ -35,11 +32,16 @@ class SearchElasticService(BaseElasticService):
             strain_image = StrainImage.objects.filter(strain=db_strain)[:1]
             srx_score = int(round(s.get('_score')))
 
-            dispensaries = self.get_locations(source.get('id'), "dispensary", current_user, result_filter)
-            dispensaries = self.transform_location_results(dispensaries, source.get('id'), result_filter, current_user)
+            if include_locations:
+                dispensaries = self.get_locations(source.get('id'), "dispensary", current_user, result_filter)
+                dispensaries = self.transform_location_results(dispensaries, source.get('id'), result_filter,
+                                                               current_user)
 
-            deliveries = self.get_locations(source.get('id'), "delivery", current_user, result_filter)
-            deliveries = self.transform_location_results(deliveries, source.get('id'), result_filter, current_user)
+                deliveries = self.get_locations(source.get('id'), "delivery", current_user, result_filter)
+                deliveries = self.transform_location_results(deliveries, source.get('id'), result_filter, current_user)
+            else:
+                dispensaries = []
+                deliveries = []
 
             if result_filter == 'delivery' and len(deliveries) == 0:
                 # means user is not in delivery radius of any delivery
@@ -288,7 +290,7 @@ class SearchElasticService(BaseElasticService):
             return score
 
     def query_strain_srx_score(self, criteria, size=50, start_from=0, strain_id=None, current_user=None,
-                               result_filter=None):
+                               result_filter=None, include_locations=True):
         """
             Return strains ranked by SRX score
         """
@@ -322,17 +324,12 @@ class SearchElasticService(BaseElasticService):
         else:
             query = self.build_srx_score_es_query(criteria, strain_ids)
 
-        logger.debug('ES url: {0}'.format(url))
-        logger.debug('Result filter: {0}'.format(result_filter))
         es_response = self._request(method, url, data=json.dumps(query))
-        logger.debug('ES SRX Score results OK')
-        results = self._transform_strain_results(es_response, current_user, result_filter)
-        logger.debug('ES SRX score transform OK')
+        results = self._transform_strain_results(es_response, current_user, result_filter,
+                                                 include_locations=include_locations)
         return results
 
     def build_srx_score_es_query(self, criteria, strain_ids):
-        logger.debug('SRX Score criteria: {0}'.format(criteria))
-        logger.debug('SRX Score strain_ids: {0}'.format(strain_ids))
         criteria_strain_types = self.parse_criteria_strains(criteria.get('strain_types'))
         effects_data = self.parse_criteria_data(criteria.get('effects'))
         benefits_data = self.parse_criteria_data(criteria.get('benefits'))

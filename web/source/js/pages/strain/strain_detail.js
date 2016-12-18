@@ -87,6 +87,8 @@ W.pages.strain.StrainDetailPage = Class.extend({
             return abbreviation;
         }
 
+        this.retrieveAndRenderAlsoLikeStrains();
+
         this.populateEffects();
         this.populateBenefits();
         this.populateSideEffects();
@@ -105,9 +107,35 @@ W.pages.strain.StrainDetailPage = Class.extend({
         new W.pages.strain.StrainReviewDialog({
             model: this.model
         });
+    },
 
+    retrieveAndRenderAlsoLikeStrains: function retrieveAndRenderAlsoLikeStrains() {
+        var $alsoLikeWrapper = $('.similar-strains-wrapper');
+        $alsoLikeWrapper.html(W.common.Constants.html.loader);
+
+        $.ajax({
+            method: 'GET',
+            url: '/api/v1/search/strain/{0}/also_like'.format($('.strain-id').val()),
+            success: function (data) {
+                if (data && data.also_like_strains) {
+                    var template = _.template($('#strain_detail_also_like_template').html());
+                    $alsoLikeWrapper.html('');
+                    $.each(data.also_like_strains, function (i, s) {
+                        $alsoLikeWrapper.append(template({s: s}));
+                    });
+                } else {
+                    $('.strain-similar').addClass('hidden');
+                }
+
+                setTimeout(function () {
+                    $(window).trigger('resize');
+                }, 500);
+            }
+        });
+
+        // 500 ms to hide a default ajax loader spinner
         setTimeout(function () {
-            $(window).trigger('resize');
+            $('#loading-spinner').hide();
         }, 500);
     },
 

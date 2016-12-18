@@ -49,6 +49,11 @@ urlpatterns = [
         name='strain_srx_score'
     ),
     url(
+        regex=r'^strain/(?P<strain_id>[0-9]+)/also_like',
+        view=StrainAlsoLikeView.as_view(),
+        name='strain_also_like'
+    ),
+    url(
         regex=r'^strain/lookup/$',
         view=StrainLookupView.as_view(),
         name='strain_lookup'

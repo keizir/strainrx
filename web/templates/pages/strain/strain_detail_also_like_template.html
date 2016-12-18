@@ -1,0 +1,19 @@
+{% load staticfiles i18n %}
+
+<script type="x/srx-template" id="strain_detail_also_like_template">
+    <div class="similar-wrapper similar-visible">
+        <a href="/search/strain/<%= s.strain_slug %>">
+            <div class="name">
+                <div class="image">
+                    <% if (s.image_url) { %>
+                    <img src="<%= s.image_url %>" alt="Strain Image"/>
+                    <% } else { %>
+                    <img src="{% static 'images/weed_small.jpg' %}" alt="Strain Image"/>
+                    <% } %>
+                </div>
+                <%= s.name %>
+            </div>
+            <div class="variety"><%= s.variety %></div>
+        </a>
+    </div>
+</script>

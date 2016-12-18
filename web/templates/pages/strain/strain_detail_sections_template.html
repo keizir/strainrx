@@ -167,25 +167,7 @@
                 <span class="title">You may also like</span>
             </span>
             <div class="also-like-strains-wrapper">
-                <div class="similar-strains-wrapper">
-                    <% $.each(model.also_like_strains, function(i, s) { %>
-                    <div class="similar-wrapper similar-visible">
-                        <a href="/search/strain/<%= s.strain_slug %>">
-                            <div class="name">
-                                <div class="image">
-                                    <% if (s.image_url) { %>
-                                    <img src="<%= s.image_url %>" alt="Strain Image"/>
-                                    <% } else { %>
-                                    <img src="{% static 'images/weed_small.jpg' %}" alt="Strain Image"/>
-                                    <% } %>
-                                </div>
-                                <%= s.name %>
-                            </div>
-                            <div class="variety"><%= s.variety %></div>
-                        </a>
-                    </div>
-                    <% }); %>
-                </div>
+                <div class="similar-strains-wrapper"></div>
             </div>
         </div>
     </div>

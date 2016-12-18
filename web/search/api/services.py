@@ -3,44 +3,29 @@ from web.search.es_service import SearchElasticService
 from web.search.models import UserSearch, Strain, StrainImage, StrainReview, StrainRating, UserFavoriteStrain
 from web.search.services import build_strain_rating
 
-import logging
-
-logger = logging.getLogger(__name__)
-
 
 class StrainDetailsService:
     def build_strain_details(self, strain_id, current_user):
-        logger.debug('Build strain details. Strain {0} user {1}'.format(strain_id, current_user.id))
         strain = Strain.objects.get(pk=strain_id)
         image = StrainImage.objects.filter(strain=strain)[:1]
-        logger.debug('Image OK. Len {0}'.format(len(image)))
-
         strain_origins = self.get_strain_origins(strain)
-        logger.debug('Strain origins OK')
-        also_like_strains = self.get_also_like_strains(strain, current_user)
-        logger.debug('Also like strains OK')
         rating = build_strain_rating(strain)
-        logger.debug('Strain ratings OK')
         strain_srx_score = self.calculate_srx_score(strain, current_user)
-        logger.debug('Calc SRX OK')
         reviews = self.get_strain_reviews(strain)
-        logger.debug('Strain reviews OK')
         strain_review = StrainRating.objects.filter(strain=strain, created_by=current_user, removed_date=None)
-        logger.debug('Strain ratings 2 OK. Len: {0}'.format(len(strain_review)))
         favorite = UserFavoriteStrain.objects.filter(strain=strain, created_by=current_user).exists()
-        logger.debug('Strain Favs OK')
+        is_rated = StrainReview.objects.filter(strain=strain, created_by=current_user).exists()
 
         return {
             'strain': StrainDetailSerializer(strain).data,
             'strain_image': image[0].image.url if image else None,
             'strain_origins': strain_origins,
-            'also_like_strains': also_like_strains,
             'strain_rating': rating,
             'user_strain_review': StrainRatingSerializer(strain_review[0]).data if len(strain_review) > 0 else None,
             'strain_reviews': reviews,
             'strain_srx_score': strain_srx_score,
             'favorite': favorite,
-            'is_rated': StrainReview.objects.filter(strain=strain, created_by=current_user).exists()
+            'is_rated': is_rated
         }
 
     @staticmethod
@@ -55,13 +40,11 @@ class StrainDetailsService:
         latest_user_search = UserSearch.objects.filter(user=current_user).order_by('-last_modified_date')[:1]
         also_like_strains = []
 
-        logger.debug('Latest user search len: {0}'.format(len(latest_user_search)))
-
         if latest_user_search and len(latest_user_search) > 0:
-            data = SearchElasticService().query_strain_srx_score(latest_user_search[0].to_search_criteria(), 2000, 0)
+            data = SearchElasticService().query_strain_srx_score(latest_user_search[0].to_search_criteria(), 2000, 0,
+                                                                 include_locations=False)
             start_index = 0
             initial = 0
-            logger.debug('ES query strain srx score data list len: {0}'.format(len(data.get('list'))))
             for index, s in enumerate(data.get('list')):
                 if s.get('id') == current_strain.id:
                     start_index = index + 1
@@ -77,8 +60,7 @@ class StrainDetailsService:
         if len(also_like_strains) == 0:
             search_criteria = current_strain.to_search_criteria()
             search_criteria['strain_types'] = 'skipped'
-            data = SearchElasticService().query_strain_srx_score(search_criteria, 6, 0)
-            logger.debug('2nd ES query strain srx score data list len {0}'.format(len(data.get('list'))))
+            data = SearchElasticService().query_strain_srx_score(search_criteria, 6, 0, include_locations=False)
             for s in data.get('list')[1:]:
                 also_like_strains.append(s)
 
@@ -134,7 +116,8 @@ class StrainDetailsService:
             'created_by_image': None  # TODO implement UserImage
         }
 
-    def build_strain_locations(self, strain_id, current_user, result_filter=None, order_field=None, order_dir=None):
+    @staticmethod
+    def build_strain_locations(strain_id, current_user, result_filter=None, order_field=None, order_dir=None):
         service = SearchElasticService()
         es_response = service.get_locations(strain_id=strain_id, current_user=current_user, result_filter=result_filter,
                                             order_field=order_field, order_dir=order_dir)
