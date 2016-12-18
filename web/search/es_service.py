@@ -8,7 +8,7 @@ from web.system.models import SystemProperty
 
 
 class SearchElasticService(BaseElasticService):
-    srx_score_script_min = "def psa=effectSum+benefitSum;def benefitPoints=0;def effectPoints=0;def negEffectPoints=0;for(e in userEffects){e=e.key;def strainE=_source['effects'][e];def userE=userEffects[e];def effectBonus=0.0;dist=strainE-userE;if(dist>0){npe=-0.01;}else{npe=dist*0.2*userE;};if(userE==strainE){switch(strainE){case 3:effectBonus=0.3;break;case 4:effectBonus=0.5;break;case 5:effectBonus=1.0;break;}};effectPoints+=effectBonus+userE+npe;};for(b in userBenefits){b=b.key;def strainB=_source['benefits'][b];def userB=userBenefits[b];def benefitBonus=0.0;dist=strainB-userB;if(dist>0){npb=-0.01;}else{npb=dist*0.2*userB;};if(userB==strainB){switch(strainB){case 3:benefitBonus=0.3;break;case 4:benefitBonus=0.5;break;case 5:benefitBonus=1.0;break;}};benefitPoints+=benefitBonus+userB+npb;};for(ne in userNegEffects){ne=ne.key;def strainNE=_source['side_effects'][ne];def userNE=userNegEffects[ne];negPoints=0;if(userNE==0||strainNE==0){negPoints=0;}else{negPoints=(((userNE-strainNE)**2)*-1)/psa;};negEffectPoints+=negPoints;};def tp=effectPoints+negEffectPoints+benefitPoints;return(tp/psa)*100;"
+    srx_score_script_min = "def psa=effectSum+benefitSum;def benefitPoints=0;def effectPoints=0;def negEffectPoints=0;for(e in userEffects){e=e.key;def strainE=_source['effects'][e];def userE=userEffects[e];def effectBonus=0.0;dist=strainE-userE;if(dist>0){npe=-0.01;}else{if(dist==0){npe=0;};if(dist<0&&dist>=-1){npe=-0.14*userE;};if(dist<-1&&dist>=-2){npe=-0.33*userE;};if(dist<-2&&dist>=-3){npe=-0.51*userE;};if(dist<-3&&dist>=-4){npe=-0.8*userE;};if(dist<-4&&dist>=-5){npe=-1*userE;};};if(userE==strainE){switch(strainE){case 3:effectBonus=0.3;break;case 4:effectBonus=0.5;break;case 5:effectBonus=1.0;break;}};effectPoints+=effectBonus+userE+npe;};for(b in userBenefits){b=b.key;def strainB=_source['benefits'][b];def userB=userBenefits[b];def benefitBonus=0.0;dist=strainB-userB;if(dist>0){npb=-0.01;}else{if(dist==0){npb=0;};if(dist<0&&dist>=-1){npb=-0.14*userB;};if(dist<-1&&dist>=-2){npb=-0.33*userB;};if(dist<-2&&dist>=-3){npb=-0.51*userB;};if(dist<-3&&dist>=-4){npb=-0.8*userB;};if(dist<-4&&dist>=-5){npb=-1*userB;};};if(userB==strainB){switch(strainB){case 3:benefitBonus=0.3;break;case 4:benefitBonus=0.5;break;case 5:benefitBonus=1.0;break;}};benefitPoints+=benefitBonus+userB+npb;};for(ne in userNegEffects){ne=ne.key;def strainNE=_source['side_effects'][ne];def userNE=userNegEffects[ne];negPoints=0;if(userNE==0||strainNE==0){negPoints=0;}else{negPoints=(((userNE-strainNE)**2)*-1)/psa;};negEffectPoints+=negPoints;};def tp=effectPoints+negEffectPoints+benefitPoints;return(tp/psa)*100;"
 
     def _transform_strain_results(self, results, current_user=None, result_filter=None, include_locations=True):
         """
@@ -583,7 +583,29 @@ for (e in userEffects) {
     if (dist > 0) {
         npe = -0.01;
     } else {
-        npe = dist * 0.2 * userE;
+        if (dist == 0) {
+            npe = 0;
+        };
+
+        if (dist < 0 && dist >= -1) {
+            npe = -0.14 * userE;
+        };
+
+        if (dist < -1 && dist >= -2) {
+            npe = -0.33 * userE;
+        };
+
+        if (dist < -2 && dist >= -3) {
+            npe = -0.51 * userE;
+        };
+
+        if (dist < -3 && dist >= -4) {
+            npe = -0.8 * userE;
+        };
+
+        if (dist < -4 && dist >= -5) {
+            npe = -1 * userE;
+        };
     };
 
     if (userE == strainE) {
@@ -615,7 +637,29 @@ for (b in userBenefits) {
     if (dist > 0) {
         npb = -0.01;
     } else {
-        npb = dist * 0.2 * userB;
+        if (dist == 0) {
+            npb = 0;
+        };
+
+        if (dist < 0 && dist >= -1) {
+            npb = -0.14 * userB;
+        };
+
+        if (dist < -1 && dist >= -2) {
+            npb = -0.33 * userB;
+        };
+
+        if (dist < -2 && dist >= -3) {
+            npb = -0.51 * userB;
+        };
+
+        if (dist < -3 && dist >= -4) {
+            npb = -0.8 * userB;
+        };
+
+        if (dist < -4 && dist >= -5) {
+            npb = -1 * userB;
+        };
     };
 
     if (userB == strainB) {
@@ -650,15 +694,6 @@ for (ne in userNegEffects) {
 
     negEffectPoints += negPoints;
 };
-
-//println 'effect';
-//println effectPoints;
-
-//println 'benefit';
-//println benefitPoints;
-
-//println 'neg';
-//println negEffectPoints;
 
 def tp = effectPoints + negEffectPoints + benefitPoints;
 return (tp / psa) * 100;​
