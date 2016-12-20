@@ -66,17 +66,11 @@
     <script src="{% static 'js/common/constants.js' %}"></script>
     <script src="{% static 'js/common/dialog.js' %}"></script>
     <script src="{% static 'js/users/user_settings.js' %}"></script>
-    <script src="{% static 'js/navbar.js' %}"></script>
 
     <script src="{% google_maps_api_url %}"></script>
 
     <script type="text/javascript">
         W.Base.init();
-        W.Navbar.init({
-            location: {% if request.user.is_authenticated %}
-                {{ request.user.get_location_json | safe }} {% else %} null {% endif %},
-            authenticated: '{{ request.user.is_authenticated }}' == 'True'
-        });
     </script>
 
     {% if request.user.is_authenticated and request.user.get_location == None %}

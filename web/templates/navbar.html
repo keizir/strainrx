@@ -93,8 +93,8 @@
                                         <i class="fa fa-dot-circle-o" aria-hidden="true"></i> UPDATE LOCATION
                                     </span>
                                     {% with l=request.user.get_location_json %}
-                                        <span class="nav-bar-user-street">{{ l.street1 }}</span>
-                                        <span class="nav-bar-user-location">{{ l.city }}, {{ l.state }}, {{ l.zipcode }}</span>
+                                        <span>{{ l.street1 }}</span>
+                                        <span>{{ l.city }}, {{ l.state }}, {{ l.zipcode }}</span>
                                     {% endwith %}
                                     <a class="update-location-href" href="{% url 'users:detail' request.user.id %}">
                                         Update location</a>

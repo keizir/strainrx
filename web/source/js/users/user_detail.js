@@ -34,7 +34,6 @@ W.users.DetailPage = Class.extend({
                         data: JSON.stringify(data),
                         success: function () {
                             that.showSuccessMessage('You profile information has been successfully updated');
-                            W.Navbar.updateAddress(data.location);
                         },
                         error: function (error) {
                             that.showErrorMessage(error);
