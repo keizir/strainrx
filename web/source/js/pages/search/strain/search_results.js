@@ -5,7 +5,7 @@ W.ns('W.pages');
 W.pages.StrainSearchResultsPage = Class.extend({
 
     scrollPage: 1,
-    scrollSize: 8,
+    scrollSize: 20,
     currentFilter: 'all', // local, delivery
 
     locations: {},
@@ -318,8 +318,9 @@ W.pages.StrainSearchResultsPage = Class.extend({
             $priceSort.addClass('fa-caret-down');
         }
 
-        url = '/api/v1/search/strain/{0}/deliveries?filter={1}&order_field={2}&order_dir={3}'
-            .format($('#strain-id-{0}'.format(position)).val(), this.ui.$menuActiveLink.attr('filter'), fieldName, newSort);
+        url = '/api/v1/search/strain/{0}/deliveries?filter={1}&order_field={2}&order_dir={3}&location_type={4}'
+            .format($('#strain-id-{0}'.format(position)).val(), this.ui.$menuActiveLink.attr('filter'),
+                fieldName, newSort, isLocations ? 'dispensary' : 'delivery');
 
         $.ajax({
             method: 'GET',
@@ -335,6 +336,13 @@ W.pages.StrainSearchResultsPage = Class.extend({
 
                     $.each($expandedHolder.find('.location-rating-exp'), function (i, el) {
                         that.initRating($(el));
+                    });
+
+                    $.each($('.price'), function () {
+                        var $el = $(this);
+                        if ($el.attr('id') === fieldName) {
+                            $el.trigger('click');
+                        }
                     });
                 }
             }

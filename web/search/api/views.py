@@ -217,9 +217,10 @@ class StrainDeliveriesView(LoginRequiredMixin, APIView):
         result_filter = d.get('filter')
         order_field = d.get('order_field')
         order_dir = d.get('order_dir')
+        location_type = d.get('location_type')
 
         l = StrainDetailsService().build_strain_locations(strain_id, request.user, result_filter, order_field,
-                                                          order_dir)
+                                                          order_dir, location_type)
         return Response(l, status=status.HTTP_200_OK)
 
 
@@ -281,7 +282,7 @@ class StrainRatingsView(LoginRequiredMixin, APIView):
             effects_to_persist[e.get('name')] = e.get('value')
         return effects_to_persist
 
-    def recalculate_global_effects(self, request, strain):
+    def recalculate_global_effects(self, request, strain, immediate=False):
         try:
             recalculate_size = int(SystemProperty.objects.get(name='rating_recalculation_size').value)
         except SystemProperty.DoesNotExist:
@@ -290,7 +291,7 @@ class StrainRatingsView(LoginRequiredMixin, APIView):
         ratings = StrainRating.objects.filter(strain=strain, status='pending', removed_date=None)
 
         # First check if there are "recalculate_size" new ratings
-        if len(ratings) >= recalculate_size:
+        if (len(ratings) >= recalculate_size) or immediate:
             sender_ip = get_client_ip(request)
 
             for r in ratings:
@@ -369,10 +370,7 @@ class StrainRatingsView(LoginRequiredMixin, APIView):
         StrainUserRatingESService().save_strain_review(rating, strain.id, request.user.id)
 
         if rating.status == 'processed':
-            strain.effects = self.calculate_new_global_values([strain], 'effects')
-            strain.benefits = self.calculate_new_global_values([strain], 'benefits')
-            strain.side_effects = self.calculate_new_global_values([strain], 'side_effects')
-            strain.save()
+            self.recalculate_global_effects(request, strain, immediate=True)
 
         return Response({}, status=status.HTTP_200_OK)
 

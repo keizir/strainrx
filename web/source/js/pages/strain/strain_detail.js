@@ -399,7 +399,7 @@ W.pages.strain.StrainDetailPage = Class.extend({
 
     buildLocationsMenu: function buildLocationsMenu() {
         var that = this,
-            $menuExpander = $('.menu-expander'),
+            $menuExpander = $('.active-link'),
             $menuLocations = $('.locations'),
             $menuFilter = $('.filter-menu'),
             menuTemplate = _.template($('#strain_detail_available_locations').html());
@@ -519,6 +519,13 @@ W.pages.strain.StrainDetailPage = Class.extend({
                     $.each($expandedHolder.find('.dispensary-rating'), function (i, el) {
                         var $ratingSelector = $(el);
                         that.initRating($ratingSelector, $ratingSelector.text());
+                    });
+
+                    $.each($('.price'), function () {
+                        var $el = $(this);
+                        if ($el.attr('id') === sortFieldName) {
+                            $el.trigger('click');
+                        }
                     });
                 }
             }
