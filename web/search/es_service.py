@@ -119,11 +119,11 @@ class SearchElasticService(BaseElasticService):
             sort_query.append({order_field: {"order": order_dir}})
 
         if order_field.startswith('menu_items'):
+            order_field_must = [{"missing": {"field": "menu_items.removed_date"}}]
+            if strain_id:
+                order_field_must.append({"match": {"menu_items.strain_id": strain_id}})
             sort_query.append({order_field: {"order": order_dir, "nested_path": "menu_items",
-                                             "nested_filter": {"bool": {"must": [
-                                                 {"missing": {"field": "menu_items.removed_date"}},
-                                                 {"match": {"menu_items.strain_id": strain_id}}
-                                             ]}}}})
+                                             "nested_filter": {"bool": {"must": order_field_must}}}})
 
         if lat and lon:
             if order_field == 'distance':
@@ -151,7 +151,7 @@ class SearchElasticService(BaseElasticService):
             },
             "sort": sort_query
         }
-        print(json.dumps(query))
+
         return self._request(method, url, data=json.dumps(query))
 
     def transform_location_results(self, es_response, strain_id=None, result_filter=None, current_user=None):
