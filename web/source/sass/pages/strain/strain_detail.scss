@@ -35,11 +35,7 @@
             width: 74%;
 
             .filter-menu {
-                .menu-expander {
-                    margin-left: 0.5em;
-                }
-
-                .menu-expander i {
+                .active-link {
                     color: $iris-blue;
                     cursor: pointer;
                 }
@@ -347,7 +343,7 @@
 
         .strain-similar {
             .also-like-strains-wrapper {
-                overflow: scroll;
+                overflow: auto;
                 width: 100%;
 
                 .similar-strains-wrapper {

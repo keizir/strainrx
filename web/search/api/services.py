@@ -119,9 +119,10 @@ class StrainDetailsService:
         }
 
     @staticmethod
-    def build_strain_locations(strain_id, current_user, result_filter=None, order_field=None, order_dir=None):
+    def build_strain_locations(strain_id, current_user, result_filter=None, order_field=None, order_dir=None,
+                               location_type=None):
         service = SearchElasticService()
         es_response = service.get_locations(strain_id=strain_id, current_user=current_user, result_filter=result_filter,
-                                            order_field=order_field, order_dir=order_dir)
+                                            order_field=order_field, order_dir=order_dir, location_type=location_type)
         locations = service.transform_location_results(es_response, strain_id=strain_id, result_filter=result_filter)
         return {'locations': locations}

@@ -61,6 +61,10 @@ class SearchElasticService(BaseElasticService):
                 # means user is not in delivery radius of any delivery
                 total = 0
                 pass
+            elif result_filter == 'local' and len(dispensaries) == 0:
+                # means there is no dispensaries is user's proximity radius
+                total = 0
+                pass
             else:
                 processed_results.append({
                     'id': source.get('id'),
@@ -111,14 +115,24 @@ class SearchElasticService(BaseElasticService):
         }} if lat and lon else {}
 
         sort_query = []
-        if order_field != 'distance' and order_field != 'rating':
+        if order_field != 'distance' and order_field != 'rating' and not order_field.startswith('menu_items'):
             sort_query.append({order_field: {"order": order_dir}})
 
+        if order_field.startswith('menu_items'):
+            sort_query.append({order_field: {"order": order_dir, "nested_path": "menu_items",
+                                             "nested_filter": {"bool": {"must": [
+                                                 {"missing": {"field": "menu_items.removed_date"}},
+                                                 {"match": {"menu_items.strain_id": strain_id}}
+                                             ]}}}})
+
         if lat and lon:
-            sort_query.append({"_geo_distance": {
-                "location": {"lat": lat, "lon": lon}, "order": order_dir if order_dir else "asc",
-                "unit": "mi", "distance_type": "plane"
-            }})
+            if order_field == 'distance':
+                sort_query.append({"_geo_distance": {
+                    "location": {"lat": lat, "lon": lon}, "order": order_dir if order_dir else "asc",
+                    "unit": "mi", "distance_type": "plane"}})
+            else:
+                sort_query.append({"_geo_distance": {
+                    "location": {"lat": lat, "lon": lon}, "order": "asc", "unit": "mi", "distance_type": "plane"}})
 
         menu_items_must_query = [{"missing": {"field": "menu_items.removed_date"}}]
         if strain_id:
@@ -137,7 +151,7 @@ class SearchElasticService(BaseElasticService):
             },
             "sort": sort_query
         }
-
+        print(json.dumps(query))
         return self._request(method, url, data=json.dumps(query))
 
     def transform_location_results(self, es_response, strain_id=None, result_filter=None, current_user=None):
@@ -199,8 +213,8 @@ class SearchElasticService(BaseElasticService):
         location_o = location_json.get('{0}_open'.format(days[current_day_index]))
         location_c = location_json.get('{0}_close'.format(days[current_day_index]))
         if location_o and location_c:
-            location_o = datetime.strptime(location_o, '%I:%M %p')
-            location_c = datetime.strptime(location_c, '%I:%M %p')
+            location_o = datetime.strptime(location_o, '%H:%M:%S')
+            location_c = datetime.strptime(location_c, '%H:%M:%S')
             return int(datetime.strftime(location_o, '%H')) < current_hour < int(datetime.strftime(location_c, '%H'))
 
         return False
