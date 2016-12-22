@@ -215,7 +215,7 @@ class SearchElasticService(BaseElasticService):
         if location_o and location_c:
             location_o = datetime.strptime(location_o, '%H:%M:%S')
             location_c = datetime.strptime(location_c, '%H:%M:%S')
-            return int(datetime.strftime(location_o, '%H')) < current_hour < int(datetime.strftime(location_c, '%H'))
+            return int(location_o.strftime('%H')) < current_hour < int(location_c.strftime('%H'))
 
         return False
 
