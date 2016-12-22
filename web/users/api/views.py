@@ -474,6 +474,13 @@ class UserFavoritesView(LoginRequiredMixin, APIView):
 class UserGeoLocationView(LoginRequiredMixin, APIView):
     permission_classes = (UserAccountOwner,)
 
+    def get(self, request, user_id):
+        if UserLocation.objects.filter(user__id=user_id).exists():
+            location = UserLocation.objects.get(user__id=user_id)
+            return Response({'location': UserLocationSerializer(location).data}, status=status.HTTP_200_OK)
+
+        return Response({}, status=status.HTTP_204_NO_CONTENT)
+
     def post(self, request, user_id):
         serializer = UserLocationSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)

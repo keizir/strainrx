@@ -28,14 +28,73 @@ W.pages.business.BusinessLocations = Class.extend({
         this.retrieveLocations(function (locations) {
             $.each(locations, function (i, location) {
                 that.locations[location.id] = location;
-                that.regions.$locations.append(that.templates.$location({'l': location}));
+                that.regions.$locations.append(that.templates.$location({
+                    'l': location, 'buildDisplayName': that.buildLocationDisplayName
+                }));
                 that.prepareAndShowDeliveryDistanceSlider(location.id, location.delivery);
+                that.changeAddress(location);
             });
 
             that.registerAllInputEvents($('input'));
             that.clickAddLocation();
             that.clickUpdateLocations();
             that.clickRemoveLocation($('.btn-trash'));
+        });
+    },
+
+    buildLocationDisplayName: function buildLocationDisplayName(location) {
+        var l = [];
+        if (location.street1) {
+            l.push(location.street1);
+        }
+
+        if (location.city) {
+            l.push(location.city);
+        }
+
+        if (location.state) {
+            l.push(location.state);
+        }
+
+        if (location.zip_code) {
+            l.push(location.zip_code);
+        }
+
+        if (l.length === 0 && location.location_raw) {
+            var parsed = JSON.parse(location.location_raw);
+            if (parsed && parsed[0] && parsed[0].formatted_address) {
+                l.push(parsed[0].formatted_address);
+            }
+        }
+
+        return l.join(', ');
+    },
+
+    changeAddress: function changeAddress(location) {
+        var that = this,
+            GoogleLocations = W.Common.GoogleLocations,
+            $locationInput = $('input[name="address__{0}"]'.format(location.id));
+
+        GoogleLocations.initGoogleAutocomplete($locationInput.get(0),
+            function (autocomplete) {
+                var a = GoogleLocations.getAddressFromAutocomplete(autocomplete),
+                    id = location.id || location.tmp_id;
+
+                if (!a.street1 || !a.city || !a.state || !a.zipcode) {
+                    that.addError(id, 'address__{0}'.format(id), 'Enter an address with street, city, state and zipcode.');
+                } else {
+                    that.locations[id].street1 = a.street1;
+                    that.locations[id].city = a.city;
+                    that.locations[id].state = a.state;
+                    that.locations[id].zip_code = a.zipcode;
+                    that.locations[id].lat = a.lat;
+                    that.locations[id].lng = a.lng;
+                    that.locations[id].location_raw = a.location_raw;
+                }
+            });
+
+        $locationInput.on('focusout', function () {
+            that.updateLocation(location, $(this));
         });
     },
 
@@ -91,45 +150,29 @@ W.pages.business.BusinessLocations = Class.extend({
 
                     if (fieldName === 'location_name') {
                         that.locations[index].location_name = inputValue;
-                        return;
-                    }
-
-                    if (fieldName === 'street_address') {
-                        that.locations[index].street1 = inputValue;
-                        that.updateLocationCoordinates(that.locations[index]);
-                        return;
-                    }
-
-                    if (fieldName === 'city') {
-                        that.locations[index].city = inputValue;
-                        that.updateLocationCoordinates(that.locations[index]);
-                        return;
-                    }
-
-                    if (fieldName === 'state') {
-                        that.locations[index].state = inputValue;
-                        that.updateLocationCoordinates(that.locations[index]);
-                        return;
-                    }
-
-                    if (fieldName === 'zip_code') {
-                        that.locations[index].zip_code = inputValue;
-                        that.updateLocationCoordinates(that.locations[index]);
                     }
                 }
             });
         }
     },
 
-    updateLocationCoordinates: function updateLocationCoordinates(location) {
-        var geoCoder = new google.maps.Geocoder();
-        geoCoder.geocode({'address': '{0} {1} {2} {3}'.format(location.street1, location.city, location.state, location.zip_code)},
+    updateLocation: function updateLocation(location, $input) {
+        var that = this,
+            geoCoder = new google.maps.Geocoder();
+
+        geoCoder.geocode({'address': '{0}'.format($input.val())},
             function (results, status) {
                 if (status === 'OK') {
-                    if (results && results[0].geometry) {
-                        location.lat = results[0].geometry.location.lat();
-                        location.lng = results[0].geometry.location.lng();
-                        location.location_raw = JSON.stringify(results);
+                    if (results && results[0]) {
+                        var a = W.Common.GoogleLocations.getAddressFromPlace(results[0]);
+
+                        that.locations[location.id].street1 = a.street1;
+                        that.locations[location.id].city = a.city;
+                        that.locations[location.id].state = a.state;
+                        that.locations[location.id].zip_code = a.zipcode;
+                        that.locations[location.id].lat = a.lat;
+                        that.locations[location.id].lng = a.lng;
+                        that.locations[location.id].location_raw = a.location_raw;
                     }
                 } else {
                     console.log('Geocoder failed due to: ' + status);
@@ -210,6 +253,7 @@ W.pages.business.BusinessLocations = Class.extend({
 
             var locationClientId = 'tmpId{0}'.format(new Date().getTime());
             that.locations[locationClientId] = {
+                tmp_id: locationClientId,
                 location_name: null, manager_name: null, location_email: null,
                 phone: null, ext: null,
                 dispensary: false, delivery: false, delivery_radius: null,
@@ -221,8 +265,11 @@ W.pages.business.BusinessLocations = Class.extend({
                 sat_open: null, sat_close: null,
                 sun_open: null, sun_close: null
             };
-            that.regions.$locations.append(that.templates.$location({'l': {'id': locationClientId}}));
+            that.regions.$locations.append(that.templates.$location({
+                'l': {'id': locationClientId}, 'buildDisplayName': that.buildLocationDisplayName
+            }));
             that.registerAllInputEvents($('.location-{0}'.format(locationClientId)).find('input'));
+            that.changeAddress({'id': locationClientId});
             that.clickRemoveLocation($('.btn-trash-{0}'.format(locationClientId)));
             that.addError(locationClientId, 'delivery__{0}'.format(locationClientId), 'Business type is required');
         });
@@ -247,6 +294,12 @@ W.pages.business.BusinessLocations = Class.extend({
                 }
             });
 
+            $.each(that.locations, function (i, l) {
+                if (!l.street1 || !l.city || !l.state || !l.zip_code) {
+                    that.addError(l.id || l.tmp_id, 'address__{0}'.format(l.id || l.tmp_id), 'Enter an address with street, city, state and zipcode.');
+                }
+            });
+
             if (that.hasErrors()) {
                 $.each(that.errors, function (locationId, locationErrors) {
                     var locationError = '';
@@ -263,6 +316,7 @@ W.pages.business.BusinessLocations = Class.extend({
 
             var locationsToSend = [];
             $.each(that.locations, function (locationId, location) {
+                delete location.tmp_id;
                 locationsToSend.push(location);
             });
 

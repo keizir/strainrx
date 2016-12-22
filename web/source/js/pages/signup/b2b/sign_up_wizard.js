@@ -49,7 +49,7 @@ W.pages.b2b.SignUpWizard = W.common.Wizard.extend({
             email: data[2].user_email,
             pwd: data[3].pwd, pwd2: data[3].pwd2,
             dispensary: data[4].dispensary, delivery: data[4].delivery,
-            street1: data[5].address, city: data[5].city, state: data[5].state, zip_code: data[5].zipcode,
+            street1: data[5].street1, city: data[5].city, state: data[5].state, zip_code: data[5].zipcode,
             lat: data[5].lat, lng: data[5].lng, location_raw: data[5].location_raw,
             phone: data[5].phone, ext: data[5].ext,
             mon_open: data[6].mon.open, mon_close: data[6].mon.close,

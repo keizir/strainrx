@@ -26,20 +26,22 @@
                             </div>
                         </div>
                         <div class="form-field-group">
-                            {% with l=request.user.get_location_json %}
-                                <div class="form-field">
-                                    <label for="city">City (Optional)</label>
-                                    <input id="city" type="text" name="city" value="{{ l.city }}">
-                                </div>
-                                <div class="form-field">
-                                    <label for="state">State (Optional)</label>
-                                    <input id="state" type="text" name="state" value="{{ l.state }}">
-                                </div>
-                                <div class="form-field">
-                                    <label for="zipcode">Zip Code (Optional)</label>
-                                    <input id="zipcode" type="number" name="zipcode" value="{{ l.zipcode }}">
-                                </div>
-                            {% endwith %}
+                            <div class="form-field address-form-field">
+                                <label for="address">Address (Optional)</label>
+                                <input id="address" type="text" name="address" value="">
+                            </div>
+                            <div class="form-field timezone-form-field">
+                                <label for="timezone">Timezone</label>
+                                <select id="timezone" name="timezone">
+                                    <option {% if request.user.timezone == None %}selected{% endif %}>- Select One -
+                                    </option>
+                                    {% for tz in timezones %}
+                                        <option value="{{ tz }}"
+                                                {% if request.user.timezone == tz %}selected="selected"{% endif %}>{{ tz }}
+                                        </option>
+                                    {% endfor %}
+                                </select>
+                            </div>
                         </div>
                         <div class="form-field-group">
                             <div class="form-field date-field">
@@ -564,20 +566,6 @@
                                             {% if request.user.gender == 'female' %}selected{% endif %} value="female">
                                         Female
                                     </option>
-                                </select>
-                            </div>
-                        </div>
-                        <div class="form-field-group">
-                            <div class="form-field timezone-form-field">
-                                <label for="timezone">Timezone</label>
-                                <select id="timezone" name="timezone">
-                                    <option {% if request.user.timezone == None %}selected{% endif %}>- Select One -
-                                    </option>
-                                    {% for tz in timezones %}
-                                        <option value="{{ tz }}"
-                                                {% if request.user.timezone == tz %}selected="selected"{% endif %}>{{ tz }}
-                                        </option>
-                                    {% endfor %}
                                 </select>
                             </div>
                         </div>

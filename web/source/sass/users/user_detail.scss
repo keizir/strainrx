@@ -195,8 +195,18 @@
             cursor: pointer;
         }
 
-        .timezone-form-field {
+        .address-form-field {
             float: left;
+            width: 63.5%;
+            margin-right: 0;
+
+            input {
+                width: 100%;
+            }
+        }
+
+        .timezone-form-field {
+            float: right;
         }
     }
 
@@ -269,34 +279,49 @@
         height: 19em;
     }
 
-    .user-profile .user-info .form fieldset {
-        width: 25em;
-    }
+    .user-profile .user-info .form {
+        .form-field-group {
+            width: 100%;
+            margin: 0 auto;
+        }
 
-    .user-profile .form .form-field-group {
-        width: 100%;
-        margin: 0 auto;
-    }
+        .form-field {
+            display: block;
 
-    .user-profile .form .form-field {
-        display: block;
-    }
+            input, select {
+                width: 100%;
+            }
+        }
 
-    .user-profile .form .form-field input,
-    .user-profile .form .form-field select {
-        width: 100%;
-    }
+        fieldset {
+            width: 25em;
+        }
 
-    .user-profile .user-info .form .form-field.gender-field {
-        display: block;
-        width: 22.1em;
-        margin: 0 1em;
-    }
+        .form-field.date-field select {
+            display: block;
+            width: 100%;
+            margin-right: 0;
+        }
 
-    .user-profile .user-info .form .form-field.date-field select {
-        display: block;
-        width: 100%;
-        margin-right: 0;
+        .form-field.gender-field {
+            display: block;
+            width: 22.1em;
+            margin: 0 1em;
+        }
+
+        .address-form-field {
+            float: none;
+            width: 100%;
+            margin-right: 0;
+
+            input {
+                width: 18em;
+            }
+        }
+
+        .timezone-form-field {
+            float: none;
+        }
     }
 }
 
@@ -334,18 +359,36 @@
         margin: 0 auto;
     }
 
-    .user-profile .user-info .form .form-field.date-field {
-        display: inline-block;
-        width: 18em;
-    }
+    .user-profile .user-info .form {
+        .form-field.date-field {
+            display: inline-block;
+            width: 18em;
+        }
 
-    .user-profile .user-info .form .form-field.date-field select {
-        display: inline-block;
-        width: 18em;
-        margin-right: 1em;
-    }
+        .form-field.date-field select {
+            display: inline-block;
+            width: 18em;
+            margin-right: 1em;
+        }
 
-    .user-profile .user-info .form .form-field.gender-field {
-        margin: 0;
+        .form-field.gender-field {
+            width: 18em;
+            float: none;
+            margin: 0 0 0 5%;
+        }
+
+        .address-form-field {
+            float: none;
+            width: 100%;
+            margin-right: 0;
+
+            input {
+                width: 18em;
+            }
+        }
+
+        .timezone-form-field {
+            float: none;
+        }
     }
 }

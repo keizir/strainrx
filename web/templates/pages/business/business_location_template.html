@@ -10,26 +10,9 @@
             </div>
             <div class="form-field-group">
                 <div class="form-field">
-                    <label for="street_address__<%= l.id %>">Street Address</label>
-                    <input type="text" name="street_address__<%= l.id %>" id="street_address__<%= l.id %>"
-                           value="<%= l.street1 %>">
-                </div>
-            </div>
-            <div class="form-field-group city-fields-group">
-                <div class="form-field">
-                    <label for="city__<%= l.id %>">City</label>
-                    <input type="text" name="city__<%= l.id %>" id="city__<%= l.id %>"
-                           value="<%= l.city %>">
-                </div>
-                <div class="form-field">
-                    <label for="state__<%= l.id %>">State</label>
-                    <input type="text" name="state__<%= l.id %>" id="state__<%= l.id %>" maxlength="2"
-                           value="<%= l.state %>">
-                </div>
-                <div class="form-field">
-                    <label for="zip_code__<%= l.id %>">Zip Code</label>
-                    <input type="number" name="zip_code__<%= l.id %>" id="zip_code__<%= l.id %>"
-                           value="<%= l.zip_code %>">
+                    <label for="address__<%= l.id %>">Address</label>
+                    <input type="text" name="address__<%= l.id %>" id="address__<%= l.id %>"
+                           value="${ buildDisplayName(l) }">
                 </div>
             </div>
         </div>

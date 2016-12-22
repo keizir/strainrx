@@ -15,8 +15,61 @@ W.users.DetailPage = Class.extend({
             that.ui.$messagesRegion.text('');
         });
 
+        this.preFillUserAddress();
+        this.changeAddress();
+
         this.clickUpdateUserInfo();
         this.clickChangePassword();
+    },
+
+    preFillUserAddress: function () {
+        var that = this;
+        $.ajax({
+            method: 'GET',
+            url: '/api/v1/users/{0}/geo_locations'.format($('input[name="uid"]').val()),
+            success: function (data) {
+                if (data && data.location) {
+                    var l = data.location, location = [];
+                    that.location = data.location;
+
+                    if (l) {
+                        if (l.street1) {
+                            location.push(l.street1);
+                        }
+
+                        if (l.city) {
+                            location.push(l.city);
+                        }
+
+                        if (l.state) {
+                            location.push(l.state);
+                        }
+
+                        if (l.zipcode) {
+                            location.push(l.zipcode);
+                        }
+
+                        if (location.length === 0 && l.location_raw) {
+                            var parsed = JSON.parse(l.location_raw);
+                            if (parsed && parsed[0] && parsed[0].formatted_address) {
+                                location.push(parsed[0].formatted_address);
+                            }
+                        }
+
+                        $('input[name="address"]').val(location.join(', '));
+                    }
+                }
+            }
+        });
+    },
+
+    changeAddress: function changeAddress() {
+        var that = this,
+            GoogleLocations = W.Common.GoogleLocations;
+
+        GoogleLocations.initGoogleAutocomplete($('input[name="address"]').get(0), function (autocomplete) {
+            that.location = GoogleLocations.getAddressFromAutocomplete(autocomplete);
+        });
     },
 
     clickUpdateUserInfo: function clickUpdateUserInfo() {
@@ -26,7 +79,7 @@ W.users.DetailPage = Class.extend({
 
             var data = collectUserData();
             if (isValid(data)) {
-                updateLocationData(data, function () {
+                updateTimezone(data, function () {
                     $.ajax({
                         method: 'PUT',
                         url: '/api/v1/users/' + $('input[name="uid"]').val() + '/',
@@ -60,12 +113,7 @@ W.users.DetailPage = Class.extend({
                     'birth_year': birthYear !== defaultSelectValue ? birthYear : null,
                     'gender': gender !== defaultSelectValue ? gender : null,
                     'timezone': timezone !== defaultSelectValue ? timezone : null,
-                    'location': {
-                        'street1': '',
-                        'city': $('input[name="city"]').val() || '',
-                        'state': $('input[name="state"]').val() || '',
-                        'zipcode': $('input[name="zipcode"]').val() || ''
-                    }
+                    'location': that.location
                 };
             }
 
@@ -81,44 +129,18 @@ W.users.DetailPage = Class.extend({
                 return true;
             }
 
-            function updateLocationData(data, callback) {
-                var l = data.location;
-                if (l.city || l.state || l.zipcode) {
-                    var geoCoder = new google.maps.Geocoder();
-                    geoCoder.geocode({'address': '{0}, {1}, {2}'.format(l.zipcode, l.city, l.state)},
-                        function (results, status) {
-                            if (status === 'OK') {
-                                if (results && results[0].geometry) {
-                                    data.location.lat = results[0].geometry.location.lat();
-                                    data.location.lng = results[0].geometry.location.lng();
-                                    data.location.location_raw = JSON.stringify(results);
-
-                                    if (data.timezone === null) {
-                                        var xsr = new XMLHttpRequest();
-                                        xsr.open("GET", 'https://maps.googleapis.com/maps/api/timezone/json?location={0},{1}&timestamp={2}&key={3}'
-                                            .format(data.location.lat, data.location.lng, '1458000000', GOOGLE_API_KEY));
-                                        xsr.onload = function () {
-                                            var d = JSON.parse(xsr.responseText);
-                                            data.timezone = d.timeZoneId;
-                                            callback();
-                                        };
-                                        xsr.send();
-                                    } else {
-                                        callback();
-                                    }
-                                } else {
-                                    callback();
-                                }
-                            } else if (status === 'ZERO_RESULTS') {
-                                alert('Invalid location');
-                            } else {
-                                console.log('Geocoder failed due to: ' + status);
-                            }
-                        });
+            function updateTimezone(data, callback) {
+                if (data.timezone === null) {
+                    var xsr = new XMLHttpRequest();
+                    xsr.open("GET", 'https://maps.googleapis.com/maps/api/timezone/json?location={0},{1}&timestamp={2}&key={3}'
+                        .format(data.location.lat, data.location.lng, '1458000000', GOOGLE_API_KEY));
+                    xsr.onload = function () {
+                        var d = JSON.parse(xsr.responseText);
+                        data.timezone = d.timeZoneId;
+                        callback();
+                    };
+                    xsr.send();
                 } else {
-                    data.location.lat = null;
-                    data.location.lng = null;
-                    data.location.location_raw = JSON.stringify({});
                     callback();
                 }
             }

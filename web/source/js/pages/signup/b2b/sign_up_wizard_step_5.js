@@ -11,31 +11,67 @@ W.pages.b2b.SignUpWizardStep5 = W.common.WizardStep.extend({
             submit_el: '.btn-b2b-step-5',
             template_el: '#b2b-wizard-5'
         });
+
+        this.stepData = {};
     },
 
     renderHTML: function () {
         var stepData = this.model.get(this.step);
         return this.$template({
-            address: stepData && stepData.address,
-            city: stepData && stepData.city,
-            state: stepData && stepData.state,
-            zipcode: stepData && stepData.zipcode,
+            buildAddressDisplayName: this.buildAddressDisplayName,
+            data: stepData,
             phone: stepData && stepData.phone,
             ext: stepData && stepData.ext
         });
     },
 
+    buildAddressDisplayName: function buildAddressDisplayName(data) {
+        var l = [];
+
+        if (data) {
+            if (data.street1) {
+                l.push(data.street1);
+            }
+
+            if (data.city) {
+                l.push(data.city);
+            }
+
+            if (data.state) {
+                l.push(data.state);
+            }
+
+            if (data.zipcode) {
+                l.push(data.zipcode);
+            }
+        }
+
+        return l.join(', ');
+    },
+
     initEventHandlers: function initEventHandlers() {
         this._super();
-        var phoneMask = W.common.Constants.masks.phone;
+
+        var that = this,
+            GoogleLocations = W.Common.GoogleLocations,
+            phoneMask = W.common.Constants.masks.phone;
+
         $('input[name="phone"]').mask(phoneMask.mask, {placeholder: phoneMask.placeholder});
+
+        GoogleLocations.initGoogleAutocomplete($('input[name="address"]').get(0),
+            function (autocomplete) {
+                var a = GoogleLocations.getAddressFromAutocomplete(autocomplete);
+
+                if (!a.street1 || !a.city || !a.state || !a.zipcode) {
+                    $('.error-message').text('Address should have a street, city, state and zipcode');
+                } else {
+                    that.stepData = a;
+                }
+            });
     },
 
     validate: function validate() {
         var address = $('input[name="address"]').val(),
-            city = $('input[name="city"]').val(),
-            state = $('input[name="state"]').val(),
-            zipCode = $('input[name="zipcode"]').val(),
             phoneNumber = $('input[name="phone"]').val(),
             phoneExt = $('input[name="ext"]').val();
 
@@ -48,17 +84,12 @@ W.pages.b2b.SignUpWizardStep5 = W.common.WizardStep.extend({
             return true;
         }
 
-        if (!validateLength(address, 'Address') || !validateLength(city, 'City') || !validateLength(state, 'State') || !validateLength(zipCode, 'Zip Code') || !validateLength(phoneNumber, 'Phone Number')) {
+        if (!validateLength(address, 'Address') || !validateLength(phoneNumber, 'Phone Number')) {
             return false;
         }
 
-        if (!W.common.Constants.regex.onlyAlpha.test(city)) {
-            $('.error-message').text('City name cannot contain numbers');
-            return false;
-        }
-
-        if (state.length > 2 || state.length < 2 || !W.common.Constants.regex.onlyAlpha.test(state)) {
-            $('.error-message').text('Enter a valid state abbreviation');
+        if (!this.stepData.street1 || !this.stepData.city || !this.stepData.state || !this.stepData.zipcode) {
+            $('.error-message').text('Address should have a street, city, state and zipcode');
             return false;
         }
 
@@ -76,32 +107,13 @@ W.pages.b2b.SignUpWizardStep5 = W.common.WizardStep.extend({
     },
 
     submit: function submit() {
-        var that = this,
-            geoCoder = new google.maps.Geocoder(),
-            data = {
-                address: $('input[name="address"]').val().trim(),
-                city: $('input[name="city"]').val().trim(),
-                state: $('input[name="state"]').val().trim(),
-                zipcode: $('input[name="zipcode"]').val().trim(),
-                phone: $('input[name="phone"]').val().trim(),
-                ext: $('input[name="ext"]').val()
-            };
+        var that = this;
 
-        geoCoder.geocode({'address': '{0} {1} {2} {3}'.format(data.address, data.city, data.state, data.zipcode)},
-            function (results, status) {
-                if (status === 'OK') {
-                    if (results && results[0].geometry) {
-                        data.lat = results[0].geometry.location.lat();
-                        data.lng = results[0].geometry.location.lng();
-                        data.location_raw = JSON.stringify(results);
-                    }
-                } else {
-                    console.log('Geocoder failed due to: ' + status);
-                }
+        this.stepData['phone'] = $('input[name="phone"]').val().trim();
+        this.stepData['ext'] = $('input[name="ext"]').val();
 
-                $.publish('update_step_data', {step: that.step, data: data});
-                $.publish('show_step', {step: 6});
-            });
+        $.publish('update_step_data', {step: that.step, data: this.stepData});
+        $.publish('show_step', {step: 6});
     }
 
 });
