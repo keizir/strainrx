@@ -327,265 +327,312 @@
                 vertical-align: top;
             }
 
+            .effect-name.missing-name {
+                color: $red;
+            }
+
             .effect {
                 display: inline-block;
+                position: relative;
                 width: 89%;
                 height: 2em;
                 background-color: $white-smoke;
-            }
 
-            .effect .fill {
-                height: 2em;
-                display: inline-block;
-                background-color: $aero-blue;
-            }
-        }
-
-        .strain-similar {
-            .also-like-strains-wrapper {
-                overflow: auto;
-                width: 100%;
-
-                .similar-strains-wrapper {
-                    width: auto;
-
-                    .similar-wrapper {
-                        display: inline-block;
-                        padding: 0.5em;
-                        border: 1px solid $grey-light;
-                        margin-bottom: 0.25em;
-
-                        .name {
-                            font-weight: bold;
-                            font-size: 0.9em;
-
-                            .image {
-                                margin-bottom: 0.5em;
-                                width: 100%;
-
-                                img {
-                                    display: block;
-                                    height: 100%;
-                                    max-height: 7em;
-                                    max-width: 100%;
-                                    margin: 0 auto;
-                                }
-                            }
-                        }
-
-                        .variety {
-                            color: $grey-normal;
-                            font-size: 0.8em;
-                            margin-top: 0.5em;
-                        }
-                    }
-                }
-            }
-        }
-
-        .strain-reviews {
-            .section-header {
-                span {
+                .fill {
                     display: inline-block;
+                    height: 2em;
+                    background-color: $aero-blue;
                 }
-            }
 
-            .all-reviews-link-wrapper a {
-                font-size: 0.7em;
-                color: $avocado-green;
-                text-decoration: underline;
-                margin-left: 1em;
-            }
+                .user-fill {
+                    display: block;
+                    position: absolute;
+                    left: 0;
+                    top: 0;
+                    height: 2em;
+                    // this pattern was generated with http://www.patternify.com/
+                    background: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAQAAAAECAYAAACp8Z5+AAAAH0lEQVQYV2NkQAX/GZH4/xkYGBhhAmAOSBJEwDkgAQCCrgQEjpMcPgAAAABJRU5ErkJggg==) repeat;
+                    z-index: 1;
+                }
 
-            .review-wrapper {
-                display: block;
-                position: relative;
-                width: 100%;
-                margin-bottom: 2em;
-
-                .user-info {
+                .tear {
                     display: inline-block;
                     position: relative;
-                    width: 8%;
-                    text-align: left;
+                    bottom: 6px;
+                    width: 30px;
+                    height: 30px;
+                    float: right;
+                    margin-right: -14px;
+                    border-radius: 0 50% 50% 50%;
+                    border: 3px solid $grey-dark;
+                    background-color: $grey-dark;
+                    transform: rotate(225deg);
 
-                    .user-image {
-                        display: inline-block;
-                        width: 4em;
-                        height: 4em;
-                        margin: 0 auto;
-                        border: 1px solid $grey-light;
-                        border-radius: 4em;
+                    .tear-value {
+                        display: block;
+                        position: absolute;
+                        top: 4px;
+                        left: 4px;
+                        width: 16px;
+                        height: 16px;
+                        margin: 0;
+                        transform: rotate(135deg);
+                        background-color: $white-smoke;
+                        border-radius: 50%;
+                        text-align: center;
+                        color: $grey-dark;
+                        font-size: 14px;
+                        font-weight: bold;
+                    }
+                }
+            }
+        }
+    }
 
-                        img {
-                            width: 3em;
-                            height: 3em;
-                            margin: 0.3em 0.4em 0.4em 0.46em;
+    .strain-similar {
+        .also-like-strains-wrapper {
+            overflow: auto;
+            width: 100%;
+
+            .similar-strains-wrapper {
+                width: auto;
+
+                .similar-wrapper {
+                    display: inline-block;
+                    padding: 0.5em;
+                    border: 1px solid $grey-light;
+                    margin-bottom: 0.25em;
+
+                    .name {
+                        font-weight: bold;
+                        font-size: 0.9em;
+
+                        .image {
+                            margin-bottom: 0.5em;
+                            width: 100%;
+
+                            img {
+                                display: block;
+                                height: 100%;
+                                max-height: 7em;
+                                max-width: 100%;
+                                margin: 0 auto;
+                            }
                         }
+                    }
+
+                    .variety {
+                        color: $grey-normal;
+                        font-size: 0.8em;
+                        margin-top: 0.5em;
+                    }
+                }
+            }
+        }
+    }
+
+    .strain-reviews {
+        .section-header {
+            span {
+                display: inline-block;
+            }
+        }
+
+        .all-reviews-link-wrapper a {
+            font-size: 0.7em;
+            color: $avocado-green;
+            text-decoration: underline;
+            margin-left: 1em;
+        }
+
+        .review-wrapper {
+            display: block;
+            position: relative;
+            width: 100%;
+            margin-bottom: 2em;
+
+            .user-info {
+                display: inline-block;
+                position: relative;
+                width: 8%;
+                text-align: left;
+
+                .user-image {
+                    display: inline-block;
+                    width: 4em;
+                    height: 4em;
+                    margin: 0 auto;
+                    border: 1px solid $grey-light;
+                    border-radius: 4em;
+
+                    img {
+                        width: 3em;
+                        height: 3em;
+                        margin: 0.3em 0.4em 0.4em 0.46em;
+                    }
+                }
+            }
+
+            .review {
+                display: inline-block;
+                width: 90%;
+                vertical-align: top;
+
+                .review-header {
+                    .user-name {
+                        font-weight: bold;
+                    }
+
+                    .rating {
+                        display: inline-block;
+                    }
+
+                    .created-date {
+                        font-weight: bold;
+                        text-decoration: underline;
+                        float: right;
                     }
                 }
 
-                .review {
-                    display: inline-block;
-                    width: 90%;
-                    vertical-align: top;
+                .review-text {
+                    margin-top: 0.5em;
 
-                    .review-header {
-                        .user-name {
-                            font-weight: bold;
-                        }
+                    .display {
+                        display: block;
+                        height: auto;
+                        max-height: 2.1em;
+                        line-height: 1em;
+                        overflow: hidden;
 
-                        .rating {
-                            display: inline-block;
-                        }
-
-                        .created-date {
-                            font-weight: bold;
+                        .expander {
+                            cursor: pointer;
+                            color: $avocado-green;
                             text-decoration: underline;
-                            float: right;
-                        }
-                    }
-
-                    .review-text {
-                        margin-top: 0.5em;
-
-                        .display {
-                            display: block;
-                            height: auto;
-                            max-height: 2.1em;
-                            line-height: 1em;
-                            overflow: hidden;
-
-                            .expander {
-                                cursor: pointer;
-                                color: $avocado-green;
-                                text-decoration: underline;
-                            }
                         }
                     }
                 }
             }
         }
+    }
 
-        .strain-lineage-section {
-            display: inline-block;
-            width: 49.5%;
-            vertical-align: top;
+    .strain-lineage-section {
+        display: inline-block;
+        width: 49.5%;
+        vertical-align: top;
+
+        a {
+            color: $medium-aquamarine;
+        }
+
+        .lineage-region {
+            a:first-child {
+                display: inline-block;
+                width: 30%;
+                height: 10em;
+                vertical-align: top;
+            }
+
+            a:first-child .abbreviation {
+                margin-top: 1.4em;
+                font-weight: bold;
+            }
+
+            a:first-child div.lineage-wrapper {
+                display: block;
+                width: 100%;
+                height: 10em;
+                border: 3px solid $medium-aquamarine;
+                text-align: center;
+            }
 
             a {
-                color: $medium-aquamarine;
+                display: inline-block;
+                width: 30%;
+                height: 4.9em;
+                vertical-align: top;
             }
 
-            .lineage-region {
-                a:first-child {
-                    display: inline-block;
-                    width: 30%;
-                    height: 10em;
-                    vertical-align: top;
-                }
+            a .abbreviation {
+                margin-top: 0.2em;
+                font-weight: bold;
+            }
 
-                a:first-child .abbreviation {
-                    margin-top: 1.4em;
-                    font-weight: bold;
-                }
+            a:nth-child(3) {
+                display: inline-block;
+                position: relative;
+                bottom: -5.1em;
+                right: 31.1%;
+                width: 30%;
+                height: 5em;
+                vertical-align: top;
+            }
 
-                a:first-child div.lineage-wrapper {
-                    display: block;
-                    width: 100%;
-                    height: 10em;
-                    border: 3px solid $medium-aquamarine;
-                    text-align: center;
-                }
+            a:nth-child(4) {
+                display: inline-block;
+                position: relative;
+                bottom: 10em;
+                left: 61.9%;
+                width: 30%;
+                height: 5em;
+                vertical-align: top;
+            }
 
-                a {
-                    display: inline-block;
-                    width: 30%;
-                    height: 4.9em;
-                    vertical-align: top;
-                }
+            a:nth-child(5) {
+                display: inline-block;
+                position: relative;
+                bottom: 4.9em;
+                left: 30.9%;
+                width: 30%;
+                height: 5em;
+            }
 
-                a .abbreviation {
-                    margin-top: 0.2em;
-                    font-weight: bold;
-                }
+            a div.lineage-wrapper {
+                display: block;
+                width: 100%;
+                height: 4.9em;
+                border: 3px solid $medium-aquamarine;
+                text-align: center;
+            }
 
-                a:nth-child(3) {
-                    display: inline-block;
-                    position: relative;
-                    bottom: -5.1em;
-                    right: 31.1%;
-                    width: 30%;
-                    height: 5em;
-                    vertical-align: top;
-                }
+            .lineage-wrapper .abbreviation {
+                display: block;
+                font-size: 2em;
+            }
 
-                a:nth-child(4) {
-                    display: inline-block;
-                    position: relative;
-                    bottom: 10em;
-                    left: 61.9%;
-                    width: 30%;
-                    height: 5em;
-                    vertical-align: top;
-                }
-
-                a:nth-child(5) {
-                    display: inline-block;
-                    position: relative;
-                    bottom: 4.9em;
-                    left: 30.9%;
-                    width: 30%;
-                    height: 5em;
-                }
-
-                a div.lineage-wrapper {
-                    display: block;
-                    width: 100%;
-                    height: 4.9em;
-                    border: 3px solid $medium-aquamarine;
-                    text-align: center;
-                }
-
-                .lineage-wrapper .abbreviation {
-                    display: block;
-                    font-size: 2em;
-                }
-
-                .lineage-wrapper .name {
-                    display: block;
-                    font-size: 0.8em;
-                }
+            .lineage-wrapper .name {
+                display: block;
+                font-size: 0.8em;
             }
         }
+    }
 
-        .strain-flavors-section {
-            display: inline-block;
-            width: 49.5%;
-            vertical-align: top;
-        }
+    .strain-flavors-section {
+        display: inline-block;
+        width: 49.5%;
+        vertical-align: top;
+    }
 
-        .strain-flavors-section .flavor-wrapper {
-            display: inline-block;
-            width: 32%;
-            height: 10em;
-            border: 1px solid $grey-light;
-            margin-right: -1px;
-            text-align: center;
-        }
+    .strain-flavors-section .flavor-wrapper {
+        display: inline-block;
+        width: 32%;
+        height: 10em;
+        border: 1px solid $grey-light;
+        margin-right: -1px;
+        text-align: center;
+    }
 
-        .strain-flavors-section .flavor-wrapper .flavor {
-            margin-top: 2em;
-        }
+    .strain-flavors-section .flavor-wrapper .flavor {
+        margin-top: 2em;
+    }
 
-        .strain-flavors-section .flavor-wrapper .flavor-name {
-            margin-top: 1em;
-            display: block;
-        }
+    .strain-flavors-section .flavor-wrapper .flavor-name {
+        margin-top: 1em;
+        display: block;
+    }
 
-        .strain-flavors-section .flavor-wrapper img {
-            height: 3em;
-            width: 3em;
-        }
+    .strain-flavors-section .flavor-wrapper img {
+        height: 3em;
+        width: 3em;
     }
 }
 

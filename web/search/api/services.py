@@ -15,6 +15,8 @@ class StrainDetailsService:
         strain_review = StrainRating.objects.filter(strain=strain, created_by=current_user, removed_date=None)
         favorite = UserFavoriteStrain.objects.filter(strain=strain, created_by=current_user).exists()
         is_rated = StrainReview.objects.filter(strain=strain, created_by=current_user).exists()
+        user_criteria = UserSearch.objects.get(user=current_user).to_search_criteria() if UserSearch.objects.filter(
+            user=current_user).exists() else None
 
         return {
             'strain': StrainDetailSerializer(strain).data,
@@ -22,6 +24,7 @@ class StrainDetailsService:
             'strain_origins': strain_origins,
             'strain_rating': rating,
             'user_strain_review': StrainRatingSerializer(strain_review[0]).data if len(strain_review) > 0 else None,
+            'user_criteria': user_criteria,
             'strain_reviews': reviews,
             'strain_srx_score': strain_srx_score,
             'favorite': favorite,

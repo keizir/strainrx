@@ -281,11 +281,27 @@ W.pages.strain.StrainDetailPage = Class.extend({
         });
     },
 
-    buildEffectsToDisplay: function buildEffectsToDisplay(rawEffects, effectNames) {
+    buildEffectsToDisplay: function buildEffectsToDisplay(rawEffects, userCriteria, effectNames) {
         var effectsToDisplay = [];
         $.each(rawEffects, function (name, value) {
             if (value > 0) {
-                effectsToDisplay.push({name: effectNames[name], value: value});
+                var userCriteriaValue = 0, criteriaEffect = [];
+                if (userCriteria && userCriteria !== 'skipped') {
+                    criteriaEffect = _.filter(userCriteria, function (o) {
+                        return name === o.name;
+                    });
+
+                    if (criteriaEffect.length > 0) {
+                        userCriteriaValue = criteriaEffect[0].value;
+                    }
+                }
+
+                effectsToDisplay.push({
+                    name: effectNames[name],
+                    value: value,
+                    userCriteriaValue: userCriteriaValue,
+                    initialName: name
+                });
             }
         });
         effectsToDisplay.sort(this.sortValues);
@@ -293,23 +309,113 @@ W.pages.strain.StrainDetailPage = Class.extend({
     },
 
     populateEffects: function populateEffects() {
-        var review = this.model.get('user_strain_review'),
+        var that = this,
+            review = this.model.get('user_strain_review'),
+            userCriteria = this.model.get('user_criteria'),
             effects = review ? review.effects : this.model.get('strain').effects,
-            toDisplay = this.buildEffectsToDisplay(effects, this.effectNames);
+            toDisplay = this.buildEffectsToDisplay(effects, userCriteria.effects, this.effectNames),
+            missingStrainEffects = [];
+
+        if (userCriteria && userCriteria.effects && userCriteria.effects !== 'skipped') {
+            $.each(userCriteria.effects, function (i, e) {
+                var existsInStrain = _.filter(toDisplay, function (strainEffect) {
+                    return strainEffect.initialName === e.name;
+                });
+
+                if (existsInStrain.length === 0) {
+                    missingStrainEffects.push(e);
+                }
+            });
+        }
+
+        if (missingStrainEffects.length > 0) {
+            $.each(missingStrainEffects, function (i, e) {
+                if (e.value > 0) {
+                    toDisplay.push({
+                        name: that.effectNames[e.name],
+                        value: e.value,
+                        userCriteriaValue: e.value,
+                        initialName: e.name,
+                        missing: true
+                    });
+                }
+            })
+        }
+
         $('.effects-region').append(this.effectHtml(toDisplay));
     },
 
     populateBenefits: function populateBenefits() {
-        var review = this.model.get('user_strain_review'),
+        var that = this,
+            review = this.model.get('user_strain_review'),
+            userCriteria = this.model.get('user_criteria'),
             effects = review ? review.benefits : this.model.get('strain').benefits,
-            toDisplay = this.buildEffectsToDisplay(effects, this.benefitNames);
+            toDisplay = this.buildEffectsToDisplay(effects, userCriteria.benefits, this.benefitNames),
+            missingStrainBenefits = [];
+
+        if (userCriteria && userCriteria.benefits && userCriteria.benefits !== 'skipped') {
+            $.each(userCriteria.benefits, function (i, e) {
+                var existsInStrain = _.filter(toDisplay, function (strainEffect) {
+                    return strainEffect.initialName === e.name;
+                });
+
+                if (existsInStrain.length === 0) {
+                    missingStrainBenefits.push(e);
+                }
+            });
+        }
+
+        if (missingStrainBenefits.length > 0) {
+            $.each(missingStrainBenefits, function (i, e) {
+                if (e.value > 0) {
+                    toDisplay.push({
+                        name: that.benefitNames[e.name],
+                        value: e.value,
+                        userCriteriaValue: e.value,
+                        initialName: e.name,
+                        missing: true
+                    });
+                }
+            })
+        }
+
         $('.benefits-region').append(this.effectHtml(toDisplay));
     },
 
     populateSideEffects: function populateSideEffects() {
-        var review = this.model.get('user_strain_review'),
+        var that = this,
+            review = this.model.get('user_strain_review'),
+            userCriteria = this.model.get('user_criteria'),
             effects = review ? review.side_effects : this.model.get('strain').side_effects,
-            toDisplay = this.buildEffectsToDisplay(effects, this.sideEffectNames);
+            toDisplay = this.buildEffectsToDisplay(effects, userCriteria.side_effects, this.sideEffectNames),
+            missingStrainSideEffects = [];
+
+        if (userCriteria && userCriteria.side_effects && userCriteria.side_effects !== 'skipped') {
+            $.each(userCriteria.side_effects, function (i, e) {
+                var existsInStrain = _.filter(toDisplay, function (strainEffect) {
+                    return strainEffect.initialName === e.name;
+                });
+
+                if (existsInStrain.length === 0) {
+                    missingStrainSideEffects.push(e);
+                }
+            });
+        }
+
+        if (missingStrainSideEffects.length > 0) {
+            $.each(missingStrainSideEffects, function (i, e) {
+                if (e.value > 0) {
+                    toDisplay.push({
+                        name: that.sideEffectNames[e.name],
+                        value: e.value,
+                        userCriteriaValue: e.value,
+                        initialName: e.name,
+                        missing: true
+                    });
+                }
+            })
+        }
+
         $('.side-effects-region').append(this.sideEffectHtml(toDisplay));
     },
 
@@ -340,22 +446,67 @@ W.pages.strain.StrainDetailPage = Class.extend({
 
     effectHtml: function effectHtml(toDisplay) {
         var template = _.template($('#strain_effects').html());
-        return template({'effects': toDisplay, 'effectFillHtml': this.effectFillHtml});
+        return template({
+            'effects': toDisplay,
+            'effectFillHtml': this.effectFillHtml,
+            'userCriteriaFillHtml': this.userCriteriaFillHtml
+        });
     },
 
-    effectFillHtml: function effectFillHtml(effectValue) {
-        var fillWidth = effectValue * 0.2 * 100; // 1 point should take 20% of parent width
-        return '<span class="fill" style="width: {0}%"></span>'.format(fillWidth);
+    effectFillHtml: function effectFillHtml(effect) {
+        var fillWidth = effect.value * 0.2 * 100, // 1 point should take 20% of parent width
+            fillHtml = '<span class="{0}" style="width: {1}%"></span>';
+
+        if (effect.missing) {
+            fillHtml = fillHtml.format('fill', fillWidth);
+        } else {
+            fillHtml = fillHtml.format('fill', fillWidth);
+        }
+
+        return fillHtml;
     },
 
-    sideEffectFillHtml: function sideEffectFillHtml(effectValue) {
-        var fillWidth = (effectValue >= 6 ? effectValue - 5 : effectValue) * 0.2 * 100; // 1 point should take 20% of parent width
-        return '<span class="fill" style="width: {0}%"></span>'.format(fillWidth);
+    userCriteriaFillHtml: function userCriteriaFillHtml(effect) {
+        var fillWidth = (effect.userCriteriaValue >= 6 ? effect.userCriteriaValue - 5 : effect.userCriteriaValue) * 0.2 * 100, // 1 point should take 20% of parent width
+            fillHtml = '<span class="{0}" style="{1}">{2}</span>',
+            tearHtml = '<div class="tear"><span class="tear-value">{0}</span></div>'.format(effect.userCriteriaValue);
+
+        if (fillWidth > 0) {
+            if (effect.missing) {
+                fillHtml = fillHtml.format('user-fill', 'width: {0}%'.format(fillWidth), tearHtml);
+            } else {
+                var strainValue = (effect.value >= 6 ? effect.value - 5 : effect.value) * 0.2 * 100;
+                fillHtml = effect.userCriteriaValue > (effect.value >= 6 ? effect.value - 5 : effect.value) ?
+                    fillHtml.format('user-fill', 'width: {0}%; left: {1}%'.format(fillWidth - strainValue, strainValue), tearHtml) :
+                    fillHtml.format('user-fill', 'width: {0}%'.format(fillWidth), tearHtml);
+            }
+        } else {
+            fillHtml = '';
+        }
+
+        return fillHtml;
+    },
+
+    sideEffectFillHtml: function sideEffectFillHtml(effect) {
+        var fillWidth = (effect.value >= 6 ? effect.value - 5 : effect.value) * 0.2 * 100, // 1 point should take 20% of parent width
+            fillHtml = '<span class="{0}" style="width: {1}%"></span>';
+
+        if (effect.missing) {
+            fillHtml = fillHtml.format('fill', fillWidth);
+        } else {
+            fillHtml = fillHtml.format('fill', fillWidth);
+        }
+
+        return fillHtml;
     },
 
     sideEffectHtml: function sideEffectHtml(toDisplay) {
         var template = _.template($('#strain_side_effects').html());
-        return template({'effects': toDisplay, 'sideEffectFillHtml': this.sideEffectFillHtml});
+        return template({
+            'effects': toDisplay,
+            'sideEffectFillHtml': this.sideEffectFillHtml,
+            'userCriteriaFillHtml': this.userCriteriaFillHtml
+        });
     },
 
     flavorsHtml: function flavorsHtml(toDisplay) {

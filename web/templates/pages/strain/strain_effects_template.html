@@ -3,9 +3,15 @@
         <% if (effects && effects.length > 0) { %>
         <% _.each(effects, function(effect) { %>
         <div class="effect-wrapper">
+            <% if (effect.missing) { %>
+            <span class="effect-name missing-name"><%= effect.name %></span>
+            <% } else { %>
             <span class="effect-name"><%= effect.name %></span>
+            <% } %>
+
             <div class="effect">
-                <%= effectFillHtml(effect.value) %>
+                <%= effectFillHtml(effect) %>
+                <%= userCriteriaFillHtml(effect) %>
             </div>
         </div>
         <% }); %>
