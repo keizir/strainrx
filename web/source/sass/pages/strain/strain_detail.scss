@@ -48,6 +48,7 @@
                     border: 1px solid $grey-normal;
                     padding: 8px;
                     color: $black;
+                    z-index: 2;
 
                     .message {
                         margin: 1em;
@@ -231,6 +232,7 @@
                     vertical-align: top;
                     position: relative;
                     top: 10px;
+                    z-index: 1;
                 }
             }
         }

@@ -83,16 +83,24 @@ W.pages.business.BusinessMenu = Class.extend({
 
     reRenderVarietyMenu: function reRenderVarietyMenu(menuItemVariety) {
         if ('sativa' === menuItemVariety) {
+            this.sativas.sort(this.sortValues);
             this.renderMenu('SATIVAS', this.sativas, this.regions.$sativas);
         }
 
         if ('indica' === menuItemVariety) {
+            this.indicas.sort(this.sortValues);
             this.renderMenu('INDICAS', this.indicas, this.regions.$indicas);
         }
 
         if ('hybrid' === menuItemVariety) {
+            this.hybrids.sort(this.sortValues);
             this.renderMenu('HYBRIDS', this.hybrids, this.regions.$hybrids);
         }
+    },
+
+    sortValues: function sortValues(el1, el2) {
+        var aName = el1.strain_name, bName = el2.strain_name;
+        return aName < bName ? -1 : aName > bName ? 1 : 0;
     },
 
     addMenuItem: function addMenuItem() {

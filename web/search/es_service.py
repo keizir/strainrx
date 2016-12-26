@@ -87,10 +87,13 @@ class SearchElasticService(BaseElasticService):
         return response_data
 
     def get_locations(self, strain_id=None, location_type=None, current_user=None, result_filter=None,
-                      order_field="menu_items.price_gram", order_dir="asc"):
+                      order_field="menu_items.price_gram", order_dir="asc", size=None):
 
         method = self.METHODS.get('GET')
         url = '{0}{1}{2}'.format(self.BASE_ELASTIC_URL, self.URLS.get('BUSINESS_LOCATION'), '/_search')
+
+        if size:
+            url += '?size={0}'.format(size)
 
         lat = None
         lon = None

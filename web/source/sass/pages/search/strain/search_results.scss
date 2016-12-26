@@ -29,43 +29,47 @@
 
         .filter-menu {
             width: 12em;
-        }
 
-        .filter-menu .menu-active-link a:hover {
-            text-decoration: underline;
-        }
+            .menu-active-link {
+                cursor: pointer;
 
-        .filter-menu .menu-expander {
-            margin-left: 0.5em;
-        }
+                a:hover {
+                    text-decoration: underline;
+                }
+            }
 
-        .filter-menu .menu-expander i {
-            color: $iris-blue;
-            cursor: pointer;
-        }
+            .menu-expander {
+                margin-left: 0.5em;
 
-        .filter-menu .active-link {
-            text-align: left;
-            padding: 1em 1em 0 1em;
-        }
+                i {
+                    color: $iris-blue;
+                    cursor: pointer;
+                }
+            }
 
-        .filter-menu .menu-link {
-            display: block;
-            line-height: 1.3em;
-            padding: 0 1em;
-            margin: 0.2em 0;
-        }
+            .active-link {
+                text-align: left;
+                padding: 1em 1em 0 1em;
+            }
 
-        .filter-menu .menu-link a {
-            color: $grey-normal;
-        }
+            .menu-link {
+                display: block;
+                line-height: 1.3em;
+                padding: 0 1em;
+                margin: 0.2em 0;
 
-        .filter-menu .menu-link:hover {
-            background-color: $avocado-green;
-        }
+                a {
+                    color: $grey-normal;
+                }
+            }
 
-        .filter-menu .hidden-links span:last-child {
-            padding-bottom: 0.5em;
+            .menu-link:hover {
+                background-color: $avocado-green;
+            }
+
+            .hidden-links span:last-child {
+                padding-bottom: 0.5em;
+            }
         }
     }
 }

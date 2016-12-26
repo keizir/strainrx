@@ -135,7 +135,8 @@ W.pages.StrainSearchResultsPage = Class.extend({
 
         that.ui.$menuActiveLink.on('click', function (e) {
             e.preventDefault();
-            that.applyNewFilter($(this).attr('filter'));
+            that.ui.$menuHiddenLinks.toggleClass('hidden');
+            that.ui.$menuFilter.toggleClass('expanded');
         });
     },
 

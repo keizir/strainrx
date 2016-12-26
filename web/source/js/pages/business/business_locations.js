@@ -117,8 +117,6 @@ W.pages.business.BusinessLocations = Class.extend({
 
         $input.on('change', function () {
             that.updateLocationCheckboxFields($(this));
-            that.ui.$btnAddLocation.addClass('hidden');
-            that.ui.$btnUpdateLocations.removeClass('hidden');
         });
     },
 
@@ -236,8 +234,6 @@ W.pages.business.BusinessLocations = Class.extend({
             slide: function (event, ui) {
                 $sliderValue.text('{0} Miles'.format(ui.value));
                 that.locations[locationId].delivery_radius = ui.value;
-                that.ui.$btnAddLocation.addClass('hidden');
-                that.ui.$btnUpdateLocations.removeClass('hidden');
             }
         });
         $sliderValue.text('{0} Miles'.format($slider.slider('value')));
@@ -248,8 +244,6 @@ W.pages.business.BusinessLocations = Class.extend({
 
         this.ui.$btnAddLocation.on('click', function (e) {
             e.preventDefault();
-            that.ui.$btnAddLocation.addClass('hidden');
-            that.ui.$btnUpdateLocations.removeClass('hidden');
 
             var locationClientId = 'tmpId{0}'.format(new Date().getTime());
             that.locations[locationClientId] = {
@@ -326,8 +320,6 @@ W.pages.business.BusinessLocations = Class.extend({
                 dataType: 'json',
                 data: JSON.stringify({'locations': locationsToSend}),
                 success: function () {
-                    that.ui.$btnAddLocation.removeClass('hidden');
-                    that.ui.$btnUpdateLocations.addClass('hidden');
                     that.showSuccessMessage('Locations were updated');
                     window.location.reload();
                 },

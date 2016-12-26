@@ -32,10 +32,6 @@
                         From here you can proceed to
                         <a href="{% url 'businesses:menu' business.id %}">create your menu</a>!
                     </span>
-                    <span class="message-2">
-                        You will be redirected to the homepage in 5 seconds.
-                        If you are not, click <a href="{% url 'home' %}">here</a>.
-                    </span>
                     <button class="btn-primary go-to-menu" type="button">
                         <a href="{% url 'businesses:menu' business.id %}">Continue to Site</a>
                     </button>
@@ -47,12 +43,5 @@
 
 {% block javascript %}
     {{ block.super }}
-    <script>
-        $(document).ready(function () {
-            setTimeout(function () {
-                window.location.href = '/';
-            }, 5000);
-        });
-    </script>
 {% endblock %}
 

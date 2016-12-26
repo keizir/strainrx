@@ -101,8 +101,12 @@
                                 </div>
                             {% elif request.user.type == 'business' %}
                                 <div class="action">
-                                    <a href="{% url 'businesses:detail' request.session.business.id %}"
-                                       class="nav-link">Business Account</a>
+                                    {% if request.user.is_email_verified %}
+                                        <a href="{% url 'businesses:detail' request.session.business.id %}"
+                                           class="nav-link">Business Account</a>
+                                    {% else %}
+                                        <a href="{% url "businesses:signup_done" %}">Business Account</a>
+                                    {% endif %}
                                 </div>
                                 {% if request.user.is_email_verified %}
                                     <div class="action">
