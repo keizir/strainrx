@@ -311,7 +311,7 @@ W.pages.strain.StrainDetailPage = Class.extend({
     populateEffects: function populateEffects() {
         var that = this,
             review = this.model.get('user_strain_review'),
-            userCriteria = this.model.get('user_criteria'),
+            userCriteria = this.model.get('user_criteria') || {},
             effects = review ? review.effects : this.model.get('strain').effects,
             toDisplay = this.buildEffectsToDisplay(effects, userCriteria.effects, this.effectNames),
             missingStrainEffects = [];
@@ -348,7 +348,7 @@ W.pages.strain.StrainDetailPage = Class.extend({
     populateBenefits: function populateBenefits() {
         var that = this,
             review = this.model.get('user_strain_review'),
-            userCriteria = this.model.get('user_criteria'),
+            userCriteria = this.model.get('user_criteria') || {},
             effects = review ? review.benefits : this.model.get('strain').benefits,
             toDisplay = this.buildEffectsToDisplay(effects, userCriteria.benefits, this.benefitNames),
             missingStrainBenefits = [];
@@ -385,7 +385,7 @@ W.pages.strain.StrainDetailPage = Class.extend({
     populateSideEffects: function populateSideEffects() {
         var that = this,
             review = this.model.get('user_strain_review'),
-            userCriteria = this.model.get('user_criteria'),
+            userCriteria = this.model.get('user_criteria') || {},
             effects = review ? review.side_effects : this.model.get('strain').side_effects,
             toDisplay = this.buildEffectsToDisplay(effects, userCriteria.side_effects, this.sideEffectNames),
             missingStrainSideEffects = [];

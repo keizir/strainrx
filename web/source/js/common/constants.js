@@ -20,6 +20,10 @@ W.common.Constants = {
         phone: {
             mask: '000-000-0000',
             placeholder: '___-___-____'
+        },
+        time: {
+            mask: '00:00',
+            placeholder: 'hh:mm'
         }
     },
 
