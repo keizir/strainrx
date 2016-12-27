@@ -259,13 +259,13 @@
 
             .form-field {
                 display: block;
-                width: 30em;
+                width: 34em;
                 margin: 0 auto;
             }
 
             .day-wrapper {
                 display: block;
-                width: 30em;
+                width: 34em;
                 height: 2em;
                 margin: 0 auto 1em;
                 text-align: left;
@@ -275,12 +275,12 @@
                     position: relative;
                     top: 0.35em;
                     float: left;
-                    width: 22%;
+                    width: 20%;
                 }
 
                 .hours {
                     display: inline-block;
-                    width: 55%;
+                    width: 80%;
 
                     input, select {
                         border-radius: 0;
@@ -292,14 +292,22 @@
                     .open-hours,
                     .close-hours {
                         display: inline-block;
-                        width: 34%;
-                    }
+                        width: 28%;
+                        vertical-align: top;
 
-                    select {
-                        width: 40%;
+                        input {
+                            display: inline-block;
+                            width: 58%;
+                        }
+
+                        select {
+                            display: inline-block;
+                            width: 36%;
+                        }
                     }
 
                     .separator {
+                        display: inline-block;
                         position: relative;
                         top: 0.35em;
                     }
@@ -313,10 +321,19 @@
                 .is-closed-wrapper {
                     display: inline-block;
                     margin-left: 1em;
+                    margin-top: 0.4em;
                     width: 20%;
+                    height: 1em;
+                    vertical-align: top;
 
                     input {
+                        display: inline-block;
                         width: 18%;
+                        height: 1em;
+                    }
+
+                    label {
+                        display: inline-block;
                     }
                 }
             }
