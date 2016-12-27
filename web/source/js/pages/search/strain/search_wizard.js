@@ -57,6 +57,8 @@ W.pages.search.strain.SearchWizard = W.common.Wizard.extend({
                 window.location.href = '/search/strain/results/';
             }
         });
+
+        W.users.UserSettings.update(that.ui.$currentUserId.val(), W.users.UserSettings.settingName_SearchFilter, {'searchFilter': 'all'});
     },
 
     initSteps: function initSteps() {

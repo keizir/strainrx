@@ -567,7 +567,7 @@ W.pages.strain.StrainDetailPage = Class.extend({
                     formatPrice: that.formatPrice
                 }));
 
-                $('.price-expander').on('click', function () {
+                $('.price-sort').on('click', function () {
                     $('.prices-wrapper').toggleClass('hidden');
                 });
 
@@ -634,7 +634,7 @@ W.pages.strain.StrainDetailPage = Class.extend({
     initSortActions: function initSortActions() {
         var that = this,
             $sort = $('.sort'),
-            $priceSort = $('.price-sort');
+            $priceSort = $('.price-expander');
 
         $sort.on('click', function () {
             var $this = $(this);
@@ -642,7 +642,7 @@ W.pages.strain.StrainDetailPage = Class.extend({
         });
 
         $priceSort.on('click', function () {
-            that.sortBy($priceSort, $('.price-value.active').attr('id'));
+            that.sortByPrice($priceSort, $('.price-value.active').attr('id'));
         });
     },
 
@@ -654,6 +654,41 @@ W.pages.strain.StrainDetailPage = Class.extend({
         newSort = $sort.hasClass('fa-caret-up') ? 'desc' : 'asc';
         url = '/api/v1/search/strain/{0}/deliveries?filter={1}&order_field={2}&order_dir={3}'
             .format(this.ui.$strainId.val(), 'all', sortFieldName, newSort);
+
+        $.ajax({
+            method: 'GET',
+            url: url,
+            success: function (data) {
+                if (data && data.locations) {
+                    var $expandedHolder = $('.locations-area-body');
+                    $expandedHolder.html('');
+
+                    $.each(data.locations, function (i, l) {
+                        $expandedHolder.append(that.renderLocation(l));
+                    });
+
+                    $.each($expandedHolder.find('.dispensary-rating'), function (i, el) {
+                        var $ratingSelector = $(el);
+                        that.initRating($ratingSelector, $ratingSelector.text());
+                    });
+
+                    $.each($('.price'), function () {
+                        var $el = $(this);
+                        if ($el.attr('id') === sortFieldName) {
+                            $el.trigger('click');
+                        }
+                    });
+                }
+            }
+        });
+    },
+
+    sortByPrice: function sortByPrice($sort, sortFieldName) {
+        var that = this, url;
+        this.priceSort = this.priceSort === 'asc' ? 'desc' : 'asc';
+
+        url = '/api/v1/search/strain/{0}/deliveries?filter={1}&order_field={2}&order_dir={3}'
+            .format(this.ui.$strainId.val(), 'all', sortFieldName, this.priceSort);
 
         $.ajax({
             method: 'GET',

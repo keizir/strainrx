@@ -12,6 +12,9 @@
 
 {% block content %}
     <div class="container search-result-container">
+        {% if request.user.is_authenticated %}
+            <input type="hidden" id="currentUserId" value="{{ request.user.id }}">
+        {% endif %}
         <div class="search-result-header-wrapper">
             <h1>Here Are Your Top Recommendations</h1>
             <div class="filter-menu-wrapper">

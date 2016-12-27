@@ -5,6 +5,9 @@ W.ns('W.users');
 W.users.UserSettings = function () {
 
     return {
+
+        settingName_SearchFilter: 'search_results_filter',
+
         get: function get(userId, settingName, successCallback, errorCallback) {
             $.ajax({
                 method: 'GET',

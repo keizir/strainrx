@@ -7,6 +7,7 @@ W.pages.StrainSearchResultsPage = Class.extend({
     scrollPage: 1,
     scrollSize: 20,
     currentFilter: 'all', // local, delivery
+    currentSort: 'asc',
 
     locations: {},
     deliveries: {},
@@ -36,10 +37,16 @@ W.pages.StrainSearchResultsPage = Class.extend({
         var that = this;
         this.name = 'StrainSearchResultsPage';
 
-        this.getSearchResults('all', function () {
-            that.buildSortMenu();
-            that.handleScrollPage();
-            that.initRatings();
+        W.users.UserSettings.get($('#currentUserId').val(), W.users.UserSettings.settingName_SearchFilter, function (setting) {
+            if (setting && setting.searchFilter) {
+                that.currentFilter = setting.searchFilter;
+            }
+
+            that.getSearchResults(that.currentFilter, function () {
+                that.buildResultsFilterMenu();
+                that.handleScrollPage();
+                that.initRatings();
+            });
         });
 
         W.subscribe.apply(this);
@@ -104,12 +111,25 @@ W.pages.StrainSearchResultsPage = Class.extend({
                 if (success) {
                     success();
                 }
+
+                W.users.UserSettings.update($('#currentUserId').val(), W.users.UserSettings.settingName_SearchFilter, {
+                    'searchFilter': filterType
+                });
             }
         });
     },
 
-    buildSortMenu: function () {
+    buildResultsFilterMenu: function buildResultsFilterMenu() {
         var that = this;
+
+        that.ui.$menuActiveLink.attr('filter', that.currentFilter);
+        $.each(that.ui.$menuLink, function () {
+            var $menuLink = $(this);
+            if ($menuLink.attr('filter') === that.currentFilter) {
+                that.ui.$menuActiveLink.text($menuLink.text());
+            }
+        });
+
 
         that.ui.$menuExpander.on('click', function () {
             that.ui.$menuHiddenLinks.toggleClass('hidden');
@@ -270,7 +290,7 @@ W.pages.StrainSearchResultsPage = Class.extend({
             that.initRating($(el));
         });
 
-        $priceExpander = $('.price-expander');
+        $priceExpander = $('.price-sort');
         $priceExpander.on('click', function () {
             $('.prices-wrapper').toggleClass('hidden');
         });
@@ -292,7 +312,7 @@ W.pages.StrainSearchResultsPage = Class.extend({
             });
         });
 
-        $priceSort = $('.price-sort');
+        $priceSort = $('.price-expander');
         $priceSort.on('click', function () {
             that.sortByPrice($priceSort, isLocations, position);
         });
@@ -307,21 +327,13 @@ W.pages.StrainSearchResultsPage = Class.extend({
     },
 
     sortByPrice: function sortByPrice($priceSort, isLocations, position) {
-        var that = this, newSort, fieldName = $('.price-value.active').attr('id'), url;
+        var that = this, fieldName = $('.price-value.active').attr('id'), url;
 
-        if ($priceSort.hasClass('fa-caret-down')) {
-            newSort = 'desc';
-            $priceSort.removeClass('fa-caret-down');
-            $priceSort.addClass('fa-caret-up');
-        } else {
-            newSort = 'asc';
-            $priceSort.removeClass('fa-caret-up');
-            $priceSort.addClass('fa-caret-down');
-        }
+        this.currentSort = this.currentSort === 'asc' ? 'desc' : 'asc';
 
         url = '/api/v1/search/strain/{0}/deliveries?filter={1}&order_field={2}&order_dir={3}&location_type={4}'
             .format($('#strain-id-{0}'.format(position)).val(), this.ui.$menuActiveLink.attr('filter'),
-                fieldName, newSort, isLocations ? 'dispensary' : 'delivery');
+                fieldName, this.currentSort, isLocations ? 'dispensary' : 'delivery');
 
         $.ajax({
             method: 'GET',
