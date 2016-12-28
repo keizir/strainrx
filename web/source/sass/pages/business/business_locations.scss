@@ -151,6 +151,22 @@
                 margin: 2em 0;
                 font-weight: bold;
             }
+
+            .location-image-wrapper {
+                display: inline-block;
+                position: relative;
+                top: 8em;
+                vertical-align: top;
+                width: 14em;
+                padding: 0.5em;
+                border: 1px solid $grey-normal;
+                cursor: pointer;
+
+                img {
+                    display: block;
+                    width: 100%;
+                }
+            }
         }
 
         .common-error-messages {

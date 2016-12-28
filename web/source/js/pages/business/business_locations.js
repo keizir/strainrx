@@ -111,7 +111,8 @@ W.pages.business.BusinessLocations = Class.extend({
     },
 
     registerAllInputEvents: function registerAllInputEvents($input) {
-        var that = this;
+        var that = this,
+            phoneMask = W.common.Constants.masks.phone;
 
         $input.on('focusout', function () {
             that.updateLocationInputFields($(this));
@@ -120,6 +121,8 @@ W.pages.business.BusinessLocations = Class.extend({
         $input.on('change', function () {
             that.updateLocationCheckboxFields($(this));
         });
+
+        $('.phone-number').mask(phoneMask.mask, {placeholder: phoneMask.placeholder});
     },
 
     updateLocationInputFields: function updateLocationInputFields($input) {
@@ -150,6 +153,14 @@ W.pages.business.BusinessLocations = Class.extend({
 
                     if (fieldName === 'location_name') {
                         that.locations[index].location_name = inputValue;
+                    }
+
+                    if (fieldName === 'location_email') {
+                        that.locations[index].location_email = inputValue;
+                    }
+
+                    if (fieldName === 'phone') {
+                        that.locations[index].phone = inputValue;
                     }
                 }
             });
