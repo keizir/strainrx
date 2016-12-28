@@ -45,8 +45,8 @@ W.pages.b2c.SignUpWizard = W.common.Wizard.extend({
                     city: userGeoLocation.city || '',
                     state: userGeoLocation.state || '',
                     zipcode: userGeoLocation.zipcode || '',
-                    lat: userGeoLocation.lat || '',
-                    lng: userGeoLocation.lng || '',
+                    lat: userGeoLocation.lat || null,
+                    lng: userGeoLocation.lng || null,
                     location_raw: {}
                 }
             }),

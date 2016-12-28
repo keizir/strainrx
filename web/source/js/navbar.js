@@ -33,7 +33,7 @@ W.Navbar = function () {
                     location_parts.push(l.zipcode);
                 }
 
-                if (location_parts.length === 0 && l.location_raw) {
+                if (location_parts.length === 0 && l.location_raw && !_.isEmpty(l.location_raw)) {
                     var parsed = JSON.parse(l.location_raw);
                     if (parsed && parsed[0] && parsed[0].formatted_address) {
                         location_parts.push(parsed[0].formatted_address);

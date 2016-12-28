@@ -44,8 +44,11 @@ W.pages.StrainSearchResultsPage = Class.extend({
 
             that.getSearchResults(that.currentFilter, function () {
                 that.buildResultsFilterMenu();
-                that.handleScrollPage();
                 that.initRatings();
+
+                W.users.UserSettings.update($('#currentUserId').val(), W.users.UserSettings.settingName_SearchFilter, {
+                    'searchFilter': that.currentFilter
+                });
             });
         });
 
@@ -112,9 +115,7 @@ W.pages.StrainSearchResultsPage = Class.extend({
                     success();
                 }
 
-                W.users.UserSettings.update($('#currentUserId').val(), W.users.UserSettings.settingName_SearchFilter, {
-                    'searchFilter': filterType
-                });
+                that.handleScrollPage();
             }
         });
     },
@@ -167,7 +168,11 @@ W.pages.StrainSearchResultsPage = Class.extend({
         this.ui.$searchResult.html('');
         this.currentFilter = filter;
         this.ui.$searchResultFooterRegion.removeClass('hidden');
-        this.getSearchResults(this.currentFilter);
+        this.getSearchResults(this.currentFilter, function () {
+            W.users.UserSettings.update($('#currentUserId').val(), W.users.UserSettings.settingName_SearchFilter, {
+                'searchFilter': filter
+            });
+        });
     },
 
     handleScrollPage: function () {
@@ -176,6 +181,7 @@ W.pages.StrainSearchResultsPage = Class.extend({
             // End of the document reached?
             var hasMoreResultToShow = !that.ui.$searchResultFooterRegion.hasClass('hidden');
             if (that.ui.$document.height() - that.ui.$window.height() == that.ui.$window.scrollTop() && hasMoreResultToShow) {
+                that.ui.$window.off('scroll');
                 that.getSearchResults(that.currentFilter);
             }
         });

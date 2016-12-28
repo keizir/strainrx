@@ -494,13 +494,14 @@ class UserGeoLocationView(LoginRequiredMixin, APIView):
             location.zipcode = data.get('zipcode')
             location.lat = data.get('lat')
             location.lng = data.get('lng')
-            location.location_raw = data.get('location_raw')
+            location.location_raw = data.get('location_raw') if data.get('location_raw') else {}
         except UserLocation.DoesNotExist:
             location = UserLocation(
                 user=request.user,
                 street1=data.get('street1'), city=data.get('city'),
                 state=data.get('state'), zipcode=data.get('zipcode'),
-                lat=data.get('lat'), lng=data.get('lng'), location_raw=data.get('location_raw')
+                lat=data.get('lat'), lng=data.get('lng'),
+                location_raw=data.get('location_raw') if data.get('location_raw') else {}
             )
 
         location.save()

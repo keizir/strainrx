@@ -49,7 +49,7 @@ W.users.DetailPage = Class.extend({
                             location.push(l.zipcode);
                         }
 
-                        if (location.length === 0 && l.location_raw) {
+                        if (location.length === 0 && l.location_raw && !_.isEmpty(l.location_raw)) {
                             var parsed = JSON.parse(l.location_raw);
                             if (parsed && parsed[0] && parsed[0].formatted_address) {
                                 location.push(parsed[0].formatted_address);
