@@ -12,7 +12,7 @@ W.pages.b2b.SignUpWizard = W.common.Wizard.extend({
         });
 
         this.name = 'SignUpWizard';
-        this.showStep({step: 6});
+        this.showStep({step: 1});
 
         W.subscribe.apply(this);
     },
