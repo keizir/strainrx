@@ -37,32 +37,8 @@ W.pages.HomePage = Class.extend({
     },
 
     preFillUserLocation: function preFillUserLocation() {
-        var l = this.location, location = [];
-        if (l) {
-            if (l.street1) {
-                location.push(l.street1);
-            }
-
-            if (l.city) {
-                location.push(l.city);
-            }
-
-            if (l.state) {
-                location.push(l.state);
-            }
-
-            if (l.zipcode) {
-                location.push(l.zipcode);
-            }
-
-            if (location.length === 0 && l.location_raw) {
-                var parsed = JSON.parse(l.location_raw);
-                if (parsed && parsed[0] && parsed[0].formatted_address) {
-                    location.push(parsed[0].formatted_address);
-                }
-            }
-
-            $('.your-location-value').val(location.join(', '));
+        if (this.location) {
+            $('.your-location-value').val(W.common.Format.formatAddress(this.location));
         }
     },
 
@@ -71,13 +47,23 @@ W.pages.HomePage = Class.extend({
             GoogleLocations = new W.Common.GoogleLocations({$input: $('#location').get(0)});
 
         GoogleLocations.initGoogleAutocomplete(
-            function (autocomplete) {
-                var address = GoogleLocations.getAddressFromAutocomplete(autocomplete);
+            function (autocomplete, $input) {
+                var $el = $($input),
+                    address = GoogleLocations.getAddressFromAutocomplete(autocomplete);
+
+                $el.val(W.common.Format.formatAddress(address));
+                $el.blur();
+
                 that.saveUserLocation(address);
             },
-            function (results, status) {
+            function (results, status, $input) {
                 if (status === 'OK') {
-                    var address = GoogleLocations.getAddressFromPlace(results[0]);
+                    var $el = $($input),
+                        address = GoogleLocations.getAddressFromPlace(results[0]);
+
+                    $el.val(W.common.Format.formatAddress(address));
+                    $el.blur();
+
                     that.saveUserLocation(address);
                 }
             });

@@ -29,34 +29,11 @@ W.users.DetailPage = Class.extend({
             url: '/api/v1/users/{0}/geo_locations'.format($('input[name="uid"]').val()),
             success: function (data) {
                 if (data && data.location) {
-                    var l = data.location, location = [];
+                    var l = data.location;
                     that.location = data.location;
 
                     if (l) {
-                        if (l.street1) {
-                            location.push(l.street1);
-                        }
-
-                        if (l.city) {
-                            location.push(l.city);
-                        }
-
-                        if (l.state) {
-                            location.push(l.state);
-                        }
-
-                        if (l.zipcode) {
-                            location.push(l.zipcode);
-                        }
-
-                        if (location.length === 0 && l.location_raw && !_.isEmpty(l.location_raw)) {
-                            var parsed = JSON.parse(l.location_raw);
-                            if (parsed && parsed[0] && parsed[0].formatted_address) {
-                                location.push(parsed[0].formatted_address);
-                            }
-                        }
-
-                        $('input[name="address"]').val(location.join(', '));
+                        $('input[name="address"]').val(W.common.Format.formatAddress(l));
                     }
                 }
             }
@@ -68,12 +45,20 @@ W.users.DetailPage = Class.extend({
             GoogleLocations = new W.Common.GoogleLocations({$input: $('input[name="address"]').get(0)});
 
         GoogleLocations.initGoogleAutocomplete(
-            function (autocomplete) {
+            function (autocomplete, $input) {
                 that.location = GoogleLocations.getAddressFromAutocomplete(autocomplete);
+
+                var $el = $($input);
+                $el.val(W.common.Format.formatAddress(that.location));
+                $el.blur();
             },
-            function (results, status) {
+            function (results, status, $input) {
                 if (status === 'OK') {
                     that.location = GoogleLocations.getAddressFromPlace(results[0]);
+
+                    var $el = $($input);
+                    $el.val(W.common.Format.formatAddress(that.location));
+                    $el.blur();
                 }
             });
     },

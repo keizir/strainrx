@@ -28,8 +28,7 @@ W.Common.GoogleLocations = Class.extend({
                 var place = that.autocomplete.getPlace();
                 if (!place || !place.address_components) {
                     var firstResult, $pacs,
-                        geoCoder = new google.maps.Geocoder(),
-                        $el = $(that.$input);
+                        geoCoder = new google.maps.Geocoder();
 
                     if (that.pacContainerIndex && that.pacContainerIndex >= 0) {
                         $pacs = $('.pac-container');
@@ -38,12 +37,9 @@ W.Common.GoogleLocations = Class.extend({
                         firstResult = $('.pac-container .pac-item:first').text();
                     }
 
-                    $el.val(firstResult);
-                    $el.blur();
-
                     geoCoder.geocode({"address": firstResult}, function (results, status) {
                         if (that.onEnterKey) {
-                            that.onEnterKey(results, status);
+                            that.onEnterKey(results, status, that.$input);
                         }
                     });
                 }
@@ -51,19 +47,18 @@ W.Common.GoogleLocations = Class.extend({
         });
 
         this.autocomplete.addListener('place_changed', function () {
-            that.onPlaceChange(that.autocomplete);
+            that.onPlaceChange(that.autocomplete, that.$input);
         });
     },
 
     getAddressFromAutocomplete: function getAddressFromAutocomplete() {
-        var place = this.autocomplete.getPlace();
+        var that = this, place = this.autocomplete.getPlace();
 
         if (place && place.address_components) {
             return this.getAddressFromPlace(place);
         } else {
             var firstResult, $pacs,
-                geoCoder = new google.maps.Geocoder(),
-                $el = $(this.$input);
+                geoCoder = new google.maps.Geocoder();
 
             if (this.pacContainerIndex && this.pacContainerIndex >= 0) {
                 $pacs = $('.pac-container');
@@ -72,15 +67,12 @@ W.Common.GoogleLocations = Class.extend({
                 firstResult = $('.pac-container .pac-item:first').text();
             }
 
-            $el.val(firstResult);
-            $el.blur();
-
             geoCoder.geocode({"address": firstResult}, function (results, status) {
                 if (status !== 'OK') {
                     alert('Invalid address');
                 } else {
                     if (this.onEnterKey) {
-                        this.onEnterKey(results, status);
+                        this.onEnterKey(results, status, that.$input);
                     }
                 }
             });

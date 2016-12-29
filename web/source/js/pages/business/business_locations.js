@@ -43,31 +43,7 @@ W.pages.business.BusinessLocations = Class.extend({
     },
 
     buildLocationDisplayName: function buildLocationDisplayName(location) {
-        var l = [];
-        if (location.street1) {
-            l.push(location.street1);
-        }
-
-        if (location.city) {
-            l.push(location.city);
-        }
-
-        if (location.state) {
-            l.push(location.state);
-        }
-
-        if (location.zip_code) {
-            l.push(location.zip_code);
-        }
-
-        if (l.length === 0 && location.location_raw) {
-            var parsed = JSON.parse(location.location_raw);
-            if (parsed && parsed[0] && parsed[0].formatted_address) {
-                l.push(parsed[0].formatted_address);
-            }
-        }
-
-        return l.join(', ');
+        return W.common.Format.formatAddress(location);
     },
 
     changeAddress: function changeAddress(location, pacContainerIndex) {
@@ -80,13 +56,17 @@ W.pages.business.BusinessLocations = Class.extend({
         });
 
         this.GoogleLocations.initGoogleAutocomplete(
-            function (autocomplete) {
-                var a = that.GoogleLocations.getAddressFromAutocomplete(autocomplete),
+            function (autocomplete, $input) {
+                var $el = $($input),
+                    a = that.GoogleLocations.getAddressFromAutocomplete(autocomplete),
                     id = location.id || location.tmp_id;
 
                 if (!a || !a.street1 || !a.city || !a.state || !a.zipcode) {
                     that.addError(id, 'address__{0}'.format(id), 'Enter an address with street, city, state and zipcode.');
                 } else {
+                    $el.val(W.common.Format.formatAddress(a));
+                    $el.blur();
+
                     that.locations[id].street1 = a.street1;
                     that.locations[id].city = a.city;
                     that.locations[id].state = a.state;
@@ -96,10 +76,14 @@ W.pages.business.BusinessLocations = Class.extend({
                     that.locations[id].location_raw = a.location_raw;
                 }
             },
-            function (results, status) {
+            function (results, status, $input) {
                 if (status === 'OK') {
                     var a = that.GoogleLocations.getAddressFromPlace(results[0]),
-                        id = location.id || location.tmp_id;
+                        id = location.id || location.tmp_id,
+                        $el = $($input);
+
+                    $el.val(W.common.Format.formatAddress(a));
+                    $el.blur();
 
                     that.locations[id].street1 = a.street1;
                     that.locations[id].city = a.city;

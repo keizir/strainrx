@@ -59,17 +59,24 @@ W.pages.b2b.SignUpWizardStep5 = W.common.WizardStep.extend({
         $('input[name="phone"]').mask(phoneMask.mask, {placeholder: phoneMask.placeholder});
 
         GoogleLocations.initGoogleAutocomplete(
-            function (autocomplete) {
-                var a = GoogleLocations.getAddressFromAutocomplete(autocomplete);
+            function (autocomplete, $input) {
+                var $el = $($input), a = GoogleLocations.getAddressFromAutocomplete(autocomplete);
                 if (!a.street1 || !a.city || !a.state || !a.zipcode) {
                     $('.error-message').text('Address should have a street, city, state and zipcode');
                 } else {
+                    $el.val(W.common.Format.formatAddress(a));
+                    $el.blur();
                     that.stepData = a;
                 }
             },
-            function (results, status) {
+            function (results, status, $input) {
                 if (status === 'OK') {
-                    var a = GoogleLocations.getAddressFromPlace(results[0]);
+                    var a = GoogleLocations.getAddressFromPlace(results[0]),
+                        $el = $($input);
+
+                    $el.val(W.common.Format.formatAddress(a));
+                    $el.blur();
+
                     if (!a.street1 || !a.city || !a.state || !a.zipcode) {
                         $('.error-message').text('Address should have a street, city, state and zipcode');
                     } else {
