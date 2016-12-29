@@ -12,7 +12,7 @@ class BusinessSerializer(serializers.ModelSerializer):
 class BusinessLocationSerializer(serializers.ModelSerializer):
     class Meta:
         model = BusinessLocation
-        fields = ('id', 'location_name', 'manager_name', 'location_email', 'primary', 'dispensary', 'delivery',
+        fields = ('id', 'location_name', 'manager_name', 'location_email', 'image', 'primary', 'dispensary', 'delivery',
                   'street1', 'city', 'state', 'zip_code', 'phone', 'ext', 'delivery_radius',
                   'mon_open', 'mon_close', 'tue_open', 'tue_close', 'wed_open', 'wed_close', 'thu_open', 'thu_close',
                   'fri_open', 'fri_close', 'sat_open', 'sat_close', 'sun_open', 'sun_close',

@@ -104,40 +104,44 @@ class BusinessSignUpService:
 
 
 class BusinessLocationService:
-    def update_locations(self, business_id, to_update_locations):
-        for to_update in to_update_locations:
-            data = to_update.get('data')
-            if to_update.get('location_id'):
-                l = BusinessLocation.objects.get(pk=to_update.get('location_id'))
-                l.location_name = data.get('location_name')
-                l.street1 = data.get('street1')
-                l.city = data.get('city')
-                l.state = data.get('state')
-                l.zip_code = data.get('zip_code')
-                l.delivery = data.get('delivery')
-                l.dispensary = data.get('dispensary')
-                l.delivery_radius = data.get('delivery_radius')
-                l.lat = data.get('lat') if data.get('lat') else l.lat
-                l.lng = data.get('lng') if data.get('lng') else l.lng
-                l.location_raw = data.get('location_raw') if data.get('location_raw') else l.location_raw
-                l.save()
-            else:
-                business = Business.objects.get(pk=business_id)
-                location = BusinessLocation(
-                    business=business,
-                    location_name=data.get('location_name'),
-                    street1=data.get('street1'),
-                    city=data.get('city'),
-                    state=data.get('state'),
-                    zip_code=data.get('zip_code'),
-                    delivery=data.get('delivery'),
-                    dispensary=data.get('dispensary'),
-                    delivery_radius=data.get('delivery_radius'),
-                    lat=data.get('lat'),
-                    lng=data.get('lng'),
-                    location_raw=data.get('location_raw') if data.get('location_raw') else {}
-                )
-                location.save()
+    def create_location(self, business_id, location):
+        business = Business.objects.get(pk=business_id)
+        l = BusinessLocation(
+            business=business,
+            location_name=location.get('location_name'),
+            location_email=location.get('location_email'),
+            street1=location.get('street1'),
+            city=location.get('city'),
+            state=location.get('state'),
+            zip_code=location.get('zip_code'),
+            phone=location.get('phone'),
+            delivery=location.get('delivery'),
+            dispensary=location.get('dispensary'),
+            delivery_radius=location.get('delivery_radius'),
+            lat=location.get('lat'),
+            lng=location.get('lng'),
+            location_raw=location.get('location_raw') if location.get('location_raw') else {}
+        )
+        l.save()
+        return l
+
+    def update_location(self, business_location_id, location):
+        l = BusinessLocation.objects.get(pk=business_location_id)
+        l.location_name = location.get('location_name')
+        l.location_email = location.get('location_email')
+        l.street1 = location.get('street1')
+        l.city = location.get('city')
+        l.state = location.get('state')
+        l.zip_code = location.get('zip_code')
+        l.phone = location.get('phone')
+        l.delivery = location.get('delivery')
+        l.dispensary = location.get('dispensary')
+        l.delivery_radius = location.get('delivery_radius')
+        l.lat = location.get('lat') if location.get('lat') else l.lat
+        l.lng = location.get('lng') if location.get('lng') else l.lng
+        l.location_raw = location.get('location_raw') if location.get('location_raw') else l.location_raw
+        l.save()
+        return l
 
     def remove_location(self, business_location_id, current_user_id):
         location = BusinessLocation.objects.get(pk=business_location_id)

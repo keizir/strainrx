@@ -166,6 +166,25 @@
                     display: block;
                     width: 100%;
                 }
+
+                .upload-image {
+                    width: 0.1px;
+                    height: 0.1px;
+                    opacity: 0;
+                    overflow: hidden;
+                    position: absolute;
+                    z-index: -1;
+                }
+
+                .upload-image + label {
+                    display: block;
+                    cursor: pointer;
+                    color: $grey-normal;
+                }
+
+                .upload-image:focus + label {
+                    outline: 1px solid $iris-blue;
+                }
             }
         }
 

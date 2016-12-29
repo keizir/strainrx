@@ -19,8 +19,9 @@
             </div>
             <div class="form-field-group">
                 <div class="form-field">
-                    <label for="email__<%= l.id %>">Email</label>
-                    <input type="text" name="email__<%= l.id %>" id="email__<%= l.id %>" value="${ l.location_email }">
+                    <label for="location_email__<%= l.id %>">Email</label>
+                    <input type="text" name="location_email__<%= l.id %>" id="location_email__<%= l.id %>"
+                           value="${ l.location_email }">
                 </div>
             </div>
             <div class="form-field-group">
@@ -56,10 +57,15 @@
             </div>
         </div>
         <div class="location-image-wrapper">
-            <% if (l.location_image) { %>
-            <img class="bus-loc-logo" src="${l.location_image}" id="<%= l.id %>">
+            <input type="file" id="file__<%= l.id %>" class="upload-image" location_id="<%= l.id %>"/>
+            <% if (l.image) { %>
+            <label for="file__<%= l.id %>">
+                <img class="bus-loc-logo" src="${ l.image }" id="image__<%= l.id %>">
+            </label>
             <% } else { %>
-            <img class="bus-loc-logo" src="{% static 'images/leaf-grey.png' %}" id="<%= l.id %>">
+            <label for="file__<%= l.id %>">
+                <img class="bus-loc-logo" src="{% static 'images/leaf-grey.png' %}" id="image__<%= l.id %>">
+            </label>
             <% } %>
         </div>
         <% if (!l.delivery) { %>
