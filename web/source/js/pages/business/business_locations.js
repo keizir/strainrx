@@ -32,7 +32,7 @@ W.pages.business.BusinessLocations = Class.extend({
                     'l': location, 'buildDisplayName': that.buildLocationDisplayName
                 }));
                 that.prepareAndShowDeliveryDistanceSlider(location.id, location.delivery);
-                that.changeAddress(location);
+                that.changeAddress(location, i);
             });
 
             that.registerAllInputEvents($('input'));
@@ -70,19 +70,37 @@ W.pages.business.BusinessLocations = Class.extend({
         return l.join(', ');
     },
 
-    changeAddress: function changeAddress(location) {
+    changeAddress: function changeAddress(location, pacContainerIndex) {
         var that = this,
-            GoogleLocations = W.Common.GoogleLocations,
             $locationInput = $('input[name="address__{0}"]'.format(location.id));
 
-        GoogleLocations.initGoogleAutocomplete($locationInput.get(0),
+        this.GoogleLocations = new W.Common.GoogleLocations({
+            $input: $locationInput.get(0),
+            pacContainerIndex: pacContainerIndex
+        });
+
+        this.GoogleLocations.initGoogleAutocomplete(
             function (autocomplete) {
-                var a = GoogleLocations.getAddressFromAutocomplete(autocomplete),
+                var a = that.GoogleLocations.getAddressFromAutocomplete(autocomplete),
                     id = location.id || location.tmp_id;
 
-                if (!a.street1 || !a.city || !a.state || !a.zipcode) {
+                if (!a || !a.street1 || !a.city || !a.state || !a.zipcode) {
                     that.addError(id, 'address__{0}'.format(id), 'Enter an address with street, city, state and zipcode.');
                 } else {
+                    that.locations[id].street1 = a.street1;
+                    that.locations[id].city = a.city;
+                    that.locations[id].state = a.state;
+                    that.locations[id].zip_code = a.zipcode;
+                    that.locations[id].lat = a.lat;
+                    that.locations[id].lng = a.lng;
+                    that.locations[id].location_raw = a.location_raw;
+                }
+            },
+            function (results, status) {
+                if (status === 'OK') {
+                    var a = that.GoogleLocations.getAddressFromPlace(results[0]),
+                        id = location.id || location.tmp_id;
+
                     that.locations[id].street1 = a.street1;
                     that.locations[id].city = a.city;
                     that.locations[id].state = a.state;
@@ -162,7 +180,7 @@ W.pages.business.BusinessLocations = Class.extend({
             function (results, status) {
                 if (status === 'OK') {
                     if (results && results[0]) {
-                        var a = W.Common.GoogleLocations.getAddressFromPlace(results[0]);
+                        var a = that.GoogleLocations.getAddressFromPlace(results[0]);
 
                         that.locations[location.id].street1 = a.street1;
                         that.locations[location.id].city = a.city;
@@ -263,7 +281,7 @@ W.pages.business.BusinessLocations = Class.extend({
                 'l': {'id': locationClientId}, 'buildDisplayName': that.buildLocationDisplayName
             }));
             that.registerAllInputEvents($('.location-{0}'.format(locationClientId)).find('input'));
-            that.changeAddress({'id': locationClientId});
+            that.changeAddress({'id': locationClientId}, $('.pac-container').length);
             that.clickRemoveLocation($('.btn-trash-{0}'.format(locationClientId)));
             that.addError(locationClientId, 'delivery__{0}'.format(locationClientId), 'Business type is required');
         });

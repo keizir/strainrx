@@ -68,25 +68,34 @@ W.pages.HomePage = Class.extend({
 
     changeLocation: function changeLocation() {
         var that = this,
-            GoogleLocations = W.Common.GoogleLocations;
+            GoogleLocations = new W.Common.GoogleLocations({$input: $('#location').get(0)});
 
-        GoogleLocations.initGoogleAutocomplete($('#location').get(0), function (autocomplete) {
-            var address = GoogleLocations.getAddressFromAutocomplete(autocomplete);
-            that.saveUserLocation(address);
-        });
+        GoogleLocations.initGoogleAutocomplete(
+            function (autocomplete) {
+                var address = GoogleLocations.getAddressFromAutocomplete(autocomplete);
+                that.saveUserLocation(address);
+            },
+            function (results, status) {
+                if (status === 'OK') {
+                    var address = GoogleLocations.getAddressFromPlace(results[0]);
+                    that.saveUserLocation(address);
+                }
+            });
     },
 
     saveUserLocation: function saveUserLocation(data) {
-        var that = this;
-        if (this.authenticated) {
-            $.ajax({
-                method: 'POST',
-                url: '/api/v1/users/{0}/geo_locations'.format(that.userId),
-                data: JSON.stringify(data)
-            });
-        } else {
-            delete data.location_raw;
-            Cookies.set('user_geo_location', JSON.stringify(data));
+        if (data) {
+            var that = this;
+            if (this.authenticated) {
+                $.ajax({
+                    method: 'POST',
+                    url: '/api/v1/users/{0}/geo_locations'.format(that.userId),
+                    data: JSON.stringify(data)
+                });
+            } else {
+                delete data.location_raw;
+                Cookies.set('user_geo_location', JSON.stringify(data));
+            }
         }
     }
 });

@@ -75,8 +75,7 @@ W.pages.strain.StrainReviewDialog = Class.extend({
     },
 
     buildAndShowUndoDialog: function buildAndShowUndoDialog($link) {
-        var that = this,
-            effectType = $link.prop('id'),
+        var effectType = $link.prop('id'),
             $undoDialog = $('.undo-strain-review-dialog');
 
         effectType = 'positive-effects' === effectType ?
@@ -88,32 +87,9 @@ W.pages.strain.StrainReviewDialog = Class.extend({
                 url: '/api/v1/search/strain/{0}/ratings'.format($('.strain-id').val()),
                 data: JSON.stringify({effect_type: effectType}),
                 success: function () {
-                    var $effects, $sectionHeader,
-                        strain = that.model.get('strain');
-
-                    if (effectType === 'effects') {
-                        $effects = $('.effects-region');
-                        $effects.html(that.effectHtml(that.buildEffectsToDisplayOnDetailPage(strain.effects, W.common.Constants.effectNames)));
-                    }
-
-                    if (effectType === 'benefits') {
-                        $effects = $('.benefits-region');
-                        $effects.html(that.effectHtml(that.buildEffectsToDisplayOnDetailPage(strain.benefits, W.common.Constants.benefitNames)));
-                    }
-
-                    if (effectType === 'side_effects') {
-                        $effects = $('.side-effects-region');
-                        $effects.html(that.sideEffectHtml(that.buildEffectsToDisplayOnDetailPage(strain.side_effects, W.common.Constants.sideEffectNames)));
-                    }
-
-                    $sectionHeader = $effects.parent().find('.section-header');
-                    $sectionHeader.find('.undo-disagree-wrapper').addClass('hidden');
-                    $sectionHeader.find('.disagree').removeClass('hidden');
-
                     $undoDialog.dialog('close');
                     $undoDialog.find('.btn-yes').off('click');
-
-                    that.recalculateSRXScore();
+                    window.location.reload();
                 }
             });
         });
@@ -125,6 +101,7 @@ W.pages.strain.StrainReviewDialog = Class.extend({
         W.common.ConfirmDialog($undoDialog);
     },
 
+    // TODO not used now, but will be used when page refresh will be removed
     recalculateSRXScore: function recalculateSRXScore() {
         var $scoreContainer = $('.score-value'),
             $percentSign = $('.percent-sign');
@@ -158,7 +135,7 @@ W.pages.strain.StrainReviewDialog = Class.extend({
         return effectsToDisplay;
     },
 
-    buildEffectsToDisplayOnDetailPage: function buildEffectsToDisplayOnDetailPage(rawEffects, effectNames) {
+    buildEffectsToDisplayOnDetailPage: function buildEffectsToDisplayOnDetailPage(rawEffects, userCriteria, effectNames) {
         var effectsToDisplay = [];
         $.each(rawEffects, function (name, value) {
             if (value > 0) {
@@ -417,33 +394,8 @@ W.pages.strain.StrainReviewDialog = Class.extend({
                     dataType: 'json',
                     data: JSON.stringify({type: effectType, effects: that.reviewEffects}),
                     success: function () {
-                        if (that.effectType === 'positive-effects') {
-                            var $effects = $('.effects-region'),
-                                $sectionHeader = $effects.parent().find('.section-header');
-                            $effects.html(that.effectHtml(that.changeEffectNames(W.common.Constants.effectNames)));
-                            $sectionHeader.find('.undo-disagree-wrapper').removeClass('hidden');
-                            $sectionHeader.find('.disagree').addClass('hidden');
-                        }
-
-                        if (that.effectType === 'medical-benefits') {
-                            var $benefits = $('.benefits-region'),
-                                $benefitsSectionHeader = $benefits.parent().find('.section-header');
-                            $benefits.html(that.effectHtml(that.changeEffectNames(W.common.Constants.benefitNames)));
-                            $benefitsSectionHeader.find('.undo-disagree-wrapper').removeClass('hidden');
-                            $benefitsSectionHeader.find('.disagree').addClass('hidden');
-                        }
-
-                        if (that.effectType === 'negative-effects') {
-                            var $sideEffects = $('.side-effects-region'),
-                                $sideEffectsSectionHeader = $sideEffects.parent().find('.section-header');
-                            $sideEffects.html(that.sideEffectHtml(that.changeEffectNames(W.common.Constants.sideEffectNames)));
-                            $sideEffectsSectionHeader.find('.undo-disagree-wrapper').removeClass('hidden');
-                            $sideEffectsSectionHeader.find('.disagree').addClass('hidden');
-                        }
-
                         $('.strain-review-dialog').dialog('close');
-
-                        that.recalculateSRXScore();
+                        window.location.reload();
                     }
                 });
             } else {
@@ -465,12 +417,22 @@ W.pages.strain.StrainReviewDialog = Class.extend({
 
     effectHtml: function effectHtml(toDisplay) {
         var template = _.template($('#strain_effects').html());
-        return template({'effects': toDisplay, 'effectFillHtml': this.effectFillHtml});
+        return template({
+            'effects': toDisplay,
+            'effectFillHtml': this.effectFillHtml,
+            'userCriteriaFillHtml': function () {
+            }
+        });
     },
 
     sideEffectHtml: function sideEffectHtml(toDisplay) {
         var template = _.template($('#strain_side_effects').html());
-        return template({'effects': toDisplay, 'sideEffectFillHtml': this.sideEffectFillHtml});
+        return template({
+            'effects': toDisplay,
+            'sideEffectFillHtml': this.sideEffectFillHtml,
+            'userCriteriaFillHtml': function () {
+            }
+        });
     },
 
     effectFillHtml: function effectFillHtml(effectValue) {

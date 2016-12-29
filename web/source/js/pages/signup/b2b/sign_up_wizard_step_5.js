@@ -53,19 +53,28 @@ W.pages.b2b.SignUpWizardStep5 = W.common.WizardStep.extend({
         this._super();
 
         var that = this,
-            GoogleLocations = W.Common.GoogleLocations,
+            GoogleLocations = new W.Common.GoogleLocations({$input: $('input[name="address"]').get(0)}),
             phoneMask = W.common.Constants.masks.phone;
 
         $('input[name="phone"]').mask(phoneMask.mask, {placeholder: phoneMask.placeholder});
 
-        GoogleLocations.initGoogleAutocomplete($('input[name="address"]').get(0),
+        GoogleLocations.initGoogleAutocomplete(
             function (autocomplete) {
                 var a = GoogleLocations.getAddressFromAutocomplete(autocomplete);
-
                 if (!a.street1 || !a.city || !a.state || !a.zipcode) {
                     $('.error-message').text('Address should have a street, city, state and zipcode');
                 } else {
                     that.stepData = a;
+                }
+            },
+            function (results, status) {
+                if (status === 'OK') {
+                    var a = GoogleLocations.getAddressFromPlace(results[0]);
+                    if (!a.street1 || !a.city || !a.state || !a.zipcode) {
+                        $('.error-message').text('Address should have a street, city, state and zipcode');
+                    } else {
+                        that.stepData = a;
+                    }
                 }
             });
     },

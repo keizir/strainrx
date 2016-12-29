@@ -458,7 +458,7 @@ W.pages.strain.StrainDetailPage = Class.extend({
             fillHtml = '<span class="{0}" style="width: {1}%"></span>';
 
         if (effect.missing) {
-            fillHtml = fillHtml.format('fill', fillWidth);
+            fillHtml = fillHtml.format('', fillWidth);
         } else {
             fillHtml = fillHtml.format('fill', fillWidth);
         }
@@ -492,7 +492,7 @@ W.pages.strain.StrainDetailPage = Class.extend({
             fillHtml = '<span class="{0}" style="width: {1}%"></span>';
 
         if (effect.missing) {
-            fillHtml = fillHtml.format('fill', fillWidth);
+            fillHtml = fillHtml.format('', fillWidth);
         } else {
             fillHtml = fillHtml.format('fill', fillWidth);
         }

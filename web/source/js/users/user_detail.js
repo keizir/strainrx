@@ -65,11 +65,17 @@ W.users.DetailPage = Class.extend({
 
     changeAddress: function changeAddress() {
         var that = this,
-            GoogleLocations = W.Common.GoogleLocations;
+            GoogleLocations = new W.Common.GoogleLocations({$input: $('input[name="address"]').get(0)});
 
-        GoogleLocations.initGoogleAutocomplete($('input[name="address"]').get(0), function (autocomplete) {
-            that.location = GoogleLocations.getAddressFromAutocomplete(autocomplete);
-        });
+        GoogleLocations.initGoogleAutocomplete(
+            function (autocomplete) {
+                that.location = GoogleLocations.getAddressFromAutocomplete(autocomplete);
+            },
+            function (results, status) {
+                if (status === 'OK') {
+                    that.location = GoogleLocations.getAddressFromPlace(results[0]);
+                }
+            });
     },
 
     clickUpdateUserInfo: function clickUpdateUserInfo() {

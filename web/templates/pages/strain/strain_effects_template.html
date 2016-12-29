@@ -4,9 +4,9 @@
         <% _.each(effects, function(effect) { %>
         <div class="effect-wrapper">
             <% if (effect.missing) { %>
-            <span class="effect-name missing-name"><%= effect.name %></span>
+            <div class="effect-name missing-name"><span><%= effect.name %></span></div>
             <% } else { %>
-            <span class="effect-name"><%= effect.name %></span>
+            <div class="effect-name"><span><%= effect.name %></span></div>
             <% } %>
 
             <div class="effect">
