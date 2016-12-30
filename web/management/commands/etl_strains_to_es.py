@@ -2,6 +2,7 @@
 import json
 import logging
 
+import time
 from django.core.management.base import BaseCommand, CommandError
 
 from web.search import es_mappings
@@ -53,6 +54,7 @@ class Command(BaseCommand):
             self.drop_and_rebuild()
 
         self.load_strains()
+        time.sleep(1)
         self.load_strain_reviews()
 
     def drop_and_rebuild(self):
