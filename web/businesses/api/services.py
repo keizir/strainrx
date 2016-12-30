@@ -106,8 +106,12 @@ class BusinessSignUpService:
 class BusinessLocationService:
     def create_location(self, business_id, location):
         business = Business.objects.get(pk=business_id)
+        is_primary_exist = BusinessLocation.objects.filter(business__id=business_id, primary=True, removed_date=None) \
+            .exists()
+
         l = BusinessLocation(
             business=business,
+            primary=not is_primary_exist,
             location_name=location.get('location_name'),
             location_email=location.get('location_email'),
             street1=location.get('street1'),
@@ -144,7 +148,14 @@ class BusinessLocationService:
         return l
 
     def remove_location(self, business_location_id, current_user_id):
-        location = BusinessLocation.objects.get(pk=business_location_id)
-        location.removed_by = current_user_id
-        location.removed_date = datetime.now()
-        location.save()
+        l = BusinessLocation.objects.get(pk=business_location_id)
+        l.removed_by = current_user_id
+        l.removed_date = datetime.now()
+        l.save()
+
+        if l.primary:
+            locations = BusinessLocation.objects.filter(business__id=l.business.id, removed_date=None).order_by('id')
+            if len(locations) > 0:
+                new_primary = locations[0]
+                new_primary.primary = True
+                new_primary.save()

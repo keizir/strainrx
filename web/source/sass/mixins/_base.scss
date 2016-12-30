@@ -163,7 +163,7 @@ button {
 
 .btn-primary:disabled,
 .btn-secondary:disabled {
-    color: $grey-light;
+    opacity: 0.4;
 }
 
 input, select {

@@ -2,18 +2,16 @@ import datetime
 import logging
 import uuid
 
-import pytz
 from django.contrib.auth import authenticate, login
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.core.exceptions import ValidationError
 from django.core.validators import EmailValidator
-from django.utils import timezone
 from rest_framework import permissions
 from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
-from web.businesses.models import Business
+from web.businesses.models import Business, BusinessLocation
 from web.businesses.serializers import BusinessSerializer
 from web.search.api.serializers import SearchCriteriaSerializer
 from web.search.models import UserSearch, StrainReview, StrainImage, UserFavoriteStrain
@@ -181,15 +179,14 @@ class UserLoginView(APIView):
         # If user is a business user we need a business object to be available across the app
         if user.type == 'business':
             business = Business.objects.filter(users__in=[user])[:1]
-            serializer = BusinessSerializer(business[0])
-            request.session['business'] = serializer.data
-            request.session['business_image'] = business[0].image.url if business[0].image and business[0].image.url \
-                else None
+            request.session['business'] = BusinessSerializer(business[0]).data
 
-        if user.timezone:
-            timezone.activate(pytz.timezone(user.timezone))
-        else:
-            timezone.activate(pytz.timezone('America/Los_Angeles'))
+            locations = BusinessLocation.objects.filter(business__id=business[0].id, primary=True, removed_date=None)
+            if len(locations) > 0:
+                primary = locations[0]
+                business_image = primary.image.url if len(
+                    locations) > 0 and primary.image and primary.image.url else None
+                request.session['business_image'] = business_image
 
         login(request, authenticated)
         return Response({}, status=status.HTTP_200_OK)
@@ -203,57 +200,61 @@ class UserSignUpWizardView(APIView):
         location_data = request.data.get('location')
         del request_data['location']
 
-        serializer = UserSignUpSerializer(data=request_data)
-        is_valid = self.validate_user(serializer)
-        if isinstance(is_valid, Response):
-            return is_valid
+        user_serializer = UserSignUpSerializer(data=request_data)
+        location_serializer = UserLocationSerializer(data=location_data)
 
         try:
-            user = serializer.save()
+            user_serializer.is_valid(raise_exception=True)
+            location_serializer.is_valid(raise_exception=True)
         except ValidationError as e:
             return bad_request(e.message)
+
+        user_data = user_serializer.validated_data
+        l_data = location_serializer.validated_data
+
+        if User.objects.filter(email=user_data.get('email')).exists():
+            return bad_request('There is already an account associated with that email address')
+
+        try:
+            validators.validate_pwd(user_data.get('pwd'), user_data.get('pwd2'))
+        except ValidationError as e:
+            return bad_request(e.message)
+
+        if not user_data.get('is_terms_accepted'):
+            return bad_request('Agreement is required')
+
+        try:
+            user = user_serializer.save()
+            location = UserLocation(user=user, street1=l_data.get('street1'), city=l_data.get('city'),
+                                    state=l_data.get('state'), zipcode=l_data.get('zipcode'),
+                                    lat=l_data.get('lat'), lng=l_data.get('lng'),
+                                    location_raw=l_data.get('location_raw'))
+            location.save()
+        except Exception:
+            logger.exception('Cannot sign up user')
+
+            if UserLocation.objects.filter(user__email=user_data.get('email')).exists():
+                l = UserLocation.objects.get(user__email=user_data.get('email'))
+                l.delete()
+
+            if User.objects.filter(email=user_data.get('email')).exists():
+                u = User.objects.get(email=user_data.get('email'))
+                u.delete()
+
+            return bad_request('Something gone wrong. Please, try again.')
+
+        authenticated = authenticate(username=user.email, password=user_data.get('pwd'))
+        if authenticated is None:
+            return bad_request('Cannot authenticate user')
+
+        login(request, authenticated)
 
         try:
             EmailService().send_confirmation_email(user)
         except Exception:
-            logger.error('Cannot send an email to {0}'.format(user.email))
-
-        authenticated = authenticate(username=user.email, password=serializer.validated_data.get('pwd'))
-        if authenticated is None:
-            return bad_request('Cannot authenticate user')
-
-        if user.timezone:
-            timezone.activate(pytz.timezone(user.timezone))
-        else:
-            timezone.activate(pytz.timezone('America/Los_Angeles'))
-
-        login(request, authenticated)
-
-        serializer = UserLocationSerializer(data=location_data)
-        serializer.is_valid(raise_exception=True)
-        data = serializer.validated_data
-        location = UserLocation(user=request.user, street1=data.get('street1'), city=data.get('city'),
-                                state=data.get('state'), zipcode=data.get('zipcode'),
-                                lat=data.get('lat'), lng=data.get('lng'), location_raw=data.get('location_raw'))
-        location.save()
+            logger.exception('Cannot send an email to {0}'.format(user.email))
 
         return Response({}, status=status.HTTP_200_OK)
-
-    def validate_user(self, serializer):
-        serializer.is_valid()
-        data = serializer.validated_data
-
-        does_exist = User.objects.filter(email=data.get('email')).exists()
-        if does_exist:
-            return bad_request('There is already an account associated with that email address')
-
-        try:
-            validators.validate_pwd(data.get('pwd'), data.get('pwd2'))
-        except ValidationError as e:
-            return bad_request(e.message)
-
-        if not data.get('is_terms_accepted'):
-            return bad_request('Agreement is required')
 
 
 class ResendConfirmationEmailView(LoginRequiredMixin, APIView):

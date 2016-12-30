@@ -97,6 +97,9 @@ class BusinessLocationImageView(LoginRequiredMixin, APIView):
         location.image = file
         location.save()
 
+        if location.primary:
+            request.session['business_image'] = location.image.url
+
         return Response({}, status=status.HTTP_200_OK)
 
 
