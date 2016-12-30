@@ -64,7 +64,8 @@ class Command(BaseCommand):
                 "analysis": {
                     "analyzer": {
                         "name_analyzer": {
-                            "tokenizer": "standard",
+                            "type": "custom",
+                            "tokenizer": "whitespace",
                             "filter": ["lowercase"]
                         }
                     }
@@ -117,11 +118,20 @@ class Command(BaseCommand):
             }))
 
             if self.UPDATE_SUGGESTER_INDEX:
+                input_variants = [s.name]
+
+                name_words = s.name.split(' ')
+                for i, name_word in enumerate(name_words):
+                    if i < len(name_words) - 1:
+                        input_variants.append('{0} {1}'.format(name_word, name_words[i + 1]))
+                    else:
+                        input_variants.append(name_word)
+
                 bulk_strain_suggester_data.append(action_data)
                 bulk_strain_suggester_data.append(json.dumps({
                     'name': s.name,
                     'name_suggest': {
-                        'input': s.name,
+                        'input': input_variants,
                         'output': s.name,
                         'payload': {
                             'id': s.id,
@@ -148,6 +158,10 @@ class Command(BaseCommand):
                 errors=results.get('errors')
             )))
 
+        self.stdout.write(
+            '2. Updated [{0}] index with {1} strains'.format(self.INDEX, len(strains))
+        )
+
         if self.UPDATE_SUGGESTER_INDEX:
             transformed_bulk_suggester_data = '{0}\n'.format('\n'.join(bulk_strain_suggester_data))
             results_suggester = es.bulk_index(transformed_bulk_suggester_data, index=self.INDEX,
@@ -161,9 +175,9 @@ class Command(BaseCommand):
                     errors=results_suggester.get('errors')
                 )))
 
-        self.stdout.write(
-            '2. Updated [{0}] index with {1} strains'.format(self.INDEX, len(strains))
-        )
+            self.stdout.write(
+                '2.1. Created [{0}] suggester'.format(self.SUGGESTER_INDEX_TYPE)
+            )
 
     def load_strain_reviews(self):
         self.stdout.write('3. Updating a strain reviews')

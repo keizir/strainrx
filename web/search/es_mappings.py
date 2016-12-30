@@ -326,7 +326,7 @@ strain_suggester_mapping = {
         },
         "name_suggest": {
             "type": "completion",
-            "analyzer": "simple",
+            "analyzer": "name_analyzer",
             "payloads": True
         }
     }
