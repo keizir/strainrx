@@ -151,6 +151,41 @@
                 margin: 2em 0;
                 font-weight: bold;
             }
+
+            .location-image-wrapper {
+                display: inline-block;
+                position: relative;
+                top: 8em;
+                vertical-align: top;
+                width: 14em;
+                padding: 0.5em;
+                border: 1px solid $grey-normal;
+                cursor: pointer;
+
+                img {
+                    display: block;
+                    width: 100%;
+                }
+
+                .upload-image {
+                    width: 0.1px;
+                    height: 0.1px;
+                    opacity: 0;
+                    overflow: hidden;
+                    position: absolute;
+                    z-index: -1;
+                }
+
+                .upload-image + label {
+                    display: block;
+                    cursor: pointer;
+                    color: $grey-normal;
+                }
+
+                .upload-image:focus + label {
+                    outline: 1px solid $iris-blue;
+                }
+            }
         }
 
         .common-error-messages {
@@ -207,6 +242,10 @@
                     left: 18%;
                     font-size: 2em;
                 }
+
+                .location-image-wrapper {
+                    top: -1em;
+                }
             }
         }
     }
@@ -239,6 +278,10 @@
                 .location-error {
                     margin: 2em 0;
                     font-weight: bold;
+                }
+
+                .location-image-wrapper {
+                    top: -1em;
                 }
             }
 

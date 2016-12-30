@@ -81,6 +81,25 @@ class BusinessImageView(LoginRequiredMixin, APIView):
         return Response({}, status=status.HTTP_200_OK)
 
 
+class BusinessLocationImageView(LoginRequiredMixin, APIView):
+    permission_classes = (BusinessAccountOwner,)
+
+    def post(self, request, business_id, business_location_id):
+        location = BusinessLocation.objects.get(pk=business_location_id)
+
+        if location.image and location.image.url:
+            conn = S3Connection(settings.AWS_ACCESS_KEY_ID, settings.AWS_SECRET_ACCESS_KEY)
+            bucket = Bucket(conn, settings.AWS_STORAGE_BUCKET_NAME)
+            k = Key(bucket=bucket, name=location.image.url.split(bucket.name)[1])
+            k.delete()
+
+        file = request.FILES.get('file')
+        location.image = file
+        location.save()
+
+        return Response({}, status=status.HTTP_200_OK)
+
+
 class ResendConfirmationEmailView(LoginRequiredMixin, APIView):
     def get(self, request):
         authenticated_user = request.user
@@ -114,18 +133,18 @@ class BusinessLocationView(LoginRequiredMixin, APIView):
         return Response({}, status=status.HTTP_200_OK)
 
     def put(self, request, business_id, business_location_id):
-        to_update_locations = []
+        serializer = BusinessLocationSerializer(data=request.data.get('location'))
+        serializer.is_valid(raise_exception=True)
 
-        for l in request.data.get('locations'):
-            serializer = BusinessLocationSerializer(data=l)
-            serializer.is_valid(raise_exception=True)
-            to_update_locations.append({
-                'location_id': l.get('id'),
-                'data': serializer.validated_data
-            })
+        if int(business_location_id) > 0:
+            location = BusinessLocationService().update_location(business_location_id, serializer.validated_data)
+        else:
+            location = BusinessLocationService().create_location(business_id, serializer.validated_data)
 
-        BusinessLocationService().update_locations(business_id, to_update_locations)
-        return Response({}, status=status.HTTP_200_OK)
+        return Response({
+            'location': BusinessLocationSerializer(location).data,
+            'image_key': request.data.get('image_key')
+        }, status=status.HTTP_200_OK)
 
     def delete(self, request, business_id, business_location_id):
         BusinessLocationService().remove_location(business_location_id, request.user.id)

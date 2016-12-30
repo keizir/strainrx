@@ -7,6 +7,8 @@ W.pages.business.BusinessLocations = Class.extend({
     errors: {},
 
     locations: {},
+    locationImagesToUpload: {},
+    locationImageDeferreds: [],
 
     ui: {
         $businessId: $('.business-id'),
@@ -39,6 +41,7 @@ W.pages.business.BusinessLocations = Class.extend({
             that.clickAddLocation();
             that.clickUpdateLocations();
             that.clickRemoveLocation($('.btn-trash'));
+            that.clickImage($('.upload-image'));
         });
     },
 
@@ -111,7 +114,8 @@ W.pages.business.BusinessLocations = Class.extend({
     },
 
     registerAllInputEvents: function registerAllInputEvents($input) {
-        var that = this;
+        var that = this,
+            phoneMask = W.common.Constants.masks.phone;
 
         $input.on('focusout', function () {
             that.updateLocationInputFields($(this));
@@ -119,7 +123,10 @@ W.pages.business.BusinessLocations = Class.extend({
 
         $input.on('change', function () {
             that.updateLocationCheckboxFields($(this));
+            that.ui.$btnUpdateLocations.removeAttr('disabled');
         });
+
+        $('.phone-number').mask(phoneMask.mask, {placeholder: phoneMask.placeholder});
     },
 
     updateLocationInputFields: function updateLocationInputFields($input) {
@@ -150,6 +157,14 @@ W.pages.business.BusinessLocations = Class.extend({
 
                     if (fieldName === 'location_name') {
                         that.locations[index].location_name = inputValue;
+                    }
+
+                    if (fieldName === 'location_email') {
+                        that.locations[index].location_email = inputValue;
+                    }
+
+                    if (fieldName === 'phone') {
+                        that.locations[index].phone = inputValue;
                     }
                 }
             });
@@ -236,6 +251,7 @@ W.pages.business.BusinessLocations = Class.extend({
             slide: function (event, ui) {
                 $sliderValue.text('{0} Miles'.format(ui.value));
                 that.locations[locationId].delivery_radius = ui.value;
+                that.ui.$btnUpdateLocations.removeAttr('disabled');
             }
         });
         $sliderValue.text('{0} Miles'.format($slider.slider('value')));
@@ -246,6 +262,7 @@ W.pages.business.BusinessLocations = Class.extend({
 
         this.ui.$btnAddLocation.on('click', function (e) {
             e.preventDefault();
+            that.ui.$btnUpdateLocations.removeAttr('disabled');
 
             var locationClientId = 'tmpId{0}'.format(new Date().getTime());
             that.locations[locationClientId] = {
@@ -267,6 +284,7 @@ W.pages.business.BusinessLocations = Class.extend({
             that.registerAllInputEvents($('.location-{0}'.format(locationClientId)).find('input'));
             that.changeAddress({'id': locationClientId}, $('.pac-container').length);
             that.clickRemoveLocation($('.btn-trash-{0}'.format(locationClientId)));
+            that.clickImage($('#file__{0}'.format(locationClientId)));
             that.addError(locationClientId, 'delivery__{0}'.format(locationClientId), 'Business type is required');
         });
     },
@@ -310,28 +328,62 @@ W.pages.business.BusinessLocations = Class.extend({
                 return;
             }
 
-            var locationsToSend = [];
-            $.each(that.locations, function (locationId, location) {
-                delete location.tmp_id;
-                locationsToSend.push(location);
-            });
+            that.updateBusinessLocations();
+        });
+    },
 
-            $.ajax({
-                method: 'PUT',
-                url: '/api/v1/businesses/{0}/locations/0'.format(that.ui.$businessId.val()),
-                dataType: 'json',
-                data: JSON.stringify({'locations': locationsToSend}),
-                success: function () {
-                    that.showSuccessMessage('Locations were updated');
-                    window.location.reload();
-                },
-                error: function (error) {
-                    if (error.status === 400) {
-                        var errorJson = W.common.Parser.parseJson(error.responseText);
-                        $('.common-error-messages').text(errorJson.error);
-                    }
-                }
+    updateBusinessLocations: function updateBusinessLocations() {
+        var that = this,
+            businessId = $('.business-id').val(),
+            deferreds = [];
+
+        $.each(that.locations, function (locationId, location) {
+            var imageKey = location.id || location.tmp_id;
+
+            delete location.tmp_id;
+            delete location.image;
+
+            deferreds.push(that.businessLocationDeferred(businessId, location, imageKey));
+        });
+
+        $.when.apply($, deferreds).done(function () {
+            $.when.apply($, that.locationImageDeferreds).done(function () {
+                window.location.reload();
             });
+        });
+    },
+
+    businessLocationDeferred: function businessLocationDeferred(businessId, location, imageKey) {
+        var that = this;
+        return $.ajax({
+            method: 'PUT',
+            url: '/api/v1/businesses/{0}/locations/{1}'.format(businessId, location.id ? location.id : 0),
+            dataType: 'json',
+            data: JSON.stringify({'location': location, 'image_key': imageKey}),
+            success: function (data) {
+                if (data && data.location && that.locationImagesToUpload[data.image_key]) {
+                    that.locationImageDeferreds.push(
+                        that.businessLocationImageDeferred(businessId, data.location.id, that.locationImagesToUpload[data.image_key])
+                    );
+                }
+            },
+            error: function (error) {
+                if (error.status === 400) {
+                    var errorJson = W.common.Parser.parseJson(error.responseText);
+                    $('.common-error-messages').text(errorJson.error);
+                }
+            }
+        })
+    },
+
+    businessLocationImageDeferred: function businessLocationImageDeferred(businessId, locationId, formData) {
+        return $.ajax({
+            type: 'POST',
+            url: '/api/v1/businesses/{0}/locations/{1}/image'.format(businessId, locationId),
+            enctype: 'multipart/form-data',
+            data: formData,
+            processData: false,
+            contentType: false
         });
     },
 
@@ -377,6 +429,33 @@ W.pages.business.BusinessLocations = Class.extend({
             $commonError.text('');
             $commonError.addClass('error-message').removeClass('success-message');
         }, 2000);
+    },
+
+    clickImage: function clickImage($selector) {
+        var that = this;
+        $selector.on('change', function (e) {
+            e.preventDefault();
+            var $el = $(this),
+                locationId = $el.attr('location_id'),
+                preview = $('#image__{0}'.format(locationId)),
+                file = $el[0].files[0],
+                reader = new FileReader(),
+                formData;
+
+            reader.addEventListener('load', function () {
+                preview[0].src = reader.result;
+                that.ui.$btnUpdateLocations.removeAttr('disabled');
+            }, false);
+
+            if (file) {
+                reader.readAsDataURL(file);
+
+                formData = new FormData();
+                formData.append('file', file);
+                formData.append('name', file.name);
+                that.locationImagesToUpload[locationId] = formData;
+            }
+        });
     },
 
     hasErrors: function hasErrors() {

@@ -23,6 +23,11 @@ def upload_business_image_to(instance, filename):
     return path
 
 
+def upload_business_location_image_to(instance, filename):
+    path = 'businesses/{0}/locations/{1}/images/{2}___{3}'.format(instance.business.pk, instance.pk, uuid4(), filename)
+    return path
+
+
 def validate_business_image(field_file_obj):
     file_size = field_file_obj.file.size
     megabyte_limit = settings.MAX_BUSINESS_IMAGE_SIZE
@@ -61,6 +66,10 @@ class BusinessLocation(models.Model):
     location_name = models.CharField(max_length=255, blank=True, null=True)
     manager_name = models.CharField(max_length=255, blank=True, null=True)
     location_email = models.CharField(max_length=255, blank=True, null=True)
+
+    image = models.ImageField(max_length=255, upload_to=upload_business_location_image_to, blank=True,
+                              help_text='Maximum file size allowed is 5Mb',
+                              validators=[validate_business_image])
 
     primary = models.BooleanField(default=False)
     dispensary = models.BooleanField(default=False)
