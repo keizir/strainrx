@@ -118,6 +118,10 @@ W.pages.StrainSearchResultsPage = Class.extend({
                 that.handleScrollPage();
             }
         });
+
+        setTimeout(function () {
+            $('#loading-spinner').hide();
+        }, 500);
     },
 
     buildResultsFilterMenu: function buildResultsFilterMenu() {
@@ -178,9 +182,8 @@ W.pages.StrainSearchResultsPage = Class.extend({
     handleScrollPage: function () {
         var that = this;
         this.ui.$window.on('scroll', function () {
-            // End of the document reached?
             var hasMoreResultToShow = !that.ui.$searchResultFooterRegion.hasClass('hidden');
-            if (that.ui.$document.height() - that.ui.$window.height() == that.ui.$window.scrollTop() && hasMoreResultToShow) {
+            if (that.ui.$window.scrollTop() >= (that.ui.$document.height() - that.ui.$window.height()) * 0.6 && hasMoreResultToShow) {
                 that.ui.$window.off('scroll');
                 that.getSearchResults(that.currentFilter);
             }
@@ -243,9 +246,9 @@ W.pages.StrainSearchResultsPage = Class.extend({
 
     initRating: function ($el) {
         var rating = $el.text();
-        if (rating !== 'Not Rated') {
+        if (rating && rating.indexOf('Not Rated') === -1) {
             $el.rateYo({
-                rating: rating,
+                rating: parseInt(rating, 10),
                 readOnly: true,
                 spacing: '1px',
                 normalFill: '#aaa8a8', // $grey-light
