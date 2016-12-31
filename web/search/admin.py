@@ -68,9 +68,24 @@ class StrainRatingAdmin(admin.ModelAdmin):
     actions = [remove_user_ratings]
 
 
+def approve_strain_image(modeladmin, request, queryset):
+    for image in queryset:
+        image.is_approved = True
+        image.save()
+
+
+approve_strain_image.short_description = 'Approve Image'
+
+
 @admin.register(StrainImage)
 class StrainImageAdmin(admin.ModelAdmin):
-    pass
+    list_display = ['strain', 'created_by', 'is_approved', 'created_date', 'image']
+    search_fields = ['strain__name', 'created_by__email', 'created_by__first_name', 'created_by__last_name',
+                     'is_approved']
+    list_filter = ['is_approved', 'created_date']
+    ordering = ['-created_date']
+    readonly_fields = ['strain', 'created_by', 'created_date', 'image']
+    actions = [approve_strain_image]
 
 
 @admin.register(Effect)

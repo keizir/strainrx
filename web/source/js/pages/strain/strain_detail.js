@@ -540,10 +540,40 @@ W.pages.strain.StrainDetailPage = Class.extend({
                     contentType: false,
                     success: function () {
                         $('.loader').addClass('hidden');
-                        $('.btn-upload-image-submit').removeClass('hidden');
-                        $('.upload-image-dialog').dialog('close');
+                        $('.btn-upload-image-submit').addClass('hidden');
+                        $('.submitted-message').removeClass('hidden');
+
+                        var $btn = $('.btn-close');
+                        $btn.removeClass('hidden');
+                        $btn.on('click', function () {
+                            $btn.addClass('hidden');
+                            $('.btn-upload-image-submit').removeClass('hidden');
+                            $('.photo-camera-wrapper').removeClass('hidden');
+                            $('.preview-image-wrapper').addClass('hidden');
+                            $('.submitted-message').addClass('hidden');
+                            $('.upload-image-dialog').dialog('close');
+                        });
                     }
                 });
+            });
+
+            $('.upload-image').on('change', function (e) {
+                e.preventDefault();
+                var $el = $(this),
+                    preview = $('.preview-image'),
+                    file = $el[0].files[0],
+                    reader = new FileReader();
+
+                reader.addEventListener('load', function () {
+                    $('.photo-camera-wrapper').addClass('hidden');
+                    $('.preview-image-wrapper').removeClass('hidden');
+                    $('.btn-upload-image-submit').removeAttr('disabled');
+                    preview[0].src = reader.result;
+                }, false);
+
+                if (file) {
+                    reader.readAsDataURL(file);
+                }
             });
         });
     },

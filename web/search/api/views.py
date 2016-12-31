@@ -180,13 +180,8 @@ class StrainUploadImageView(LoginRequiredMixin, APIView):
     def post(self, request, strain_id):
         file = request.FILES.get('file')
         strain = Strain.objects.get(pk=strain_id)
-
-        image = StrainImage()
-        image.image = file
-        image.strain = strain
-        image.created_by = request.user
+        image = StrainImage(image=file, strain=strain, created_by=request.user)
         image.save()
-
         return Response({}, status=status.HTTP_200_OK)
 
 

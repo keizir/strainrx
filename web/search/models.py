@@ -116,8 +116,11 @@ class StrainImage(models.Model):
     created_date = models.DateField(blank=False, null=False, default=datetime.now)
     created_by = models.ForeignKey(User, on_delete=models.DO_NOTHING)
 
+    is_approved = models.BooleanField(default=False)
+
     def __str__(self):
-        return self.strain
+        i = self.image
+        return i.url if i and i.url else None
 
 
 @python_2_unicode_compatible

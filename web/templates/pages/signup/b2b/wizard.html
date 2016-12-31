@@ -61,3 +61,12 @@
         W.pages.b2b.SignUpView.init();
     </script>
 {% endblock %}
+
+{% block modal %}
+    <div class="dialog info-dialog privacy-dialog hidden" title="Privacy Policy">
+        {% include "pages/privacy_text.html" %}
+    </div>
+    <div class="dialog info-dialog terms-dialog hidden" title="Terms of Use">
+        {% include "pages/terms_text.html" %}
+    </div>
+{% endblock %}

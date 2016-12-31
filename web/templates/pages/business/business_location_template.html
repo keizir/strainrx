@@ -67,6 +67,7 @@
                 <img class="bus-loc-logo" src="{% static 'images/leaf-grey.png' %}" id="image__<%= l.id %>">
             </label>
             <% } %>
+            <label class="btn btn-primary" for="file__<%= l.id %>">Edit Profile Image</label>
         </div>
         <% if (!l.delivery) { %>
         <div class="form-field-group slider-area slider-area-<%= l.id %> hidden">

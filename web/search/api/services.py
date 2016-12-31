@@ -7,7 +7,7 @@ from web.search.services import build_strain_rating
 class StrainDetailsService:
     def build_strain_details(self, strain_id, current_user):
         strain = Strain.objects.get(pk=strain_id)
-        image = StrainImage.objects.filter(strain=strain)[:1]
+        image = StrainImage.objects.filter(strain=strain, is_approved=True)[:1]
         strain_origins = self.get_strain_origins(strain)
         rating = build_strain_rating(strain)
         strain_srx_score = self.calculate_srx_score(strain, current_user)

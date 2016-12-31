@@ -1,6 +1,10 @@
 import uuid
 from datetime import datetime
 
+from boto.s3.bucket import Bucket
+from boto.s3.connection import S3Connection
+from boto.s3.key import Key
+from django.conf import settings
 from django.core.exceptions import ValidationError
 
 from web.businesses.models import BusinessLocation, Business
@@ -152,6 +156,12 @@ class BusinessLocationService:
         l.removed_by = current_user_id
         l.removed_date = datetime.now()
         l.save()
+
+        if l.image and l.image.url:
+            conn = S3Connection(settings.AWS_ACCESS_KEY_ID, settings.AWS_SECRET_ACCESS_KEY)
+            bucket = Bucket(conn, settings.AWS_STORAGE_BUCKET_NAME)
+            k = Key(bucket=bucket, name=l.image.url.split(bucket.name)[1])
+            k.delete()
 
         if l.primary:
             locations = BusinessLocation.objects.filter(business__id=l.business.id, removed_date=None).order_by('id')

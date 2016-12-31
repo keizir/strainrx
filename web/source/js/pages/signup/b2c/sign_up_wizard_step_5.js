@@ -15,8 +15,18 @@ W.pages.b2c.SignUpWizardStep5 = W.common.WizardStep.extend({
 
     initEventHandlers: function initEventHandlers() {
         this._super();
-        $('.check').on('click', function (e) {
+        $('.check').on('click', function () {
             $('.error-message').text('');
+        });
+
+        $('.terms-link').on('click', function (e) {
+            e.preventDefault();
+            W.common.Dialog($('.terms-dialog'));
+        });
+
+        $('.policy-link').on('click', function (e) {
+            e.preventDefault();
+            W.common.Dialog($('.privacy-dialog'));
         });
     },
 

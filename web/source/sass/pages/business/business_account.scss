@@ -315,16 +315,16 @@
 
                         .hours {
                             display: inline-block;
-                            width: 55%;
+                            width: 50%;
 
                             .open-hours,
                             .close-hours {
                                 display: inline-block;
-                                width: 34%;
+                                width: 30%;
                             }
 
                             select {
-                                width: 40%;
+                                width: 100%;
                             }
                         }
 

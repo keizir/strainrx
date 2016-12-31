@@ -63,13 +63,22 @@
             <span class="photo-camera-wrapper">
                 <i class="fa fa-camera fa-5x" aria-hidden="true"></i>
             </span>
+            <span class="preview-image-wrapper hidden">
+                <img alt="Preview" src="" class="preview-image"/>
+            </span>
             <div class="form-group">
                 <div class="form-field">
-                    <input type="file" class="upload-image" value="Choose File"/>
+                    <input type="file" id="image-file" class="upload-image"/>
+                    <label for="image-file">Choose File</label>
                 </div>
             </div>
+            <div class="submitted-message hidden">
+                <span class="success-message message-1">Photo Successfully Submitted</span>
+                <span class="message-2">pending administrative review</span>
+            </div>
             <div class="form-actions">
-                <button class="btn-primary btn-upload-image-submit" type="submit">Upload</button>
+                <button class="btn-primary btn-upload-image-submit" type="submit" disabled="disabled">Upload</button>
+                <button class="btn-primary btn-close hidden" type="button">Close</button>
                 <div class="loader hidden">
                     <i class="fa fa-refresh fa-3x rotating" aria-hidden="true"></i>
                 </div>

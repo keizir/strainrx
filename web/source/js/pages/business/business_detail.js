@@ -34,8 +34,17 @@ W.pages.business.BusinessDetail = Class.extend({
         this.clickUpdateBusinessInfo();
         this.changeLocation();
 
-        $('input').on('focus', function () {
+        var $input = $('input');
+        $input.on('focus', function () {
             $('.error-message').text('');
+        });
+
+        $input.on('change', function () {
+            that.ui.$btnUpdateInfo.removeAttr('disabled');
+        });
+
+        $input.on('keyup', function () {
+            that.ui.$btnUpdateInfo.removeAttr('disabled');
         });
     },
 
@@ -50,75 +59,32 @@ W.pages.business.BusinessDetail = Class.extend({
     },
 
     preselectHours: function preselectHours(location) {
+        var that = this;
+
         findAndSelect('mon_open', location);
         findAndSelect('mon_close', location);
-        selectIsClosed('mon');
-
         findAndSelect('tue_open', location);
         findAndSelect('tue_close', location);
-        selectIsClosed('tue');
-
         findAndSelect('wed_open', location);
         findAndSelect('wed_close', location);
-        selectIsClosed('wed');
-
         findAndSelect('thu_open', location);
         findAndSelect('thu_close', location);
-        selectIsClosed('thu');
-
         findAndSelect('fri_open', location);
         findAndSelect('fri_close', location);
-        selectIsClosed('fri');
-
         findAndSelect('sat_open', location);
         findAndSelect('sat_close', location);
-        selectIsClosed('sat');
-
         findAndSelect('sun_open', location);
         findAndSelect('sun_close', location);
-        selectIsClosed('sun');
 
         function findAndSelect(selectName, location) {
             var value = location[selectName],
-                $input = $('input[name="{0}"]'.format(selectName)),
-                $select = $('select[name="{0}_am_pm"]'.format(selectName)),
-                valueSplit, time, timeAmPm,
-                timeMask = W.common.Constants.masks.time;
+                $select = $('select[name="{0}"]'.format(selectName));
 
-            $input.mask(timeMask.mask, {placeholder: timeMask.placeholder});
+            $select.find('option').removeProp('selected');
+            $select.find('option[value="{0}"]'.format(value !== null ? value : '')).prop('selected', 'selected');
 
-            if (value) {
-                valueSplit = value.split(' ');
-                time = valueSplit[0];
-                timeAmPm = valueSplit[1];
-                $input.val(time);
-                $select.find('option[value="{0}"]'.format(timeAmPm)).prop('selected', 'selected');
-            }
-        }
-
-        function selectIsClosed(day) {
-            var $isClosed = $('input[name="{0}_is_closed"]'.format(day)),
-                $open = $('input[name="{0}_open"]'.format(day)),
-                $close = $('input[name="{0}_close"]'.format(day));
-
-            if (!$open.val() && !$close.val()) {
-                $isClosed.attr('checked', true);
-            }
-
-            $open.on('focusout', function () {
-                if ($(this).val()) {
-                    $isClosed.attr('checked', false);
-                } else {
-                    $isClosed.attr('checked', true);
-                }
-            });
-
-            $close.on('focusout', function () {
-                if ($(this).val()) {
-                    $isClosed.attr('checked', false);
-                } else {
-                    $isClosed.attr('checked', true);
-                }
+            $select.on('change', function () {
+                that.ui.$btnUpdateInfo.removeAttr('disabled');
             });
         }
     },
@@ -136,15 +102,13 @@ W.pages.business.BusinessDetail = Class.extend({
     },
 
     getOpenTime: function getOpenTime(day) {
-        var time = $('input[name="{0}_open"]'.format(day)).val(),
-            amPm = $('select[name="{0}_open_am_pm"]'.format(day)).val();
-        return time ? '{0} {1}'.format(time, amPm) : null;
+        var val = $('select[name="{0}_open"]'.format(day)).val();
+        return val !== '' ? val : null;
     },
 
     getCloseTime: function getCloseTime(day) {
-        var time = $('input[name="{0}_close"]'.format(day)).val(),
-            amPm = $('select[name="{0}_close_am_pm"]'.format(day)).val();
-        return time ? '{0} {1}'.format(time, amPm) : null;
+        var val = $('select[name="{0}_close"]'.format(day)).val();
+        return val !== '' ? val : null;
     },
 
     getValidatedData: function getValidatedData() {
@@ -206,39 +170,9 @@ W.pages.business.BusinessDetail = Class.extend({
                 dayInvalid = true;
             }
 
-            if (openTime && !openTime.split(' ')[1]) {
-                $errorMessage.text('{0} open time should have AM/PM specified'.format(day.name));
-                dayInvalid = true;
-            }
-
-            if (closeTime && !closeTime.split(' ')[1]) {
-                $errorMessage.text('{0} close time should have AM/PM specified'.format(day.name));
-                dayInvalid = true;
-            }
-
             if ((openTime && !closeTime) || (!openTime && closeTime)) {
-                $errorMessage.text('{0} should have both open and close time selected'.format(day.name));
+                $errorMessage.text('{0} should have both open and close time selected.'.format(day.name));
                 dayInvalid = true;
-            }
-
-            if (openTime) {
-                var oTime = openTime.split(' ')[0],
-                    oParts = oTime.split(':');
-
-                if (!oParts || oParts.length <= 1) {
-                    $errorMessage.text('{0} open time should be in HH:MM format'.format(day.name));
-                    dayInvalid = true;
-                }
-            }
-
-            if (closeTime) {
-                var cTime = closeTime.split(' ')[0],
-                    cParts = cTime.split(':');
-
-                if (!cParts || cParts.length <= 1) {
-                    $errorMessage.text('{0} close time should be in HH:MM format'.format(day.name));
-                    dayInvalid = true;
-                }
             }
         });
 
@@ -302,6 +236,7 @@ W.pages.business.BusinessDetail = Class.extend({
         var that = this;
 
         this.ui.$locations.on('change', function () {
+            that.ui.$btnUpdateInfo.attr('disabled', 'disabled');
             var locationId = $(this).val();
             that.retrieveLocation(locationId, function (location) {
                 if (location) {

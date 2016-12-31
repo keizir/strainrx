@@ -18,6 +18,16 @@ W.pages.b2b.SignUpWizardStep9 = W.common.WizardStep.extend({
         $('.check').on('click', function () {
             $('.error-message').text('');
         });
+
+        $('.terms-link').on('click', function (e) {
+            e.preventDefault();
+            W.common.Dialog($('.terms-dialog'));
+        });
+
+        $('.policy-link').on('click', function (e) {
+            e.preventDefault();
+            W.common.Dialog($('.privacy-dialog'));
+        });
     },
 
     renderHTML: function () {

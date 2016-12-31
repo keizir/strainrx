@@ -126,6 +126,10 @@ W.pages.business.BusinessLocations = Class.extend({
             that.ui.$btnUpdateLocations.removeAttr('disabled');
         });
 
+        $input.on('keyup', function () {
+            that.ui.$btnUpdateLocations.removeAttr('disabled');
+        });
+
         $('.phone-number').mask(phoneMask.mask, {placeholder: phoneMask.placeholder});
     },
 

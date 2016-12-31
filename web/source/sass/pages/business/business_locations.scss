@@ -160,7 +160,6 @@
                 width: 14em;
                 padding: 0.5em;
                 border: 1px solid $grey-normal;
-                cursor: pointer;
 
                 img {
                     display: block;
@@ -184,6 +183,16 @@
 
                 .upload-image:focus + label {
                     outline: 1px solid $iris-blue;
+                }
+
+                .btn-primary {
+                    display: block;
+                    width: 100%;
+                    margin: 0.5em 0 0;
+                    padding: 0.5em 1em;
+                    cursor: pointer;
+                    text-align: center;
+                    color: $white;
                 }
             }
         }

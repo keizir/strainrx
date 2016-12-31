@@ -75,15 +75,13 @@
                 <span class="title">Popularity</span>
                 <h1>A</h1>
             </div>
+            <% if (model.strain_srx_score > 0) { %>
             <div class="match-score-wrapper">
                 <span class="title">Match Score</span>
-                <% if (model.strain_srx_score > 0) { %>
                 <span class="score-value"><%= model.strain_srx_score %></span>
                 <span class="percent-sign">%</span>
-                <% } else { %>
-                <span class="score-value">n/a</span>
-                <% } %>
             </div>
+            <% } %>
         </div>
     </div>
     <% if (model.strain.about) { %>
