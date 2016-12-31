@@ -18,6 +18,7 @@ W.pages.search.strain.SearchWizardStep = W.common.WizardStep.extend({
 
         this.currentUserId = options && options.currentUserId;
         this.skip_el = options && options.skip_el;
+        this.back_el = options && options.back_el;
     },
 
     initEventHandlers: function initEventHandlers() {
@@ -34,6 +35,11 @@ W.pages.search.strain.SearchWizardStep = W.common.WizardStep.extend({
             e.preventDefault();
             that.skip();
         });
+
+        $(this.back_el).on('click', function (e) {
+            e.preventDefault();
+            that.back();
+        });
     },
 
     validate: function validate() {
@@ -42,6 +48,10 @@ W.pages.search.strain.SearchWizardStep = W.common.WizardStep.extend({
 
     skip: function skip() {
         throw new Error('Child class must implement skip.');
+    },
+
+    back: function back() {
+        throw new Error('Child class must implement back before use.');
     },
 
     restoreState: function restoreState() {
@@ -133,19 +143,18 @@ W.pages.search.strain.SearchWizardStep = W.common.WizardStep.extend({
         $('.slider').slider({
             value: 1, min: 1, max: 5, step: 1,
             slide: function (event, ui) {
-                that.handleSlideChange(ui, container)
+                that.handleSlideChange(ui.value, container)
             }
         });
     },
 
-    handleSlideChange: function handleSlideChange(ui, container) {
+    handleSlideChange: function handleSlideChange(value, container) {
         var that = this;
         container.forEach(function (effect) {
             if (effect.name === that.currentEffectName) {
-                var sliderValue = ui.value,
-                    $effectValue = $('#' + that.currentEffectName).parent().find('.importance-value');
-                effect.value = sliderValue;
-                $effectValue.text(sliderValue);
+                var $effectValue = $('#' + that.currentEffectName).parent().find('.importance-value');
+                effect.value = value;
+                $effectValue.text(value);
             }
         });
     },

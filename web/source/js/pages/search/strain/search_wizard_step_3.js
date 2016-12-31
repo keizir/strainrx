@@ -14,6 +14,7 @@ W.pages.search.strain.SearchWizardStep3 = W.pages.search.strain.SearchWizardStep
             currentUserId: options && options.currentUserId,
             submit_el: '.btn-step-3',
             skip_el: '.btn-skip-3',
+            back_el: '.btn-go-back',
             template_el: '#search-wizard-step3'
         });
     },
@@ -36,14 +37,23 @@ W.pages.search.strain.SearchWizardStep3 = W.pages.search.strain.SearchWizardStep
     submit: function submit() {
         var that = this;
         this.showDialogOrProceed(this.selectedBenefits, function () {
-            $.publish('update_step_data', {step: that.step, data: {effects: that.selectedBenefits}});
+            var data = {step: that.step, data: {effects: that.selectedBenefits}};
+            window.history.pushState(data, 'search-step-3', '/search/strain/wizard/#4');
+            $.publish('update_step_data', data);
             $.publish('show_step', {step: 4});
         });
     },
 
     skip: function skip() {
-        $.publish('update_step_data', {step: this.step, data: {skipped: true}});
+        var data = {step: this.step, data: {skipped: true}};
+        window.history.pushState(data, 'search-step-3', '/search/strain/wizard/#4');
+        $.publish('update_step_data', data);
         $.publish('show_step', {step: 4});
+    },
+
+    back: function back() {
+        $.publish('update_step_data', {step: this.step, data: {effects: this.selectedBenefits}});
+        $.publish('show_refreshed_step', {step: 2});
     },
 
     restoreState: function restoreState() {

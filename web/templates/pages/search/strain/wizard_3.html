@@ -1,7 +1,7 @@
 <script type="x/srx-template" id="search-wizard-step3">
     <div class="search-form-wrapper">
         <h1>What type of ailments do you want to alleviate?</h1>
-        <h3>(Choose up to 5 Effects)</h3>
+        <h3>(Choose up to 5 effects and select the importance of each one)</h3>
         <div class="form effects-form">
             <div class="fields benefits">
                 <% _.each(benefits, function(b) { %>
@@ -30,6 +30,9 @@
                         {% if is_2nd_step_skipped %}disabled="disabled"{% endif %}>Skip
                 </button>
                 <button class="btn-primary btn-step-3" type="submit" disabled="disabled">Next</button>
+                <button class="btn-primary btn-go-back" type="button">
+                    <i class="fa fa-caret-left" aria-hidden="true"></i>Back to previous step
+                </button>
             </div>
         </div>
     </div>

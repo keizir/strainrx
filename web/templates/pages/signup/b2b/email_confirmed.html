@@ -43,5 +43,10 @@
 
 {% block javascript %}
     {{ block.super }}
+    <script>
+        $(document).ready(function () {
+            $('.verify-email-nav-link').addClass('hidden');
+        });
+    </script>
 {% endblock %}
 

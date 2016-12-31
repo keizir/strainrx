@@ -62,13 +62,18 @@ W.pages.search.strain.SearchWizard = W.common.Wizard.extend({
     },
 
     initSteps: function initSteps() {
-        var currentUserId = this.ui.$currentUserId.val(),
+        var that = this,
+            currentUserId = this.ui.$currentUserId.val(),
             stepData = {model: this.model, currentUserId: currentUserId};
 
         this.steps[1] = new W.pages.search.strain.SearchWizardStep1(stepData);
         this.steps[2] = new W.pages.search.strain.SearchWizardStep2(stepData);
         this.steps[3] = new W.pages.search.strain.SearchWizardStep3(stepData);
         this.steps[4] = new W.pages.search.strain.SearchWizardStep4(stepData);
+
+        $(window).hashchange(function () {
+            that.refreshSearchSettingAndRenderStep({step: parseInt(location.hash.split('#')[1], 10)});
+        });
     },
 
     clickStep: function clickStep() {
@@ -106,6 +111,7 @@ W.pages.search.strain.SearchWizard = W.common.Wizard.extend({
     },
 
     renderStepContent: function renderStepContent(step) {
+        window.location.hash = step;
         this.handleStepClick(step);
         this.prepareContentAndShow(step);
     },

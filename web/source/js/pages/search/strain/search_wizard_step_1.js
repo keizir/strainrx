@@ -65,19 +65,23 @@ W.pages.search.strain.SearchWizardStep1 = W.pages.search.strain.SearchWizardStep
     },
 
     submit: function submit() {
-        $.publish('update_step_data', {
+        var data = {
             step: this.step,
             data: {
                 sativa: $('input[name="sativa"]').is(":checked"),
                 hybrid: $('input[name="hybrid"]').is(":checked"),
                 indica: $('input[name="indica"]').is(":checked")
             }
-        });
+        };
+        window.history.pushState(data, 'search-step-1', '/search/strain/wizard/#2');
+        $.publish('update_step_data', data);
         $.publish('show_step', {step: 2});
     },
 
     skip: function skip() {
-        $.publish('update_step_data', {step: this.step, data: {skipped: true}});
+        var data = {step: this.step, data: {skipped: true}};
+        window.history.pushState(data, 'search-step-1', '/search/strain/wizard/#2');
+        $.publish('update_step_data', data);
         $.publish('show_step', {step: 2});
     },
 

@@ -25,10 +25,6 @@
                     <span class="message-1">
                         Your account has been created. You can now enjoy the full benefits os StrainRx.
                     </span>
-                    <span class="message-2">
-                        You will be redirected to the homepage in 5 seconds.
-                        If you are not, click <a href="{% url 'home' %}">here</a>.
-                    </span>
                 </div>
             </div>
         </div>
@@ -39,9 +35,7 @@
     {{ block.super }}
     <script>
         $(document).ready(function () {
-            setTimeout(function () {
-                window.location.href = '/';
-            }, 5000);
+            $('.verify-email-nav-link').addClass('hidden');
         });
     </script>
 {% endblock %}

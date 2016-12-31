@@ -5,24 +5,29 @@
             <div class="fields effects">
                 <% _.each(side_effects, function(se) { %>
                 <div class="form-field">
-                    <span class="strain-effect" id="<%= _.escape(se.data_name) %>"><%= _.escape(se.display_name) %></span>
+                    <span class="strain-effect" id="<%= _.escape(se.data_name) %>">
+                        <%= _.escape(se.display_name) %>
+                    </span>
                     <span class="importance-value hidden">1</span>
                     <span class="removable hidden"></span>
                 </div>
                 <% }); %>
             </div>
             <div class="slider-wrapper hidden">
-                <span class="slider-step-label">Little Tolerance</span>
-                <span class="slider-step-label">Mild Tolerance</span>
-                <span class="slider-step-label">Moderate Tolerance</span>
-                <span class="slider-step-label">Strong Tolerance</span>
-                <span class="slider-step-label">Extreme Tolerance</span>
+                <span class="slider-step-label">Not very bothersome</span>
+                <span class="slider-step-label">It bothers me a little</span>
+                <span class="slider-step-label">It bothers me</span>
+                <span class="slider-step-label">It bothers me a lot</span>
+                <span class="slider-step-label">Extremely bothersome</span>
                 <div class="slider"></div>
             </div>
             <span class="error-message"></span>
             <div class="form-actions">
                 <button class="btn-secondary btn-skip-4" type="submit">Skip</button>
                 <button class="btn-primary btn-step-4" type="submit" disabled="disabled">Next</button>
+                <button class="btn-primary btn-go-back" type="button">
+                    <i class="fa fa-caret-left" aria-hidden="true"></i>Back to previous step
+                </button>
             </div>
         </div>
     </div>
