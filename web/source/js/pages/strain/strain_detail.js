@@ -17,6 +17,8 @@ W.pages.strain.StrainDetailPage = Class.extend({
         expandedLocation: _.template($('#strain_detail_available_location').html())
     },
 
+    priceSort: 'asc',
+
     init: function init() {
         var that = this;
         this.name = 'StrainDetailPage';
@@ -608,14 +610,7 @@ W.pages.strain.StrainDetailPage = Class.extend({
                 $('.price').on('click', function () {
                     $('.prices-wrapper').addClass('hidden');
                     var priceType = $(this).attr('id');
-                    $('.price-value').each(function (index, $el) {
-                        var $price = $($el);
-                        if ($price.attr('id') === priceType) {
-                            $price.addClass('active');
-                        } else {
-                            $price.removeClass('active');
-                        }
-                    });
+                    that.sortByPrice(priceType, false);
                 });
 
                 $('.dispensary-rating').each(function () {
@@ -672,7 +667,7 @@ W.pages.strain.StrainDetailPage = Class.extend({
         });
 
         $priceSort.on('click', function () {
-            that.sortByPrice($priceSort, $('.price-value.active').attr('id'));
+            that.sortByPrice($('.price-value.active').attr('id'), true);
         });
     },
 
@@ -713,9 +708,12 @@ W.pages.strain.StrainDetailPage = Class.extend({
         });
     },
 
-    sortByPrice: function sortByPrice($sort, sortFieldName) {
+    sortByPrice: function sortByPrice(sortFieldName, changeOrder) {
         var that = this, url;
-        this.priceSort = this.priceSort === 'asc' ? 'desc' : 'asc';
+
+        if (changeOrder) {
+            this.priceSort = this.priceSort === 'asc' ? 'desc' : 'asc';
+        }
 
         url = '/api/v1/search/strain/{0}/deliveries?filter={1}&order_field={2}&order_dir={3}'
             .format(this.ui.$strainId.val(), 'all', sortFieldName, this.priceSort);
@@ -737,10 +735,12 @@ W.pages.strain.StrainDetailPage = Class.extend({
                         that.initRating($ratingSelector, $ratingSelector.text());
                     });
 
-                    $.each($('.price'), function () {
-                        var $el = $(this);
-                        if ($el.attr('id') === sortFieldName) {
-                            $el.trigger('click');
+                    $('.price-value').each(function (index, $el) {
+                        var $price = $($el);
+                        if ($price.attr('id') === sortFieldName) {
+                            $price.addClass('active');
+                        } else {
+                            $price.removeClass('active');
                         }
                     });
                 }

@@ -308,19 +308,12 @@ W.pages.StrainSearchResultsPage = Class.extend({
         $('.price').on('click', function () {
             $('.prices-wrapper').addClass('hidden');
             var priceType = $(this).attr('id');
-            $('.price-value').each(function (index, $el) {
-                var $price = $($el);
-                if ($price.attr('id') === priceType) {
-                    $price.addClass('active');
-                } else {
-                    $price.removeClass('active');
-                }
-            });
+            that.sortByPrice(priceType, isLocations, position, false);
         });
 
         $priceSort = $('.price-expander');
         $priceSort.on('click', function () {
-            that.sortByPrice($priceSort, isLocations, position);
+            that.sortByPrice($('.price-value.active').attr('id'), isLocations, position, true);
         });
     },
 
@@ -332,14 +325,16 @@ W.pages.StrainSearchResultsPage = Class.extend({
         });
     },
 
-    sortByPrice: function sortByPrice($priceSort, isLocations, position) {
-        var that = this, fieldName = $('.price-value.active').attr('id'), url;
+    sortByPrice: function sortByPrice(sortFieldName, isLocations, position, changeSortOrder) {
+        var that = this, url;
 
-        this.currentSort = this.currentSort === 'asc' ? 'desc' : 'asc';
+        if (changeSortOrder) {
+            this.currentSort = this.currentSort === 'asc' ? 'desc' : 'asc';
+        }
 
         url = '/api/v1/search/strain/{0}/deliveries?filter={1}&order_field={2}&order_dir={3}&location_type={4}'
             .format($('#strain-id-{0}'.format(position)).val(), this.ui.$menuActiveLink.attr('filter'),
-                fieldName, this.currentSort, isLocations ? 'dispensary' : 'delivery');
+                sortFieldName, this.currentSort, isLocations ? 'dispensary' : 'delivery');
 
         $.ajax({
             method: 'GET',
@@ -357,10 +352,12 @@ W.pages.StrainSearchResultsPage = Class.extend({
                         that.initRating($(el));
                     });
 
-                    $.each($('.price'), function () {
-                        var $el = $(this);
-                        if ($el.attr('id') === fieldName) {
-                            $el.trigger('click');
+                    $('.price-value').each(function (index, $el) {
+                        var $price = $($el);
+                        if ($price.attr('id') === sortFieldName) {
+                            $price.addClass('active');
+                        } else {
+                            $price.removeClass('active');
                         }
                     });
                 }
