@@ -95,7 +95,7 @@ W.views.LocationView = Class.extend({
         if (locationRaw) {
             var parsed = JSON.parse(locationRaw);
             if (parsed && parsed[0] && $locationInput) {
-                $locationInput.val(parsed[0].formatted_address);
+                $locationInput.val(parsed[0].formatted_address).trigger('change');
             }
         }
 

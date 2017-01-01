@@ -210,22 +210,15 @@
             }
         }
 
-        .city-field-group {
-            .form-field {
-                margin: 0;
-            }
+        .address-field-group {
+            position: relative;
 
-            .form-field.city {
-                width: 40%;
-            }
-
-            .form-field.state {
-                width: 20%;
-                margin: 0 4%;
-            }
-
-            .form-field.zipcode {
-                width: 30%;
+            .removable {
+                display: inline-block;
+                position: absolute;
+                right: 0.6em;
+                top: 2.7em;
+                cursor: pointer;
             }
         }
 

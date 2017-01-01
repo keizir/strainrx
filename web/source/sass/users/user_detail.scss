@@ -196,12 +196,21 @@
         }
 
         .address-form-field {
+            position: relative;
             float: left;
             width: 63.5%;
             margin-right: 0;
 
             input {
                 width: 100%;
+            }
+
+            .removable {
+                display: inline-block;
+                position: absolute;
+                right: 0.6em;
+                top: 2.5em;
+                cursor: pointer;
             }
         }
 
@@ -317,6 +326,10 @@
             input {
                 width: 18em;
             }
+
+            .removable {
+                right: 16.6em;
+            }
         }
 
         .timezone-form-field {
@@ -384,6 +397,10 @@
 
             input {
                 width: 18em;
+            }
+
+            .removable {
+                right: 3.6em;
             }
         }
 

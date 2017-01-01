@@ -55,7 +55,7 @@ W.pages.strain.StrainLookup = Class.extend({
                         });
                     },
                     error: function () {
-                        alert('Please, login or sign up to search strains.');
+                        window.location.href = '/users/signup/wizard/';
                     }
                 });
             } else {
@@ -123,17 +123,13 @@ W.pages.strain.StrainLookup = Class.extend({
         if (data) {
             var totalResults = data.total,
                 payloads = data.payloads,
+                itemHtml = '<span class="search-payload" id="{0}" slug="{1}" variety="{2}">{3}</span>',
                 payloadHtml = '';
 
             if (totalResults && totalResults > 0) {
                 $.each(payloads, function (index, payload) {
-                    payloadHtml +=
-                        '<span class="search-payload" ' +
-                        'id="' + payload.id + '" ' +
-                        'slug="' + payload.strain_slug + '" ' +
-                        'variety="' + payload.variety + '">' + payload.name + '</span>';
+                    payloadHtml += itemHtml.format(payload.id, payload.strain_slug, payload.variety, payload.name);
                 });
-
                 return payloadHtml;
             }
         }

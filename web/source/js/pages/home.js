@@ -11,8 +11,8 @@ W.pages.HomePage = Class.extend({
 
         this.initStrainLookupField();
         this.clickLookupSubmit();
-        this.preFillUserLocation();
         this.changeLocation();
+        this.preFillUserLocation();
     },
 
     initStrainLookupField: function initStrainLookupField() {
@@ -38,7 +38,7 @@ W.pages.HomePage = Class.extend({
 
     preFillUserLocation: function preFillUserLocation() {
         if (this.location) {
-            $('.your-location-value').val(W.common.Format.formatAddress(this.location));
+            $('.your-location-value').val(W.common.Format.formatAddress(this.location)).trigger('change');
         }
     },
 
@@ -66,6 +66,22 @@ W.pages.HomePage = Class.extend({
 
                     that.saveUserLocation(address);
                 }
+            },
+            function ($input) {
+                var $removeBtn = $('.remove-location');
+                $('.check').hide();
+                $removeBtn.removeClass('hidden');
+                $removeBtn.on('click', function () {
+                    if (that.authenticated) {
+                        // TODO remove when auth
+                    } else {
+                        Cookies.remove('user_geo_location');
+                    }
+
+                    $removeBtn.addClass('hidden');
+                    $('.check').show();
+                    $($input).val('');
+                });
             });
     },
 

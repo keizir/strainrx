@@ -15,8 +15,8 @@ W.users.DetailPage = Class.extend({
             that.ui.$messagesRegion.text('');
         });
 
-        this.preFillUserAddress();
         this.changeAddress();
+        this.preFillUserAddress();
 
         this.clickUpdateUserInfo();
         this.clickChangePassword();
@@ -33,7 +33,7 @@ W.users.DetailPage = Class.extend({
                     that.location = data.location;
 
                     if (l) {
-                        $('input[name="address"]').val(W.common.Format.formatAddress(l));
+                        $('input[name="address"]').val(W.common.Format.formatAddress(l)).trigger('change');
                     }
                 }
             }
@@ -60,6 +60,15 @@ W.users.DetailPage = Class.extend({
                     $el.val(W.common.Format.formatAddress(that.location));
                     $el.blur();
                 }
+            },
+            function ($input) {
+                var $removeBtn = $($input).parent().find('.remove-location');
+                $removeBtn.removeClass('hidden');
+                $removeBtn.on('click', function () {
+                    that.location = {location_raw: {}};
+                    $removeBtn.addClass('hidden');
+                    $($input).val('');
+                });
             });
     },
 

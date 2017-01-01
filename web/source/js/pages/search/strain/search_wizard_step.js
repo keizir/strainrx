@@ -220,7 +220,7 @@ W.pages.search.strain.SearchWizardStep = W.common.WizardStep.extend({
             $effect.removeClass('active');
             $effectCloseBtn.addClass('hidden');
             $importanceValue.addClass('hidden');
-            $importanceValue.text(1);
+            $importanceValue.text(that.step === 4 ? 5 : 1);
 
             for (var i = 0; i < container.length; i++) {
                 if (container[i].name === effectName) {

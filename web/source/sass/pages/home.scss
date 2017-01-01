@@ -1,10 +1,11 @@
 @import '../mixins/variables';
 
 .home-row-01 {
-    background: $grey-light url(../../images/weed_dark.jpg) no-repeat fixed center center;
+    background: $grey-light url(../../images/weed_dark.jpg) no-repeat top center;
     -webkit-background-size: cover;
+    background-size: cover;
     text-align: center;
-    height: 26em;
+    height: 30em;
     display: block;
     z-index: 1;
 
@@ -16,13 +17,97 @@
         width: 34em;
         margin: 0 auto 2em auto;
     }
+
+    .home-sub-row-01 {
+        display: block;
+        width: 100%;
+        height: 8em;
+
+        .location-holder {
+            display: inline-block;
+            float: left;
+            margin-top: 2em;
+            line-height: 3em;
+
+            form > fieldset {
+                position: relative;
+                border: none;
+                padding: 0.35em 0.3em;
+                margin: 0;
+                text-align: left;
+            }
+
+            .check {
+                margin-left: -30px;
+            }
+
+            .removable {
+                position: relative;
+                right: 2.4em;
+                top: 0.44em;
+                cursor: pointer;
+            }
+
+            .your-location {
+                border: 1px solid $grey-dark;
+                border-bottom-left-radius: 0.5em;
+                border-top-left-radius: 0.5em;
+                border-right: none;
+                padding: 0.64em 0.75em 0.81em;
+                margin-right: -5px;
+                color: $white;
+                background: $grey;
+                opacity: 0.8;
+            }
+
+            .your-location-value {
+                border: 1px solid $grey-dark;
+                border-left: none;
+                border-radius: 0 0.5em 0.5em 0;
+                padding: 0.75em;
+                width: 30em;
+                opacity: 0.8;
+                color: $grey-dark;
+            }
+        }
+
+        .favorites-holder {
+            display: inline-block;
+            float: right;
+            margin-top: 2em;
+            line-height: 3em;
+            padding: 0.35em 0;
+            opacity: 0.8;
+
+            .favorites {
+                border: 1px solid $grey;
+                padding: 0.75em 1em;
+                border-radius: 0.5em;
+                background: $grey;
+                color: $white;
+
+                .fa-sort-desc {
+                    position: relative;
+                    top: -0.2em;
+                    margin-left: 0.3em;
+                }
+            }
+        }
+    }
+
+    .home-sub-row-02 {
+        display: block;
+        width: 100%;
+        color: $white;
+        line-height: 2.5em;
+    }
 }
 
 .home-row-02 {
-    height: 25em;
+    height: 24em;
     background: $paradiso;
     position: absolute;
-    top: 30em;
+    top: 34em;
     width: 100%;
 
     .search-box {
@@ -108,78 +193,6 @@
     }
 }
 
-.home-sub-row-01 {
-    display: block;
-    width: 100%;
-    height: 8em;
-
-    .location-holder {
-        display: inline-block;
-        float: left;
-        margin-top: 2em;
-        line-height: 3em;
-    }
-
-    .location-holder > form > fieldset {
-        border: none;
-        padding-top: 0.35em;
-        margin: 0;
-    }
-
-    .location-holder .check {
-        margin-left: -30px;
-    }
-
-    .location-holder .your-location {
-        border: 1px solid $grey;
-        padding: 0.75em;
-        border-bottom-left-radius: 0.5em;
-        border-top-left-radius: 0.5em;
-        margin-right: -5px;
-        color: $white;
-        background: $grey;
-        opacity: 0.8;
-    }
-
-    .location-holder .your-location-value {
-        border: 1px solid $grey;
-        padding: 0.75em;
-        border-radius: 0 0.5em 0.5em 0;
-        width: 30em;
-        opacity: 0.8;
-    }
-
-    .favorites-holder {
-        display: inline-block;
-        float: right;
-        margin-top: 2em;
-        line-height: 3em;
-        padding: 0.35em 0;
-        opacity: 0.8;
-
-        .favorites {
-            border: 1px solid $grey;
-            padding: 0.75em 1em;
-            border-radius: 0.5em;
-            background: $grey;
-            color: $white;
-
-            .fa-sort-desc {
-                position: relative;
-                top: -0.2em;
-                margin-left: 0.3em;
-            }
-        }
-    }
-}
-
-.home-sub-row-02 {
-    display: block;
-    width: 100%;
-    color: $white;
-    line-height: 2.5em;
-}
-
 @media (max-width: $screen-md-min) {
     fieldset {
         padding: 0.2em 0.4em;
@@ -201,6 +214,7 @@
         padding: 0.75em;
         border-radius: 0.5em;
         margin-right: 0;
+        border: none !important;
     }
 
     .home-sub-row-01 .location-holder .your-location-value {
@@ -208,6 +222,10 @@
     }
 
     .home-sub-row-01 .location-holder .check {
+        display: none;
+    }
+
+    .home-sub-row-01 .location-holder .removable {
         display: none;
     }
 

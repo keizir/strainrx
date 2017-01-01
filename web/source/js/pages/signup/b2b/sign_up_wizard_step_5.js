@@ -83,6 +83,14 @@ W.pages.b2b.SignUpWizardStep5 = W.common.WizardStep.extend({
                         that.stepData = a;
                     }
                 }
+            },
+            function ($input) {
+                var $removeBtn = $($input).parent().find('.remove-location');
+                $removeBtn.removeClass('hidden');
+                $removeBtn.on('click', function () {
+                    $removeBtn.addClass('hidden');
+                    $($input).val('');
+                });
             });
     },
 

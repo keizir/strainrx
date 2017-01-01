@@ -15,11 +15,12 @@ W.Common.GoogleLocations = Class.extend({
         this.pacContainerIndex = options && options.pacContainerIndex;
     },
 
-    initGoogleAutocomplete: function initGoogleAutocomplete(onPlaceChange, onEnterKey) {
+    initGoogleAutocomplete: function initGoogleAutocomplete(onPlaceChange, onEnterKey, onLocationRemove) {
         var that = this;
 
         this.onPlaceChange = onPlaceChange;
         this.onEnterKey = onEnterKey;
+        this.onLocationRemove = onLocationRemove;
 
         google.maps.event.addDomListener(this.$input, 'keydown', function (e) {
             if (e.keyCode === 13) {
@@ -48,6 +49,13 @@ W.Common.GoogleLocations = Class.extend({
 
         this.autocomplete.addListener('place_changed', function () {
             that.onPlaceChange(that.autocomplete, that.$input);
+        });
+
+        $(this.$input).on('change paste keyup', function (e) {
+            e.preventDefault();
+            if ($(this).val() && that.onLocationRemove) {
+                that.onLocationRemove(that.$input);
+            }
         });
     },
 

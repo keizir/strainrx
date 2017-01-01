@@ -51,21 +51,15 @@
                 }
             }
 
-            .city-fields-group {
-                .form-field {
-                    margin-right: 1%;
-                }
+            .address-field {
+                position: relative;
 
-                .form-field:first-child {
-                    width: 51%;
-                }
-
-                .form-field:nth-child(2) {
-                    width: 15%;
-                }
-
-                .form-field:last-child {
-                    width: 20%;
+                .removable {
+                    display: inline-block;
+                    position: absolute;
+                    right: 0.6em;
+                    top: 2.5em;
+                    cursor: pointer;
                 }
             }
 
@@ -225,24 +219,6 @@
                     .form-field {
                         display: inline-block;
                         width: 49%;
-                    }
-                }
-
-                .city-fields-group {
-                    .form-field {
-                        margin-right: 1%;
-                    }
-
-                    .form-field:first-child {
-                        width: 51%;
-                    }
-
-                    .form-field:nth-child(2) {
-                        width: 15%;
-                    }
-
-                    .form-field:last-child {
-                        width: 26%;
                     }
                 }
 

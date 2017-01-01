@@ -11,10 +11,11 @@
                 </div>
             </div>
             <div class="form-field-group">
-                <div class="form-field">
+                <div class="form-field address-field">
                     <label for="address__<%= l.id %>">Address</label>
                     <input type="text" name="address__<%= l.id %>" id="address__<%= l.id %>"
                            value="${ buildDisplayName(l) }">
+                    <span class="removable remove-location hidden" title="Clear value"></span>
                 </div>
             </div>
             <div class="form-field-group">

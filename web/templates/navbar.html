@@ -10,11 +10,6 @@
             {% if request.user.type == 'consumer' %}
                 <div class="nav-tabs-wrapper">
                     <div class="action blue-link">
-                        <a class="nav-link" href="#">
-                            Find Dispensaries</a>
-                    </div>
-                    <span class="separator"></span>
-                    <div class="action blue-link">
                         <a class="nav-link" href="{% url 'search:strain_wizard' %}">
                             Strain Recommendation</a>
                     </div>
@@ -76,10 +71,6 @@
                                 <div class="action blue-link">
                                     <a class="nav-link" href="{% url 'users:detail' request.user.id %}">
                                         My Account</a>
-                                </div>
-                                <div class="action blue-link">
-                                    <a class="nav-link" href="#">
-                                        Find Dispensaries</a>
                                 </div>
                                 <div class="action blue-link">
                                     <a class="nav-link" href="{% url 'search:strain_wizard' %}">

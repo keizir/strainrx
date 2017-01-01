@@ -78,8 +78,7 @@ W.pages.business.BusinessLocations = Class.extend({
                     that.locations[id].lng = a.lng;
                     that.locations[id].location_raw = a.location_raw;
                 }
-            },
-            function (results, status, $input) {
+            }, function (results, status, $input) {
                 if (status === 'OK') {
                     var a = that.GoogleLocations.getAddressFromPlace(results[0]),
                         id = location.id || location.tmp_id,
@@ -96,11 +95,21 @@ W.pages.business.BusinessLocations = Class.extend({
                     that.locations[id].lng = a.lng;
                     that.locations[id].location_raw = a.location_raw;
                 }
+            }, function ($input) {
+                var $removeBtn = $($input).parent().find('.remove-location');
+                $removeBtn.removeClass('hidden');
+                $removeBtn.on('click', function () {
+                    $removeBtn.addClass('hidden');
+                    $($input).val('');
+                    that.ui.$btnUpdateLocations.removeAttr('disabled');
+                });
             });
 
         $locationInput.on('focusout', function () {
             that.updateLocation(location, $(this));
         });
+
+        $locationInput.trigger('change');
     },
 
     retrieveLocations: function retrieveLocations(successCallback) {

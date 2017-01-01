@@ -448,14 +448,15 @@ class UserFavoritesView(LoginRequiredMixin, APIView):
             favorites_raw = UserFavoriteStrain.objects.filter(created_by__id=user_id).order_by('-created_date')
             favorites = []
             for r in favorites_raw:
-                images = StrainImage.objects.filter(strain=r.strain)
+                images = StrainImage.objects.filter(strain=r.strain, is_approved=True)
+                img = images[0].image.url if len(images) > 0 and images[0].image and images[0].image.url else None
                 favorites.append({
                     'id': r.id,
                     'strain_id': r.strain.id,
                     'strain_name': r.strain.name,
                     'strain_slug': r.strain.strain_slug,
                     'strain_variety': r.strain.variety,
-                    'strain_image': images[0] if len(images) > 0 else None,
+                    'strain_image': img,
                     'strain_overall_rating': build_strain_rating(r.strain),
                     'created_date': r.created_date
                 })
