@@ -1,20 +1,30 @@
 @import '../mixins/variables';
 
+.strains-wrapper {
+    height: 90em;
+    margin-bottom: -8em;
+    background-color: #508484;
+}
+
 .home-row-01 {
     background: $grey-light url(../../images/weed_dark.jpg) no-repeat top center;
     -webkit-background-size: cover;
     background-size: cover;
     text-align: center;
-    height: 30em;
+    height: 46em;
     display: block;
     z-index: 1;
 
     h1 {
-        margin: 0.5em;
+        font-size: 82px;
+        font-weight: normal;
+        margin: 1.5em 0.5em 0.5em;
+        line-height: 1em;
     }
 
     p {
-        width: 34em;
+        width: 64%;
+        font-size: 28px;
         margin: 0 auto 2em auto;
     }
 
@@ -100,14 +110,20 @@
         width: 100%;
         color: $white;
         line-height: 2.5em;
+
+        .btn-lets-go {
+            width: 336px;
+            height: 70px;
+            font-size: 26px;
+        }
     }
 }
 
 .home-row-02 {
-    height: 24em;
+    height: 28em;
     background: $paradiso;
     position: absolute;
-    top: 34em;
+    top: 52em;
     width: 100%;
 
     .search-box {
@@ -123,32 +139,35 @@
         }
 
         p {
-            font-size: 0.8em;
-            margin-top: 2em;
+            font-size: 22px;
+            margin: 1.5em 0;
         }
 
         h2 {
-            font-weight: 300;
+            font-size: 40px;
         }
 
         .search-form {
             display: block;
             position: relative;
-            width: 21em;
+            width: 28em;
             margin: 0 auto;
             height: 12em;
 
             button[type="submit"] {
-                margin-top: 1em;
+                margin-top: 2em;
                 border: 1px $white solid;
                 background-color: $paradiso;
                 font-size: 1em;
                 font-weight: 500;
+                width: 264px;
+                height: 50px;
             }
 
             input[type="text"] {
                 display: block;
-                width: 30em;
+                width: 40em;
+                height: 3em;
                 padding: 1em;
                 font-size: 0.7em;
                 border: none;
@@ -167,7 +186,7 @@
                 display: block;
                 position: absolute;
                 top: 2.5em;
-                width: 30em;
+                width: 40em;
                 font-size: 0.7em;
                 color: $grey-normal;
                 background-color: $white;
@@ -193,44 +212,102 @@
     }
 }
 
+@media (max-width: $screen-lg-min) {
+    .home-row-01 {
+        h1 {
+            font-size: 70px;
+        }
+
+        p {
+            width: 80%;
+            font-size: 26px;
+        }
+    }
+
+    .home-row-02 {
+        .search-box {
+            .search-form {
+                button[type="submit"] {
+                    width: 14em;
+                    height: auto;
+                }
+            }
+        }
+    }
+}
+
 @media (max-width: $screen-md-min) {
     fieldset {
         padding: 0.2em 0.4em;
     }
 
-    .home-row-01 p {
-        width: 22em;
+    .strains-wrapper {
+        height: 70em;
     }
 
-    .home-sub-row-01 .location-holder {
-        margin-top: 0.5em;
+    .home-row-01 {
+        height: 30em;
+
+        h1 {
+            font-size: 40px;
+        }
+
+        p {
+            font-size: 18px;
+        }
+
+        .home-sub-row-01 {
+            height: 6em;
+
+            .location-holder {
+                margin-top: 0.5em;
+
+                .your-location {
+                    padding: 0.72em 0.75em 0.8em;
+                    margin-right: -4px;
+                }
+
+                .check {
+                    display: none;
+                }
+
+                .removable {
+                    display: none;
+                }
+            }
+
+            .favorites-holder {
+                margin-top: 0.5em;
+            }
+        }
+
+        .home-sub-row-02 {
+            .btn-lets-go {
+                width: 180px;
+                height: auto;
+                font-size: 14px;
+            }
+        }
     }
 
-    .home-sub-row-01 .favorites-holder {
-        margin-top: 0.5em;
-    }
+    .home-row-02 {
+        top: 34em;
 
-    .home-sub-row-01 .location-holder .your-location {
-        padding: 0.75em;
-        border-radius: 0.5em;
-        margin-right: 0;
-        border: none !important;
-    }
+        .search-box {
+            p {
+                font-size: 14px;
+            }
 
-    .home-sub-row-01 .location-holder .your-location-value {
-        display: none;
-    }
-
-    .home-sub-row-01 .location-holder .check {
-        display: none;
-    }
-
-    .home-sub-row-01 .location-holder .removable {
-        display: none;
-    }
-
-    .home-sub-row-01 {
-        height: 6em;
+            h2 {
+                font-size: 30px;
+            }
+            .search-form {
+                button[type="submit"] {
+                    width: 180px;
+                    height: 40px;
+                }
+            }
+        }
     }
 
     .footer-region {
@@ -239,10 +316,92 @@
     }
 }
 
+@media (max-width: $screen-sm-min) {
+    .home-row-01 {
+        h1 {
+            font-size: 36px;
+        }
+
+        p {
+            font-size: 18px;
+            width: 100%;
+        }
+
+        .home-sub-row-01 {
+            .location-holder {
+                .your-location {
+                    padding: 0.75em;
+                    border-radius: 0.5em;
+                    margin-right: 0;
+                    border: none !important;
+                }
+
+                .your-location-value {
+                    display: none;
+                }
+            }
+        }
+    }
+
+    .home-row-02 {
+        .search-box {
+            .search-form {
+                button[type="submit"] {
+                    width: 14em;
+                }
+            }
+        }
+    }
+}
+
 @media (max-width: $screen-xs-min) {
-    .home-sub-row-01 .favorites-holder {
-        margin-top: 0.5em;
-        position: absolute;
-        right: 5%;
+    .home-row-01 {
+        height: 30em;
+
+        h1 {
+            font-size: 30px;
+        }
+
+        p {
+            font-size: 14px;
+            width: 100%;
+        }
+
+        .home-sub-row-01 {
+            .favorites-holder {
+                margin-top: 0.5em;
+                position: absolute;
+                right: 5%;
+            }
+        }
+    }
+
+    .home-row-02 {
+        .search-box {
+            p {
+                font-size: 14px;
+            }
+
+            h2 {
+                font-size: 30px;
+            }
+
+            .search-form {
+                width: 20em;
+
+                input[type="text"] {
+                    width: 100%;
+                    height: 3em;
+                }
+
+                button[type="submit"] {
+                    width: 14em;
+                }
+
+                .payloads-region {
+                    width: 100%;
+                }
+            }
+        }
     }
 }
