@@ -520,6 +520,7 @@ business_location_mapping = {
         "location_raw": {"type": "string"},
         "phone": {"type": "string"},
         "ext": {"type": "string"},
+        "timezone": {"type": "string"},
         "removed_by_id": {"type": "long"},
         "removed_date": {"type": "date"},
         "created_date": {"type": "date"},

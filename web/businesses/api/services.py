@@ -128,7 +128,8 @@ class BusinessLocationService:
             delivery_radius=location.get('delivery_radius'),
             lat=location.get('lat'),
             lng=location.get('lng'),
-            location_raw=location.get('location_raw') if location.get('location_raw') else {}
+            location_raw=location.get('location_raw') if location.get('location_raw') else {},
+            timezone=location.get('timezone')
         )
         l.save()
         return l
@@ -148,6 +149,7 @@ class BusinessLocationService:
         l.lat = location.get('lat') if location.get('lat') else l.lat
         l.lng = location.get('lng') if location.get('lng') else l.lng
         l.location_raw = location.get('location_raw') if location.get('location_raw') else l.location_raw
+        l.timezone = location.get('timezone')
         l.save()
         return l
 

@@ -54,6 +54,7 @@ class BusinessLocationDetailSerializer(serializers.Serializer):
 
     phone = serializers.CharField(validators=[phone_number_validator])
     ext = serializers.CharField(allow_blank=True, allow_null=True)
+    timezone = serializers.CharField(allow_blank=True, allow_null=True)
 
     dispensary = serializers.BooleanField()
     delivery = serializers.BooleanField()
@@ -88,6 +89,7 @@ class BusinessLocationDetailSerializer(serializers.Serializer):
         inst.delivery_radius = data.get('delivery_radius')
         inst.phone = data.get('phone')
         inst.ext = data.get('ext')
+        inst.timezone = data.get('timezone')
         inst.lat = data.get('lat') if data.get('lat') else inst.lat
         inst.lng = data.get('lng') if data.get('lng') else inst.lng
         inst.location_raw = data.get('location_raw') if data.get('location_raw') else inst.location_raw

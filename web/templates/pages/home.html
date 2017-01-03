@@ -90,9 +90,15 @@
                 <h1>Find Your Perfect Strain</h1>
                 <p>Use our customized strain matching system to find the perfect strain for your needs</p>
                 {% if request.user.is_authenticated %}
-                    <a href="{% url 'search:strain_wizard' %}">
-                        <button class="btn-primary btn-lets-go" type="button">Let's Go!</button>
-                    </a>
+                    {% if request.user.is_email_verified %}
+                        <a href="{% url 'search:strain_wizard' %}">
+                            <button class="btn-primary btn-lets-go" type="button">Let's Go!</button>
+                        </a>
+                    {% else %}
+                        <a href="#">
+                            <button class="btn-primary btn-lets-go" type="button">Let's Go!</button>
+                        </a>
+                    {% endif %}
                 {% else %}
                     <a href="{% url 'users:signup' %}">
                         <button class="btn-primary btn-lets-go" type="button">Let's Go!</button>

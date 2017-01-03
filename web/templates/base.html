@@ -20,7 +20,9 @@
         var STATIC_URL = '{% static '' %}',
                 HTTP_USERNAME = '{% http_username %}',
                 HTTP_PASSWORD = '{% http_password %}',
-                GOOGLE_API_KEY = '{% google_maps_api_key %}';
+                GOOGLE_API_KEY = '{% google_maps_api_key %}',
+                AUTHENTICATED = '{{ request.user.is_authenticated }}' === 'True',
+                EMAIL_VERIFIED = '{{ request.user.is_email_verified }}' === 'True';
     </script>
 
     {% block css %}
@@ -30,6 +32,7 @@
         <link href="{% static 'css/vendor/jquery-ui.min.css' %}" rel="stylesheet">
         <link href="{% static 'css/vendor/jquery.rateyo.min.css' %}" rel="stylesheet">
         <link href="{% static 'css/pages/base.css' %}" rel="stylesheet">
+        <link href="{% static 'css/common/dialog.css' %}" rel="stylesheet">
     {% endblock %}
 </head>
 
@@ -107,7 +110,24 @@
 
 </body>
 
-{% block modal %}{% endblock modal %}
+{% block modal %}
+    {% if not request.user.is_email_verified %}
+        <div class="dialog verify-email-dialog hidden" title="Verify Your Email">
+            <div class="dialog-text">
+                <span class="message-1">You must verify your email to use this feature.</span>
+                <span class="message-2">
+                Click <a href="#" class="dialog-verify-email-link">here</a> to resend verification email.
+            </span>
+            </div>
+            <div class="dialog-actions">
+                <div class="buttons-section">
+                    <button type="button" class="btn-primary btn-yes">Ok</button>
+                </div>
+            </div>
+        </div>
+    {% endif %}
+{% endblock %}
+
 
 </html>
 

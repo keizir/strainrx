@@ -12,6 +12,13 @@ W.Navbar = function () {
             if (this.authenticated) {
                 this.updateAddress();
             }
+
+            if (AUTHENTICATED && !EMAIL_VERIFIED) {
+                $('.strain-wizard-link').on('click', function (e) {
+                    e.preventDefault();
+                    W.common.VerifyEmailDialog();
+                });
+            }
         },
 
         updateAddress: function (location) {

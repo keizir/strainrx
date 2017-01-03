@@ -18,6 +18,7 @@ class BusinessLocationESSerializer(serializers.Serializer):
     location_raw = serializers.CharField()
     phone = serializers.CharField()
     ext = serializers.CharField()
+    timezone = serializers.CharField()
     removed_date = serializers.DateTimeField()
     created_date = serializers.DateTimeField()
     mon_open = serializers.TimeField(format='%H:%M:%S', input_formats=['%H:%M:%S'], allow_null=True)

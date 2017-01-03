@@ -3,6 +3,7 @@ from __future__ import absolute_import, unicode_literals
 
 from datetime import datetime
 
+import pytz
 from django.views.generic import TemplateView
 
 from web.businesses.models import Business, BusinessLocation, BusinessLocationMenuItem
@@ -42,6 +43,7 @@ class BusinessDetailView(TemplateView):
         business = Business.objects.get(pk=kwargs.get('business_id'))
         context['business'] = business
         context['locations'] = BusinessLocation.objects.filter(business=business, removed_date=None).order_by('id')
+        context['timezones'] = pytz.common_timezones
         context['tab'] = 'info'
         return context
 
@@ -78,7 +80,8 @@ class BusinessDispensaryInfoView(TemplateView):
         business = Business.objects.get(pk=kwargs.get('business_id'))
         context['business'] = business
         locationid = BusinessLocation.objects.get(pk=kwargs.get('location_id'))
-        businesslocationmenuitem = BusinessLocationMenuItem.objects.filter(business_location=locationid, removed_date=None).order_by('id')
+        businesslocationmenuitem = BusinessLocationMenuItem.objects.filter(business_location=locationid,
+                                                                           removed_date=None).order_by('id')
         context['businesslocationmenuitem'] = businesslocationmenuitem
         context['businesslocation'] = locationid
         context['locations'] = BusinessLocation.objects.filter(business=business, removed_date=None).order_by('id')

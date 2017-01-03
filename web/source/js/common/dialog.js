@@ -2,18 +2,18 @@
 
 W.ns('W.common');
 
-W.common.Dialog = function ($el, closeCallback) {
+W.common.Dialog = function ($el, closeCallback, options) {
     if ($el) {
         $el.removeClass('hidden');
         $el.dialog({
             closeOnEscape: true,
-            height: 450,
-            width: 'auto',
+            height: (options && options.height) || 450,
+            width: (options && options.width) || 'auto',
             modal: true,
             draggable: false,
             resizable: false,
             create: function () {
-                $(this).css("maxWidth", "500px");
+                $(this).css("maxWidth", (options && options.maxWidth) || "500px");
             },
             close: function (e, ui) {
                 if (closeCallback) {
@@ -22,6 +22,23 @@ W.common.Dialog = function ($el, closeCallback) {
             }
         });
     }
+};
+
+W.common.VerifyEmailDialog = function () {
+    W.common.Dialog($('.verify-email-dialog'), function () {
+        $('.btn-yes').off('click');
+        $('.dialog-verify-email-link').off('click');
+    }, {height: 250, width: 380});
+
+    $('.dialog-verify-email-link').on('click', function (e) {
+        e.preventDefault();
+        $.ajax({method: 'GET', url: '/api/v1/users/resend-email-confirmation'});
+    });
+
+    $('.btn-yes').on('click', function (e) {
+        e.preventDefault();
+        $('.verify-email-dialog').dialog('close');
+    });
 };
 
 W.common.ConfirmDialog = function ($el, closeCallback) {

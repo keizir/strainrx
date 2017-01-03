@@ -54,8 +54,17 @@ W.pages.strain.StrainLookup = Class.extend({
                             $payloadsRegion.html('');
                         });
                     },
-                    error: function () {
-                        window.location.href = '/users/signup/wizard/';
+                    error: function (e) {
+                        var status = e.status;
+
+                        if (200 === status) {
+                            window.location.href = '/users/signup/wizard/';
+                        }
+
+
+                        if (400 === status) {
+                            W.common.VerifyEmailDialog();
+                        }
                     }
                 });
             } else {

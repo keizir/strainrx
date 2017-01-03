@@ -23,22 +23,30 @@
 .ui-dialog {
     border-radius: 1em;
     color: $grey-light;
-}
 
-.ui-dialog .ui-dialog-titlebar-close {
-    right: 1em;
-}
+    .ui-dialog-titlebar {
+        padding: 1em;
+        color: $grey-light;
+    }
 
-.ui-dialog .ui-dialog-title {
-    font-size: 18px;
-}
+    .ui-dialog-titlebar-close {
+        right: 1em;
+    }
 
-.ui-dialog .ui-dialog-titlebar {
-    padding: 1em;
-}
+    .ui-dialog-title {
+        font-size: 18px;
+    }
 
-.ui-dialog-titlebar {
-    color: $grey-light;
+    .ui-dialog-content {
+        .dialog-actions {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            margin-bottom: 10px;
+            text-align: center;
+        }
+    }
 }
 
 .ui-widget-header {

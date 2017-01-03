@@ -13,6 +13,7 @@ W.pages.HomePage = Class.extend({
         this.clickLookupSubmit();
         this.changeLocation();
         this.preFillUserLocation();
+        this.enterSearchWizard();
     },
 
     initStrainLookupField: function initStrainLookupField() {
@@ -98,6 +99,15 @@ W.pages.HomePage = Class.extend({
                 delete data.location_raw;
                 Cookies.set('user_geo_location', JSON.stringify(data));
             }
+        }
+    },
+
+    enterSearchWizard: function enterSearchWizard() {
+        if (AUTHENTICATED && !EMAIL_VERIFIED) {
+            $('.btn-lets-go').on('click', function (e) {
+                e.preventDefault();
+                W.common.VerifyEmailDialog();
+            });
         }
     }
 });

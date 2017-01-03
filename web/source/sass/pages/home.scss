@@ -212,6 +212,21 @@
     }
 }
 
+.verify-email-dialog {
+    .message-1 {
+        display: block;
+    }
+
+    .message-2 {
+        display: block;
+        margin-top: 20px;
+
+        a {
+            color: $iris-blue;
+        }
+    }
+}
+
 @media (max-width: $screen-lg-min) {
     .home-row-01 {
         h1 {

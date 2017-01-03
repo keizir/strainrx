@@ -34,7 +34,9 @@ W.pages.business.BusinessDetail = Class.extend({
         this.clickUpdateBusinessInfo();
         this.changeLocation();
 
-        var $input = $('input');
+        var $input = $('input'),
+            $selectTimezone = $('select[name="timezone"]');
+
         $input.on('focus', function () {
             $('.error-message').text('');
         });
@@ -46,6 +48,14 @@ W.pages.business.BusinessDetail = Class.extend({
         $input.on('keyup', function () {
             that.ui.$btnUpdateInfo.removeAttr('disabled');
         });
+
+        $selectTimezone.on('focus', function () {
+            $('.error-message').text('');
+        });
+
+        $selectTimezone.on('change', function () {
+            that.ui.$btnUpdateInfo.removeAttr('disabled');
+        })
     },
 
     retrieveLocation: function retrieveLocation(locationId, successCallback) {
@@ -121,6 +131,7 @@ W.pages.business.BusinessDetail = Class.extend({
             ext = $('input[name="ext"]').val(),
             dispensary = $('input[name="dispensary"]').is(':checked'),
             delivery = $('input[name="delivery"]').is(':checked'),
+            timezone = $('select[name="timezone"]').val(),
             isOpenBeforeClose = function isOpenBeforeClose(open, close) {
                 if (open && close) {
                     var o = new Date(Date.parse('1/1/1970 {0}'.format(open))),
@@ -160,6 +171,11 @@ W.pages.business.BusinessDetail = Class.extend({
             return;
         }
 
+        if (!timezone || timezone === '- Select One -') {
+            $errorMessage.text('Timezone is required');
+            return;
+        }
+
         var dayInvalid = false;
         $.each(W.common.Constants.days, function (index, day) {
             var openTime = that.getOpenTime(day.value),
@@ -188,6 +204,7 @@ W.pages.business.BusinessDetail = Class.extend({
             ext: ext ? ext.trim() : null,
             dispensary: dispensary,
             delivery: delivery,
+            timezone: timezone,
             mon_open: this.getOpenTime('mon'), mon_close: this.getCloseTime('mon'),
             tue_open: this.getOpenTime('tue'), tue_close: this.getCloseTime('tue'),
             wed_open: this.getOpenTime('wed'), wed_close: this.getCloseTime('wed'),
@@ -257,6 +274,11 @@ W.pages.business.BusinessDetail = Class.extend({
                     } else {
                         $('input[name="delivery"]').removeProp('checked');
                     }
+
+                    var $select = $('select[name="timezone"]');
+                    $select.find('option:selected').removeAttr('selected');
+                    $select.find('option[value="{0}"]'.format(location.timezone)).attr('selected', 'selected');
+                    $select.val(location.timezone ? location.timezone : '- Select One -');
 
                     that.preselectHours(location);
                 }

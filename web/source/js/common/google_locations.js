@@ -7,7 +7,6 @@ W.Common.GoogleLocations = Class.extend({
     init: function init(options) {
         if (!options || !options.$input) {
             console.error('$input is required to use location autocomplete');
-            return;
         }
 
         this.$input = options && options.$input;
@@ -120,5 +119,19 @@ W.Common.GoogleLocations = Class.extend({
             lng: raw_place.geometry && raw_place.geometry.location.lng(),
             location_raw: JSON.stringify(raw_place)
         };
+    },
+
+    getTimezone: function getTimezone(lat, lng, callback) {
+        var xsr = new XMLHttpRequest();
+        xsr.open(
+            'GET',
+            'https://maps.googleapis.com/maps/api/timezone/json?location={0},{1}&timestamp={2}&key={3}'
+                .format(lat, lng, '1458000000', GOOGLE_API_KEY));
+
+        xsr.onload = function () {
+            callback(JSON.parse(xsr.responseText));
+        };
+
+        xsr.send();
     }
 });

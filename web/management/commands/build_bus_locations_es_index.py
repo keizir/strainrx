@@ -107,6 +107,7 @@ class Command(BaseCommand):
                 "location_raw": l.location_raw,
                 "phone": l.phone,
                 "ext": l.ext,
+                "timezone": l.timezone,
                 "removed_by_id": l.removed_by,
                 "removed_date": l.removed_date.isoformat() if l.removed_date else None,
                 "created_date": l.created_date.isoformat() if l.created_date else None,

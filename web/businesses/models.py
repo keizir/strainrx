@@ -3,6 +3,7 @@ from __future__ import unicode_literals, absolute_import
 import re
 from uuid import uuid4
 
+import pytz
 from django.conf import settings
 from django.contrib.postgres.fields import JSONField
 from django.core.exceptions import ValidationError
@@ -82,6 +83,7 @@ class BusinessLocation(models.Model):
     city = models.CharField(max_length=100)
     state = models.CharField(max_length=50)
     zip_code = models.CharField(max_length=10)
+    timezone = models.CharField(max_length=100, null=True, choices=zip(pytz.common_timezones, pytz.common_timezones))
 
     lat = models.FloatField(_('Latitude'), blank=True, null=True, max_length=50)
     lng = models.FloatField(_('Longitude'), blank=True, null=True, max_length=50)

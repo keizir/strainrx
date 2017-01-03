@@ -1,6 +1,8 @@
 import json
 from datetime import datetime
 
+import pytz
+
 from web.es_service import BaseElasticService
 from web.search import es_mappings
 from web.search.models import StrainImage, Strain
@@ -209,15 +211,22 @@ class SearchElasticService(BaseElasticService):
 
     def is_open(self, location_json):
         days = ['sun', 'mon', 'tue', 'wed', 'thu', 'fri', 'sat']
-        now = datetime.now()
+        location_tz = pytz.timezone(location_json.get('timezone')) if location_json.get('timezone') else None
+        now = datetime.now(tz=location_tz) if location_tz else datetime.now()
         current_day_index = int(now.strftime('%w'))  # 0 - Sunday, 6 - Saturday
         current_hour = int(now.strftime('%H'))
 
         location_o = location_json.get('{0}_open'.format(days[current_day_index]))
         location_c = location_json.get('{0}_close'.format(days[current_day_index]))
+
         if location_o and location_c:
-            location_o = datetime.strptime(location_o, '%H:%M:%S')
-            location_c = datetime.strptime(location_c, '%H:%M:%S')
+            if location_tz:
+                location_o = location_tz.localize(datetime.strptime(location_o, '%H:%M:%S'))
+                location_c = location_tz.localize(datetime.strptime(location_c, '%H:%M:%S'))
+            else:
+                location_o = datetime.strptime(location_o, '%H:%M:%S')
+                location_c = datetime.strptime(location_c, '%H:%M:%S')
+
             return int(location_o.strftime('%H')) < current_hour < int(location_c.strftime('%H'))
 
         return False

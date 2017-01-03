@@ -55,6 +55,11 @@ W.pages.search.strain.SearchWizard = W.common.Wizard.extend({
             data: search_criteria,
             success: function () {
                 window.location.href = '/search/strain/results/';
+            },
+            error: function (e) {
+                if (400 === e.status) {
+                    W.common.VerifyEmailDialog();
+                }
             }
         });
 

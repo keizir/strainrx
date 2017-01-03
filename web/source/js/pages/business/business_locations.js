@@ -77,6 +77,10 @@ W.pages.business.BusinessLocations = Class.extend({
                     that.locations[id].lat = a.lat;
                     that.locations[id].lng = a.lng;
                     that.locations[id].location_raw = a.location_raw;
+
+                    that.GoogleLocations.getTimezone(that.locations[id].lat, that.locations[id].lng, function (json) {
+                        that.locations[id].timezone = json.timeZoneId;
+                    });
                 }
             }, function (results, status, $input) {
                 if (status === 'OK') {
@@ -94,6 +98,10 @@ W.pages.business.BusinessLocations = Class.extend({
                     that.locations[id].lat = a.lat;
                     that.locations[id].lng = a.lng;
                     that.locations[id].location_raw = a.location_raw;
+
+                    that.GoogleLocations.getTimezone(that.locations[id].lat, that.locations[id].lng, function (json) {
+                        that.locations[id].timezone = json.timeZoneId;
+                    });
                 }
             }, function ($input) {
                 var $removeBtn = $($input).parent().find('.remove-location');
@@ -281,7 +289,7 @@ W.pages.business.BusinessLocations = Class.extend({
             that.locations[locationClientId] = {
                 tmp_id: locationClientId,
                 location_name: null, manager_name: null, location_email: null,
-                phone: null, ext: null,
+                phone: null, ext: null, timezone: null,
                 dispensary: false, delivery: false, delivery_radius: null,
                 mon_open: null, mon_close: null,
                 tue_open: null, tue_close: null,

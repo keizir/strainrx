@@ -4,6 +4,8 @@ W.ns('W.users');
 
 W.users.DetailPage = Class.extend({
 
+    timezone: null,
+
     ui: {
         $messagesRegion: $('.messages')
     },
@@ -51,6 +53,8 @@ W.users.DetailPage = Class.extend({
                 var $el = $($input);
                 $el.val(W.common.Format.formatAddress(that.location));
                 $el.blur();
+
+                that.updateTimezone(GoogleLocations);
             },
             function (results, status, $input) {
                 if (status === 'OK') {
@@ -59,6 +63,8 @@ W.users.DetailPage = Class.extend({
                     var $el = $($input);
                     $el.val(W.common.Format.formatAddress(that.location));
                     $el.blur();
+
+                    that.updateTimezone(GoogleLocations);
                 }
             },
             function ($input) {
@@ -72,6 +78,18 @@ W.users.DetailPage = Class.extend({
             });
     },
 
+    updateTimezone: function updateTimezone(GoogleLocations) {
+        var that = this;
+        GoogleLocations.getTimezone(this.location.lat, this.location.lng, function (json) {
+            that.timezone = json.timeZoneId;
+
+            var $select = $('select[name="timezone"]');
+            $select.find('option:selected').removeAttr('selected');
+            $select.find('option[value="{0}"]'.format(that.timezone)).attr('selected', 'selected');
+            $select.val(that.timezone);
+        });
+    },
+
     clickUpdateUserInfo: function clickUpdateUserInfo() {
         var that = this;
         $('.btn-update-user-info').on('click', function (e) {
@@ -79,20 +97,18 @@ W.users.DetailPage = Class.extend({
 
             var data = collectUserData();
             if (isValid(data)) {
-                updateTimezone(data, function () {
-                    $.ajax({
-                        method: 'PUT',
-                        url: '/api/v1/users/' + $('input[name="uid"]').val() + '/',
-                        dataType: 'json',
-                        data: JSON.stringify(data),
-                        success: function () {
-                            that.showSuccessMessage('You profile information has been successfully updated');
-                            W.Navbar.updateAddress(data.location);
-                        },
-                        error: function (error) {
-                            that.showErrorMessage(error);
-                        }
-                    });
+                $.ajax({
+                    method: 'PUT',
+                    url: '/api/v1/users/' + $('input[name="uid"]').val() + '/',
+                    dataType: 'json',
+                    data: JSON.stringify(data),
+                    success: function () {
+                        that.showSuccessMessage('You profile information has been successfully updated');
+                        W.Navbar.updateAddress(data.location);
+                    },
+                    error: function (error) {
+                        that.showErrorMessage(error);
+                    }
                 });
             }
 
@@ -112,7 +128,7 @@ W.users.DetailPage = Class.extend({
                     'birth_day': birthDay !== defaultSelectValue ? birthDay : null,
                     'birth_year': birthYear !== defaultSelectValue ? birthYear : null,
                     'gender': gender !== defaultSelectValue ? gender : null,
-                    'timezone': timezone !== defaultSelectValue ? timezone : null,
+                    'timezone': timezone !== defaultSelectValue ? timezone : that.timezone,
                     'location': that.location
                 };
             }
@@ -127,22 +143,6 @@ W.users.DetailPage = Class.extend({
                 }
 
                 return true;
-            }
-
-            function updateTimezone(data, callback) {
-                if (data.timezone === null) {
-                    var xsr = new XMLHttpRequest();
-                    xsr.open("GET", 'https://maps.googleapis.com/maps/api/timezone/json?location={0},{1}&timestamp={2}&key={3}'
-                        .format(data.location.lat, data.location.lng, '1458000000', GOOGLE_API_KEY));
-                    xsr.onload = function () {
-                        var d = JSON.parse(xsr.responseText);
-                        data.timezone = d.timeZoneId;
-                        callback();
-                    };
-                    xsr.send();
-                } else {
-                    callback();
-                }
             }
         });
     },

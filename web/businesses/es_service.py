@@ -53,6 +53,7 @@ class BusinessLocationESService(BaseElasticService):
         existing_data['location_raw'] = new_data.get('location_raw')
         existing_data['phone'] = new_data.get('phone')
         existing_data['ext'] = new_data.get('ext')
+        existing_data['timezone'] = new_data.get('timezone')
         existing_data['removed_by_id'] = new_data.get('removed_by_id')
         existing_data['removed_date'] = new_data.get('removed_date')
         existing_data['created_date'] = new_data.get('created_date')

@@ -27,27 +27,33 @@ def bad_request(error_message):
 
 class StrainSearchWizardView(LoginRequiredMixin, APIView):
     def post(self, request):
-        criteria = SearchCriteriaSerializer(data=request.data.get('search_criteria'))
-        criteria.is_valid()
+        if request.user.is_authenticated():
+            if not request.user.is_email_verified:
+                return Response({'message': 'User must verify the email'}, status=status.HTTP_400_BAD_REQUEST)
 
-        step_1_data = criteria.validated_data.get('step1')
-        step_2_data = criteria.validated_data.get('step2')
-        step_3_data = criteria.validated_data.get('step3')
-        step_4_data = criteria.validated_data.get('step4')
+            criteria = SearchCriteriaSerializer(data=request.data.get('search_criteria'))
+            criteria.is_valid()
 
-        types = 'skipped' if step_1_data.get('skipped') else step_1_data
-        effects = 'skipped' if step_2_data.get('skipped') else step_2_data.get('effects')
-        benefits = 'skipped' if step_3_data.get('skipped') else step_3_data.get('effects')
-        side_effects = 'skipped' if step_4_data.get('skipped') else step_4_data.get('effects')
+            step_1_data = criteria.validated_data.get('step1')
+            step_2_data = criteria.validated_data.get('step2')
+            step_3_data = criteria.validated_data.get('step3')
+            step_4_data = criteria.validated_data.get('step4')
 
-        request.session['search_criteria'] = {
-            'strain_types': types,
-            'effects': effects,
-            'benefits': benefits,
-            'side_effects': side_effects
-        }
+            types = 'skipped' if step_1_data.get('skipped') else step_1_data
+            effects = 'skipped' if step_2_data.get('skipped') else step_2_data.get('effects')
+            benefits = 'skipped' if step_3_data.get('skipped') else step_3_data.get('effects')
+            side_effects = 'skipped' if step_4_data.get('skipped') else step_4_data.get('effects')
 
-        return Response({}, status=status.HTTP_200_OK)
+            request.session['search_criteria'] = {
+                'strain_types': types,
+                'effects': effects,
+                'benefits': benefits,
+                'side_effects': side_effects
+            }
+
+            return Response({}, status=status.HTTP_200_OK)
+        else:
+            return Response({'message': 'User must be authenticated'}, status=status.HTTP_403_FORBIDDEN)
 
 
 class StrainSearchResultsView(LoginRequiredMixin, APIView):
@@ -168,12 +174,18 @@ class StrainAlsoLikeView(LoginRequiredMixin, APIView):
 
 class StrainLookupView(LoginRequiredMixin, APIView):
     def get(self, request):
-        query = request.GET.get('q')
-        result = SearchElasticService().lookup_strain(query)
-        return Response({
-            'total': result.get('total'),
-            'payloads': result.get('payloads')
-        }, status=status.HTTP_200_OK)
+        if request.user.is_authenticated():
+            if not request.user.is_email_verified:
+                return Response({'message': 'User must verify the email'}, status=status.HTTP_400_BAD_REQUEST)
+
+            query = request.GET.get('q')
+            result = SearchElasticService().lookup_strain(query)
+            return Response({
+                'total': result.get('total'),
+                'payloads': result.get('payloads')
+            }, status=status.HTTP_200_OK)
+        else:
+            return Response({'message': 'User must be authenticated'}, status=status.HTTP_403_FORBIDDEN)
 
 
 class StrainUploadImageView(LoginRequiredMixin, APIView):
@@ -202,8 +214,14 @@ class StrainRateView(LoginRequiredMixin, APIView):
 
 class StrainDetailsView(LoginRequiredMixin, APIView):
     def get(self, request, strain_id):
-        details = StrainDetailsService().build_strain_details(strain_id, request.user)
-        return Response(details, status=status.HTTP_200_OK)
+        if request.user.is_authenticated():
+            if not request.user.is_email_verified:
+                return Response({'message': 'User must verify the email'}, status=status.HTTP_400_BAD_REQUEST)
+
+            details = StrainDetailsService().build_strain_details(strain_id, request.user)
+            return Response(details, status=status.HTTP_200_OK)
+        else:
+            return Response({'message': 'User must be authenticated'}, status=status.HTTP_403_FORBIDDEN)
 
 
 class StrainDeliveriesView(LoginRequiredMixin, APIView):

@@ -10,7 +10,7 @@
             {% if request.user.type == 'consumer' %}
                 <div class="nav-tabs-wrapper">
                     <div class="action blue-link">
-                        <a class="nav-link" href="{% url 'search:strain_wizard' %}">
+                        <a class="nav-link strain-wizard-link" href="{% url 'search:strain_wizard' %}">
                             Strain Recommendation</a>
                     </div>
                     <span class="separator"></span>
@@ -73,7 +73,7 @@
                                         My Account</a>
                                 </div>
                                 <div class="action blue-link">
-                                    <a class="nav-link" href="{% url 'search:strain_wizard' %}">
+                                    <a class="nav-link strain-wizard-link" href="{% url 'search:strain_wizard' %}">
                                         Strain Recommendation</a>
                                 </div>
                                 <div class="action blue-link">
