@@ -68,6 +68,7 @@ button {
 
 .container {
     display: block;
+    position: relative;
     width: 100%;
     max-width: 1300px;
     margin-left: auto;
@@ -356,23 +357,23 @@ fieldset {
 *   Body font size changes below will cascade to all em units to effectively scale our pages
 *   in a nice, responsive way (everything should be ems unless it is a purposely fixed element
 */
-@media (max-width: $screen-xs-max) {
+@media (min-width: $screen-xs-min) {
     html, body {
         font-size: 12px;
     }
 
     .container {
-        max-width: 460px;
+        max-width: $screen-xs-min - 10;
     }
 }
 
-@media (max-width: $screen-sm-max) {
+@media (min-width: $screen-sm-min) {
     html, body {
-        font-size: 14px;
+        font-size: 13px;
     }
 
     .container {
-        max-width: 758px;
+        max-width: $screen-sm-min - 10;
     }
 
     input {
@@ -381,35 +382,42 @@ fieldset {
     }
 }
 
-@media (max-width: $screen-md-max) {
+@media (min-width: $screen-md-min) {
+    html, body {
+        font-size: 14px;
+    }
+
     .container {
-        max-width: 1014px;
+        max-width: $screen-md-min - 10;
     }
 }
 
 @media (min-width: $screen-lg-min) {
     html, body {
-        font-size: 16px;
+        font-size: 15px;
     }
 
+    .container {
+        max-width: $screen-lg-min - 10;
+    }
 }
 
 @media (min-width: $screen-xl-min) {
     html, body {
-        font-size: 19px;
+        font-size: 16px;
     }
 
     .container {
-        max-width: 1480px;
+        max-width: $screen-xl-min - 10;
     }
 }
 
 @media (min-width: $screen-xxl-min) {
     html, body {
-        font-size: 19px;
+        font-size: 18px;
     }
 
     .container {
-        max-width: 1600px;
+        max-width: $screen-xxl-min - 10;
     }
 }

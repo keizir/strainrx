@@ -38,7 +38,7 @@ $screen-sm-min: 768px;
 $screen-md-min: 1024px;
 $screen-lg-min: 1200px;
 $screen-xl-min: 1500px;
-$screen-xxl-min: 2000px;
+$screen-xxl-min: 1920px;
 
 //== Make sure there is a space between the `-` and the `1` with out the space SASS will produce the wrong css
 $screen-xs-max: ($screen-xs-min - 1);
