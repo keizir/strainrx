@@ -1,0 +1,639 @@
+@import '../../mixins/variables';
+
+.nav-region {
+    background-color: $grey-dark;
+}
+
+.business-location-header-bg {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 50em;
+    background-color: $grey-lighter;
+    border-bottom: 1px solid $grey-light;
+}
+
+.business-location-holder {
+    position: relative;
+    height: 100%;
+
+    .header-region {
+        display: block;
+        position: relative;
+        color: $grey-normal;
+        margin-top: 6em;
+        height: 40em;
+
+        .image-wrapper {
+            display: inline-block;
+            width: 10em;
+            margin-top: 4em;
+
+            img {
+                width: 100%;
+            }
+        }
+
+        .info-wrapper {
+            display: inline-block;
+
+            .location-name {
+                display: inline-block;
+                position: absolute;
+                top: 0;
+                left: 0;
+                width: 100%;
+
+                h1 {
+                    width: auto;
+                    margin: 0;
+                }
+            }
+
+            .favorite-wrapper {
+                display: inline-block;
+                position: absolute;
+                top: -4.5em;
+                right: 1em;
+                width: auto;
+                margin-left: 1em;
+                cursor: pointer;
+
+                .fa-heart {
+                    color: $light-red;
+                }
+
+                .fa-heart, .fa-heart-o {
+                    font-size: 3em;
+                }
+            }
+
+            .contact-info {
+                font-size: 1.2em;
+                display: inline-block;
+                position: absolute;
+                left: 40%;
+                top: 3.25em;
+                vertical-align: top;
+
+                .street {
+                    margin-bottom: 0.2em;
+                }
+
+                .city {
+                    margin-bottom: 1em;
+                }
+
+                .phone-wrapper {
+                    position: relative;
+                    margin-bottom: 1em;
+
+                    .fa {
+                        font-size: 1.6em;
+                        color: $black;
+                        margin-right: 0.3em;
+                        vertical-align: top;
+                    }
+
+                    span, a {
+                        position: relative;
+                        top: 0.11em;
+                        vertical-align: top;
+                    }
+
+                    a {
+                        top: 0.2em;
+                        font-weight: bold;
+                    }
+                }
+
+                .delivery-available-wrapper {
+                    position: relative;
+                    margin-bottom: 1em;
+
+                    .fa {
+                        font-size: 1.6em;
+                        color: $black;
+                        margin-right: 0.3em;
+                    }
+
+                    span {
+                        position: relative;
+                        top: 0.2em;
+                        vertical-align: top;
+                        color: $iris-blue;
+                    }
+                }
+
+                .btn {
+                    width: 70%;
+                    padding: 0.5em;
+                }
+            }
+
+            .hours-info {
+                font-size: 1.2em;
+                display: inline-block;
+                position: absolute;
+                top: 18em;
+                left: 0;
+                vertical-align: top;
+                width: 145%;
+
+                .hours {
+                    display: block;
+                    margin-bottom: 1em;
+                    width: 100%;
+
+                    .title {
+                        display: inline-block;
+                        width: 35%;
+                        font-size: 1.05em;
+                        font-weight: bold;
+                        color: $grey-dark;
+                    }
+
+                    .opened {
+                        color: $avocado-green;
+                    }
+
+                    .closed {
+                        color: $light-red;
+                        width: 40%;
+                    }
+                }
+
+                .schedule {
+                    display: block;
+                    width: 100%;
+
+                    .day-wrapper {
+                        display: block;
+                        margin-bottom: 0.5em;
+
+                        .first {
+                            font-size: 1.05em;
+                            font-weight: bold;
+                            color: $grey-dark;
+                        }
+
+                        .day-name {
+                            display: inline-block;
+                            width: 35%;
+                        }
+
+                        .day-value {
+                            display: inline-block;
+                            width: 60%;
+                        }
+                    }
+                }
+            }
+        }
+
+        .rating-row {
+            display: block;
+            text-align: left;
+
+            .rating-raw {
+                display: inline-block;
+                position: absolute;
+                top: 15em;
+                padding: 0 0.2em;
+            }
+
+            .rating-display {
+                display: none;
+            }
+
+            .separator {
+                display: none;
+            }
+
+            a {
+                font-size: 1.5em;
+                display: inline-block;
+                position: absolute;
+                top: 11.8em;
+            }
+        }
+
+        .socials-row {
+            display: inline-block;
+            position: absolute;
+            top: -4.2em;
+            left: 0;
+            width: 7em;
+
+            span {
+                margin-right: 0.5em;
+            }
+        }
+    }
+
+    .content-region {
+        display: block;
+        position: relative;
+        margin: 3em auto;
+
+        .location-content {
+            color: $grey-normal;
+
+            h2 {
+                margin-bottom: 1em;
+            }
+
+            .left-column {
+                display: block;
+                position: relative;
+                left: 0;
+                width: 100%;
+                vertical-align: top;
+
+                .about-wrapper {
+                    margin-bottom: 2em;
+                }
+
+                .reviews-wrapper {
+                    margin-bottom: 2em;
+                }
+
+                .deals-wrapper {
+                    margin-bottom: 2em;
+                }
+            }
+
+            .right-column {
+                display: block;
+                position: relative;
+                right: 0;
+                width: 100%;
+                vertical-align: top;
+
+                .menu-section-wrapper {
+                    h3 {
+                        font-weight: bold;
+                        color: $grey-dark;
+                        text-align: center;
+                        margin-bottom: 0.2em;
+                    }
+
+                    .current-strain-menu-item {
+                        margin-bottom: 2em;
+
+                        .menu-item-header {
+                            font-weight: bold;
+                            font-size: 1.05em;
+                            padding: 1em;
+
+                            span {
+                                display: inline-block;
+                                width: 14%;
+                            }
+
+                            .name {
+                                width: 21%;
+                            }
+
+                            .match {
+                                width: 17%;
+                            }
+                        }
+
+                        .menu-item {
+                            color: $white;
+                            padding: 1em;
+
+                            span {
+                                display: inline-block;
+                                width: 14%;
+                            }
+
+                            .name {
+                                width: 21%;
+                            }
+
+                            .match {
+                                width: 17%;
+                            }
+                        }
+                    }
+
+                    .menu-wrapper {
+                        color: $white;
+                        margin-bottom: 2em;
+                        padding: 1em;
+
+                        .menu-item-header {
+                            font-weight: bold;
+                            font-size: 1.05em;
+                            margin-bottom: 1em;
+
+                            span {
+                                display: inline-block;
+                                width: 14%;
+                            }
+
+                            .name {
+                                width: 21%;
+                            }
+
+                            .match {
+                                width: 17%;
+                            }
+                        }
+
+                        .menu-item {
+                            margin-top: 1.1em;
+
+                            span {
+                                display: inline-block;
+                                width: 14%;
+                            }
+
+                            .name {
+                                width: 21%;
+                            }
+
+                            .match {
+                                width: 17%;
+                            }
+                        }
+                    }
+
+                    .sativa {
+                        background-color: $orange-red;
+                    }
+
+                    .sativa-header {
+                        color: $orange-red;
+                    }
+
+                    .hybrid {
+                        background-color: $green;
+                    }
+
+                    .hybrid-header {
+                        color: $green;
+                    }
+
+                    .indica {
+                        background-color: $purple;
+                    }
+
+                    .indica-header {
+                        color: $purple;
+                    }
+                }
+            }
+        }
+    }
+}
+
+@media (min-width: $screen-xs-min) {
+    .business-location-holder {
+
+    }
+}
+
+@media (min-width: $screen-sm-min) {
+    .nav-region {
+        background-color: $grey-lighter;
+    }
+
+    .business-location-header-bg {
+        height: 36em;
+    }
+
+    .business-location-holder {
+        .header-region {
+            height: 29em;
+            margin-top: 3em;
+
+            .image-wrapper {
+                width: 25%;
+                margin-top: 0;
+                margin-right: 2%;
+                vertical-align: top;
+            }
+
+            .info-wrapper {
+                width: 70%;
+                vertical-align: top;
+
+                .location-name {
+                    position: relative;
+                    width: auto;
+                }
+
+                .favorite-wrapper {
+                    position: relative;
+                    margin-left: 1em;
+                    top: auto;
+                    right: auto;
+
+                    .fa-heart, .fa-heart-o {
+                        font-size: 2em;
+                    }
+                }
+
+                .contact-info {
+                    position: relative;
+                    width: 38%;
+                    margin-top: 2em;
+                    top: auto;
+                    left: auto;
+                }
+
+                .hours-info {
+                    position: relative;
+                    width: 59%;
+                    margin-top: 2em;
+                    top: auto;
+                    left: auto;
+                }
+            }
+
+            .rating-row {
+                line-height: 3em;
+                font-size: 1.2em;
+
+                .rating-raw {
+                    display: inline-block;
+                    position: relative;
+                    top: auto;
+                }
+
+                .rating-display {
+                    display: inline-block;
+                    position: relative;
+                }
+
+                .separator {
+                    display: inline-block;
+                }
+
+                a {
+                    display: inline-block;
+                    position: relative;
+                    top: auto;
+                    font-size: 1em;
+                }
+            }
+
+            .socials-row {
+                display: block;
+                position: relative;
+                bottom: 1.5em;
+                top: auto;
+                left: 55.2%;
+            }
+        }
+
+        .content-region {
+            position: relative;
+
+            .location-content {
+                .left-column {
+                    display: inline-block;
+                    position: relative;
+                    left: 0;
+                    width: 43%;
+                    margin-right: 2%;
+                    vertical-align: top;
+                }
+
+                .right-column {
+                    display: inline-block;
+                    position: relative;
+                    right: 0;
+                    width: 54%;
+                    vertical-align: top;
+
+                    .menu-section-wrapper {
+                        .current-strain-menu-item {
+                            .menu-item-header {
+                                span {
+                                    width: 14%;
+                                }
+
+                                .name {
+                                    width: 21%;
+                                }
+                            }
+
+                            .menu-item {
+                                span {
+                                    width: 14%;
+                                }
+
+                                .name {
+                                    width: 21%;
+                                }
+                            }
+                        }
+
+                        .menu-wrapper {
+                            .menu-item-header {
+                                span {
+                                    width: 14%;
+                                }
+
+                                .name {
+                                    width: 21%;
+                                }
+                            }
+
+                            .menu-item {
+                                span {
+                                    width: 14%;
+                                }
+
+                                .name {
+                                    width: 21%;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
+@media (min-width: $screen-md-min) {
+    .business-location-holder {
+        .header-region {
+            .image-wrapper {
+                width: 30%;
+                margin-right: 3%;
+            }
+
+            .info-wrapper {
+                width: 66%;
+
+                .contact-info {
+                    width: 40%;
+                    margin-top: 2em;
+                }
+
+                .hours-info {
+                    width: 50%;
+                    margin-top: 2em;
+                }
+            }
+
+            .socials-row {
+                left: 60.2%;
+            }
+        }
+    }
+}
+
+@media (min-width: $screen-lg-min) {
+    .business-location-holder {
+        .header-region {
+            .socials-row {
+                bottom: 3em;
+            }
+        }
+    }
+}
+
+@media (min-width: $screen-xl-min) {
+    .business-location-header-bg {
+        height: 40em;
+    }
+
+    .business-location-holder {
+        .header-region {
+            height: 33em;
+
+            .image-wrapper {
+                width: 30%;
+                margin-right: 5%;
+            }
+
+            .info-wrapper {
+                width: 60%;
+            }
+        }
+    }
+}
+
+@media (min-width: $screen-xxl-min) {
+    .business-location-header-bg {
+        height: 45em;
+    }
+
+    .business-location-holder {
+        .header-region {
+            height: 38em;
+
+            .info-wrapper {
+                width: 50%;
+            }
+        }
+    }
+}

@@ -84,11 +84,28 @@ class StrainDetailsService:
                 return score
             else:
                 data = SearchElasticService().query_strain_srx_score(latest_user_search[0].to_search_criteria(),
-                                                                     strain_id=current_strain.id)
+                                                                     strain_ids=[current_strain.id])
                 strain = data.get('list')[0]
                 return strain.get('match_percentage')
 
         return 0
+
+    @staticmethod
+    def calculate_srx_scores(strain_ids, current_user):
+        latest_user_search = UserSearch.objects.filter(user=current_user).order_by('-last_modified_date')[:1]
+
+        if latest_user_search and len(latest_user_search) > 0:
+            data = SearchElasticService().query_strain_srx_score(latest_user_search[0].to_search_criteria(),
+                                                                 strain_ids=strain_ids)
+            scores = {}
+            strains = data.get('list')
+
+            for s in strains:
+                scores[s.get('id')] = s.get('match_percentage')
+
+            return scores
+
+        return []
 
     def get_strain_reviews(self, current_strain):
         reviews_raw = StrainReview.objects.filter(strain=current_strain,

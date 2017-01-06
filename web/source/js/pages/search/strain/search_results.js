@@ -247,14 +247,7 @@ W.pages.StrainSearchResultsPage = Class.extend({
     initRating: function ($el) {
         var rating = $el.text();
         if (rating && rating.indexOf('Not Rated') === -1) {
-            $el.rateYo({
-                rating: parseInt(rating, 10),
-                readOnly: true,
-                spacing: '1px',
-                normalFill: '#aaa8a8', // $grey-light
-                ratedFill: '#6bc331', // $avocado-green
-                starWidth: '16px'
-            });
+            W.common.Rating.readOnly($el, {rating: rating});
         }
     },
 

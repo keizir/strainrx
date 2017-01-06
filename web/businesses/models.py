@@ -85,6 +85,8 @@ class BusinessLocation(models.Model):
     zip_code = models.CharField(max_length=10)
     timezone = models.CharField(max_length=100, null=True, choices=zip(pytz.common_timezones, pytz.common_timezones))
 
+    about = models.CharField(max_length=1000, blank=True, default='')
+
     lat = models.FloatField(_('Latitude'), blank=True, null=True, max_length=50)
     lng = models.FloatField(_('Longitude'), blank=True, null=True, max_length=50)
     location_raw = JSONField(_('Location Raw JSON'), default={}, max_length=20000)
@@ -113,7 +115,7 @@ class BusinessLocation(models.Model):
     sun_close = models.TimeField(blank=True, null=True)
 
     def __str__(self):
-        return '{0} - {1}'.format(self.business, self.location_name)
+        return self.location_name
 
 
 @receiver(post_save, sender=BusinessLocation)
@@ -153,3 +155,24 @@ def save_es_menu_item(sender, **kwargs):
     d['strain_id'] = strain.pk
     d['strain_name'] = strain.name
     BusinessLocationESService().save_menu_item(d, menu_item.pk, menu_item.business_location.pk)
+
+
+@python_2_unicode_compatible
+class UserFavoriteLocation(models.Model):
+    location = models.ForeignKey(BusinessLocation, on_delete=models.DO_NOTHING)
+    created_by = models.ForeignKey(User, on_delete=models.DO_NOTHING)
+    created_date = models.DateTimeField(auto_now=True)
+
+
+@python_2_unicode_compatible
+class LocationReview(models.Model):
+    location = models.ForeignKey(BusinessLocation, on_delete=models.DO_NOTHING)
+
+    rating = models.FloatField()
+    review = models.CharField(max_length=500, default='', blank=True)
+    review_approved = models.BooleanField(default=False)
+
+    created_date = models.DateTimeField(auto_now_add=True)
+    created_by = models.ForeignKey(User, on_delete=models.DO_NOTHING, related_name='+')
+    last_modified_date = models.DateTimeField(auto_now=True)
+    last_modified_by = models.ForeignKey(User, on_delete=models.DO_NOTHING, null=True, related_name='+')

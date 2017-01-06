@@ -20,6 +20,11 @@ urlpatterns = [
         name='business_location_image'
     ),
     url(
+        regex=r'^(?P<business_id>[0-9]+)/locations/(?P<business_location_id>[0-9]+)/reviews',
+        view=BusinessLocationReviewView.as_view(),
+        name='business_location_reviews'
+    ),
+    url(
         regex=r'^(?P<business_id>[0-9]+)/locations/(?P<business_location_id>[0-9]+)',
         view=BusinessLocationView.as_view(),
         name='business_location'

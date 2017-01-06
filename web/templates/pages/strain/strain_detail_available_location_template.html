@@ -4,7 +4,9 @@
     <div class="dispensary">
         <div class="location-name col-1">
             <div class="name">
-                <a href="/businesses/${d.business_id}/locations/${d.location_id}"><%=d.location_name %></a>
+                <a href="/businesses/${d.business_id}/locations/${d.location_id}?strain_id=${strain_id}">
+                    <%=d.location_name %>
+                </a>
             </div>
             <div class="icon">
                 <% if (d.is_delivery) { %>

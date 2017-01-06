@@ -1,0 +1,124 @@
+{% load staticfiles i18n %}
+
+<script type="x/srx-template" id="dispensary_content_template">
+    <div class="location-content">
+        <div class="left-column">
+            <div class="about-wrapper">
+                <h2>About This Place</h2>
+                <% if (l.about) { %>
+                <span class="about">${ l.about }</span>
+                <% } else { %>
+                <span class="about">--</span>
+                <% } %>
+            </div>
+            <% if (reviews && reviews.length > 0) { %>
+            <div class="reviews-wrapper">
+                <h2>Reviews</h2>
+            </div>
+            <% } %>
+            <% if (deals && deals.length > 0) { %>
+            <div class="deals-wrapper">
+                <h2>Today's Deals</h2>
+            </div>
+            <% } %>
+        </div>
+        <div class="right-column">
+            <div class="menu-section-wrapper">
+                <h2>Menu</h2>
+
+                <% if (selectedStrainMenuItem) { %>
+                <div class="current-strain-menu-item">
+                    <div class="menu-item-header ${ selectedStrainMenuItem.strain_variety }-header">
+                        <span class="name">Matched Strain</span>
+                        <span class="gram">Gram</span>
+                        <span class="eighth">Eighth</span>
+                        <span class="quarter">Quarter</span>
+                        <span class="half">Half</span>
+                        <span class="match">Match %</span>
+                    </div>
+                    <div class="menu-item ${ selectedStrainMenuItem.strain_variety }">
+                        <span class="name">${ selectedStrainMenuItem.strain_name }</span>
+                        <span class="gram">${ formatPrice(selectedStrainMenuItem.price_gram) }</span>
+                        <span class="eighth">${ formatPrice(selectedStrainMenuItem.price_eighth) }</span>
+                        <span class="quarter">${ formatPrice(selectedStrainMenuItem.price_quarter) }</span>
+                        <span class="half">${ formatPrice(selectedStrainMenuItem.price_half) }</span>
+                        <span class="match">${ formatScore(selectedStrainMenuItem.match_score) }</span>
+                    </div>
+                </div>
+                <% } %>
+
+                <% if (sativas && sativas.length > 0) { %>
+                <h3>SATIVAS</h3>
+                <div class="menu-wrapper sativa">
+                    <div class="menu-item-header">
+                        <span class="name">Strain</span>
+                        <span class="gram">Gram</span>
+                        <span class="eighth">Eighth</span>
+                        <span class="quarter">Quarter</span>
+                        <span class="half">Half</span>
+                        <span class="match">Match %</span>
+                    </div>
+                    <% $.each(sativas, function(i, mi) { %>
+                    <div class="menu-item">
+                        <span class="name">${ mi.strain_name }</span>
+                        <span class="gram">${ formatPrice(mi.price_gram) }</span>
+                        <span class="eighth">${ formatPrice(mi.price_eighth) }</span>
+                        <span class="quarter">${ formatPrice(mi.price_quarter) }</span>
+                        <span class="half">${ formatPrice(mi.price_half) }</span>
+                        <span class="match">${ formatScore(mi.match_score) }</span>
+                    </div>
+                    <% }) %>
+                </div>
+                <% } %>
+
+                <% if (hybrids && hybrids.length > 0) { %>
+                <h3>HYBRIDS</h3>
+                <div class="menu-wrapper hybrid">
+                    <div class="menu-item-header">
+                        <span class="name">Strain</span>
+                        <span class="gram">Gram</span>
+                        <span class="eighth">Eighth</span>
+                        <span class="quarter">Quarter</span>
+                        <span class="half">Half</span>
+                        <span class="match">Match %</span>
+                    </div>
+                    <% $.each(hybrids, function(i, mi) { %>
+                    <div class="menu-item">
+                        <span class="name">${ mi.strain_name }</span>
+                        <span class="gram">${ formatPrice(mi.price_gram) }</span>
+                        <span class="eighth">${ formatPrice(mi.price_eighth) }</span>
+                        <span class="quarter">${ formatPrice(mi.price_quarter) }</span>
+                        <span class="half">${ formatPrice(mi.price_half) }</span>
+                        <span class="match">${ formatScore(mi.match_score) }</span>
+                    </div>
+                    <% }) %>
+                </div>
+                <% } %>
+
+                <% if (indicas && indicas.length > 0) { %>
+                <h3>INDICAS</h3>
+                <div class="menu-wrapper indica">
+                    <div class="menu-item-header">
+                        <span class="name">Strain</span>
+                        <span class="gram">Gram</span>
+                        <span class="eighth">Eighth</span>
+                        <span class="quarter">Quarter</span>
+                        <span class="half">Half</span>
+                        <span class="match">Match %</span>
+                    </div>
+                    <% $.each(indicas, function(i, mi) { %>
+                    <div class="menu-item">
+                        <span class="name">${ mi.strain_name }</span>
+                        <span class="gram">${ formatPrice(mi.price_gram) }</span>
+                        <span class="eighth">${ formatPrice(mi.price_eighth) }</span>
+                        <span class="quarter">${ formatPrice(mi.price_quarter) }</span>
+                        <span class="half">${ formatPrice(mi.price_half) }</span>
+                        <span class="match">${ formatScore(mi.match_score) }</span>
+                    </div>
+                    <% }) %>
+                </div>
+                <% } %>
+            </div>
+        </div>
+    </div>
+</script>

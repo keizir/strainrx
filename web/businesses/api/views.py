@@ -14,10 +14,13 @@ from rest_framework.views import APIView
 
 from web.businesses.api.permissions import BusinessAccountOwner
 from web.businesses.api.serializers import *
-from web.businesses.api.services import BusinessSignUpService, BusinessLocationService
+from web.businesses.api.services import BusinessSignUpService, BusinessLocationService, get_open_closed, \
+    get_location_rating
 from web.businesses.emails import EmailService
-from web.businesses.models import Business, BusinessLocation, BusinessLocationMenuItem
+from web.businesses.models import Business, BusinessLocation, BusinessLocationMenuItem, LocationReview, \
+    UserFavoriteLocation
 from web.businesses.serializers import BusinessSerializer, BusinessLocationSerializer
+from web.search.api.services import StrainDetailsService
 from web.search.models import Strain
 
 logger = logging.getLogger(__name__)
@@ -103,6 +106,31 @@ class BusinessLocationImageView(LoginRequiredMixin, APIView):
         return Response({}, status=status.HTTP_200_OK)
 
 
+class BusinessLocationReviewView(LoginRequiredMixin, APIView):
+    def get(self, request, business_id, business_location_id):
+        reviews_raw = LocationReview.objects.filter(location__id=business_location_id,
+                                                    review_approved=True).order_by('-created_date')
+        reviews = []
+        for r in reviews_raw:
+            reviews.append(self.build_review(r))
+        return Response({'reviews': reviews}, status=status.HTTP_200_OK)
+
+    @staticmethod
+    def build_review(review):
+        display_user_name = '{0} {1}'.format(review.created_by.first_name, review.created_by.last_name) \
+            if review.created_by.first_name and review.created_by.last_name \
+            else review.created_by.email.split('@')[0]
+
+        return {
+            'id': review.id,
+            'rating': review.rating,
+            'review': review.review,
+            'created_date': review.created_date,
+            'created_by_name': display_user_name,
+            'created_by_image': None  # TODO implement UserImage
+        }
+
+
 class ResendConfirmationEmailView(LoginRequiredMixin, APIView):
     def get(self, request):
         authenticated_user = request.user
@@ -126,7 +154,18 @@ class BusinessLocationView(LoginRequiredMixin, APIView):
 
         location = BusinessLocation.objects.get(pk=business_location_id)
         serializer = BusinessLocationSerializer(location)
-        return Response({'location': serializer.data}, status=status.HTTP_200_OK)
+        d = {'location': serializer.data}
+
+        if request.GET.get('ddp'):
+            current_user = request.user
+            open_closed = get_open_closed(serializer.data, '%I:%M %p')
+            d['location']['is_favorite'] = UserFavoriteLocation.objects.filter(created_by=current_user).exists()
+            d['location']['is_rated'] = LocationReview.objects.filter(created_by=current_user).exists()
+            d['location']['rating'] = get_location_rating(business_location_id)
+            d['location']['is_open'] = open_closed == 'Opened'
+            d['location']['open_closed'] = open_closed
+
+        return Response(d, status=status.HTTP_200_OK)
 
     def post(self, request, business_id, business_location_id):
         existing_location = BusinessLocation.objects.get(pk=business_location_id)
@@ -165,6 +204,16 @@ class BusinessLocationMenuView(LoginRequiredMixin, APIView):
         menu_items = []
         for mi in menu_items_raw:
             menu_items.append(self.build_menu_item(mi))
+
+        if request.GET.get('ddp'):
+            strain_ids = []
+            for mi in menu_items:
+                strain_ids.append(mi.get('strain_id'))
+
+            scores = StrainDetailsService().calculate_srx_scores(strain_ids, request.user)
+            if len(scores) > 0:
+                for mi in menu_items:
+                    mi['match_score'] = scores.get(mi.get('strain_id'))
 
         return Response({'menu': menu_items}, status=status.HTTP_200_OK)
 
@@ -212,6 +261,7 @@ class BusinessLocationMenuView(LoginRequiredMixin, APIView):
     def build_menu_item(self, menu_item):
         return {
             'id': menu_item.id,
+            'strain_id': menu_item.strain.id,
             'strain_name': menu_item.strain.name,
             'strain_variety': menu_item.strain.variety,
             'price_gram': menu_item.price_gram,

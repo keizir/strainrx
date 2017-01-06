@@ -29,7 +29,7 @@
         </div>
         <div class="locations-area-body">
             <% $.each(dispensaries, function(index, d) { %>
-            <%= renderLocation({d: d, formatDistance: formatDistance, formatPrice: formatPrice}) %>
+            <%= renderLocation({d: d, formatDistance: formatDistance, formatPrice: formatPrice, strain_id: strain_id}) %>
             <% }) %>
         </div>
         <% } else { %>

@@ -388,7 +388,7 @@ fieldset {
     }
 
     .container {
-        max-width: $screen-md-min - 10;
+        max-width: $screen-md-min - 20;
     }
 }
 
@@ -398,7 +398,7 @@ fieldset {
     }
 
     .container {
-        max-width: $screen-lg-min - 10;
+        max-width: $screen-lg-min - 20;
     }
 }
 
@@ -408,7 +408,7 @@ fieldset {
     }
 
     .container {
-        max-width: $screen-xl-min - 10;
+        max-width: $screen-xl-min - 20;
     }
 }
 
@@ -418,6 +418,6 @@ fieldset {
     }
 
     .container {
-        max-width: $screen-xxl-min - 10;
+        max-width: $screen-xxl-min - 20;
     }
 }

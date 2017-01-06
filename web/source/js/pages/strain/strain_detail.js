@@ -189,14 +189,7 @@ W.pages.strain.StrainDetailPage = Class.extend({
     },
 
     initRating: function initRating($ratingSelector, rating) {
-        $ratingSelector.rateYo({
-            rating: rating !== 'Not Rated' ? rating : 0,
-            readOnly: true,
-            spacing: '1px',
-            normalFill: '#aaa8a8', // $grey-light
-            ratedFill: '#6bc331', // $avocado-green
-            starWidth: '16px'
-        });
+        W.common.Rating.readOnly($ratingSelector, {rating: rating !== 'Not Rated' ? rating : 0});
     },
 
     changeReviewText: function changeReviewText($review) {
@@ -585,7 +578,8 @@ W.pages.strain.StrainDetailPage = Class.extend({
             $menuExpander = $('.active-link'),
             $menuLocations = $('.locations'),
             $menuFilter = $('.filter-menu'),
-            menuTemplate = _.template($('#strain_detail_available_locations').html());
+            menuTemplate = _.template($('#strain_detail_available_locations').html()),
+            strainId = that.ui.$strainId.val();
 
         $menuExpander.on('click', function () {
             $menuLocations.toggleClass('hidden');
@@ -596,7 +590,8 @@ W.pages.strain.StrainDetailPage = Class.extend({
                     dispensaries: dispensaries,
                     renderLocation: that.templates.expandedLocation,
                     formatDistance: that.formatDistance,
-                    formatPrice: that.formatPrice
+                    formatPrice: that.formatPrice,
+                    strain_id: strainId
                 }));
 
                 $('.price-sort').on('click', function () {
@@ -614,17 +609,8 @@ W.pages.strain.StrainDetailPage = Class.extend({
                 });
 
                 $('.dispensary-rating').each(function () {
-                    var $this = $(this),
-                        rating = $this.text();
-
-                    $this.rateYo({
-                        rating: rating,
-                        readOnly: true,
-                        spacing: '1px',
-                        normalFill: '#aaa8a8', // $grey-light
-                        ratedFill: '#6bc331', // $avocado-green
-                        starWidth: '16px'
-                    });
+                    var $this = $(this);
+                    W.common.Rating.readOnly($this, {rating: $this.text()});
                 });
 
                 that.initSortActions();
@@ -633,10 +619,12 @@ W.pages.strain.StrainDetailPage = Class.extend({
     },
 
     renderLocation: function renderLocation(location) {
+        var that = this;
         return this.templates.expandedLocation({
-            'd': location,
-            'formatDistance': this.formatDistance,
-            'formatPrice': this.formatPrice
+            d: location,
+            formatDistance: this.formatDistance,
+            formatPrice: this.formatPrice,
+            strain_id: that.ui.$strainId.val()
         });
     },
 

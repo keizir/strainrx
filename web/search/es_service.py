@@ -1,8 +1,6 @@
 import json
-from datetime import datetime
 
-import pytz
-
+from web.businesses.api.services import get_open_closed
 from web.es_service import BaseElasticService
 from web.search import es_mappings
 from web.search.models import StrainImage, Strain
@@ -204,32 +202,10 @@ class SearchElasticService(BaseElasticService):
             'menu_item_id': menu_item_id, 'in_stock': in_stock,
             'price_gram': price_gram, 'price_half': price_half,
             'price_quarter': price_quarter, 'price_eighth': price_eighth,
-            'open': self.is_open(s),
+            'open': get_open_closed(s) == 'Opened',
             'is_delivery': s.get('delivery'),
             'rating': 4.5  # TODO load here location rating
         })
-
-    def is_open(self, location_json):
-        days = ['sun', 'mon', 'tue', 'wed', 'thu', 'fri', 'sat']
-        location_tz = pytz.timezone(location_json.get('timezone')) if location_json.get('timezone') else None
-        now = datetime.now(tz=location_tz) if location_tz else datetime.now()
-        current_day_index = int(now.strftime('%w'))  # 0 - Sunday, 6 - Saturday
-        current_hour = int(now.strftime('%H'))
-
-        location_o = location_json.get('{0}_open'.format(days[current_day_index]))
-        location_c = location_json.get('{0}_close'.format(days[current_day_index]))
-
-        if location_o and location_c:
-            if location_tz:
-                location_o = location_tz.localize(datetime.strptime(location_o, '%H:%M:%S'))
-                location_c = location_tz.localize(datetime.strptime(location_c, '%H:%M:%S'))
-            else:
-                location_o = datetime.strptime(location_o, '%H:%M:%S')
-                location_c = datetime.strptime(location_c, '%H:%M:%S')
-
-            return int(location_o.strftime('%H')) < current_hour < int(location_c.strftime('%H'))
-
-        return False
 
     def query_strains_by_name(self, query, size=50, start_from=0):
         """
@@ -329,7 +305,7 @@ class SearchElasticService(BaseElasticService):
         else:
             return score
 
-    def query_strain_srx_score(self, criteria, size=50, start_from=0, strain_id=None, current_user=None,
+    def query_strain_srx_score(self, criteria, size=50, start_from=0, strain_ids=None, current_user=None,
                                result_filter=None, include_locations=True, is_similar=False, similar_strain_id=None):
         """
             Return strains ranked by SRX score
@@ -337,9 +313,8 @@ class SearchElasticService(BaseElasticService):
         if start_from is None:
             start_from = 0
 
-        strain_ids = []
-        if strain_id:
-            strain_ids.append(strain_id)
+        if strain_ids is None:
+            strain_ids = []
 
         proximity = SystemProperty.objects.get(name='max_delivery_radius')
         proximity = int(proximity.value)

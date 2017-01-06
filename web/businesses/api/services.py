@@ -1,13 +1,15 @@
 import uuid
 from datetime import datetime
 
+import pytz
 from boto.s3.bucket import Bucket
 from boto.s3.connection import S3Connection
 from boto.s3.key import Key
 from django.conf import settings
 from django.core.exceptions import ValidationError
+from django.db.models import Avg
 
-from web.businesses.models import BusinessLocation, Business
+from web.businesses.models import BusinessLocation, Business, LocationReview
 from web.users import validators
 from web.users.models import User, UserLocation
 
@@ -129,7 +131,8 @@ class BusinessLocationService:
             lat=location.get('lat'),
             lng=location.get('lng'),
             location_raw=location.get('location_raw') if location.get('location_raw') else {},
-            timezone=location.get('timezone')
+            timezone=location.get('timezone'),
+            about=location.get('about')
         )
         l.save()
         return l
@@ -150,6 +153,7 @@ class BusinessLocationService:
         l.lng = location.get('lng') if location.get('lng') else l.lng
         l.location_raw = location.get('location_raw') if location.get('location_raw') else l.location_raw
         l.timezone = location.get('timezone')
+        l.about = location.get('about')
         l.save()
         return l
 
@@ -171,3 +175,42 @@ class BusinessLocationService:
                 new_primary = locations[0]
                 new_primary.primary = True
                 new_primary.save()
+
+
+def get_location_rating(location_id):
+    rating = LocationReview.objects.filter(location__id=location_id).aggregate(avg_rating=Avg('rating'))
+    rating = rating.get('avg_rating')
+    return 'Not Rated' if rating is None else "{0:.2f}".format(round(rating, 2))
+
+
+def get_open_closed(location_json, time_format='%H:%M:%S'):
+    days = ['sun', 'mon', 'tue', 'wed', 'thu', 'fri', 'sat']
+    location_tz = pytz.timezone(location_json.get('timezone')) if location_json.get('timezone') else None
+
+    now = datetime.now(tz=location_tz) if location_tz else datetime.now()
+    current_day_index = int(now.strftime('%w'))  # 0 - Sunday, 6 - Saturday
+    current_hour = int(now.strftime('%H'))
+    current_minute = int(now.strftime('%M'))
+
+    loc_o = location_json.get('{0}_open'.format(days[current_day_index]))
+    loc_c = location_json.get('{0}_close'.format(days[current_day_index]))
+
+    if loc_o and loc_c:
+        loc_o = datetime.strptime(loc_o, time_format)
+        loc_c = datetime.strptime(loc_c, time_format)
+        now = datetime.strptime('1900-01-01 {0}:{1}'.format(current_hour, current_minute), '%Y-%m-%d %H:%M')
+
+        if location_tz:
+            loc_o = location_tz.localize(loc_o)
+            loc_c = location_tz.localize(loc_c)
+            now = location_tz.localize(now)
+
+        delta = (loc_c - now).total_seconds()
+        till_close_min = delta / 60
+
+        if 0 < till_close_min <= 30:
+            return 'Closing Soon'
+
+        return 'Opened' if int(loc_o.strftime('%H')) < current_hour < int(loc_c.strftime('%H')) else 'Closed Now'
+
+    return ''

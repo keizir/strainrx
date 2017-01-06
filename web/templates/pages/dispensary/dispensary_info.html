@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+
+{% load staticfiles i18n %}
+
+{% block title %}Business Location Detail{% endblock %}
+
+{% block css %}
+    {{ block.super }}
+    <link href="{% static 'css/pages/dispensary/dispensary_info.css' %}" rel="stylesheet">
+{% endblock %}
+
+{% block content %}
+
+    <div class="business-location-header-bg"></div>
+
+    <div class="container">
+        <div class="business-location-holder">
+            <input type="hidden" id="business_id" value="{{ business_id }}">
+            <input type="hidden" id="location_id" value="{{ location_id }}">
+            <input type="hidden" id="strain_id" value="{{ strain_id }}">
+
+            <div class="header-region"></div>
+            <div class="content-region"></div>
+        </div>
+    </div>
+
+    {% include "pages/dispensary/dispensary_info_header_template.html" %}
+    {% include "pages/dispensary/dispensary_info_content_template.html" %}
+
+{% endblock %}
+
+{% block javascript %}
+    {{ block.super }}
+    <script src="{% static 'js/pages/dispensary/dispensary_info.js' %}"></script>
+    <script src="{% static 'js/pages/dispensary/dispensary_info_view.js' %}"></script>
+    <script type="text/javascript">
+        W.pages.dispensary.DispensaryInfoView.init();
+    </script>
+{% endblock %}

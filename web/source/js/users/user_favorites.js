@@ -67,14 +67,7 @@ W.users.FavoritesPage = Class.extend({
 
     initRating: function initRating($ratingSelector, rating) {
         if (rating !== 'Not Rated') {
-            $ratingSelector.rateYo({
-                rating: rating,
-                readOnly: true,
-                spacing: '1px',
-                normalFill: '#aaa8a8', // $grey-light
-                ratedFill: '#6bc331', // $avocado-green
-                starWidth: '16px'
-            });
+            W.common.Rating.readOnly($ratingSelector, {rating: rating});
         }
     },
 

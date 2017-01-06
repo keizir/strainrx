@@ -35,7 +35,8 @@ W.pages.business.BusinessDetail = Class.extend({
         this.changeLocation();
 
         var $input = $('input'),
-            $selectTimezone = $('select[name="timezone"]');
+            $selectTimezone = $('select[name="timezone"]'),
+            $textarea = $('textarea');
 
         $input.on('focus', function () {
             $('.error-message').text('');
@@ -46,6 +47,18 @@ W.pages.business.BusinessDetail = Class.extend({
         });
 
         $input.on('keyup', function () {
+            that.ui.$btnUpdateInfo.removeAttr('disabled');
+        });
+
+        $textarea.on('focus', function () {
+            $('.error-message').text('');
+        });
+
+        $textarea.on('change', function () {
+            that.ui.$btnUpdateInfo.removeAttr('disabled');
+        });
+
+        $textarea.on('keyup', function () {
             that.ui.$btnUpdateInfo.removeAttr('disabled');
         });
 
@@ -132,6 +145,7 @@ W.pages.business.BusinessDetail = Class.extend({
             dispensary = $('input[name="dispensary"]').is(':checked'),
             delivery = $('input[name="delivery"]').is(':checked'),
             timezone = $('select[name="timezone"]').val(),
+            about = $('textarea[name="about"]').val(),
             isOpenBeforeClose = function isOpenBeforeClose(open, close) {
                 if (open && close) {
                     var o = new Date(Date.parse('1/1/1970 {0}'.format(open))),
@@ -176,6 +190,11 @@ W.pages.business.BusinessDetail = Class.extend({
             return;
         }
 
+        if (about && about.length > 1000) {
+            $errorMessage.text('About Us max length is 1000 chars');
+            return;
+        }
+
         var dayInvalid = false;
         $.each(W.common.Constants.days, function (index, day) {
             var openTime = that.getOpenTime(day.value),
@@ -205,6 +224,7 @@ W.pages.business.BusinessDetail = Class.extend({
             dispensary: dispensary,
             delivery: delivery,
             timezone: timezone,
+            about: about,
             mon_open: this.getOpenTime('mon'), mon_close: this.getCloseTime('mon'),
             tue_open: this.getOpenTime('tue'), tue_close: this.getCloseTime('tue'),
             wed_open: this.getOpenTime('wed'), wed_close: this.getCloseTime('wed'),
@@ -262,6 +282,7 @@ W.pages.business.BusinessDetail = Class.extend({
                     $('input[name="location_email"]').val(location.location_email);
                     $('input[name="phone"]').val(location.phone);
                     $('input[name="ext"]').val(location.ext);
+                    $('textarea[name="about"]').val(location.about);
 
                     if (location.dispensary) {
                         $('input[name="dispensary"]').prop('checked', true);

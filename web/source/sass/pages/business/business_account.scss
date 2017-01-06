@@ -231,6 +231,23 @@
                     }
                 }
 
+                .textarea-field {
+                    label {
+                        vertical-align: top;
+                        line-height: 10em;
+                    }
+
+                    textarea {
+                        width: 55%;
+                        height: 10em;
+                        padding: 1em 2.5em 1em 1em;
+                        border-radius: 0.5em;
+                        border: 1px solid $grey-normal;
+                        resize: none;
+                        color: $grey-normal;
+                    }
+                }
+
                 .phone-field-group {
                     width: 100%;
 

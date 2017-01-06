@@ -39,7 +39,7 @@ urlpatterns = [
     ),
     url(
         regex=r'^(?P<business_id>[0-9]{1,})/locations/(?P<location_id>[0-9]{1,})/$',
-        view=views.BusinessDispensaryInfoView.as_view(),
+        view=views.DispensaryInfoView.as_view(),
         name='dispensary_info'
     ),
 ]
