@@ -20,7 +20,7 @@ ROOT_DIR = environ.Path(__file__) - 3  # (web/config/settings/common.py - 3 = we
 APPS_DIR = ROOT_DIR.path('web')
 
 env = environ.Env()
-env.read_env('.env')
+env.read_env()
 
 # APP CONFIGURATION
 # ------------------------------------------------------------------------------

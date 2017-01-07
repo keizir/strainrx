@@ -5,13 +5,14 @@
   tags: packages
 
 - name: Install virtualenvwrapper
-  pip: name=virtualenvwrapper executable=pip2
+  pip: name=virtualenvwrapper executable=pip3
   tags: packages
 
-- name: Create the virtualenv
-  shell: . /usr/local/bin/virtualenvwrapper.sh && mkvirtualenv -p {{ virtualenv_python_version }} {{ application_name }}
-  args:
-    executable: /bin/bash
+# TODO ansible refuses to make a virtualenv with python3 as default python
+#- name: Create the virtualenv
+#  shell: export VIRTUALENVWRAPPER_PYTHON=/usr/bin/python3 && . /usr/local/bin/virtualenvwrapper.sh && mkvirtualenv -p {{ virtualenv_python_version }} {{ application_name }}
+#  args:
+#    executable: /bin/bash
 
 - name: Ensure gunicorn is installed
   pip: virtualenv={{ virtualenv_path }} name=gunicorn

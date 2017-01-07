@@ -26,6 +26,9 @@
 		8. As `root` follow steps to install node LTS 4.2.6 via NVM at [https://github.com/creationix/nvm#install-script](https://github.com/creationix/nvm#install-script) so we can run FE build tasks
 		9. `source ~/.bashrc`
 		10. `nvm install 6.9.4 && nvm use 6.9.4 && nvm alias default node`
+    1. Create virtualenv
+        1. `pip3 install virtualenv virtualenvwrapper`
+        2. `mkvirtualenv -p python3 <application name>`
 
 ### Run with Ansible
 3. Run Playbook: `ansible-playbook -i <env> site.yml --ask-vault-pass` (where env = stage, prod, etc to set up various environments)

@@ -50,7 +50,7 @@ X_FRAME_OPTIONS = 'DENY'
 # ------------------------------------------------------------------------------
 # Hosts/domain names that are valid for this site
 # See https://docs.djangoproject.com/en/1.6/ref/settings/#allowed-hosts
-ALLOWED_HOSTS = env.list('DJANGO_ALLOWED_HOSTS', default=['example.com'])
+ALLOWED_HOSTS = env.list('DJANGO_ALLOWED_HOSTS', default=['strainrx.co'])
 # END SITE CONFIGURATION
 
 INSTALLED_APPS += ('gunicorn',)
@@ -78,8 +78,9 @@ AWS_HEADERS = {
 
 #  See:http://stackoverflow.com/questions/10390244/
 from storages.backends.s3boto import S3BotoStorage
+from web.custom_s3_boto_storage import StaticS3Storage
 
-StaticRootS3BotoStorage = lambda: S3BotoStorage(location='static')
+StaticRootS3BotoStorage = lambda: StaticS3torage(location='static')
 MediaRootS3BotoStorage = lambda: S3BotoStorage(location='media')
 DEFAULT_FILE_STORAGE = 'config.settings.production.MediaRootS3BotoStorage'
 
@@ -94,7 +95,6 @@ STATICFILES_STORAGE = 'config.settings.production.StaticRootS3BotoStorage'
 # For Django 1.7+, 'collectfast' should come before
 # 'django.contrib.staticfiles'
 AWS_PRELOAD_METADATA = True
-INSTALLED_APPS = ('collectfast',) + INSTALLED_APPS
 
 # EMAIL
 # ------------------------------------------------------------------------------
@@ -111,34 +111,6 @@ ANYMAIL = {
 EMAIL_BACKEND = env('DJANGO_EMAIL_BACKEND',
                     default='django.core.mail.backends.console.EmailBackend')
 
-# TEMPLATE CONFIGURATION
-# ------------------------------------------------------------------------------
-# See:
-# https://docs.djangoproject.com/en/dev/ref/templates/api/#django.template.loaders.cached.Loader
-TEMPLATES[0]['OPTIONS']['loaders'] = [
-    ('django.template.loaders.cached.Loader', [
-        'django.template.loaders.filesystem.Loader', 'django.template.loaders.app_directories.Loader', ]),
-]
-
-
-# CACHING
-# ------------------------------------------------------------------------------
-# Heroku URL does not pass the DB number, so we parse it in
-# CACHES = {
-#     'default': {
-#         'BACKEND': 'django_redis.cache.RedisCache',
-#         'LOCATION': '{0}/{1}'.format(env('REDIS_URL', default='redis://127.0.0.1:6379'), 0),
-#         'OPTIONS': {
-#             'CLIENT_CLASS': 'django_redis.client.DefaultClient',
-#             'IGNORE_EXCEPTIONS': True,  # mimics memcache behavior.
-#             # http://niwinz.github.io/django-redis/latest/#_memcached_exceptions_behavior
-#         }
-#     }
-# }
-
-
-# Custom Admin URL, use {% url 'admin:index' %}
-#ADMIN_URL = env('DJANGO_ADMIN_URL')
 
 # Your production stuff: Below this line define 3rd party library settings
-HOST = 'https://strains.com'
+HOST = 'https://strainrx.co'

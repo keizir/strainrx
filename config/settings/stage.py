@@ -107,7 +107,7 @@ AWS_PRELOAD_METADATA = True
 # MIDDLEWARE_CLASSES += ('debug_toolbar.middleware.DebugToolbarMiddleware',)
 # INSTALLED_APPS += ('debug_toolbar',)
 
-HOST = 'http://staging.strainrx.co'
+HOST = 'https://staging.strainrx.co'
 
 # DEBUG_TOOLBAR_CONFIG = {
 #     'DISABLE_PANELS': [

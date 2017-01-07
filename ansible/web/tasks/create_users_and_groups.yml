@@ -20,11 +20,6 @@
   become: yes
   become_user: "{{ gunicorn_user }}"
 
-- lineinfile:
-    dest: "/home/{{gunicorn_user}}/.bashrc"
-    regexp: "^alias reload="
-    line: "alias reload='source ~/.bashrc'"
-
 - name: Create virtualenvs dir
   file:
     path: "{{ virtualenv_root }}"
@@ -33,23 +28,28 @@
 
 - lineinfile:
     dest: "/root/.bashrc"
+    regexp: "^alias reload="
+    line: "alias reload='source ~/.bashrc'"
+
+- lineinfile:
+    dest: "/root/.bashrc"
+    regexp: "^export VIRTUALENVWRAPPER_PYTHON=/usr/bin/python3"
+    line: "export VIRTUALENVWRAPPER_PYTHON=/usr/bin/python3"
+
+- lineinfile:
+    dest: "/root/.bashrc"
     regexp: "^export WORKON_HOME="
     line: "export WORKON_HOME={{ virtualenv_root }}"
 
 - lineinfile:
     dest: "/root/.bashrc"
-    regexp: "^cd {{ project_path }}"
-    line: "cd {{ project_path }}"
-
-#- lineinfile:
-#    dest: "/root/.bashrc"
-#    regexp: "^export VIRTUALENVWRAPPER_PYTHON=/usr/bin/python3"
-#    line: "export VIRTUALENVWRAPPER_PYTHON=/usr/bin/python3"
+    regexp: "^source /usr/local/bin/virtualenvwrapper.sh"
+    line: "source /usr/local/bin/virtualenvwrapper.sh"
 
 - lineinfile:
     dest: "/root/.bashrc"
-    regexp: "^source /usr/local/bin/virtualenvwrapper.sh"
-    line: "source /usr/local/bin/virtualenvwrapper.sh"
+    regexp: "^cd {{ project_path }}"
+    line: "cd {{ project_path }}"
 
 - lineinfile:
     dest: "/root/.bashrc"

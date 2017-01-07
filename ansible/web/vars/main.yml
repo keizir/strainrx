@@ -3,8 +3,9 @@
 # Application settings.
 virtualenv_root: "/webapps/.virtualenvs"
 virtualenv_path: "{{ virtualenv_root }}/{{ application_name }}"
-project_path: "{{ virtualenv_path }}/{{ project_name }}"
-application_log_dir: "{{ virtualenv_path }}/logs"
+project_root: "/webapps/{{ application_name }}"
+project_path: "{{ project_root }}/{{ project_name }}"
+application_log_dir: "{{ project_root }}/logs"
 application_log_file: "{{ application_log_dir }}/gunicorn.log"
 requirements_file: "{{ project_path }}/requirements/{{ env }}.txt"
 django_settings_file: "config.settings.{{ env }}"

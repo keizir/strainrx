@@ -26,11 +26,13 @@ npm install
 gulp prod
 
 # migrate pending database migrations and collect all static files
+echo "running migrations..."
 python manage.py migrate
+echo "running collectstatic..."
 python manage.py collectstatic --noinput --verbosity=0
 
 #restart gunicorn
-echo "Restarting gunicorn"
+echo "Restarting gunicorn..."
 if pgrep "gunicorn" > /dev/null
 then
     sudo systemctl stop gunicorn_srx_web.service
