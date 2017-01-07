@@ -24,3 +24,12 @@
 #  environment: "{{ django_environment }}"
 #  when: run_django_collectstatic is defined and run_django_collectstatic
 #  tags: django.collectstatic
+
+- name: Create env var file
+  template: src=env_vars.j2
+            dest={{ project_path }}/.env
+            owner={{ gunicorn_user }}
+            group={{ gunicorn_group }}
+            mode=0640
+            backup=yes
+  tags: deploy

@@ -9,6 +9,7 @@ application_log_dir: "{{ project_root }}/logs"
 application_log_file: "{{ application_log_dir }}/gunicorn.log"
 requirements_file: "{{ project_path }}/requirements/{{ env }}.txt"
 django_settings_file: "config.settings.{{ env }}"
+env_var_file: "{{ project_path }}/.env"
 
 # Gunicorn settings.
 gunicorn_user: "{{ application_name }}"
