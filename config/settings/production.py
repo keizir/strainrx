@@ -80,7 +80,7 @@ AWS_HEADERS = {
 from storages.backends.s3boto import S3BotoStorage
 from web.custom_s3_boto_storage import StaticS3Storage
 
-StaticRootS3BotoStorage = lambda: StaticS3torage(location='static')
+StaticRootS3BotoStorage = lambda: StaticS3Storage(location='static')
 MediaRootS3BotoStorage = lambda: S3BotoStorage(location='media')
 DEFAULT_FILE_STORAGE = 'config.settings.production.MediaRootS3BotoStorage'
 
