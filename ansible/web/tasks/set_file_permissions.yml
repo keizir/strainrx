@@ -7,3 +7,11 @@
         group={{ gunicorn_group }}
         state=directory
   notify: restart application
+
+- name: Ensure that the application file permissions are set properly
+  file: path={{ project_root }}
+        recurse=yes
+        owner={{ gunicorn_user }}
+        group={{ gunicorn_group }}
+        state=directory
+  notify: restart application
