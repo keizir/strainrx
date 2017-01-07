@@ -1,0 +1,6 @@
+---
+
+git_repo: git@github.com:straintechinc/web.git
+
+project_name: web
+application_name: srx_web

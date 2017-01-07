@@ -1,0 +1,58 @@
+---
+# see http://docs.ansible.com/ansible/user_module.html
+- name: Ensure root has a public SSH key (be sure to add ssh key for root to git as deploy key)
+  user: name=root state=present generate_ssh_key=yes
+
+- name: Create the application user
+  user: name={{ gunicorn_user }} state=present
+
+- name: Create the application group
+  group: name={{ gunicorn_group }} system=yes state=present
+
+- name: Add the application user to the application group
+  user: name={{ gunicorn_user }} group={{ gunicorn_group }} state=present
+
+- name: Create the bashrc
+  file: path=~/.bashrc
+        owner={{ gunicorn_user }}
+        group={{ gunicorn_group }}
+        state=touch
+  become: yes
+  become_user: "{{ gunicorn_user }}"
+
+- lineinfile:
+    dest: "/home/{{gunicorn_user}}/.bashrc"
+    regexp: "^alias reload="
+    line: "alias reload='source ~/.bashrc'"
+
+- name: Create virtualenvs dir
+  file:
+    path: "{{ virtualenv_root }}"
+    state: directory
+    mode: 0755
+
+- lineinfile:
+    dest: "/root/.bashrc"
+    regexp: "^export WORKON_HOME="
+    line: "export WORKON_HOME={{ virtualenv_root }}"
+
+- lineinfile:
+    dest: "/root/.bashrc"
+    regexp: "^cd {{ project_path }}"
+    line: "cd {{ project_path }}"
+
+#- lineinfile:
+#    dest: "/root/.bashrc"
+#    regexp: "^export VIRTUALENVWRAPPER_PYTHON=/usr/bin/python3"
+#    line: "export VIRTUALENVWRAPPER_PYTHON=/usr/bin/python3"
+
+- lineinfile:
+    dest: "/root/.bashrc"
+    regexp: "^source /usr/local/bin/virtualenvwrapper.sh"
+    line: "source /usr/local/bin/virtualenvwrapper.sh"
+
+- lineinfile:
+    dest: "/root/.bashrc"
+    regexp: "^workon {{ application_name }}"
+    line: "workon {{ application_name }}"
+

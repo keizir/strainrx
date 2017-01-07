@@ -1,0 +1,11 @@
+---
+# TODO get this working
+- name: Install node packages
+  shell: "cd {{ project_path }} && npm install"
+  become: yes
+  become_user: "{{ gunicorn_user }}"
+
+- name: Run gulp
+  shell: "cd {{ project_path }} && gulp prod"
+  become: yes
+  become_user: "{{ gunicorn_user }}"

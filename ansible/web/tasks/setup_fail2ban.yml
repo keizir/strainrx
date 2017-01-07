@@ -1,0 +1,13 @@
+---
+
+- name: Configure fail2ban
+  template: src=jail_local.j2
+            dest=/etc/fail2ban/jail.local
+            owner={{ gunicorn_user }}
+            group={{ gunicorn_group }}
+            mode=0755
+            backup=yes
+
+- service:
+    name: fail2ban
+    state: restarted

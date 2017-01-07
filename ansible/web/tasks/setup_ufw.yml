@@ -1,0 +1,21 @@
+---
+
+- name: UFW allow 22
+  command: ufw allow 22
+  become: yes
+
+- name: UFW allow 80
+  command: ufw allow 80
+  become: yes
+
+- name: UFW allow 443
+  command: ufw allow 443
+  become: yes
+
+- name: UFW disable
+  command: ufw disable
+  become: yes
+
+- name: UFW ENABLE
+  command: ufw enable
+  become: yes

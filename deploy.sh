@@ -1,11 +1,5 @@
 #!/bin/bash
 
-# go to project directory
-cd /home/deploy/www/web
-
-# activate python environment
-source srx_env/bin/activate
-
 DEPLOY_ENV="$DJANGO_SETTINGS_MODULE"
 DEPLOY_BRANCH="master"
 
@@ -39,8 +33,8 @@ python manage.py collectstatic --noinput --verbosity=0
 echo "Restarting gunicorn"
 if pgrep "gunicorn" > /dev/null
 then
-    sudo systemctl stop gunicorn.service
+    sudo systemctl stop gunicorn_srx_web.service
 fi
-sudo systemctl start gunicorn.service
+sudo systemctl start gunicorn_srx_web.service
 
 echo "deploy complete"

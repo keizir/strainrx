@@ -1,0 +1,34 @@
+---
+
+#- name: Install NVM
+#  get_url:
+#    url: https://raw.githubusercontent.com/creationix/nvm/v0.33.0/install.sh
+#    dest: "{{ project_path }}/nvm_install.sh"
+#    owner: root
+#
+#- name: Install NVM
+#  command: "bash {{ project_path }}/nvm_install.sh"
+
+#- lineinfile:
+#    dest: "/home/{{gunicorn_user}}/.bashrc"
+#    regexp: "^export NVM_DIR="
+#    line: 'export NVM_DIR="/home/{{ gunicorn_user }}/.nvm"'
+#
+#- lineinfile:
+#    dest: "/home/{{gunicorn_user}}/.bashrc"
+#    regexp: '^\[ \-s \"\$NVM_DIR'
+#    line: '[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"'
+
+# nvm doesn't run well in ansible - just run the following manually as gunicorn user
+# nvm install 6.9.4 && nvm use 6.9.4 && nvm alias default node
+
+# TODO get this working
+#- name: Install Nodejs
+#  shell: nvm install 6.9.4 && nvm use 6.9.4 && nvm alias default node
+#  become: yes
+#  become_user: "{{ gunicorn_user }}"
+
+#- name: Install Nodejs
+#  command: "source /home/{{ gunicorn_user }}/.bashrc && nvm install 6.9.4 && nvm use 6.9.4 && nvm alias default node"
+#  become: yes
+#  become_user: "{{ gunicorn_user }}"

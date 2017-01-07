@@ -1,0 +1,15 @@
+---
+
+nginx_server_name: "{{ hostname }}"
+nginx_ssl_dest_dir: /etc/ssl
+nginx_strong_dh_group: yes  # Strongly recomended in production. See weakdh.org.
+nginx_use_letsencrypt: yes
+nginx_static_dir: "{{ project_path }}/web"
+nginx_media_dir: "{{ project_path }}/web"
+
+certbot_auto_renew: yes
+certbot_admin_email: "{{ tech_email }}"
+certbot_script: /opt/certbot-auto
+certbot_output_dir: "/etc/letsencrypt/live/{{ domain_name }}"
+certbot_cert_filename: fullchain.pem
+certbot_privkey_filename: privkey.pem

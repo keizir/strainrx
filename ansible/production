@@ -1,0 +1,5 @@
+[all:vars]
+env=production
+
+[webservers]
+prod1 ansible_ssh_host=34.195.201.113

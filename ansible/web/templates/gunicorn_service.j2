@@ -1,0 +1,19 @@
+[Unit]
+Description=gunicorn daemon
+After=network.target
+After=syslog.target
+
+[Service]
+User={{ gunicorn_user }}
+Group={{ gunicorn_group }}
+WorkingDirectory={{ project_path }}
+ExecStart={{ virtualenv_path}}/bin/gunicorn \
+    --name={{ application_name }}
+    --bind=127.0.0.1:8000 \
+    --access-logfile={{ gunicorn_access_log_file}} \
+    --error-logfile={{ gunicorn_error_log_file}} \
+    --log-level=debug \
+    config.wsgi:application
+
+[Install]
+WantedBy=multi-user.target

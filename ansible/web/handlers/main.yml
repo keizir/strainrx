@@ -1,0 +1,5 @@
+---
+
+- name: restart application
+  systemd: name=gunicorn_{{ application_name }}.service state=restarted
+

@@ -1,0 +1,13 @@
+---
+
+- name: Configure SSH
+  template: src=sshd_config.j2
+            dest=/etc/ssh/sshd_config
+            owner={{ gunicorn_user }}
+            group={{ gunicorn_group }}
+            mode=0755
+            backup=yes
+
+- name: Reload sshd
+  command: systemctl reload sshd
+  become: yes

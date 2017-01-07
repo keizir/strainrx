@@ -1,0 +1,5 @@
+[all:vars]
+env=stage
+
+[webservers]
+stage1 ansible_ssh_host=54.144.238.246

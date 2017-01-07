@@ -1,0 +1,63 @@
+---
+
+- name: Install virtualenv
+  pip: name=virtualenv executable=pip3
+  tags: packages
+
+- name: Install virtualenvwrapper
+  pip: name=virtualenvwrapper executable=pip2
+  tags: packages
+
+- name: Create the virtualenv
+  shell: . /usr/local/bin/virtualenvwrapper.sh && mkvirtualenv -p {{ virtualenv_python_version }} {{ application_name }}
+  args:
+    executable: /bin/bash
+
+- name: Ensure gunicorn is installed
+  pip: virtualenv={{ virtualenv_path }} name=gunicorn
+
+- name: Create the Gunicorn script file
+  template: src=gunicorn_service.j2
+            dest=/etc/systemd/system/gunicorn_{{ application_name }}.service
+            owner={{ gunicorn_user }}
+            group={{ gunicorn_group }}
+            mode=0755
+            backup=yes
+  tags: deploy
+
+- name: Create the application log folder
+  file: path={{ application_log_dir }}
+        owner={{ gunicorn_user }}
+        group={{ gunicorn_group }}
+        mode=0774
+        state=directory
+
+- name: Create the application log file
+  file: path={{ application_log_file }}
+        owner={{ gunicorn_user }}
+        group={{ gunicorn_group }}
+        mode=0664
+        state=touch
+
+- name: Create the gunicorn access log file
+  file: path={{ gunicorn_access_log_file }}
+        owner={{ gunicorn_user }}
+        group={{ gunicorn_group }}
+        mode=0664
+        state=touch
+
+- name: Create the gunicorn error log file
+  file: path={{ gunicorn_error_log_file }}
+        owner={{ gunicorn_user }}
+        group={{ gunicorn_group }}
+        mode=0664
+        state=touch
+
+- name: Create the virtualenv postactivate script to set environment variables
+  template: src=virtualenv_postactivate.j2
+            dest={{ virtualenv_path }}/bin/postactivate
+            owner={{ gunicorn_user }}
+            group={{ gunicorn_group }}
+            mode=0640
+            backup=yes
+  tags: deploy
