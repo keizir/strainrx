@@ -37,3 +37,40 @@
         W.pages.dispensary.DispensaryInfoView.init();
     </script>
 {% endblock %}
+
+{% block modal %}
+    <div class="dialog phone-dialog hidden" title="">
+        <h1>Ready to place an order?</h1>
+        <div class="dialog-phone-wrapper">
+            <i class="fa fa-phone" aria-hidden="true"></i>
+            <span class="dialog-phone-message"></span>
+        </div>
+        <div class="dialog-actions">
+            <button class="btn-primary btn-close-phone-dialog" type="button">Dismiss</button>
+        </div>
+    </div>
+
+    <div class="dialog form-dialog rate-dialog rate-location-dialog hidden" title="Rate this location">
+        <form class="rate-location-form">
+            {% csrf_token %}
+            <div class="form-field-group">
+                <div class="form-field">
+                    <span class="rate-stars"></span>
+                </div>
+            </div>
+            <div class="form-field-group review-textarea-group">
+                <div class="form-field">
+                    <label for="review">Write a review <span>(optional)</span></label>
+                    <textarea class="rate-review" id="review" maxlength="500"></textarea>
+                </div>
+            </div>
+            <span class="error-message"></span>
+            <div class="form-actions">
+                <button class="btn-primary btn-review-submit" type="submit">Submit</button>
+                <div class="loader hidden">
+                    <i class="fa fa-refresh fa-3x rotating" aria-hidden="true"></i>
+                </div>
+            </div>
+        </form>
+    </div>
+{% endblock %}

@@ -14,6 +14,31 @@
             <% if (reviews && reviews.length > 0) { %>
             <div class="reviews-wrapper">
                 <h2>Reviews</h2>
+                <% $.each(reviews, function(i, review) { %>
+                <div class="review-wrapper">
+                    <div class="user-info">
+                        <div class="user-image">
+                            <% if (review.created_by_image) { %>
+                            <img src="${ review.created_by_image }" alt="User Image"/>
+                            <% } else { %>
+                            <img src="{% static 'images/default-profile-image.png' %}" alt="User Image"/>
+                            <% } %>
+                        </div>
+                    </div>
+                    <div class="review">
+                        <div class="review-header">
+                            <span class="user-name">${ review.created_by_name }</span>
+                            <span class="rating">${ review.rating }</span>
+                            <span class="created-date">${ review.created_date }</span>
+                        </div>
+                        <div class="review-text">
+                            <span class="display display-text">${ review.review }</span>
+                            <span class="full hidden">${ review.review }</span>
+                        </div>
+                    </div>
+                </div>
+                <% }); %>
+                <div class="all-reviews-link-wrapper"><a href="#">View All Reviews</a></div>
             </div>
             <% } %>
             <% if (deals && deals.length > 0) { %>
@@ -23,9 +48,8 @@
             <% } %>
         </div>
         <div class="right-column">
+            <h2>Menu</h2>
             <div class="menu-section-wrapper">
-                <h2>Menu</h2>
-
                 <% if (selectedStrainMenuItem) { %>
                 <div class="current-strain-menu-item">
                     <div class="menu-item-header ${ selectedStrainMenuItem.strain_variety }-header">

@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-from web.businesses.models import phone_number_validator
+from web.businesses.models import phone_number_validator, LocationReview
 
 
 class BusinessSignUpSerializer(serializers.Serializer):
@@ -131,3 +131,9 @@ class BusinessLocationMenuItemSerializer(serializers.Serializer):
 
     def create(self, validated_data):
         pass
+
+
+class LocationReviewFormSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = LocationReview
+        fields = ('rating', 'review')

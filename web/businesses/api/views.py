@@ -130,6 +130,37 @@ class BusinessLocationReviewView(LoginRequiredMixin, APIView):
             'created_by_image': None  # TODO implement UserImage
         }
 
+    def post(self, request, business_id, business_location_id):
+        location = BusinessLocation.objects.get(pk=business_location_id)
+        serializer = LocationReviewFormSerializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+
+        review_text = serializer.validated_data.get('review')
+        is_approved = False if review_text and len(review_text) > 0 else True
+        review = LocationReview(location=location, created_by=request.user,
+                                rating=serializer.validated_data.get('rating'),
+                                review=review_text, review_approved=is_approved)
+        review.save()
+        return Response({}, status=status.HTTP_200_OK)
+
+
+class BusinessLocationFavoriteView(LoginRequiredMixin, APIView):
+    def post(self, request, business_id, business_location_id):
+        add_to_favorites = request.data.get('like')
+        favorite_location = UserFavoriteLocation.objects.filter(location__id=business_location_id,
+                                                                created_by=request.user)
+
+        if add_to_favorites and len(favorite_location) == 0:
+            favorite_location = UserFavoriteLocation(
+                location=BusinessLocation.objects.get(id=business_location_id),
+                created_by=request.user
+            )
+            favorite_location.save()
+        elif len(favorite_location) > 0:
+            favorite_location[0].delete()
+
+        return Response({}, status=status.HTTP_200_OK)
+
 
 class ResendConfirmationEmailView(LoginRequiredMixin, APIView):
     def get(self, request):

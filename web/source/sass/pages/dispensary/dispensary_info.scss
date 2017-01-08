@@ -257,6 +257,86 @@
 
                 .reviews-wrapper {
                     margin-bottom: 2em;
+
+                    .all-reviews-link-wrapper {
+                        text-align: right;
+                        margin-top: -1em;
+
+                        a {
+                            color: $avocado-green;
+                            text-decoration: underline;
+                        }
+                    }
+
+                    .review-wrapper {
+                        display: block;
+                        position: relative;
+                        width: 100%;
+                        margin-bottom: 2em;
+
+                        .user-info {
+                            display: inline-block;
+                            position: relative;
+                            width: 14%;
+                            text-align: left;
+
+                            .user-image {
+                                display: inline-block;
+                                width: 4em;
+                                height: 4em;
+                                margin: 0 auto;
+                                border: 1px solid $grey-light;
+                                border-radius: 4em;
+
+                                img {
+                                    width: 3em;
+                                    height: 3em;
+                                    margin: 0.3em 0.4em 0.4em 0.46em;
+                                }
+                            }
+                        }
+
+                        .review {
+                            display: inline-block;
+                            width: 80%;
+                            vertical-align: top;
+
+                            .review-header {
+                                .user-name {
+                                    font-weight: bold;
+                                    color: $grey-dark;
+                                }
+
+                                .rating {
+                                    display: inline-block;
+                                }
+
+                                .created-date {
+                                    font-weight: bold;
+                                    text-decoration: underline;
+                                    float: right;
+                                }
+                            }
+
+                            .review-text {
+                                margin-top: 0.5em;
+
+                                .display {
+                                    display: block;
+                                    height: auto;
+                                    max-height: 2.1em;
+                                    line-height: 1em;
+                                    overflow: hidden;
+
+                                    .expander {
+                                        cursor: pointer;
+                                        color: $avocado-green;
+                                        text-decoration: underline;
+                                    }
+                                }
+                            }
+                        }
+                    }
                 }
 
                 .deals-wrapper {
@@ -391,6 +471,24 @@
     }
 }
 
+.phone-dialog {
+    text-align: center;
+
+    .dialog-phone-wrapper {
+        .fa-phone {
+            font-size: 4em;
+            color: $grey-dark;
+            margin-right: 15px;
+        }
+
+        .dialog-phone-message {
+            font-size: 1.5em;
+            position: relative;
+            top: -16px;
+        }
+    }
+}
+
 @media (min-width: $screen-xs-min) {
     .business-location-holder {
 
@@ -512,6 +610,9 @@
                     vertical-align: top;
 
                     .menu-section-wrapper {
+                        max-height: 45em;
+                        overflow: scroll;
+
                         .current-strain-menu-item {
                             .menu-item-header {
                                 span {

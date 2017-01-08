@@ -6,6 +6,13 @@ W.pages.dispensary.DispensaryInfo = Class.extend({
 
     location: null,
 
+    urls: {
+        favorite: '/api/v1/businesses/{0}/locations/{1}/favorite',
+        location: '/api/v1/businesses/{0}/locations/{1}?ddp=true',
+        menu: '/api/v1/businesses/{0}/locations/{1}/menu?ddp=true',
+        review: '/api/v1/businesses/{0}/locations/{1}/reviews'
+    },
+
     ui: {
         $businessId: $('#business_id'),
         $location_id: $('#location_id'),
@@ -37,7 +44,7 @@ W.pages.dispensary.DispensaryInfo = Class.extend({
     retrieveLocation: function retrieveLocation(successCallback) {
         $.ajax({
             method: 'GET',
-            url: '/api/v1/businesses/{0}/locations/{1}?ddp=true'.format(this.ui.$businessId.val(), this.ui.$location_id.val()),
+            url: this.urls.location.format(this.ui.$businessId.val(), this.ui.$location_id.val()),
             success: function (data) {
                 successCallback(data.location);
             }
@@ -60,6 +67,8 @@ W.pages.dispensary.DispensaryInfo = Class.extend({
         }
 
         this.clickRateLink();
+        this.submitLocationReview();
+
         this.clickFavoriteIcon();
         this.clickPhoneNumberLink();
         this.clickPlaceOrderBtn();
@@ -130,35 +139,110 @@ W.pages.dispensary.DispensaryInfo = Class.extend({
     clickRateLink: function clickRateLink() {
         $('.rate-link').on('click', function (e) {
             e.preventDefault();
-            // TODO
-            alert('Rate Location');
+            W.common.RateDialog($('.rate-location-dialog'));
+        });
+    },
+
+    submitLocationReview: function submitLocationReview() {
+        var that = this;
+        $('.rate-location-form').on('submit', function (e) {
+            e.preventDefault();
+            var rating = $('.rate-stars').rateYo('rating'),
+                review = $('.rate-review').val();
+
+            if (rating === 0) {
+                $('.error-message').text('Rating is required');
+                return;
+            }
+
+            if (review && review.length > 500) {
+                $('.error-message').text('Review max length 500 is exceeded');
+                return;
+            }
+
+            $('.loader').removeClass('hidden');
+            $('.btn-review-submit').addClass('hidden');
+
+            $.ajax({
+                type: 'POST',
+                url: that.urls.review.format(that.ui.$businessId.val(), that.ui.$location_id.val()),
+                data: JSON.stringify({rating: rating, review: review}),
+                success: function () {
+                    $('.loader').addClass('hidden');
+                    $('.btn-review-submit').removeClass('hidden');
+                    $('.rate-stars').rateYo('rating', 0);
+                    $('.review').val('');
+                    $('.rate-location-dialog').dialog('close');
+                    window.location.reload();
+                }
+            });
         });
     },
 
     clickFavoriteIcon: function clickFavoriteIcon() {
+        var that = this;
         $('.location-like').on('click', function () {
-            // TODO
-            alert('Is Location favorite now: {0}'.format($(this).hasClass('active')));
-        });
-    },
-
-    clickPhoneNumberLink: function clickPhoneNumberLink() {
-        $('.phone-number').on('click', function (e) {
-            // Fo mobile devices do not prevent 'tel:' default
-            if ($(window).outerWidth() > 768) {
-                e.preventDefault();
-                // TODO
-                alert('Show phone dialog');
+            var $el = $(this);
+            if ($el.hasClass('active')) {
+                that.favoriteLocation({like: false}, function () {
+                    $el.addClass('fa-heart-o');
+                    $el.removeClass('fa-heart');
+                    $el.removeClass('heart-active');
+                    $el.removeClass('active');
+                });
+            } else {
+                that.favoriteLocation({like: true}, function () {
+                    $el.removeClass('fa-heart-o');
+                    $el.addClass('fa-heart');
+                    $el.addClass('heart-active');
+                    $el.addClass('active');
+                });
             }
         });
     },
 
+    favoriteLocation: function favoriteLocation(data, successCallback) {
+        $.ajax({
+            method: 'POST',
+            url: this.urls.favorite.format(this.ui.$businessId.val(), this.ui.$location_id.val()),
+            dataType: 'json',
+            data: JSON.stringify(data),
+            success: function () {
+                if (successCallback) {
+                    successCallback();
+                }
+            }
+        });
+    },
+
+    clickPhoneNumberLink: function clickPhoneNumberLink() {
+        var that = this;
+        $('.phone-number').on('click', function (e) {
+            // Fo mobile devices do not prevent 'tel:' default
+            if ($(window).outerWidth() > 768) {
+                e.preventDefault();
+                that.showPhoneDialog();
+            }
+        });
+    },
+
+    showPhoneDialog: function showPhoneDialog() {
+        W.common.Dialog($('.phone-dialog'), function () {
+            $('.btn-close-phone-dialog').off('click');
+        }, {height: 300, width: 400});
+
+        $('.dialog-phone-message').text('Call: {0}'.format(this.location.phone));
+        $('.btn-close-phone-dialog').on('click', function () {
+            $('.phone-dialog').dialog('close');
+        });
+    },
+
     clickPlaceOrderBtn: function clickPlaceOrderBtn() {
-        var $btn = $('.btn-place-order');
+        var that = this,
+            $btn = $('.btn-place-order');
         if ($btn && $btn.length != 0) {
             $btn.on('click', function () {
-                // TODO
-                alert('Place order. Show phone number dialog instead?')
+                that.showPhoneDialog();
             });
         }
     },
@@ -180,9 +264,14 @@ W.pages.dispensary.DispensaryInfo = Class.extend({
                 that.menu_items = menu_response && menu_response[0]['menu'];
                 that.reviews = reviews_response && reviews_response[0]['reviews'];
 
+                that.preFormatReviews();
+
                 that.menu_sativas = that.getSortedMenuItems('sativa');
                 that.menu_indicas = that.getSortedMenuItems('indica');
                 that.menu_hybrids = that.getSortedMenuItems('hybrid');
+
+                var reviews = that.reviews,
+                    reviewToShow = reviews.length > 2 ? reviews.splice(0, 2) : reviews;
 
                 that.regions.$contentRegion.append(that.templates.$content({
                     l: that.location,
@@ -192,24 +281,82 @@ W.pages.dispensary.DispensaryInfo = Class.extend({
                     selectedStrainMenuItem: that.selectedStrainMenuItem,
                     formatPrice: that.formatPrice,
                     formatScore: that.formatScore,
-                    reviews: that.reviews,
+                    reviews: reviewToShow,
                     deals: []
                 }));
+
+                that.postShowContent();
             });
+    },
+
+    postShowContent: function postShowContent() {
+        var that = this;
+        $.each($('.review-wrapper'), function () {
+            var $el = $(this),
+                $rating = $el.find('.rating'),
+                $review = $el.find('.display-text');
+
+            W.common.Rating.readOnly($rating, {rating: $rating.text()});
+            that.changeReviewText($review);
+        });
+
+        this.expandReviewText();
+        this.showAllReviews();
+    },
+
+    changeReviewText: function changeReviewText($review) {
+        var reviewHeight = $review.height(),
+            reviewText = $review.text(),
+            fontSize = parseInt($review.css('font-size'), 10);
+
+        if (reviewHeight / fontSize >= 2) {
+            reviewText = reviewText.substr(0, 65) + '... <span class="expander">Review full review</span>';
+            $review.html(reviewText);
+        }
+    },
+
+    expandReviewText: function expandReviewText() {
+        $('.expander').on('click', function () {
+            var parent = $(this).parent().parent();
+            parent.find('.display').addClass('hidden');
+            parent.find('.full').removeClass('hidden');
+        });
+    },
+
+    showAllReviews: function showAllReviews() {
+        $('.all-reviews-link-wrapper a').on('click', function (e) {
+            e.preventDefault();
+            // TODO
+            alert('Show all reviews here');
+        });
     },
 
     getMenuItemsDeferred: function getMenuItemsDeferred() {
         return $.ajax({
             method: 'GET',
-            url: '/api/v1/businesses/{0}/locations/{1}/menu?ddp=true'.format(this.ui.$businessId.val(), this.ui.$location_id.val())
+            url: this.urls.menu.format(this.ui.$businessId.val(), this.ui.$location_id.val())
         });
     },
 
     getReviewsDeferred: function getReviewsDeferred() {
         return $.ajax({
             method: 'GET',
-            url: '/api/v1/businesses/{0}/locations/{1}/reviews'.format(this.ui.$businessId.val(), this.ui.$location_id.val())
+            url: this.urls.review.format(this.ui.$businessId.val(), this.ui.$location_id.val())
         });
+    },
+
+    preFormatReviews: function preFormatReviews() {
+        if (this.reviews && this.reviews.length > 0) {
+            $.each(this.reviews, function (i, r) {
+                var date = new Date(r.created_date),
+                    year = date.getFullYear() - 2000,
+                    month = date.getMonth() + 1,
+                    day = date.getDate();
+
+                r.review = r.review ? r.review : '(No review written)';
+                r.created_date = '{0}/{1}/{2}'.format(month, day, year);
+            });
+        }
     },
 
     getSortedMenuItems: function getSortedMenuItems(type) {
