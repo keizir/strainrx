@@ -334,6 +334,10 @@
                                         text-decoration: underline;
                                     }
                                 }
+
+                                .full {
+                                    word-break: break-all;
+                                }
                             }
                         }
                     }
@@ -465,6 +469,112 @@
                     .indica-header {
                         color: $purple;
                     }
+                }
+            }
+        }
+
+        .all-reviews-wrapper {
+            margin-bottom: 2em;
+
+            .back-btn-wrapper {
+                display: block;
+                position: absolute;
+                top: -5em;
+                color: $grey-normal;
+            }
+
+            .header {
+                color: $grey-normal;
+                margin-bottom: 3em;
+            }
+
+            .review-wrapper {
+                display: block;
+                position: relative;
+                width: 100%;
+                margin-bottom: 2em;
+
+                .user-info {
+                    display: inline-block;
+                    position: relative;
+                    width: 6em;
+                    text-align: left;
+
+                    .user-image {
+                        display: inline-block;
+                        width: 4em;
+                        height: 4em;
+                        margin: 0 auto;
+                        border: 1px solid $grey-light;
+                        border-radius: 4em;
+
+                        img {
+                            width: 3em;
+                            height: 3em;
+                            margin: 0.3em 0.4em 0.4em 0.46em;
+                        }
+                    }
+                }
+
+                .review {
+                    display: inline-block;
+                    width: 89%;
+                    vertical-align: top;
+
+                    .review-header {
+                        .user-name {
+                            font-weight: bold;
+                            color: $grey-dark;
+                        }
+
+                        .rating {
+                            display: inline-block;
+                        }
+
+                        .created-date {
+                            font-weight: bold;
+                            text-decoration: underline;
+                            float: right;
+                        }
+                    }
+
+                    .review-text {
+                        margin-top: 0.5em;
+                        color: $grey-normal;
+
+                        .display {
+                            display: block;
+                            height: auto;
+                            line-height: 1em;
+                            overflow: hidden;
+                            word-break: break-all;
+                        }
+                    }
+                }
+            }
+
+            .navigation-controls {
+                display: block;
+                position: relative;
+                width: 100%;
+                font-size: 1.5em;
+                margin: 2.5em auto;
+                height: 1em;
+
+                a {
+                    color: $grey-normal;
+                }
+
+                .left-side {
+                    display: inline-block;
+                    position: absolute;
+                    left: 1em;
+                }
+
+                .right-side {
+                    display: inline-block;
+                    position: absolute;
+                    right: 1em;
                 }
             }
         }

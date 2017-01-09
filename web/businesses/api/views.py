@@ -191,7 +191,8 @@ class BusinessLocationView(LoginRequiredMixin, APIView):
             current_user = request.user
             open_closed = get_open_closed(serializer.data, '%I:%M %p')
             d['location']['is_favorite'] = UserFavoriteLocation.objects.filter(created_by=current_user).exists()
-            d['location']['is_rated'] = LocationReview.objects.filter(created_by=current_user).exists()
+            d['location']['is_rated'] = LocationReview.objects.filter(location=location,
+                                                                      created_by=current_user).exists()
             d['location']['rating'] = get_location_rating(business_location_id)
             d['location']['is_open'] = open_closed == 'Opened'
             d['location']['open_closed'] = open_closed

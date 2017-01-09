@@ -6,6 +6,9 @@ W.pages.dispensary.DispensaryInfo = Class.extend({
 
     location: null,
 
+    allReviewsPage: 1,
+    allReviewsSize: 5,
+
     urls: {
         favorite: '/api/v1/businesses/{0}/locations/{1}/favorite',
         location: '/api/v1/businesses/{0}/locations/{1}?ddp=true',
@@ -26,7 +29,8 @@ W.pages.dispensary.DispensaryInfo = Class.extend({
 
     templates: {
         $header: _.template($('#dispensary_header_template').html()),
-        $content: _.template($('#dispensary_content_template').html())
+        $content: _.template($('#dispensary_content_template').html()),
+        $allReviews: _.template($('#dispensary_all_reviews_template').html())
     },
 
     init: function init() {
@@ -248,11 +252,13 @@ W.pages.dispensary.DispensaryInfo = Class.extend({
     },
 
     clickGetDirectionsBtn: function clickGetDirectionsBtn() {
-        var $btn = $('.btn-get-directions');
+        var that = this, $btn = $('.btn-get-directions'), q;
         if ($btn && $btn.length != 0) {
             $btn.on('click', function () {
-                // TODO
-                alert('Get Direction. Nothing in spec abot this.')
+                q = W.common.Format.formatAddress(that.location);
+                if (q) {
+                    window.open('http://maps.google.com/?daddr={0}?sadds='.format(q), '_blank').focus();
+                }
             });
         }
     },
@@ -270,10 +276,10 @@ W.pages.dispensary.DispensaryInfo = Class.extend({
                 that.menu_indicas = that.getSortedMenuItems('indica');
                 that.menu_hybrids = that.getSortedMenuItems('hybrid');
 
-                var reviews = that.reviews,
+                var reviews = _.map(that.reviews, _.clone),
                     reviewToShow = reviews.length > 2 ? reviews.splice(0, 2) : reviews;
 
-                that.regions.$contentRegion.append(that.templates.$content({
+                that.regions.$contentRegion.html(that.templates.$content({
                     l: that.location,
                     sativas: that.menu_sativas,
                     indicas: that.menu_indicas,
@@ -324,10 +330,98 @@ W.pages.dispensary.DispensaryInfo = Class.extend({
     },
 
     showAllReviews: function showAllReviews() {
+        var that = this, reviews;
+
         $('.all-reviews-link-wrapper a').on('click', function (e) {
             e.preventDefault();
-            // TODO
-            alert('Show all reviews here');
+
+            var reviews = _.map(that.reviews, _.clone),
+                reviewToShow = reviews.length > that.allReviewsSize ? reviews.splice(0, that.allReviewsSize) : reviews;
+
+            that.regions.$contentRegion.html(that.templates.$allReviews({
+                showNext: that.reviews.length > that.allReviewsSize,
+                showPrev: that.allReviewsPage > 1,
+                reviews: reviewToShow
+            }));
+
+            $.each($('.review-wrapper'), function () {
+                var $el = $(this), $rating = $el.find('.rating');
+                W.common.Rating.readOnly($rating, {rating: $rating.text()});
+            });
+
+            that.initAllReviewsControls();
+        });
+    },
+
+    initAllReviewsControls: function initAllReviewsControls() {
+        var that = this;
+
+        $('.btn-back').on('click', function (e) {
+            e.preventDefault();
+
+            var reviews = _.map(that.reviews, _.clone),
+                reviewToShow = reviews.length > 2 ? reviews.splice(0, 2) : reviews;
+
+            that.regions.$contentRegion.html(that.templates.$content({
+                l: that.location,
+                sativas: that.menu_sativas,
+                indicas: that.menu_indicas,
+                hybrids: that.menu_hybrids,
+                selectedStrainMenuItem: that.selectedStrainMenuItem,
+                formatPrice: that.formatPrice,
+                formatScore: that.formatScore,
+                reviews: reviewToShow,
+                deals: []
+            }));
+
+            that.postShowContent();
+        });
+
+        $('.reviews-next').on('click', function (e) {
+            e.preventDefault();
+
+            var reviews = _.map(that.reviews, _.clone),
+                reviewToShow = reviews.length > that.allReviewsSize ?
+                    reviews.splice(that.allReviewsPage * that.allReviewsSize, that.allReviewsSize) : reviews;
+
+            that.allReviewsPage += 1;
+
+            that.regions.$contentRegion.html(that.templates.$allReviews({
+                showNext: that.reviews.length > that.allReviewsSize * that.allReviewsPage,
+                showPrev: that.allReviewsPage > 1,
+                reviews: reviewToShow
+            }));
+
+            $.each($('.review-wrapper'), function () {
+                var $el = $(this), $rating = $el.find('.rating');
+                W.common.Rating.readOnly($rating, {rating: $rating.text()});
+            });
+
+            that.initAllReviewsControls();
+        });
+
+        $('.reviews-prev').on('click', function (e) {
+            e.preventDefault();
+
+            that.allReviewsPage -= 1;
+
+            var reviews = _.map(that.reviews, _.clone),
+                reviewToShow = reviews.length > that.allReviewsSize ?
+                    reviews.splice((that.allReviewsPage - 1) * that.allReviewsSize, that.allReviewsSize) : reviews;
+
+
+            that.regions.$contentRegion.html(that.templates.$allReviews({
+                showNext: that.reviews.length > that.allReviewsSize,
+                showPrev: that.allReviewsPage > 1,
+                reviews: reviewToShow
+            }));
+
+            $.each($('.review-wrapper'), function () {
+                var $el = $(this), $rating = $el.find('.rating');
+                W.common.Rating.readOnly($rating, {rating: $rating.text()});
+            });
+
+            that.initAllReviewsControls();
         });
     },
 

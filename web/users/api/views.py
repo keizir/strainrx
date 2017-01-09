@@ -484,7 +484,7 @@ class UserGeoLocationView(LoginRequiredMixin, APIView):
         return Response({}, status=status.HTTP_204_NO_CONTENT)
 
     def post(self, request, user_id):
-        serializer = UserLocationSerializer(data=request.data)
+        serializer = UserLocationSerializer(data=request.data.get('address'))
         serializer.is_valid(raise_exception=True)
         data = serializer.validated_data
 
@@ -507,6 +507,12 @@ class UserGeoLocationView(LoginRequiredMixin, APIView):
             )
 
         location.save()
+
+        if request.data.get('timezone'):
+            user = User.objects.get(pk=request.user.id)
+            user.timezone = request.data.get('timezone')
+            user.save()
+
         return Response({}, status=status.HTTP_200_OK)
 
 

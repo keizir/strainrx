@@ -55,7 +55,9 @@ W.pages.HomePage = Class.extend({
                 $el.val(W.common.Format.formatAddress(address));
                 $el.blur();
 
-                that.saveUserLocation(address);
+                that.updateTimezone(GoogleLocations, address, function () {
+                    that.saveUserLocation(address);
+                });
             },
             function (results, status, $input) {
                 if (status === 'OK') {
@@ -65,7 +67,9 @@ W.pages.HomePage = Class.extend({
                     $el.val(W.common.Format.formatAddress(address));
                     $el.blur();
 
-                    that.saveUserLocation(address);
+                    that.updateTimezone(GoogleLocations, address, function () {
+                        that.saveUserLocation(address);
+                    });
                 }
             },
             function ($input) {
@@ -73,9 +77,7 @@ W.pages.HomePage = Class.extend({
                 $('.check').hide();
                 $removeBtn.removeClass('hidden');
                 $removeBtn.on('click', function () {
-                    if (that.authenticated) {
-                        // TODO remove when auth
-                    } else {
+                    if (!that.authenticated) {
                         Cookies.remove('user_geo_location');
                     }
 
@@ -86,6 +88,14 @@ W.pages.HomePage = Class.extend({
             });
     },
 
+    updateTimezone: function updateTimezone(GoogleLocations, address, success) {
+        var that = this;
+        GoogleLocations.getTimezone(address.lat, address.lng, function (json) {
+            that.timezone = json.timeZoneId;
+            success();
+        });
+    },
+
     saveUserLocation: function saveUserLocation(data) {
         if (data) {
             var that = this;
@@ -93,7 +103,7 @@ W.pages.HomePage = Class.extend({
                 $.ajax({
                     method: 'POST',
                     url: '/api/v1/users/{0}/geo_locations'.format(that.userId),
-                    data: JSON.stringify(data)
+                    data: JSON.stringify({address: data, timezone: this.timezone})
                 });
             } else {
                 delete data.location_raw;
