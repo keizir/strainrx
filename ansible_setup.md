@@ -23,16 +23,19 @@
 		5. see current instructions at [https://certbot.eff.org/#ubuntuxenial-nginx](https://certbot.eff.org/#ubuntuxenial-nginx)
 		6. Run `sudo letsencrypt certonly --standalone -d domain.com -d www.domain.com` and so long as that domain is publicly accessible you should be OK
 	7. Install Nodejs
-		8. As `root` follow steps to install node LTS 4.2.6 via NVM at [https://github.com/creationix/nvm#install-script](https://github.com/creationix/nvm#install-script) so we can run FE build tasks
+		8. As `root` follow steps to install node LTS 6.9.x via NVM at [https://github.com/creationix/nvm#install-script](https://github.com/creationix/nvm#install-script) so we can run FE build tasks
 		9. `source ~/.bashrc`
 		10. `nvm install 6.9.4 && nvm use 6.9.4 && nvm alias default node`
-    1. Create virtualenv
-        1. `pip3 install virtualenv virtualenvwrapper`
-        2. `mkvirtualenv -p python3 <application name>`
+		1. `npm install gulp -g` install gulp globally so we can use it in FE builds
+        
 
 ### Run with Ansible
-3. Run Playbook: `ansible-playbook -i <env> site.yml --ask-vault-pass` (where env = stage, prod, etc to set up various environments)
-	4. On very first run you'll get an error on git step - on server copy the SSH key for `root` and add it as deploy key in git repo - then re-run ansible command above
+3. Run Playbook: `ansible-playbook -i <env> site.yml --ask-vault-pass` (where env = stage, production, etc to set up various environments)
+	4. On very first run you'll get an error on git step - on server copy the SSH key for `root` and add it as deploy key in git repo
+	1. At this time you should also ensure the virtualenv install properly:
+	    1. as `root` - `source ~/.bashrc` (you'll likely see an error but also that some virtualenv setup was completed)
+	    1. inside virtualenv check that python version is 3.5.x `python --version`
+	    
 
 ### Creating a New User 
 1. (on local) Copy your SSH key. Usually in `~/.ssh/id_rsa.pub`

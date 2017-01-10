@@ -21,7 +21,7 @@ gunicorn_timeout_seconds: 300
 
 
 # Nginx settings.
-nginx_server_name: 54.205.68.211
+nginx_server_name: strainrx.co
 nginx_strong_dh_group: yes
 
 # Application settings.

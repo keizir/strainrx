@@ -15,3 +15,10 @@
         group={{ gunicorn_group }}
         state=directory
   notify: restart application
+
+- name: Create the django log file
+  file: path={{ project_root }}/srx_error.log
+        owner={{ gunicorn_user }}
+        group={{ gunicorn_group }}
+        mode=0664
+        state=touch

@@ -119,3 +119,5 @@ sendgrid.env
 srx_error.log
 .env
 
+ansible/site.retry
+

@@ -38,6 +38,11 @@
 
 - lineinfile:
     dest: "/root/.bashrc"
+    regexp: "^export DJANGO_SETTINGS_MODULE="
+    line: "export DJANGO_SETTINGS_MODULE=config.settings.{{ env }}"
+
+- lineinfile:
+    dest: "/root/.bashrc"
     regexp: "^export WORKON_HOME="
     line: "export WORKON_HOME={{ virtualenv_root }}"
 

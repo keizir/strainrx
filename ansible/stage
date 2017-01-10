@@ -2,4 +2,4 @@
 env=stage
 
 [webservers]
-stage1 ansible_ssh_host=54.144.238.246
+stage1 ansible_ssh_host=52.55.217.255
