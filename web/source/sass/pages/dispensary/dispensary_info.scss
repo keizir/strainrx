@@ -38,34 +38,36 @@
         .info-wrapper {
             display: inline-block;
 
-            .location-name {
-                display: inline-block;
-                position: absolute;
-                top: 0;
-                left: 0;
-                width: 100%;
+            .location-name-row {
+                .location-name {
+                    display: inline-block;
+                    position: absolute;
+                    top: 0;
+                    left: 0;
+                    width: 100%;
 
-                h1 {
+                    h1 {
+                        width: auto;
+                        margin: 0;
+                    }
+                }
+
+                .favorite-wrapper {
+                    display: inline-block;
+                    position: absolute;
+                    top: -4.5em;
+                    right: 1em;
                     width: auto;
-                    margin: 0;
-                }
-            }
+                    margin-left: 1em;
+                    cursor: pointer;
 
-            .favorite-wrapper {
-                display: inline-block;
-                position: absolute;
-                top: -4.5em;
-                right: 1em;
-                width: auto;
-                margin-left: 1em;
-                cursor: pointer;
+                    .fa-heart {
+                        color: $light-red;
+                    }
 
-                .fa-heart {
-                    color: $light-red;
-                }
-
-                .fa-heart, .fa-heart-o {
-                    font-size: 3em;
+                    .fa-heart, .fa-heart-o {
+                        font-size: 3em;
+                    }
                 }
             }
 
@@ -630,19 +632,21 @@
                 width: 70%;
                 vertical-align: top;
 
-                .location-name {
-                    position: relative;
-                    width: auto;
-                }
+                .location-name-row {
+                    .location-name {
+                        position: relative;
+                        width: auto;
+                    }
 
-                .favorite-wrapper {
-                    position: relative;
-                    margin-left: 1em;
-                    top: auto;
-                    right: auto;
+                    .favorite-wrapper {
+                        position: relative;
+                        margin-left: 1em;
+                        top: auto;
+                        right: auto;
 
-                    .fa-heart, .fa-heart-o {
-                        font-size: 2em;
+                        .fa-heart, .fa-heart-o {
+                            font-size: 2em;
+                        }
                     }
                 }
 

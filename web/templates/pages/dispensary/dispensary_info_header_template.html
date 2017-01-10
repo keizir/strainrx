@@ -10,15 +10,17 @@
             <% } %>
         </div>
         <div class="info-wrapper">
-            <div class="location-name">
-                <h1>${ l.location_name }</h1>
-            </div>
-            <div class="favorite-wrapper">
-                <% if (l.is_favorite) { %>
-                <i class="location-like active fa fa-heart fa-2x" aria-hidden="true"></i>
-                <% } else { %>
-                <i class="location-like fa fa-heart-o fa-2x" aria-hidden="true"></i>
-                <% } %>
+            <div class="location-name-row">
+                <div class="location-name">
+                    <h1>${ l.location_name }</h1>
+                </div>
+                <div class="favorite-wrapper">
+                    <% if (l.is_favorite) { %>
+                    <i class="location-like active fa fa-heart fa-2x" aria-hidden="true"></i>
+                    <% } else { %>
+                    <i class="location-like fa fa-heart-o fa-2x" aria-hidden="true"></i>
+                    <% } %>
+                </div>
             </div>
             <div class="contact-info">
                 <div class="street">${ l.street1 }</div>
