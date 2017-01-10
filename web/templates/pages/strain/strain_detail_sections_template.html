@@ -3,6 +3,13 @@
 <script type="x/srx-template" id="strain_details_page">
     <div class="detail-section">
         <div class="detail-header">
+            {% if backtosearch %}
+                <div class ="search-container">
+                    <a href ="{{ backtosearch }}" class ="search-link">
+                        <i class="fa fa-arrow-left" aria-hidden="true"></i>
+                        back to search results</a>
+                </div>
+            {% endif %}
             <div class="row">
                 <div class="strain-data">
                     <span class="strain-name"><%= model.strain.name %></span>
