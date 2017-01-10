@@ -38,6 +38,7 @@
             left: 0;
             margin-top: 2em;
             line-height: 3em;
+            width: 11em;
 
             form > fieldset {
                 position: relative;
@@ -245,6 +246,8 @@
 
         .home-sub-row-01 {
             .location-holder {
+                width: 80%;
+
                 .your-location {
                     border: 1px solid $grey-dark;
                     border-radius: 0.5em 0 0 0.5em;

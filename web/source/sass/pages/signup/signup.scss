@@ -452,5 +452,34 @@
                 width: 22em;
             }
         }
+
+        .b2b-step-4 {
+            .form-field-group {
+                width: 90%;
+
+                .form-field {
+                    width: 24%;
+                    vertical-align: top;
+                }
+            }
+        }
+
+        .b2b-step-5 {
+            .form-field-group {
+                width: 100%;
+            }
+
+            .address-field-group {
+                width: 100%;
+            }
+
+            .phone-field-group {
+                width: 100%;
+
+                .form-field.phone-number {
+                    width: 69%;
+                }
+            }
+        }
     }
 }

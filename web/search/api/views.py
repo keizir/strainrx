@@ -3,6 +3,7 @@ from datetime import datetime
 from operator import itemgetter
 
 from django.contrib.auth.mixins import LoginRequiredMixin
+from rest_framework import permissions
 from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.views import APIView
@@ -172,20 +173,19 @@ class StrainAlsoLikeView(LoginRequiredMixin, APIView):
         return Response({'also_like_strains': also_like_strains}, status=status.HTTP_200_OK)
 
 
-class StrainLookupView(LoginRequiredMixin, APIView):
-    def get(self, request):
-        if request.user.is_authenticated():
-            if not request.user.is_email_verified:
-                return Response({'message': 'User must verify the email'}, status=status.HTTP_400_BAD_REQUEST)
+class StrainLookupView(APIView):
+    permission_classes = (permissions.AllowAny,)
 
-            query = request.GET.get('q')
-            result = SearchElasticService().lookup_strain(query)
-            return Response({
-                'total': result.get('total'),
-                'payloads': result.get('payloads')
-            }, status=status.HTTP_200_OK)
-        else:
-            return Response({'message': 'User must be authenticated'}, status=status.HTTP_403_FORBIDDEN)
+    def get(self, request):
+        if request.user.is_authenticated() and not request.user.is_email_verified:
+            return Response({'message': 'User must verify the email'}, status=status.HTTP_400_BAD_REQUEST)
+
+        query = request.GET.get('q')
+        result = SearchElasticService().lookup_strain(query)
+        return Response({
+            'total': result.get('total'),
+            'payloads': result.get('payloads')
+        }, status=status.HTTP_200_OK)
 
 
 class StrainUploadImageView(LoginRequiredMixin, APIView):

@@ -16,7 +16,7 @@
 
     .detail-section {
         display: block;
-        width: 80%;
+        width: 90%;
         margin: 0 auto 3em;
 
         .second-row {
@@ -26,13 +26,13 @@
         .second-row .photo-controls {
             display: inline-block;
             text-align: left;
-            width: 25%;
+            width: 45%;
         }
 
         .second-row .location-controls {
             display: inline-block;
             text-align: right;
-            width: 74%;
+            width: 54%;
 
             .filter-menu {
                 .active-link {
@@ -290,14 +290,14 @@
             float: right;
             text-align: right;
             cursor: default;
-        }
 
-        .social-icons a {
-            color: $grey-normal;
-        }
+            a {
+                color: $grey-normal;
+            }
 
-        .social-icons a:hover {
-            color: $iris-blue;
+            a:hover {
+                color: $iris-blue;
+            }
         }
 
         .strain-about span {
@@ -947,86 +947,122 @@
 }
 
 @media (max-width: $screen-xs-max) {
-    .strain-detail-wrapper .detail-section .second-row .photo-controls {
-        display: block;
-        text-align: left;
-        width: 100%;
+    .nav-region {
+        background-color: $grey-dark;
     }
 
-    .strain-detail-wrapper .detail-section .second-row .location-controls {
-        display: block;
-        text-align: left;
-        width: 100%;
-        margin-top: 1em;
-    }
+    .strain-detail-wrapper .detail-section {
+        width: 95%;
 
-    .strain-detail-wrapper .detail-section .strain-photo-wrapper {
-        display: block;
-        width: 100%;
-        vertical-align: top;
-    }
+        .strain-data {
+            margin-top: 3em;
 
-    .strain-detail-wrapper .detail-section .strain-info-wrapper {
-        display: block;
-        width: 100%;
-        text-align: center;
-    }
-
-    .strain-detail-wrapper .detail-section .strain-info-wrapper .popularity-wrapper {
-        display: inline-block;
-        margin: 0 auto;
-        vertical-align: top;
-        width: 45%;
-        text-align: center;
-    }
-
-    .strain-detail-wrapper .detail-section .strain-info-wrapper .popularity-wrapper h1 {
-        border-bottom: none;
-    }
-
-    .strain-detail-wrapper .detail-section .strain-info-wrapper .match-score-wrapper {
-        display: inline-block;
-        margin: 0 auto;
-        vertical-align: top;
-        width: 45%;
-        text-align: center;
-    }
-
-    .strain-detail-wrapper .detail-section .effects-wrapper .effect-wrapper {
-        height: 3.5em;
-    }
-
-    .strain-detail-wrapper .detail-section .effects-wrapper .effect-name {
-        display: block;
-        width: 100%;
-        margin-bottom: 5px;
-    }
-
-    .strain-detail-wrapper .detail-section .effects-wrapper .effect {
-        display: block;
-        width: 100%;
-    }
-
-    .strain-detail-wrapper .detail-section .strain-lineage-section {
-        display: block;
-        width: 100%;
-    }
-
-    .strain-detail-wrapper .detail-section .strain-reviews {
-        .review-wrapper {
-            .user-info {
-                width: 20%;
-            }
-
-            .review {
-                width: 70%;
+            .strain-like {
+                position: absolute;
+                top: 0;
+                right: 6%;
+                font-size: 3em;
             }
         }
-    }
 
-    .strain-detail-wrapper .detail-section .strain-flavors-section {
-        display: block;
-        width: 100%;
+        .social-icons {
+            position: absolute;
+            left: 3%;
+            font-size: 1.2em;
+        }
+
+        .second-row .photo-controls {
+            display: block;
+            text-align: left;
+            width: 100%;
+        }
+
+        .second-row .location-controls {
+            display: block;
+            text-align: left;
+            width: 100%;
+            margin-top: 1em;
+        }
+
+        .strain-photo-wrapper {
+            display: block;
+            width: 100%;
+            vertical-align: top;
+        }
+
+        .strain-info-wrapper {
+            display: block;
+            width: 100%;
+            text-align: center;
+
+            .popularity-wrapper {
+                display: inline-block;
+                margin: 0 auto;
+                vertical-align: top;
+                width: 45%;
+                text-align: center;
+
+                h1 {
+                    border-bottom: none;
+                }
+            }
+
+            .match-score-wrapper {
+                display: inline-block;
+                margin: 0 auto;
+                vertical-align: top;
+                width: 45%;
+                text-align: center;
+            }
+        }
+
+        .section-header {
+            position: relative;
+
+            .disagree-link {
+                position: absolute;
+                top: 0.2em;
+                right: 0;
+            }
+        }
+
+        .effects-wrapper .effect-wrapper {
+            height: 3.5em;
+
+            .effect-name {
+                display: block;
+                width: 100%;
+                margin-bottom: 0;
+            }
+
+            .effect {
+                display: block;
+                width: 100%;
+            }
+        }
+
+        .strain-lineage-section {
+            display: block;
+            width: 100%;
+        }
+
+        .strain-reviews {
+            .review-wrapper {
+                .user-info {
+                    width: 20%;
+                }
+
+                .review {
+                    width: 70%;
+                }
+            }
+        }
+
+        .strain-flavors-section {
+            display: block;
+            width: 100%;
+            margin-top: 2em;
+        }
     }
 
     .strain-detail-wrapper .detail-section .second-row .location-controls {
@@ -1078,9 +1114,13 @@
                 right: 1%;
                 background: $white;
                 width: 98%;
-                border: 1px solid $grey-normal;
                 padding: 8px;
                 color: $black;
+
+                .locations-area {
+                    left: 0;
+                    width: 100%;
+                }
             }
 
             .location-header {

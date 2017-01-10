@@ -232,6 +232,10 @@
 }
 
 @media (max-width: $screen-xs-max) {
+    .nav-region {
+        background-color: $grey-dark;
+    }
+
     .mobile-menu {
         display: inline-block !important;
 

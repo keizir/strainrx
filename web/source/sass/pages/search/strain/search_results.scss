@@ -160,7 +160,7 @@
             .item-locations,
             .item-deliveries,
             .item-percentage-match {
-                width: 28%;
+                width: 27%;
                 height: 6em;
                 text-align: center;
                 vertical-align: top;
@@ -379,10 +379,6 @@
 
 @media (max-width: $screen-sm-min) {
     .search-result-container {
-        .fa-2x {
-            font-size: 1em;
-        }
-
         .strains-wrapper .separator {
             margin: 0 0.1em;
         }
@@ -422,18 +418,49 @@
                 width: 29%;
             }
 
-            .item-locations .locations {
-                font-size: 0.8em;
+            .item-info-wrapper {
+                .item-info {
+                    width: 60%;
+                }
+
+                .item-image {
+                    width: 30%;
+                }
             }
 
+            .item-locations .locations,
             .item-deliveries .deliveries {
-                font-size: 0.8em;
+                font-size: 1em;
             }
 
             .item-percentage-match .percentage {
                 display: block;
                 font-size: 2em;
                 font-weight: bold;
+            }
+
+            .locations-expanded {
+                top: 7.5em;
+
+                .exp-location {
+                    .location-name {
+                        width: 36%;
+                    }
+
+                    .location-rating {
+                        width: 23%;
+                    }
+
+                    .location-distance {
+                        width: 18%;
+                        text-align: center;
+                    }
+
+                    .location-price {
+                        width: 14%;
+                        text-align: center;
+                    }
+                }
             }
         }
     }
@@ -442,6 +469,7 @@
 @media (max-width: $screen-xs-max) {
     .strains-wrapper .separator {
         margin: 0 0.3em;
+        height: 4em;
     }
 
     .search-result-header-wrapper {
@@ -456,6 +484,10 @@
 
     .search-result-container .search-result-body-wrapper .result-item {
         height: 13em;
+
+        .fa-2x {
+            font-size: 1em;
+        }
 
         .pull-left {
             display: block;
@@ -489,7 +521,7 @@
             .item-image {
                 position: relative;
                 float: left;
-                width: 30%;
+                width: 25%;
                 vertical-align: top;
             }
         }
@@ -498,6 +530,35 @@
         .item-deliveries,
         .item-percentage-match {
             width: 29%;
+        }
+
+        .item-deliveries .deliveries-icon,
+        .item-locations .locations-icon {
+            font-size: 2em;
+        }
+
+        .locations-expanded {
+            top: 5.5em;
+
+            .exp-location {
+                .location-name {
+                    width: 36%;
+                }
+
+                .location-rating {
+                    width: 23%;
+                }
+
+                .location-distance {
+                    width: 18%;
+                    text-align: center;
+                }
+
+                .location-price {
+                    width: 14%;
+                    text-align: center;
+                }
+            }
         }
     }
 }
