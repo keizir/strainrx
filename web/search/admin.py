@@ -1,7 +1,65 @@
 # -*- coding: utf-8 -*-
+from boto.s3.bucket import Bucket
+from boto.s3.connection import S3Connection
+from boto.s3.key import Key
+from django.conf import settings
 from django.contrib import admin
 
+from web.businesses.es_service import BusinessLocationESService
+from web.businesses.models import BusinessLocationMenuItem
+from web.search.es_service import SearchElasticService
 from web.search.models import *
+from web.search.strain_user_rating_es_service import StrainUserRatingESService
+
+
+def delete_selected_strains(modeladmin, request, queryset):
+    strain_es_service = StrainESService()
+    user_rating_es_service = StrainUserRatingESService()
+    business_location_es_service = BusinessLocationESService()
+    search_elastic_service = SearchElasticService()
+
+    for strain in queryset:
+        # Delete images from S3 and from database
+        if StrainImage.objects.filter(strain=strain).exists():
+            for sim in StrainImage.objects.filter(strain=strain):
+                if sim.image and sim.image.url:
+                    conn = S3Connection(settings.AWS_ACCESS_KEY_ID, settings.AWS_SECRET_ACCESS_KEY)
+                    bucket = Bucket(conn, settings.AWS_STORAGE_BUCKET_NAME)
+                    k = Key(bucket=bucket, name=sim.image.url.split(bucket.name)[1])
+                    k.delete()
+
+                sim.delete()
+
+        # Delete strain reviews
+        if StrainReview.objects.filter(strain=strain).exists():
+            for sr in StrainReview.objects.filter(strain=strain):
+                strain_es_service.delete_strain_review_by_db_id(sr.id, strain.id)
+                sr.delete()
+
+        # Delete strain ratings
+        if StrainRating.objects.filter(strain=strain).exists():
+            for sr in StrainRating.objects.filter(strain=strain):
+                user_rating_es_service.delete_user_review(strain.id, sr.created_by.id)
+                sr.delete()
+
+        # Delete strain from user favorites
+        if UserFavoriteStrain.objects.filter(strain=strain).exists():
+            for ufs in UserFavoriteStrain.objects.filter(strain=strain):
+                ufs.delete()
+
+        # Delete strain from locations menu
+        if BusinessLocationMenuItem.objects.filter(strain=strain).exists():
+            for mi in BusinessLocationMenuItem.objects.filter(strain=strain):
+                business_location_es_service.delete_menu_item(mi.id, mi.business_location.id)
+                mi.delete()
+
+        # Delete strain itself and name from suggester
+        search_elastic_service.delete_lookup_strain_name(strain.id)
+        strain_es_service.delete_strain(strain.id)
+        strain.delete()
+
+
+delete_selected_strains.short_description = 'Delete selected (including relationships)'
 
 
 @admin.register(Strain)
@@ -10,6 +68,7 @@ class StrainAdmin(admin.ModelAdmin):
     search_fields = ['name', 'category', 'variety']
     list_filter = ['name', 'category', 'variety']
     ordering = ['name']
+    actions = [delete_selected_strains]
 
 
 def approve_selected_ratings(modeladmin, request, queryset):

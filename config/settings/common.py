@@ -388,3 +388,5 @@ LOGGING = {
         },
     }
 }
+
+PROFILE = 'local'

@@ -105,3 +105,28 @@ class BusinessLocationESService(BaseElasticService):
             return es_response
 
         return None
+
+    def delete_menu_item(self, menu_item_id, business_location_id):
+        es_response = self.get_business_location_by_db_id(business_location_id)
+        es_location = es_response.get('hits', {}).get('hits', [])
+
+        if len(es_location) > 0:
+            existing_source = es_location[0].get('_source')
+            menu_items = existing_source.get('menu_items')
+            new_menu_items = []
+
+            for mi in menu_items:
+                if mi.get('id') != menu_item_id:
+                    new_menu_items.append(mi)
+
+            existing_source['menu_items'] = new_menu_items
+
+            url = '{base}{index}/{type}/{es_id}'.format(base=self.BASE_ELASTIC_URL,
+                                                        index=self.URLS.get('BUSINESS_LOCATION'),
+                                                        type=es_mappings.TYPES.get('business_location'),
+                                                        es_id=es_location[0].get('_id'))
+
+            es_response = self._request(self.METHODS.get('PUT'), url, data=json.dumps(existing_source))
+            return es_response
+
+        return None

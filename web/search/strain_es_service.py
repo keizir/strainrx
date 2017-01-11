@@ -75,3 +75,31 @@ class StrainESService(BaseElasticService):
             es_response = self._request(self.METHODS.get('PUT'), url, data=json.dumps(es_strain_source))
 
         return es_response
+
+    def delete_strain(self, strain_id):
+        es_response = self.get_strain_by_db_id(strain_id)
+        es_strains = es_response.get('hits', {}).get('hits', [])
+
+        if len(es_strains) > 0:
+            es_strain = es_strains[0]
+            url = '{base}{index}/{type}/{es_id}'.format(base=self.BASE_ELASTIC_URL, index=self.URLS.get('STRAIN'),
+                                                        type=es_mappings.TYPES.get('strain'),
+                                                        es_id=es_strain.get('_id'))
+            es_response = self._request(self.METHODS.get('DELETE'), url)
+            return es_response
+
+    def delete_strain_review_by_db_id(self, db_strain_review_id, parent_strain_db_id):
+        es_response = self.get_strain_review_by_db_id(db_strain_review_id)
+        es_review = es_response.get('hits', {}).get('hits', [])
+        es_response = self.get_strain_by_db_id(parent_strain_db_id)
+        es_strain = es_response.get('hits', {}).get('hits', [])
+
+        if len(es_review) > 0:
+            url = '{base}{index}/{type}/{es_id}?parent={parent}'.format(base=self.BASE_ELASTIC_URL,
+                                                                        index=self.URLS.get('STRAIN'),
+                                                                        type=es_mappings.TYPES.get('strain_review'),
+                                                                        es_id=es_review[0].get('_id'),
+                                                                        parent=es_strain[0].get('_id'))
+
+            es_response = self._request(self.METHODS.get('DELETE'), url)
+            return es_response

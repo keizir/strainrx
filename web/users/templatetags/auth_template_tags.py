@@ -22,3 +22,8 @@ def google_maps_api_url():
 @register.simple_tag
 def google_maps_api_key():
     return settings.GOOGLE_API_KEY
+
+
+@register.simple_tag
+def get_profile():
+    return settings.PROFILE

@@ -306,6 +306,10 @@ strain_mapping = {
 
 strain_suggester_mapping = {
     "properties": {
+        "strain_id": {
+            "type": "long",
+            "index": "not_analyzed"
+        },
         "name": {
             "type": "string",
             "index": "analyzed",

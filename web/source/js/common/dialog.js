@@ -41,14 +41,14 @@ W.common.VerifyEmailDialog = function () {
     });
 };
 
-W.common.ConfirmDialog = function ($el, closeCallback) {
+W.common.ConfirmDialog = function ($el, closeCallback, options) {
     if ($el) {
         $el.removeClass('hidden');
         $el.dialog({
             closeOnEscape: true,
             minHeight: 'auto',
-            height: 'auto',
-            width: 'auto',
+            height: (options && options.height) || 200,
+            width: (options && options.width) || 'auto',
             modal: true,
             draggable: false,
             resizable: false,

@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 import json
 import logging
-
 import time
+
 from django.core.management.base import BaseCommand, CommandError
 
 from web.search import es_mappings
@@ -131,6 +131,7 @@ class Command(BaseCommand):
 
                 bulk_strain_suggester_data.append(action_data)
                 bulk_strain_suggester_data.append(json.dumps({
+                    'strain_id': s.id,
                     'name': s.name,
                     'name_suggest': {
                         'input': input_variants,

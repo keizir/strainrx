@@ -479,6 +479,22 @@ class SearchElasticService(BaseElasticService):
         results = self._transform_suggest_results(es_response)
         return results
 
+    def delete_lookup_strain_name(self, strain_id):
+        method = self.METHODS.get('POST')
+        url = '{base}{index}/{type}/_search'.format(base=self.BASE_ELASTIC_URL,
+                                                    index=self.URLS.get('STRAIN'), type='name')
+
+        query = {"query": {"term": {"strain_id": strain_id}}}
+        es_response = self._request(method, url, data=json.dumps(query))
+        es_name_suggest = es_response.get('hits', {}).get('hits', [])
+
+        if len(es_name_suggest) > 0:
+            url = '{base}{index}/{type}/{es_id}'.format(base=self.BASE_ELASTIC_URL,
+                                                        index=self.URLS.get('STRAIN'), type='name',
+                                                        es_id=es_name_suggest[0].get('_id'))
+            es_response = self._request(self.METHODS.get('DELETE'), url)
+            return es_response
+
     def _transform_suggest_results(self, es_response):
         suggests = es_response.get('suggest', {}).get('name_suggestion', {})
         total = 0

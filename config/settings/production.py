@@ -12,7 +12,6 @@ Production Configurations
 """
 from __future__ import absolute_import, unicode_literals
 
-from boto.s3.connection import OrdinaryCallingFormat
 from django.utils import six
 
 from .common import *  # noqa
@@ -111,6 +110,7 @@ ANYMAIL = {
 EMAIL_BACKEND = env('DJANGO_EMAIL_BACKEND',
                     default='django.core.mail.backends.console.EmailBackend')
 
-
 # Your production stuff: Below this line define 3rd party library settings
-HOST = 'https://strainrx.co'
+HOST = env('HOST_URL', default='https://strainrx.co')
+
+PROFILE = 'prod'
