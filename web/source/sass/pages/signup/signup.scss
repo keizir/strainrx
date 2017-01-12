@@ -146,6 +146,20 @@
         }
     }
 
+    .b2b-step-1 {
+        .additional-actions {
+            display: block;
+            width: 100%;
+            height: 5em;
+            margin-top: -2em;
+            color: $iris-blue;
+
+            a {
+                text-decoration: underline;
+            }
+        }
+    }
+
     .b2b-step-4 {
         .form-field-group {
             display: block;

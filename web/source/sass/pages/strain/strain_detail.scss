@@ -675,8 +675,10 @@
             width: 20em;
 
             img {
-                width: 14em;
-                margin-bottom: 1em;
+                width: auto;
+                max-width: 14em;
+                margin: 0 auto 1em;
+                max-height: 14em;
             }
         }
 

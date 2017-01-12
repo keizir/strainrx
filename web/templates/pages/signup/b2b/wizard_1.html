@@ -1,3 +1,5 @@
+{% load staticfiles i18n %}
+
 <script type="x/srx-template" id="b2b-wizard-1">
     <div class="b2b-sign-up-form-wrapper b2b-step-1">
         <h1>What's the name of your business?</h1>
@@ -16,5 +18,10 @@
                 <button class="btn-primary btn-b2b-step-1" type="submit">Next</button>
             </div>
         </form>
+        <div class="additional-actions">
+            <span class="message">
+                Already have an account? <a href="{% url 'account_login' %}">Sign In</a>
+            </span>
+        </div>
     </div>
 </script>

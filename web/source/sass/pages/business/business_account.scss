@@ -33,7 +33,9 @@
                 height: 82%;
 
                 img {
-                    width: 14em;
+                    width: auto;
+                    max-width: 14em;
+                    max-height: 14em;
                 }
 
                 .upload-business-image-link-wrapper {

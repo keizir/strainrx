@@ -105,6 +105,12 @@ W.users.DetailPage = Class.extend({
                     success: function () {
                         that.showSuccessMessage('You profile information has been successfully updated');
                         W.Navbar.updateAddress(data.location);
+
+                        var firstName = $('input[name="first_name"]').val(),
+                            lastName = $('input[name="last_name"]').val();
+
+                        $('.user-info .user-name').text('{0} {1}'.format(firstName, lastName));
+                        $('.auth-menu .user-name').text(firstName);
                     },
                     error: function (error) {
                         that.showErrorMessage(error);

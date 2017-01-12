@@ -35,6 +35,16 @@ footer {
         color: $black;
         padding-top: 1em;
     }
+
+    .vendor-signup {
+        a {
+            color: $avocado-green;
+        }
+
+        a:hover {
+            color: $paradiso;
+        }
+    }
 }
 
 @media (max-width: $screen-xs-max) {

@@ -12,9 +12,9 @@
                 <li><a href="{% url 'contact' %}">Contact Us</a></li>
 
                 {% if not request.user.is_authenticated %}
-                    <li>
+                    <li class="vendor-signup">
                         <span class="separator"></span>
-                        <a href="{% url 'account_login' %}">Dispensary Login</a>
+                        <a href="{% url 'businesses:signup' %}">Vendor Signup</a>
                     </li>
                 {% endif %}
             </ul>

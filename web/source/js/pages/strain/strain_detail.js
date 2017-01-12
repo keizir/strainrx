@@ -563,6 +563,7 @@ W.pages.strain.StrainDetailPage = Class.extend({
                     $('.photo-camera-wrapper').addClass('hidden');
                     $('.preview-image-wrapper').removeClass('hidden');
                     $('.btn-upload-image-submit').removeAttr('disabled');
+                    $('label[for="image-file"]').addClass('hidden');
                     preview[0].src = reader.result;
                 }, false);
 
