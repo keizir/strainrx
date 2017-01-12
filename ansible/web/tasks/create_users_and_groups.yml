@@ -27,6 +27,13 @@
     mode: 0755
 
 - lineinfile:
+    dest: "~/.bashrc"
+    regexp: "^export DJANGO_SETTINGS_MODULE="
+    line: "export DJANGO_SETTINGS_MODULE=config.settings.{{ env }}"
+  become: yes
+  become_user: "{{ gunicorn_user }}"
+
+- lineinfile:
     dest: "/root/.bashrc"
     regexp: "^alias reload="
     line: "alias reload='source ~/.bashrc'"

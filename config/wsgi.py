@@ -23,7 +23,7 @@ from raven.contrib.django.raven_compat.middleware.wsgi import Sentry
 # mod_wsgi daemon mode with each site in its own daemon process, or use
 # os.environ["DJANGO_SETTINGS_MODULE"] = "config.settings.production"
 # TODO get gunicorn to read env vars and have this be set automatically
-os.environ.setdefault("DJANGO_SETTINGS_MODULE", "config.settings.stage")
+#os.environ.setdefault("DJANGO_SETTINGS_MODULE", "config.settings.stage")
 
 # This application object is used by any WSGI server configured to use this
 # file. This includes Django's development server, if the WSGI_APPLICATION
