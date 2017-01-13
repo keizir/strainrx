@@ -57,11 +57,12 @@ W.pages.search.strain.SearchWizardStep1 = W.pages.search.strain.SearchWizardStep
             $('input[type="checkbox"]').prop('checked', false);
             $.publish('update_step_data', {step: that.step, data: {}});
             that.toggleButtonsState();
+            $(this).attr('disabled', 'disabled');
         });
     },
 
     renderHTML: function renderHTML() {
-        return this.$template();
+        return this.$template({previousSearchData: this.model.get(this.step)});
     },
 
     submit: function submit() {

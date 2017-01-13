@@ -68,6 +68,15 @@
         }
     }
 
+    .proximity-input-wrapper {
+        width: 80%;
+        margin-top: 3em;
+
+        input {
+            width: 10em;
+        }
+    }
+
     .notice {
         display: block;
         margin: 3em auto;

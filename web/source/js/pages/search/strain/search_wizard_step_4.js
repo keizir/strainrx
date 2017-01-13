@@ -51,17 +51,6 @@ W.pages.search.strain.SearchWizardStep4 = W.pages.search.strain.SearchWizardStep
         if (this.model.get(this.step)) {
             this.restoreEffectsState(this.step, this.selectedSideEffects);
         }
-    },
-
-    activateSlider: function activateSlider(container) {
-        var that = this;
-        $('.slider-wrapper').removeClass('hidden');
-        $('.slider').slider({
-            value: 1, min: 1, max: 5, step: 1,
-            slide: function (event, ui) {
-                that.handleSlideChange(6 - ui.value, container)
-            }
-        });
     }
 
 });

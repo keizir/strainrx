@@ -61,12 +61,15 @@ W.pages.search.strain.SearchWizardStep = W.common.WizardStep.extend({
     showDialogOrProceed: function showDialogOrProceed(container, proceedCallback) {
         var that = this;
         W.users.UserSettings.get(that.currentUserId, that.settingName_NeverShowPopupAgain, function (setting) {
-            var doNotShowAgain = setting && setting.doNotShowAgain;
+            // TODO do not show the dialog for now (changed under WEED-201)
+            /*var doNotShowAgain = setting && setting.doNotShowAgain;
             if (container[container.length - 1].value === 1 && !that.popupDismissed && !doNotShowAgain) {
                 that.showJustASecondDialog();
             } else {
                 proceedCallback();
-            }
+            }*/
+
+            proceedCallback();
         });
     },
 
@@ -220,7 +223,7 @@ W.pages.search.strain.SearchWizardStep = W.common.WizardStep.extend({
             $effect.removeClass('active');
             $effectCloseBtn.addClass('hidden');
             $importanceValue.addClass('hidden');
-            $importanceValue.text(that.step === 4 ? 5 : 1);
+            $importanceValue.text(1);
 
             for (var i = 0; i < container.length; i++) {
                 if (container[i].name === effectName) {

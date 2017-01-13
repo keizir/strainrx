@@ -7,13 +7,15 @@ W.users.ProximityPage = Class.extend({
     defaultProximityValue: 10,
 
     ui: {
-        $userId: $('.user-id')
+        $userId: $('.user-id'),
+        $proximityInput: $('.proximity-value')
     },
 
     init: function (options) {
         this.proximity = options && options.proximity;
 
         this.initSlider();
+        this.initProximityInput();
         this.updateProximity();
     },
 
@@ -24,12 +26,52 @@ W.users.ProximityPage = Class.extend({
             value: that.proximity || that.defaultProximityValue,
             min: 0, max: 50, step: 0.5,
             slide: function (event, ui) {
-                $('.ui-slider-handle').text('{0} MI'.format(ui.value));
+                that.setSliderHandleValue(ui.value);
                 that.proximity = ui.value;
+                that.ui.$proximityInput.val(ui.value);
             }
         });
 
-        $('.ui-slider-handle').text('{0} MI'.format(this.proximity || this.defaultProximityValue));
+        this.setSliderHandleValue(this.proximity || this.defaultProximityValue);
+    },
+
+    initProximityInput: function initProximityInput() {
+        var that = this;
+
+        this.ui.$proximityInput.val(this.proximity);
+        this.ui.$proximityInput.on('keyup', function () {
+            var $input = $(this),
+                $inputVal = $input.val();
+
+            if ($inputVal) {
+                $inputVal = parseFloat($inputVal).toFixed(1);
+                $('.slider').slider('value', $inputVal);
+                that.setSliderHandleValue($inputVal);
+                that.proximity = $inputVal;
+            } else {
+                that.setProximityValue(0);
+            }
+
+            if ($inputVal && $inputVal < 0) {
+                that.setProximityValue(0);
+
+            }
+
+            if ($inputVal && $inputVal > 50) {
+                that.setProximityValue(50);
+            }
+        });
+    },
+
+    setProximityValue: function setProximityValue(value) {
+        $('.slider').slider('value', value);
+        this.setSliderHandleValue(value);
+        this.ui.$proximityInput.val(value);
+        this.proximity = value;
+    },
+
+    setSliderHandleValue: function setSliderHandleValue(value) {
+        $('.ui-slider-handle').text('{0} MI'.format(value));
     },
 
     updateProximity: function updateProximity() {
