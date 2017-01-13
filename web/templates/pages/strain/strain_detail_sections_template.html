@@ -4,8 +4,8 @@
     <div class="detail-section">
         <div class="detail-header">
             {% if backtosearch %}
-                <div class ="search-container">
-                    <a href ="{{ backtosearch }}" class ="search-link">
+                <div class="search-container">
+                    <a href="{{ backtosearch }}" class="search-link">
                         <i class="fa fa-arrow-left" aria-hidden="true"></i>
                         back to search results</a>
                 </div>
@@ -217,7 +217,7 @@
             </span>
             <div class="lineage-region">
                 <% $.each(model.strain_origins, function(i, origin) { %>
-                <a href="/search/strain/<%= origin.strain_slug %>">
+                <a href="/<%= origin.variety %>/<%= origin.strain_slug %>">
                     <div class="lineage-wrapper">
                         <span class="abbreviation"><%= abbreviateStrainName(origin.name)%></span>
                         <span class="name"><%= origin.name %></span>

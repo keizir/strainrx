@@ -611,7 +611,9 @@ W.pages.strain.StrainDetailPage = Class.extend({
 
                 $('.dispensary-rating').each(function () {
                     var $this = $(this);
-                    W.common.Rating.readOnly($this, {rating: $this.text()});
+                    if ($this.text() !== 'Not Rated') {
+                        W.common.Rating.readOnly($this, {rating: $this.text()});
+                    }
                 });
 
                 that.initSortActions();

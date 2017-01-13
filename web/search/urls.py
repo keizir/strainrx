@@ -7,17 +7,17 @@ from . import views
 
 urlpatterns = [
     url(
-        regex=r'^strain/wizard/$',
+        regex=r'^search/strain/wizard/$',
         view=views.StrainSearchWizardView.as_view(),
         name='strain_wizard'
     ),
     url(
-        regex=r'^strain/results/$',
+        regex=r'^search/strain/results/$',
         view=views.StrainSearchResultView.as_view(),
         name='strain_results'
     ),
     url(
-        regex=r'^strain/(?P<slug_name>.+)/$',
+        regex=r'^(?P<strain_variety>sativa|hybrid|indica)/(?P<slug_name>.+)/$',
         view=views.StrainDetailView.as_view(),
         name='strain_detail'
     ),

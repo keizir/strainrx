@@ -1,6 +1,6 @@
 import json
 
-from web.businesses.api.services import get_open_closed
+from web.businesses.api.services import get_open_closed, get_location_rating
 from web.es_service import BaseElasticService
 from web.search import es_mappings
 from web.search.models import StrainImage, Strain
@@ -198,13 +198,15 @@ class SearchElasticService(BaseElasticService):
 
         processed_results.append({
             'business_id': s.get('business_id'), 'location_id': s.get('business_location_id'),
+            'category': s.get('category', 'dispensary'),
+            'slug_name': s.get('slug_name'),
             'location_name': s.get('location_name'), 'distance': distance,
             'menu_item_id': menu_item_id, 'in_stock': in_stock,
             'price_gram': price_gram, 'price_half': price_half,
             'price_quarter': price_quarter, 'price_eighth': price_eighth,
             'open': get_open_closed(s) == 'Opened',
             'is_delivery': s.get('delivery'),
-            'rating': 4.5  # TODO load here location rating
+            'rating': get_location_rating(s.get('business_location_id'))
         })
 
     def query_strains_by_name(self, query, size=50, start_from=0):

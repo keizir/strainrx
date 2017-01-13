@@ -29,11 +29,12 @@ W.pages.HomePage = Class.extend({
             e.preventDefault();
             var $input = $('.lookup-input'),
                 strainName = $input.val(),
+                strainVariety = $input.attr('payload-variety'),
                 strainSlug = $input.attr('payload-slug');
 
             if (AUTHENTICATED) {
-                if (strainName && strainSlug) {
-                    window.location.href = '/search/strain/{0}'.format(strainSlug);
+                if (strainName && strainVariety && strainSlug) {
+                    window.location.href = '/{0}/{1}'.format(strainVariety, strainSlug);
                 }
             } else {
                 window.location.href = '/users/signup/wizard/';

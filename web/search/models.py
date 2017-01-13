@@ -73,7 +73,7 @@ class Strain(models.Model):
 
     def save(self, *args, **kwargs):
         if self.pk is None and not self.strain_slug:
-            self.strain_slug = '{0}-{1}'.format(slugify(self.name), slugify(self.category))
+            self.strain_slug = '{0}-strain'.format(slugify(self.name))
         super(Strain, self).save(*args, **kwargs)
 
     def to_search_criteria(self):

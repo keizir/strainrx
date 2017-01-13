@@ -509,6 +509,8 @@ business_location_mapping = {
     "properties": {
         "business_id": {"type": "long"},
         "business_location_id": {"type": "long"},
+        "category": {"type": "string", "index": "not_analyzed"},
+        "slug_name": {"type": "string", "index": "not_analyzed"},
         "location_name": {"type": "string", "index": "not_analyzed"},
         "manager_name": {"type": "string"},
         "location_email": {"type": "string"},

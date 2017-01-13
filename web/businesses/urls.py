@@ -8,37 +8,37 @@ from . import views
 
 urlpatterns = [
     url(
-        regex=r'^signup/$',
+        regex=r'^businesses/signup/$',
         view=views.BusinessSignUpWizardView.as_view(),
         name='signup'
     ),
     url(
-        regex=r'^signup/done/$',
+        regex=r'^businesses/signup/done/$',
         view=views.BusinessSignUpDoneView.as_view(),
         name='signup_done'
     ),
     url(
-        regex=r'^confirm_email/(?P<uid>[0-9]{1,})/$',
+        regex=r'^businesses/confirm_email/(?P<uid>[0-9]{1,})/$',
         view=views.ConfirmEmailView.as_view(),
         name='confirm_email'
     ),
     url(
-        regex=r'^(?P<business_id>[0-9]+)/info$',
+        regex=r'^businesses/(?P<business_id>[0-9]+)/info$',
         view=user_is_owner(views.BusinessDetailView.as_view()),
         name='detail'
     ),
     url(
-        regex=r'^(?P<business_id>[0-9]{1,})/menu$',
+        regex=r'^businesses/(?P<business_id>[0-9]{1,})/menu$',
         view=user_is_owner(views.BusinessMenuView.as_view()),
         name='menu'
     ),
     url(
-        regex=r'^(?P<business_id>[0-9]{1,})/locations$',
+        regex=r'^businesses/(?P<business_id>[0-9]{1,})/locations$',
         view=user_is_owner(views.BusinessLocationsView.as_view()),
         name='locations'
     ),
     url(
-        regex=r'^(?P<business_id>[0-9]{1,})/locations/(?P<location_id>[0-9]{1,})/$',
+        regex=r'^(?P<location_category>dispensary|delivery)/(?P<location_slug>.+)/$',
         view=views.DispensaryInfoView.as_view(),
         name='dispensary_info'
     ),

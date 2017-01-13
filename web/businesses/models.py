@@ -10,6 +10,7 @@ from django.core.exceptions import ValidationError
 from django.db import models
 from django.db.models.signals import post_save
 from django.dispatch import receiver
+from django.template.defaultfilters import slugify
 from django.utils.encoding import python_2_unicode_compatible
 from django.utils.translation import ugettext_lazy as _
 
@@ -63,6 +64,11 @@ class Business(models.Model):
 
 @python_2_unicode_compatible
 class BusinessLocation(models.Model):
+    CATEGORY_CHOICES = (
+        ('dispensary', 'Dispensary'),
+        ('delivery', 'Delivery'),
+    )
+
     business = models.ForeignKey(Business, on_delete=models.DO_NOTHING)
     location_name = models.CharField(max_length=255, blank=True, null=True)
     manager_name = models.CharField(max_length=255, blank=True, null=True)
@@ -71,6 +77,12 @@ class BusinessLocation(models.Model):
     image = models.ImageField(max_length=255, upload_to=upload_business_location_image_to, blank=True,
                               help_text='Maximum file size allowed is 5Mb',
                               validators=[validate_business_image])
+
+    category = models.CharField(max_length=20, default='dispensary', choices=CATEGORY_CHOICES,
+                                help_text='Warning: changing the category will change the URL of this location')
+
+    slug_name = models.SlugField(max_length=611, null=True, blank=True,
+                                 help_text='Warning: changing the slug will change the URL of this location')
 
     primary = models.BooleanField(default=False)
     dispensary = models.BooleanField(default=False)
@@ -114,8 +126,30 @@ class BusinessLocation(models.Model):
     sun_open = models.TimeField(blank=True, null=True)
     sun_close = models.TimeField(blank=True, null=True)
 
+    def save(self, *args, **kwargs):
+        if self.pk is None and not self.slug_name:
+            # determine a category
+            self.category = 'dispensary' if self.dispensary else 'delivery' if self.delivery else 'dispensary'
+
+            # create a slug name
+            slugified_name = slugify(self.location_name)
+            if not exist_by_slug_name(slugified_name):
+                self.slug_name = slugified_name
+            else:
+                for x in range(1, 1000):
+                    new_slug_name = '{0}-{1}'.format(slugified_name, x)
+                    if not exist_by_slug_name(new_slug_name):
+                        self.slug_name = new_slug_name
+                        break
+
+        super(BusinessLocation, self).save(*args, **kwargs)
+
     def __str__(self):
         return self.location_name
+
+
+def exist_by_slug_name(location_slug_name):
+    return BusinessLocation.objects.filter(slug_name=location_slug_name).exists()
 
 
 @receiver(post_save, sender=BusinessLocation)

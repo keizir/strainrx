@@ -92,6 +92,8 @@ class Command(BaseCommand):
             locations_data.append(json.dumps({
                 "business_id": l.business.pk,
                 "business_location_id": l.pk,
+                "category": l.category,
+                "slug_name": l.slug_name,
                 "location_name": l.location_name,
                 "manager_name": l.manager_name,
                 "location_email": l.location_email,

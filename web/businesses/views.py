@@ -4,6 +4,7 @@ from __future__ import absolute_import, unicode_literals
 from datetime import datetime
 
 import pytz
+from django.http import Http404
 from django.views.generic import TemplateView
 
 from web.businesses.models import Business, BusinessLocation
@@ -77,7 +78,13 @@ class DispensaryInfoView(TemplateView):
 
     def get_context_data(self, **kwargs):
         context = super(DispensaryInfoView, self).get_context_data(**kwargs)
-        context['business_id'] = kwargs.get('business_id')
-        context['location_id'] = kwargs.get('location_id')
-        context['strain_id'] = self.request.GET.get('strain_id')
+
+        if BusinessLocation.objects.filter(slug_name=kwargs.get('location_slug'), removed_date=None).exists():
+            location = BusinessLocation.objects.get(slug_name=kwargs.get('location_slug'), removed_date=None)
+            context['business_id'] = location.business.id
+            context['location_id'] = location.id
+            context['strain_id'] = self.request.GET.get('strain_id')
+        else:
+            raise Http404
+
         return context

@@ -20,8 +20,8 @@ urlpatterns = [
 
                   # User management
                   url(r'^users/', include('web.users.urls', namespace='users')),
-                  url(r'^search/', include('web.search.urls', namespace='search')),
-                  url(r'^businesses/', include('web.businesses.urls', namespace='businesses')),
+                  url(r'^', include('web.search.urls', namespace='search')),
+                  url(r'^', include('web.businesses.urls', namespace='businesses')),
                   url(r'^accounts/', include('allauth.urls')),
 
                   # Your stuff: custom urls includes go here
@@ -43,6 +43,10 @@ if settings.DEBUG:
     urlpatterns += [
         url(r'^400/$', default_views.bad_request, kwargs={'exception': Exception('Bad Request!')}),
         url(r'^403/$', default_views.permission_denied, kwargs={'exception': Exception('Permission Denied')}),
-        url(r'^404/$', default_views.page_not_found, kwargs={'exception': Exception('Page not Found')}),
-        url(r'^500/$', default_views.server_error),
+        url(r'^404/$', default_views.page_not_found, kwargs={
+            'exception': Exception('Page not Found'), 'template_name': '404.html'
+        }),
+        url(r'^500/$', default_views.server_error, kwargs={'template_name': '500.html'}),
     ]
+
+handler404 = 'web.system.views.page_404_handler'
