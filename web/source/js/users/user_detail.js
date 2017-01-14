@@ -7,6 +7,7 @@ W.users.DetailPage = Class.extend({
     timezone: null,
 
     ui: {
+        $userId: $('input[name="uid"]'),
         $messagesRegion: $('.messages')
     },
 
@@ -22,13 +23,14 @@ W.users.DetailPage = Class.extend({
 
         this.clickUpdateUserInfo();
         this.clickChangePassword();
+        this.changeImage();
     },
 
     preFillUserAddress: function () {
         var that = this;
         $.ajax({
             method: 'GET',
-            url: '/api/v1/users/{0}/geo_locations'.format($('input[name="uid"]').val()),
+            url: '/api/v1/users/{0}/geo_locations'.format(that.ui.$userId.val()),
             success: function (data) {
                 if (data && data.location) {
                     var l = data.location;
@@ -99,7 +101,7 @@ W.users.DetailPage = Class.extend({
             if (isValid(data)) {
                 $.ajax({
                     method: 'PUT',
-                    url: '/api/v1/users/' + $('input[name="uid"]').val() + '/',
+                    url: '/api/v1/users/{0}/'.format(that.ui.$userId.val()),
                     dataType: 'json',
                     data: JSON.stringify(data),
                     success: function () {
@@ -167,7 +169,7 @@ W.users.DetailPage = Class.extend({
 
             $.ajax({
                 method: 'POST',
-                url: '/api/v1/users/' + $('input[name="uid"]').val() + '/change-pwd',
+                url: '/api/v1/users/{0}/change-pwd'.format(that.ui.$userId.val()),
                 dataType: 'json',
                 data: JSON.stringify(data),
                 success: function () {
@@ -206,5 +208,39 @@ W.users.DetailPage = Class.extend({
         $messagesRegion.text(message);
         $messagesRegion.removeClass('success-message');
         $messagesRegion.addClass('error-message');
+    },
+
+    changeImage: function changeImage() {
+        var that = this;
+
+        $('.upload-image').on('change', function (e) {
+            e.preventDefault();
+            var $el = $(this),
+                preview = $('.image'),
+                file = $el[0].files[0],
+                reader = new FileReader(),
+                formData;
+
+            reader.addEventListener('load', function () {
+                preview[0].src = reader.result;
+            }, false);
+
+            if (file) {
+                reader.readAsDataURL(file);
+
+                formData = new FormData();
+                formData.append('file', file);
+                formData.append('name', file.name);
+
+                $.ajax({
+                    type: 'POST',
+                    url: '/api/v1/users/{0}/image'.format(that.ui.$userId.val()),
+                    enctype: 'multipart/form-data',
+                    data: formData,
+                    processData: false,
+                    contentType: false
+                });
+            }
+        });
     }
 });

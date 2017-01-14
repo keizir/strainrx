@@ -2,6 +2,12 @@
 
 <script type="x/srx-template" id="dispensary_header_template">
     <div class="location-header">
+        <% if (from_search) { %>
+        <div class="back-to-search-wrapper">
+            <a href="{% url 'search:strain_results' %}" class="search-link">
+                <i class="fa fa-arrow-left" aria-hidden="true"></i>back to search results</a>
+        </div>
+        <% } %>
         <div class="image-wrapper">
             <% if (l.image) { %>
             <img class="location-logo" src="${ l.image }">

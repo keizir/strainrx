@@ -17,13 +17,19 @@
                 <div class="info-wrapper">
                     <div class="user-image-wrapper">
                         <div class="user-image">
-                            <a class="edit-photo">
-                                {% if request.user.user_image_path %}
-                                    <img src="{{ request.user.user_image_path }}" alt="User Image"/>
-                                {% else %}
-                                    <img src="{% static 'images/default-profile-image.png' %}" alt="User Image"/>
-                                {% endif %}
-                            </a>
+                            <input type="file" id="file" class="upload-image"/>
+                            {% if request.user.image and request.user.image.url %}
+                                <label for="file" class="uploaded-image-label">
+                                    <img src="{{ request.user.image.url }}"
+                                         class="image uploaded-image" alt="User Image"/>
+                                </label>
+                            {% else %}
+                                <label for="file">
+                                    <img src="{% static 'images/default-profile-image.png' %}"
+                                         class="image" alt="User Image"/>
+                                </label>
+                            {% endif %}
+                            <label class="btn btn-primary" for="file">Edit Image</label>
                         </div>
                     </div>
                     <div class="user-info">

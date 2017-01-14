@@ -12,7 +12,7 @@
 .user-account-header-background {
     display: block;
     position: relative;
-    height: 16em;
+    height: 18em;
     width: 100%;
     left: 0;
     background-color: $grey-blue;
@@ -46,22 +46,68 @@
                 .user-image {
                     width: 8em;
                     height: 8em;
-                    margin: 2em auto 0;
-                    background-color: $white;
 
-                    a {
-                        display: block;
-                        width: 8em;
-                        height: 8em;
-                    }
-
-                    img {
+                    .image {
                         width: 6em;
                         height: 6em;
                         margin: 1em;
                         border: 1px solid $grey-light;
                         border-radius: 4em;
                         padding: 0.5em;
+                    }
+
+                    .uploaded-image-label {
+                        background: none !important;
+                    }
+
+                    .uploaded-image {
+                        max-width: 8em;
+                        width: auto;
+                        height: auto;
+                        margin: 0;
+                        border: none;
+                        border-radius: 0;
+                        padding: 0;
+                        position: absolute;
+                        left: 0;
+                    }
+
+                    .upload-image {
+                        width: 0.1px;
+                        height: 0.1px;
+                        opacity: 0;
+                        overflow: hidden;
+                        position: absolute;
+                        z-index: -1;
+                    }
+
+                    label {
+                        cursor: pointer;
+                    }
+
+                    .upload-image + label {
+                        display: block;
+                        position: relative;
+                        cursor: pointer;
+                        color: $grey-normal;
+                        height: 8em;
+                        width: 8em;
+                        overflow: hidden;
+                        background: $white no-repeat center center;
+                    }
+
+                    .upload-image:focus + label {
+                        outline: 1px solid $iris-blue;
+                    }
+
+                    .btn-primary {
+                        width: 100%;
+                        padding: 0.5em 1em;
+                        cursor: pointer;
+                        margin: 0;
+                        position: relative;
+                        top: 1em;
+                        border-radius: 0.2em;
                     }
                 }
             }
@@ -78,7 +124,6 @@
 
                 .user-name {
                     display: block;
-                    margin-top: 1.5em;
                     font-size: 2em;
                 }
 

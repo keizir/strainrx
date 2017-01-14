@@ -19,6 +19,14 @@
         width: 90%;
         margin: 0 auto 3em;
 
+        .back-to-search-wrapper {
+            margin-bottom: 1em;
+
+            i {
+                margin-right: 0.5em;
+            }
+        }
+
         .second-row {
             margin-top: 2em;
         }
@@ -277,6 +285,7 @@
 
             .rating-row {
                 display: block;
+                margin-top: 0.5em;
             }
 
             .rating-row span {

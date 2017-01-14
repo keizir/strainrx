@@ -23,9 +23,4 @@ class StrainDetailView(LoginRequiredMixin, TemplateView):
         strain = Strain.objects.get(strain_slug=slug_name)
         context = super(StrainDetailView, self).get_context_data(**kwargs)
         context['strain_id'] = strain.id
-        docref = self.request.META.get('HTTP_REFERER')
-        if docref is None:
-            context['backtosearch'] = None
-        elif "/search" in docref:
-            context['backtosearch'] = docref
         return context

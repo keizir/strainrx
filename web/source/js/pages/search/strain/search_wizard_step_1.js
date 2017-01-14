@@ -50,14 +50,18 @@ W.pages.search.strain.SearchWizardStep1 = W.pages.search.strain.SearchWizardStep
     },
 
     clickResetSearch: function clickResetSearch() {
-        var that = this;
+        var that = this,
+            userId = $('.current-user-id').val();
+
         $('.btn-reset-search').on('click', function () {
             that.model.setData({});
             that.checkedTypes.length = 0;
-            $('input[type="checkbox"]').prop('checked', false);
-            $.publish('update_step_data', {step: that.step, data: {}});
             that.toggleButtonsState();
+            $('input[type="checkbox"]').prop('checked', false);
             $(this).attr('disabled', 'disabled');
+
+            W.users.UserSettings.update(userId, W.users.UserSettings.settingName_WizardSearch, that.model.getData());
+            $.ajax({method: 'DELETE', url: '/api/v1/users/{0}/searches'.format(userId)});
         });
     },
 

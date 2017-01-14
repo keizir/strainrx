@@ -29,7 +29,11 @@ W.pages.strain.StrainDetailPage = Class.extend({
 
         this.retrieveStrain(function (strain_data) {
             if (strain_data) {
+                var qs = W.qs(),
+                    search = qs['search'];
+
                 that.model = new W.common.Model(strain_data);
+                that.model.set('from_search', search);
                 that.preformatModel();
                 that.renderStrainDetails();
             }
@@ -580,7 +584,8 @@ W.pages.strain.StrainDetailPage = Class.extend({
             $menuLocations = $('.locations'),
             $menuFilter = $('.filter-menu'),
             menuTemplate = _.template($('#strain_detail_available_locations').html()),
-            strainId = that.ui.$strainId.val();
+            strainId = that.ui.$strainId.val(),
+            fromSearch = !!that.model.get('from_search');
 
         $menuExpander.on('click', function () {
             $menuLocations.toggleClass('hidden');
@@ -592,7 +597,8 @@ W.pages.strain.StrainDetailPage = Class.extend({
                     renderLocation: that.templates.expandedLocation,
                     formatDistance: that.formatDistance,
                     formatPrice: that.formatPrice,
-                    strain_id: strainId
+                    strain_id: strainId,
+                    from_search: fromSearch
                 }));
 
                 $('.price-sort').on('click', function () {
@@ -622,12 +628,14 @@ W.pages.strain.StrainDetailPage = Class.extend({
     },
 
     renderLocation: function renderLocation(location) {
-        var that = this;
+        var that = this,
+            fromSearch = !!that.model.get('from_search');
         return this.templates.expandedLocation({
             d: location,
             formatDistance: this.formatDistance,
             formatPrice: this.formatPrice,
-            strain_id: that.ui.$strainId.val()
+            strain_id: that.ui.$strainId.val(),
+            from_search: fromSearch
         });
     },
 

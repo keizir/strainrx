@@ -166,6 +166,10 @@
     .nav-menu-btn-wrapper .nav-menu-btn a,
     .nav-menu-btn-wrapper .nav-menu-btn {
         color: $black;
+
+        i {
+            margin-right: 0.5em;
+        }
     }
 
     .pointer {

@@ -6,8 +6,6 @@ W.pages.search.strain.SearchWizard = W.common.Wizard.extend({
 
     steps: {},
 
-    settingName_Search: 'search_strain_wizard',
-
     ui: {
         $currentUserId: $('.current-user-id')
     },
@@ -43,7 +41,7 @@ W.pages.search.strain.SearchWizard = W.common.Wizard.extend({
 
         $.ajax({
             method: 'POST',
-            url: '/api/v1/users/{0}/searches'.format(that.ui.$currentUserId.val()),
+            url: '/api/v1/users/{0}/searches'.format(that.getCurrentUserId()),
             dataType: 'json',
             data: search_criteria
         });
@@ -63,13 +61,16 @@ W.pages.search.strain.SearchWizard = W.common.Wizard.extend({
             }
         });
 
-        W.users.UserSettings.update(that.ui.$currentUserId.val(), W.users.UserSettings.settingName_SearchFilter, {'searchFilter': 'all'});
+        W.users.UserSettings.update(that.getCurrentUserId(), W.users.UserSettings.settingName_SearchFilter, {'searchFilter': 'all'});
+    },
+
+    getCurrentUserId: function getCurrentUserId() {
+        return this.ui.$currentUserId.val();
     },
 
     initSteps: function initSteps() {
         var that = this,
-            currentUserId = this.ui.$currentUserId.val(),
-            stepData = {model: this.model, currentUserId: currentUserId};
+            stepData = {model: this.model, currentUserId: this.getCurrentUserId()};
 
         this.steps[1] = new W.pages.search.strain.SearchWizardStep1(stepData);
         this.steps[2] = new W.pages.search.strain.SearchWizardStep2(stepData);
@@ -109,7 +110,7 @@ W.pages.search.strain.SearchWizard = W.common.Wizard.extend({
 
     refreshSearchSettingAndRenderStep: function refreshSearchSettingAndRenderStep(data) {
         var that = this;
-        W.users.UserSettings.get(this.ui.$currentUserId.val(), this.settingName_Search, function (setting) {
+        W.users.UserSettings.get(this.getCurrentUserId(), W.users.UserSettings.settingName_WizardSearch, function (setting) {
             that.model.setData(setting);
             that.renderStepContent(data.step);
         });
@@ -174,7 +175,7 @@ W.pages.search.strain.SearchWizard = W.common.Wizard.extend({
 
     updateData: function updateData(data) {
         this.model.set(data.step, data.data);
-        W.users.UserSettings.update(this.ui.$currentUserId.val(), this.settingName_Search, this.model.getData());
+        W.users.UserSettings.update(this.getCurrentUserId(), W.users.UserSettings.settingName_WizardSearch, this.model.getData());
     }
 
 });

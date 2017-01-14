@@ -117,9 +117,10 @@ class BusinessLocationReviewView(LoginRequiredMixin, APIView):
 
     @staticmethod
     def build_review(review):
-        display_user_name = '{0} {1}'.format(review.created_by.first_name, review.created_by.last_name) \
-            if review.created_by.first_name and review.created_by.last_name \
-            else review.created_by.email.split('@')[0]
+        created_by = review.created_by
+        display_user_name = '{0} {1}'.format(created_by.first_name, created_by.last_name) \
+            if created_by.first_name and created_by.last_name \
+            else created_by.email.split('@')[0]
 
         return {
             'id': review.id,
@@ -127,7 +128,7 @@ class BusinessLocationReviewView(LoginRequiredMixin, APIView):
             'review': review.review,
             'created_date': review.created_date,
             'created_by_name': display_user_name,
-            'created_by_image': None  # TODO implement UserImage
+            'created_by_image': created_by.image.url if created_by.image and created_by.image.url else None
         }
 
     def post(self, request, business_id, business_location_id):

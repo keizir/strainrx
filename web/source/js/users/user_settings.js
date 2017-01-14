@@ -7,6 +7,7 @@ W.users.UserSettings = function () {
     return {
 
         settingName_SearchFilter: 'search_results_filter',
+        settingName_WizardSearch: 'search_strain_wizard',
 
         get: function get(userId, settingName, successCallback, errorCallback) {
             $.ajax({

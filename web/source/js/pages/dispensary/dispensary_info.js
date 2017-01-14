@@ -56,14 +56,18 @@ W.pages.dispensary.DispensaryInfo = Class.extend({
     },
 
     showHeader: function showHeader() {
+        var qs = W.qs(),
+            search = qs['search'],
+            $rawRating;
+
         this.regions.$headerRegion.append(this.templates.$header({
+            from_search: search,
             l: this.location,
             formatAddressLine: this.formatAddressLine,
             getOpenDays: this.getOpenDays
         }));
 
-        var $rawRating = $('.rating-raw');
-
+        $rawRating = $('.rating-raw');
         if ($rawRating && $rawRating.text() === 'Not Rated') {
             $rawRating.addClass('hidden');
         } else {

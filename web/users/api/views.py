@@ -2,6 +2,10 @@ import datetime
 import logging
 import uuid
 
+from boto.s3.bucket import Bucket
+from boto.s3.connection import S3Connection
+from boto.s3.key import Key
+from django.conf import settings
 from django.contrib.auth import authenticate, login
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.core.exceptions import ValidationError
@@ -120,6 +124,25 @@ class UserChangePwdView(LoginRequiredMixin, APIView):
                 user.save()
             except ValidationError as e:
                 return bad_request(e.message)
+
+        return Response({}, status=status.HTTP_200_OK)
+
+
+class UserImageView(LoginRequiredMixin, APIView):
+    permission_classes = (UserAccountOwner,)
+
+    def post(self, request, user_id):
+        user = User.objects.get(pk=user_id)
+
+        if user.image and user.image.url:
+            conn = S3Connection(settings.AWS_ACCESS_KEY_ID, settings.AWS_SECRET_ACCESS_KEY)
+            bucket = Bucket(conn, settings.AWS_STORAGE_BUCKET_NAME)
+            k = Key(bucket=bucket, name=user.image.url.split(bucket.name)[1])
+            k.delete()
+
+        file = request.FILES.get('file')
+        user.image = file
+        user.save()
 
         return Response({}, status=status.HTTP_200_OK)
 
@@ -413,6 +436,14 @@ class UserStrainSearchesView(LoginRequiredMixin, APIView):
         user_search.benefits = benefits
         user_search.side_effects = side_effects
         user_search.save()
+
+        return Response({}, status=status.HTTP_200_OK)
+
+    def delete(self, request, user_id):
+        if UserSearch.objects.filter(user=request.user).exists():
+            search = UserSearch.objects.get(user=request.user)
+            search.delete()
+            print('------ deleted')
 
         return Response({}, status=status.HTTP_200_OK)
 

@@ -78,7 +78,7 @@
                     </div>
                     <div class="item-info inline-block">
                         <span class="strain-name">
-                            <a href="/${ strain.variety }/${ strain.strain_slug }">${ strain.name }</a>
+                            <a href="/${ strain.variety }/${ strain.strain_slug }/?search=true">${ strain.name }</a>
                         </span>
                         <span class="strain-type">${ strain.variety }</span>
                         <span class="strain-rating loaded-rating-<%= position %>">${ strain.rating }</span>
@@ -114,7 +114,7 @@
                 <div class="locations-expanded deliveries-expanded-<%= position %> hidden popup-container"></div>
                 <div class="separator inline-block"></div>
                 <div class="item-percentage-match inline-block">
-                    <a href="/${ strain.variety }/${ strain.strain_slug }">
+                    <a href="/${ strain.variety }/${ strain.strain_slug }/?search=true">
                         <span class="percentage">${ strain.match_percentage }%</span>
                         <span class="match">match</span>
                     </a>

@@ -14,6 +14,11 @@ urlpatterns = [
         name='user-detail'
     ),
     url(
+        regex=r'^(?P<user_id>\d+)/image$',
+        view=UserImageView.as_view(),
+        name='user_image'
+    ),
+    url(
         regex=r'^(?P<user_id>\d+)/change-pwd$',
         view=UserChangePwdView.as_view(),
         name='user_change_pwd'

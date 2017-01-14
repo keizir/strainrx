@@ -1,7 +1,10 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals, absolute_import
 
+from uuid import uuid4
+
 import pytz
+from django.conf import settings
 from django.contrib.auth.models import AbstractUser
 from django.contrib.postgres.fields import JSONField
 from django.core.exceptions import ValidationError
@@ -24,6 +27,17 @@ GENDER = [
 ]
 
 
+def upload_image_to(instance, filename):
+    return 'users/{0}/images/{1}___{2}'.format(instance.pk, uuid4(), filename)
+
+
+def validate_image(field_file_obj):
+    file_size = field_file_obj.file.size
+    megabyte_limit = settings.MAX_BUSINESS_IMAGE_SIZE
+    if file_size > megabyte_limit:
+        raise ValidationError("Max file size is %sMB" % str(megabyte_limit))
+
+
 @python_2_unicode_compatible
 class User(AbstractUser):
     # First Name and Last Name do not cover name patterns
@@ -43,6 +57,9 @@ class User(AbstractUser):
     timezone = models.CharField(_('Timezone'), null=True, max_length=100,
                                 choices=zip(pytz.common_timezones, pytz.common_timezones))
 
+    image = models.ImageField(max_length=255, upload_to=upload_image_to, blank=True,
+                              help_text='Maximum file size allowed is 5Mb', validators=[validate_image])
+
     def clean(self):
         validators.validate_email(self.email)
 
@@ -51,7 +68,7 @@ class User(AbstractUser):
 
     def save(self, *args, **kwargs):
         self.clean()
-        super().save(*args, **kwargs)
+        super(User, self).save(*args, **kwargs)
 
     def __str__(self):
         return self.email
