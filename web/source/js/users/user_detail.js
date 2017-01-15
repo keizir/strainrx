@@ -223,6 +223,8 @@ W.users.DetailPage = Class.extend({
 
             reader.addEventListener('load', function () {
                 preview[0].src = reader.result;
+                $('.default-image-label').removeClass('.default-image-label').addClass('.uploaded-image-label');
+                $('.image').addClass('uploaded-image');
             }, false);
 
             if (file) {
