@@ -4,6 +4,8 @@ W.ns('W.pages.search.strain');
 
 W.pages.search.strain.SearchWizard = W.common.Wizard.extend({
 
+    mixpanelEventName: 'Strain Search Wizard',
+
     steps: {},
 
     ui: {
@@ -62,6 +64,7 @@ W.pages.search.strain.SearchWizard = W.common.Wizard.extend({
         });
 
         W.users.UserSettings.update(that.getCurrentUserId(), W.users.UserSettings.settingName_SearchFilter, {'searchFilter': 'all'});
+        W.common.Mixpanel.track(this.mixpanelEventName, search_criteria);
     },
 
     getCurrentUserId: function getCurrentUserId() {

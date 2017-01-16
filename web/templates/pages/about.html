@@ -14,13 +14,19 @@
             <h1>About StrainRx</h1>
             <div class="social-icons">
                 <span class="social-fb">
-                    <a href="#"><i class="fa fa-facebook-square" aria-hidden="true"></i></a>
+                    <a href="#" class="facebook-share-link" target="_blank">
+                        <i class="fa fa-facebook-square" aria-hidden="true"></i>
+                    </a>
                 </span>
                 <span class="social-google">
-                    <a href="#"><i class="fa fa-google-plus-square" aria-hidden="true"></i></a>
+                    <a href="#" class="google-share-link" target="_blank">
+                        <i class="fa fa-google-plus-square" aria-hidden="true"></i>
+                    </a>
                 </span>
                 <span class="social-twitter">
-                    <a href="#"><i class="fa fa-twitter-square" aria-hidden="true"></i></a>
+                    <a href="#" class="twitter-share-link" target="_blank">
+                        <i class="fa fa-twitter-square" aria-hidden="true"></i>
+                    </a>
                 </span>
             </div>
         </div>
@@ -68,4 +74,17 @@
             <p>So what are you waiting for? <a href="">Sign up</a> your business today and get a 60 day free trial!</p>
         </div>
     </div>
+{% endblock %}
+
+{% block javascript %}
+    {{ block.super }}
+    <script>
+        $(document).ready(function () {
+            var urls = W.common.Sharer.getSharerUrls(encodeURIComponent(window.location.href));
+
+            $('.facebook-share-link').attr('href', urls.facebook);
+            $('.google-share-link').attr('href', urls.google);
+            $('.twitter-share-link').attr('href', urls.twitter);
+        });
+    </script>
 {% endblock %}

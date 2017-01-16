@@ -37,6 +37,12 @@ W.common.Constants = {
         {name: 'Sunday', value: 'sun'}
     ],
 
+    sharerUrls: {
+        facebook: 'https://www.facebook.com/sharer/sharer.php?u={0}',
+        google: 'https://plus.google.com/share?url={0}',
+        twitter: 'https://twitter.com/home?status={0}'
+    },
+
     effectNames: {
         'happy': 'Happy',
         'uplifted': 'Uplifted',

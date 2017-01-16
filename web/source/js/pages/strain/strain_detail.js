@@ -34,6 +34,8 @@ W.pages.strain.StrainDetailPage = Class.extend({
 
                 that.model = new W.common.Model(strain_data);
                 that.model.set('from_search', search);
+                that.model.set('share_urls', W.common.Sharer.getSharerUrls(encodeURIComponent(window.location.href)));
+
                 that.preformatModel();
                 that.renderStrainDetails();
             }

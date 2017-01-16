@@ -62,6 +62,7 @@ W.pages.dispensary.DispensaryInfo = Class.extend({
 
         this.regions.$headerRegion.append(this.templates.$header({
             from_search: search,
+            share_urls: W.common.Sharer.getSharerUrls(encodeURIComponent(window.location.href)),
             l: this.location,
             formatAddressLine: this.formatAddressLine,
             getOpenDays: this.getOpenDays
