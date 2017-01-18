@@ -50,7 +50,8 @@ W.pages.b2c.SignUpWizard = W.common.Wizard.extend({
                     location_raw: {}
                 }
             }),
-            success: function () {
+            success: function (data) {
+                W.common.Mixpanel.alias(data.user.id);
                 window.location.href = '/users/signup/done';
             },
             error: function (error) {

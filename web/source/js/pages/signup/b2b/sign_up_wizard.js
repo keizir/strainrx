@@ -33,6 +33,7 @@ W.pages.b2b.SignUpWizard = W.common.Wizard.extend({
             dataType: 'json',
             data: that.prepareSubmitFormData(data),
             success: function (successData) {
+                W.common.Mixpanel.alias(successData.user.id);
                 that.uploadImage(data, successData);
             },
             error: function (error) {

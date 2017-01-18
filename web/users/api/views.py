@@ -22,7 +22,8 @@ from web.search.models import UserSearch, StrainReview, StrainImage, UserFavorit
 from web.search.services import build_strain_rating
 from web.users import validators
 from web.users.api.permissions import UserAccountOwner
-from web.users.api.serializers import (UserDetailSerializer, UserSignUpSerializer, UserLocationSerializer)
+from web.users.api.serializers import (UserDetailSerializer, UserSignUpSerializer, UserLocationSerializer,
+                                       UserSerializer)
 from web.users.emails import EmailService
 from web.users.models import User, PwResetLink, UserSetting, UserLocation
 
@@ -212,7 +213,7 @@ class UserLoginView(APIView):
                 request.session['business_image'] = business_image
 
         login(request, authenticated)
-        return Response({}, status=status.HTTP_200_OK)
+        return Response({'user': UserSerializer(user).data}, status=status.HTTP_200_OK)
 
 
 class UserSignUpWizardView(APIView):
@@ -277,7 +278,7 @@ class UserSignUpWizardView(APIView):
         except Exception:
             logger.exception('Cannot send an email to {0}'.format(user.email))
 
-        return Response({}, status=status.HTTP_200_OK)
+        return Response({'user': UserSerializer(user).data}, status=status.HTTP_200_OK)
 
 
 class ResendConfirmationEmailView(LoginRequiredMixin, APIView):

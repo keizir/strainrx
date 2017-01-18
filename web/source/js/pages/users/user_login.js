@@ -56,7 +56,8 @@ W.pages.UserLogin = W.views.BaseView.extend({
                 url: '/api/v1/users/login',
                 dataType: 'json',
                 data: JSON.stringify({email: $('#login').val(), password: $('#password').val()}),
-                success: function () {
+                success: function (data) {
+                    W.common.Mixpanel.identify(data.user.id);
                     window.location.href = '/';
                 },
                 error: function (error) {

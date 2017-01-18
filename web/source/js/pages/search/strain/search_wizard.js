@@ -4,7 +4,7 @@ W.ns('W.pages.search.strain');
 
 W.pages.search.strain.SearchWizard = W.common.Wizard.extend({
 
-    mixpanelEventName: 'Strain Search Wizard',
+    mixpanelEventName: 'strain_search',
 
     steps: {},
 
@@ -63,11 +63,37 @@ W.pages.search.strain.SearchWizard = W.common.Wizard.extend({
         });
 
         W.users.UserSettings.update(that.getCurrentUserId(), W.users.UserSettings.settingName_SearchFilter, {'searchFilter': 'all'});
+        W.common.Mixpanel.track(this.mixpanelEventName, that.getMixpanelData(data));
+    },
 
-        W.common.Mixpanel.track(this.mixpanelEventName, {
-            data: search_criteria_json,
-            user_id: that.ui.$currentUserId.val()
-        });
+    getMixpanelData: function getMixpanelData(data) {
+        var result = {};
+
+        if (data[1] && !data[1].skipped) {
+            $.each(data[1], function (key, value) {
+                result[key] = value;
+            })
+        }
+
+        if (data[2] && !data[2].skipped) {
+            $.each(data[2].effects, function (i, effect) {
+                result[effect.name] = effect.value;
+            })
+        }
+
+        if (data[3] && !data[3].skipped) {
+            $.each(data[3].effects, function (i, effect) {
+                result[effect.name] = effect.value;
+            });
+        }
+
+        if (data[4] && !data[4].skipped) {
+            $.each(data[4].effects, function (i, effect) {
+                result[effect.name] = effect.value;
+            });
+        }
+
+        return result;
     },
 
     getCurrentUserId: function getCurrentUserId() {

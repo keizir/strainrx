@@ -22,6 +22,7 @@ from web.businesses.models import Business, BusinessLocation, BusinessLocationMe
 from web.businesses.serializers import BusinessSerializer, BusinessLocationSerializer
 from web.search.api.services import StrainDetailsService
 from web.search.models import Strain
+from web.users.api.serializers import UserSerializer
 
 logger = logging.getLogger(__name__)
 
@@ -59,7 +60,8 @@ class BusinessSignUpWizardView(APIView):
         request.session['business'] = serializer.data
 
         return Response({
-            'business_id': business.pk
+            'business_id': business.pk,
+            'user': UserSerializer(business.created_by).data
         }, status=status.HTTP_200_OK)
 
 
