@@ -49,6 +49,8 @@
                                 <div class="business-image">
                                     {% if request.session.business_image %}
                                         <img src="{{ request.session.business_image }}">
+                                    {% else %}
+                                        <img src="{% static 'images/default-location-image.jpeg' %}">
                                     {% endif %}
                                 </div>
                                 <div class="business-nav-menu-btn">

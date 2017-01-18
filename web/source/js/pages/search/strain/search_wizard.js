@@ -37,9 +37,8 @@ W.pages.search.strain.SearchWizard = W.common.Wizard.extend({
 
     _on_submit_form: function _on_submit_form(ev, data) {
         var that = this,
-            search_criteria = JSON.stringify({
-                search_criteria: {step1: data[1], step2: data[2], step3: data[3], step4: data[4]}
-            });
+            search_criteria_json = {search_criteria: {step1: data[1], step2: data[2], step3: data[3], step4: data[4]}},
+            search_criteria = JSON.stringify(search_criteria_json);
 
         $.ajax({
             method: 'POST',
@@ -64,7 +63,11 @@ W.pages.search.strain.SearchWizard = W.common.Wizard.extend({
         });
 
         W.users.UserSettings.update(that.getCurrentUserId(), W.users.UserSettings.settingName_SearchFilter, {'searchFilter': 'all'});
-        W.common.Mixpanel.track(this.mixpanelEventName, search_criteria);
+
+        W.common.Mixpanel.track(this.mixpanelEventName, {
+            data: search_criteria_json,
+            user_id: that.ui.$currentUserId.val()
+        });
     },
 
     getCurrentUserId: function getCurrentUserId() {

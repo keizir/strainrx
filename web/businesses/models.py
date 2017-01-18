@@ -97,7 +97,7 @@ class BusinessLocation(models.Model):
     zip_code = models.CharField(max_length=10)
     timezone = models.CharField(max_length=100, null=True, choices=zip(pytz.common_timezones, pytz.common_timezones))
 
-    about = models.CharField(max_length=1000, blank=True, default='')
+    about = models.CharField(max_length=1000, blank=True, null=True, default='')
 
     lat = models.FloatField(_('Latitude'), blank=True, null=True, max_length=50)
     lng = models.FloatField(_('Longitude'), blank=True, null=True, max_length=50)

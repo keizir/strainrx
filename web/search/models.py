@@ -12,6 +12,7 @@ from django.db.models.signals import post_save
 from django.dispatch import receiver
 from django.template.defaultfilters import slugify
 from django.utils.encoding import python_2_unicode_compatible
+from django.utils.translation import ugettext_lazy as _
 
 from web.search.serializers import StrainReviewESSerializer
 from web.search.strain_es_service import StrainESService
@@ -68,7 +69,7 @@ class Strain(models.Model):
                                 "tar": 0, "tea": 0, "tobacco": 0, "tree_fruit": 0, "tropical": 0,
                                 "vanilla": 0, "violet": 0, "woody": 0})
 
-    about = models.CharField(max_length=1500, null=True, blank=True)
+    about = models.TextField(_('Description'), max_length=1500, null=True, blank=True)
     origins = models.ManyToManyField('self', symmetrical=False, blank=True)
 
     def save(self, *args, **kwargs):

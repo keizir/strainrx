@@ -1,0 +1,21 @@
+.legal-wrapper {
+    margin-bottom: 4em;
+
+    .paragraph {
+        display: block;
+        width: 100%;
+        line-height: 1.2em;
+        margin-bottom: 1em;
+        text-align: justify;
+
+        .header {
+            font-weight: bold;
+        }
+
+        .sub-paragraph {
+            span {
+                display: block;
+            }
+        }
+    }
+}
