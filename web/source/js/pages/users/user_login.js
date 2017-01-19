@@ -57,7 +57,17 @@ W.pages.UserLogin = W.views.BaseView.extend({
                 dataType: 'json',
                 data: JSON.stringify({email: $('#login').val(), password: $('#password').val()}),
                 success: function (data) {
-                    W.common.Mixpanel.identify(data.user.id);
+                    var user = data.user;
+                    if (user) {
+                        W.common.Mixpanel.identify(user.id);
+                        W.common.Mixpanel.peopleSet({
+                            '$first_name': user.first_name,
+                            '$last_name': user.last_name,
+                            '$last_login': new Date(),
+                            '$email': user.email,
+                            'account_type': user.type
+                        });
+                    }
                     window.location.href = '/';
                 },
                 error: function (error) {
