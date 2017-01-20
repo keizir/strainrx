@@ -56,6 +56,22 @@
                         padding: 0.5em;
                     }
 
+                    .default-image {
+                        display: block;
+                        height: 1.5em;
+                        width: 1.5em;
+                        border: 1px solid $grey;
+                        background-color: $grey;
+                        color: $grey-lighter;
+                        border-radius: 10em;
+                        margin: 0.25em;
+                        font-size: 4em;
+
+                        span {
+                            line-height: 1.5em;
+                        }
+                    }
+
                     .uploaded-image-label {
                         background: none !important;
                     }

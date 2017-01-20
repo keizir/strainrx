@@ -15,7 +15,6 @@ W.users.ProximityPage = Class.extend({
         this.proximity = options && options.proximity;
 
         this.initSlider();
-        this.initProximityInput();
         this.updateProximity();
     },
 
@@ -33,20 +32,18 @@ W.users.ProximityPage = Class.extend({
         });
 
         this.setSliderHandleValue(this.proximity || this.defaultProximityValue);
+        this.initProximityInput();
     },
 
     initProximityInput: function initProximityInput() {
         var that = this;
-
-        this.ui.$proximityInput.val(this.proximity);
-        this.ui.$proximityInput.on('keyup', function () {
+        $('.proximity-value').on('focusout', function () {
             var $input = $(this),
                 $inputVal = $input.val();
 
             if ($inputVal) {
                 $inputVal = parseFloat($inputVal).toFixed(1);
                 $('.slider').slider('value', $inputVal);
-                that.setSliderHandleValue($inputVal);
                 that.proximity = $inputVal;
             } else {
                 that.setProximityValue(0);
@@ -66,12 +63,14 @@ W.users.ProximityPage = Class.extend({
     setProximityValue: function setProximityValue(value) {
         $('.slider').slider('value', value);
         this.setSliderHandleValue(value);
-        this.ui.$proximityInput.val(value);
+        $('.proximity-value').val(value);
         this.proximity = value;
     },
 
     setSliderHandleValue: function setSliderHandleValue(value) {
-        $('.ui-slider-handle').text('{0} MI'.format(value));
+        $('.proximity-value').off('focusout');
+        $('.ui-slider-handle').html('<input type="number" class="proximity-value" value="{0}">'.format(value));
+        this.initProximityInput();
     },
 
     updateProximity: function updateProximity() {

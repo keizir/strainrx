@@ -223,8 +223,9 @@ W.users.DetailPage = Class.extend({
 
             reader.addEventListener('load', function () {
                 preview[0].src = reader.result;
+                preview.addClass('uploaded-image').removeClass('hidden');
                 $('.default-image-label').removeClass('default-image-label').addClass('uploaded-image-label');
-                $('.image').addClass('uploaded-image');
+                $('.default-image').addClass('hidden');
             }, false);
 
             if (file) {

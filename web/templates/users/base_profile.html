@@ -25,8 +25,14 @@
                                 </label>
                             {% else %}
                                 <label for="file" class="default-image-label">
-                                    <img src="{% static 'images/default-profile-image.png' %}"
-                                         class="image" alt="User Image"/>
+                                    <span class="default-image">
+                                        {% if request.user.first_name %}
+                                            <span>{{ request.user.first_name|slice:"1" }}</span>
+                                        {% else %}
+                                            <span>{{ request.user.email|slice:"1" }}</span>
+                                        {% endif %}
+                                    </span>
+                                    <img src="" class="image hidden" alt="User Image"/>
                                 </label>
                             {% endif %}
                             <label class="btn btn-primary" for="file">Edit Image</label>

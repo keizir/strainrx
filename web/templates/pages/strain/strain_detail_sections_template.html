@@ -186,7 +186,9 @@
                             <% if (review.created_by_image) { %>
                             <img src="<%= review.created_by_image %>" alt="User Image"/>
                             <% } else { %>
-                            <img src="{% static 'images/default-profile-image.png' %}" alt="User Image"/>
+                            <span class="default-image">
+                                <span><%= review.created_by_name.charAt(0) %></span>
+                            </span>
                             <% } %>
                         </div>
                     </div>
