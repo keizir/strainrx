@@ -40,6 +40,11 @@ W.pages.b2b.SignUpWizardStep4 = W.common.WizardStep.extend({
             dispensary: $('input[name="dispensary"]').is(":checked"),
             delivery: $('input[name="delivery"]').is(":checked")
         };
+
+        if (data.delivery) {
+            data['delivery_radius'] = 10;
+        }
+
         $.publish('update_step_data', {step: this.step, data: data});
         $.publish('show_step', {step: 5});
     },

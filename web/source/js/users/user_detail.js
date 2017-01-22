@@ -46,38 +46,43 @@ W.users.DetailPage = Class.extend({
 
     changeAddress: function changeAddress() {
         var that = this,
-            GoogleLocations = new W.Common.GoogleLocations({$input: $('input[name="address"]').get(0)});
+            $googleInput = $('input[name="address"]'),
+            GoogleLocations;
 
-        GoogleLocations.initGoogleAutocomplete(
-            function (autocomplete, $input) {
-                that.location = GoogleLocations.getAddressFromAutocomplete(autocomplete);
+        if ($googleInput && $googleInput.length > 0) {
+            GoogleLocations = new W.Common.GoogleLocations({$input: $googleInput.get(0)})
 
-                var $el = $($input);
-                $el.val(W.common.Format.formatAddress(that.location));
-                $el.blur();
-
-                that.updateTimezone(GoogleLocations);
-            },
-            function (results, status, $input) {
-                if (status === 'OK') {
-                    that.location = GoogleLocations.getAddressFromPlace(results[0]);
+            GoogleLocations.initGoogleAutocomplete(
+                function (autocomplete, $input) {
+                    that.location = GoogleLocations.getAddressFromAutocomplete(autocomplete);
 
                     var $el = $($input);
                     $el.val(W.common.Format.formatAddress(that.location));
                     $el.blur();
 
                     that.updateTimezone(GoogleLocations);
-                }
-            },
-            function ($input) {
-                var $removeBtn = $($input).parent().find('.remove-location');
-                $removeBtn.removeClass('hidden');
-                $removeBtn.on('click', function () {
-                    that.location = {location_raw: {}};
-                    $removeBtn.addClass('hidden');
-                    $($input).val('');
+                },
+                function (results, status, $input) {
+                    if (status === 'OK') {
+                        that.location = GoogleLocations.getAddressFromPlace(results[0]);
+
+                        var $el = $($input);
+                        $el.val(W.common.Format.formatAddress(that.location));
+                        $el.blur();
+
+                        that.updateTimezone(GoogleLocations);
+                    }
+                },
+                function ($input) {
+                    var $removeBtn = $($input).parent().find('.remove-location');
+                    $removeBtn.removeClass('hidden');
+                    $removeBtn.on('click', function () {
+                        that.location = {location_raw: {}};
+                        $removeBtn.addClass('hidden');
+                        $($input).val('');
+                    });
                 });
-            });
+        }
     },
 
     updateTimezone: function updateTimezone(GoogleLocations) {

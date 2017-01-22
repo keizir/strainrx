@@ -45,7 +45,7 @@ W.pages.b2b.SignUpWizard = W.common.Wizard.extend({
     },
 
     prepareSubmitFormData: function prepareSubmitFormData(data) {
-        return JSON.stringify({
+        var d = {
             name: data[1].business_name,
             email: data[2].user_email,
             pwd: data[3].pwd, pwd2: data[3].pwd2,
@@ -62,7 +62,13 @@ W.pages.b2b.SignUpWizard = W.common.Wizard.extend({
             sun_open: data[6].sun.open, sun_close: data[6].sun.close,
             certified_legal_compliance: data[8].certified_legal_compliance,
             is_terms_accepted: data[9].terms
-        })
+        };
+
+        if (d.delivery && data[4].delivery_radius) {
+            d['delivery_radius'] = data[4].delivery_radius;
+        }
+
+        return JSON.stringify(d);
     },
 
     uploadImage: function uploadImage(data, successData) {

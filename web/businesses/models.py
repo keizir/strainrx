@@ -160,6 +160,7 @@ def save_es_business_location(sender, **kwargs):
     data['business_id'] = business_location.business.pk
     data['business_location_id'] = business_location.pk
     data['removed_by_id'] = business_location.removed_by
+    data['slug_name'] = business_location.slug_name
     BusinessLocationESService().save_business_location(data, business_location.pk)
 
 
