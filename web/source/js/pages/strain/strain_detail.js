@@ -77,7 +77,8 @@ W.pages.strain.StrainDetailPage = Class.extend({
         var template = _.template($('#strain_details_page').html());
         $('.strain-detail-wrapper').append(template({
             'model': this.model.getData(),
-            'abbreviateStrainName': abbreviateStrainName
+            'abbreviateStrainName': abbreviateStrainName,
+            'is_authenticated': AUTHENTICATED
         }));
 
         function abbreviateStrainName(strainName) {

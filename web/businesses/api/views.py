@@ -12,7 +12,7 @@ from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
-from web.businesses.api.permissions import BusinessAccountOwner
+from web.businesses.api.permissions import BusinessAccountOwner, AllowAnyGetOperation
 from web.businesses.api.serializers import *
 from web.businesses.api.services import BusinessSignUpService, BusinessLocationService, get_open_closed, \
     get_location_rating
@@ -108,7 +108,9 @@ class BusinessLocationImageView(LoginRequiredMixin, APIView):
         return Response({}, status=status.HTTP_200_OK)
 
 
-class BusinessLocationReviewView(LoginRequiredMixin, APIView):
+class BusinessLocationReviewView(APIView):
+    permission_classes = (AllowAnyGetOperation,)
+
     def get(self, request, business_id, business_location_id):
         reviews_raw = LocationReview.objects.filter(location__id=business_location_id,
                                                     review_approved=True).order_by('-created_date')
@@ -172,7 +174,7 @@ class ResendConfirmationEmailView(LoginRequiredMixin, APIView):
         return Response({}, status=status.HTTP_200_OK)
 
 
-class BusinessLocationView(LoginRequiredMixin, APIView):
+class BusinessLocationView(APIView):
     permission_classes = (BusinessAccountOwner,)
 
     def get(self, request, business_id, business_location_id):
@@ -192,10 +194,13 @@ class BusinessLocationView(LoginRequiredMixin, APIView):
 
         if request.GET.get('ddp'):
             current_user = request.user
+
+            if current_user.is_authenticated():
+                d['location']['is_favorite'] = UserFavoriteLocation.objects.filter(created_by=current_user).exists()
+                d['location']['is_rated'] = LocationReview.objects.filter(location=location,
+                                                                          created_by=current_user).exists()
+
             open_closed = get_open_closed(serializer.data, '%I:%M %p')
-            d['location']['is_favorite'] = UserFavoriteLocation.objects.filter(created_by=current_user).exists()
-            d['location']['is_rated'] = LocationReview.objects.filter(location=location,
-                                                                      created_by=current_user).exists()
             d['location']['rating'] = get_location_rating(business_location_id)
             d['location']['is_open'] = open_closed == 'Opened'
             d['location']['open_closed'] = open_closed
@@ -228,7 +233,7 @@ class BusinessLocationView(LoginRequiredMixin, APIView):
         return Response({}, status=status.HTTP_200_OK)
 
 
-class BusinessLocationMenuView(LoginRequiredMixin, APIView):
+class BusinessLocationMenuView(APIView):
     permission_classes = (BusinessAccountOwner,)
 
     def get(self, request, business_id, business_location_id):
@@ -240,7 +245,7 @@ class BusinessLocationMenuView(LoginRequiredMixin, APIView):
         for mi in menu_items_raw:
             menu_items.append(self.build_menu_item(mi))
 
-        if request.GET.get('ddp'):
+        if request.GET.get('ddp') and request.user.is_authenticated():
             strain_ids = []
             for mi in menu_items:
                 strain_ids.append(mi.get('strain_id'))

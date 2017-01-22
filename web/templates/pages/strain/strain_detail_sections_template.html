@@ -12,17 +12,19 @@
             <div class="row">
                 <div class="strain-data">
                     <span class="strain-name"><%= model.strain.name %></span>
+                    <% if (is_authenticated) { %>
                     <span class="strain-like-wrapper">
-                    <% if (model.favorite) { %>
-                        <i class="strain-like heart-active active fa fa-heart fa-2x" aria-hidden="true"></i>
-                    <% } else { %>
-                        <i class="strain-like fa fa-heart-o fa-2x" aria-hidden="true"></i>
-                    <% } %>
+                        <% if (model.favorite) { %>
+                            <i class="strain-like heart-active active fa fa-heart fa-2x" aria-hidden="true"></i>
+                        <% } else { %>
+                            <i class="strain-like fa fa-heart-o fa-2x" aria-hidden="true"></i>
+                        <% } %>
                     </span>
+                    <% } %>
                     <div class="rating-row">
                         <span class="strain-rating-stars"><%= model.strain_rating %></span>
                         <span class="strain-rating">(<%= model.strain_rating %>)</span>
-                        <% if (!model.is_rated) { %>
+                        <% if (is_authenticated && !model.is_rated) { %>
                         <span class="separator"></span>
                         <span class="rate-link"><a href="#">Rate</a></span>
                         <% } %>
@@ -51,10 +53,12 @@
                     <span class="view-photos">
                         <a href="#">View Photos</a>
                     </span>
+                    <% if (is_authenticated) { %>
                     <span class="separator"></span>
                     <span>
                         <a href="#" class="add-photo-link">+ Add Photo</a>
                     </span>
+                    <% } %>
                 </div>
                 <div class="location-controls">
                     <div class="filter-menu">
@@ -102,6 +106,7 @@
         <div class="strain-effects">
             <span class="section-header">
                 <span class="title">Positive Effects</span>
+                <% if (is_authenticated) { %>
                 <span class="disagree-link">
                     <% if (model.user_strain_review && model.user_strain_review.effects_changed) { %>
                     <span class="undo-disagree-wrapper">
@@ -115,6 +120,7 @@
                     <a href="#" class="disagree" id="positive-effects">Provide Feedback</a>
                     <% } %>
                 </span>
+                <% } %>
             </span>
             <span class="effects-region"></span>
         </div>
@@ -123,6 +129,7 @@
         <div class="strain-benefits">
             <span class="section-header">
                 <span class="title">Medical Benefits</span>
+                <% if (is_authenticated) { %>
                 <span class="disagree-link">
                     <% if (model.user_strain_review && model.user_strain_review.benefits_changed) { %>
                     <span class="undo-disagree-wrapper">
@@ -136,6 +143,7 @@
                     <a href="#" class="disagree" id="medical-benefits">Provide Feedback</a>
                     <% } %>
                 </span>
+                <% } %>
             </span>
             <span class="benefits-region"></span>
         </div>
@@ -144,6 +152,7 @@
         <div class="strain-side-effects">
             <span class="section-header">
                 <span class="title">Negative Effects</span>
+                <% if (is_authenticated) { %>
                 <span class="disagree-link">
                     <% if (model.user_strain_review && model.user_strain_review.side_effects_changed) { %>
                     <span class="undo-disagree-wrapper">
@@ -157,6 +166,7 @@
                     <a href="#" class="disagree" id="negative-effects">Provide Feedback</a>
                     <% } %>
                 </span>
+                <% } %>
             </span>
             <span class="side-effects-region"></span>
         </div>

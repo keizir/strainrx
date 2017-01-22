@@ -65,7 +65,8 @@ W.pages.dispensary.DispensaryInfo = Class.extend({
             share_urls: W.common.Sharer.getSharerUrls(encodeURIComponent(window.location.href)),
             l: this.location,
             formatAddressLine: this.formatAddressLine,
-            getOpenDays: this.getOpenDays
+            getOpenDays: this.getOpenDays,
+            is_authenticated: AUTHENTICATED
         }));
 
         $rawRating = $('.rating-raw');

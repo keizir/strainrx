@@ -166,10 +166,14 @@ class StrainSRXScoreView(LoginRequiredMixin, APIView):
         return Response({'srx_score': score}, status=status.HTTP_200_OK)
 
 
-class StrainAlsoLikeView(LoginRequiredMixin, APIView):
+class StrainAlsoLikeView(APIView):
+    permission_classes = (permissions.AllowAny,)
+
     def get(self, request, strain_id):
         strain = Strain.objects.get(pk=strain_id)
-        also_like_strains = StrainDetailsService().get_also_like_strains(strain, request.user)
+        user = request.user
+        also_like_strains = StrainDetailsService().get_also_like_strains(strain,
+                                                                         user if user.is_authenticated() else None)
         return Response({'also_like_strains': also_like_strains}, status=status.HTTP_200_OK)
 
 
@@ -212,27 +216,27 @@ class StrainRateView(LoginRequiredMixin, APIView):
         return Response({}, status=status.HTTP_200_OK)
 
 
-class StrainDetailsView(LoginRequiredMixin, APIView):
+class StrainDetailsView(APIView):
+    permission_classes = (permissions.AllowAny,)
+
     def get(self, request, strain_id):
-        if request.user.is_authenticated():
-            if not request.user.is_email_verified:
-                return Response({'message': 'User must verify the email'}, status=status.HTTP_400_BAD_REQUEST)
-
-            details = StrainDetailsService().build_strain_details(strain_id, request.user)
-            return Response(details, status=status.HTTP_200_OK)
-        else:
-            return Response({'message': 'User must be authenticated'}, status=status.HTTP_403_FORBIDDEN)
+        user = request.user
+        details = StrainDetailsService().build_strain_details(strain_id, user if user.is_authenticated() else None)
+        return Response(details, status=status.HTTP_200_OK)
 
 
-class StrainDeliveriesView(LoginRequiredMixin, APIView):
+class StrainDeliveriesView(APIView):
+    permission_classes = (permissions.AllowAny,)
+
     def get(self, request, strain_id):
         d = request.GET
         result_filter = d.get('filter')
         order_field = d.get('order_field')
         order_dir = d.get('order_dir')
         location_type = d.get('location_type')
+        user = request.user if request.user.is_authenticated() else None
 
-        l = StrainDetailsService().build_strain_locations(strain_id, request.user, result_filter, order_field,
+        l = StrainDetailsService().build_strain_locations(strain_id, user, result_filter, order_field,
                                                           order_dir, location_type)
         return Response(l, status=status.HTTP_200_OK)
 

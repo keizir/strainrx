@@ -15,7 +15,7 @@ class StrainSearchResultView(LoginRequiredMixin, TemplateView):
     template_name = 'pages/search/strain/search_results.html'
 
 
-class StrainDetailView(LoginRequiredMixin, TemplateView):
+class StrainDetailView(TemplateView):
     template_name = 'pages/strain/strain_detail.html'
 
     def get_context_data(self, **kwargs):

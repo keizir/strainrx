@@ -5,18 +5,26 @@ from web.search.services import build_strain_rating
 
 
 class StrainDetailsService:
-    def build_strain_details(self, strain_id, current_user):
+    def build_strain_details(self, strain_id, current_user=None):
         strain = Strain.objects.get(pk=strain_id)
         image = StrainImage.objects.filter(strain=strain, is_approved=True)[:1]
         strain_origins = self.get_strain_origins(strain)
         rating = build_strain_rating(strain)
-        strain_srx_score = self.calculate_srx_score(strain, current_user)
         reviews = self.get_strain_reviews(strain)
-        strain_review = StrainRating.objects.filter(strain=strain, created_by=current_user, removed_date=None)
-        favorite = UserFavoriteStrain.objects.filter(strain=strain, created_by=current_user).exists()
-        is_rated = StrainReview.objects.filter(strain=strain, created_by=current_user).exists()
-        user_criteria = UserSearch.objects.get(user=current_user).to_search_criteria() if UserSearch.objects.filter(
-            user=current_user).exists() else None
+
+        if current_user:
+            strain_srx_score = self.calculate_srx_score(strain, current_user)
+            strain_review = StrainRating.objects.filter(strain=strain, created_by=current_user, removed_date=None)
+            favorite = UserFavoriteStrain.objects.filter(strain=strain, created_by=current_user).exists()
+            is_rated = StrainReview.objects.filter(strain=strain, created_by=current_user).exists()
+            user_criteria = UserSearch.objects.get(user=current_user).to_search_criteria() if UserSearch.objects.filter(
+                user=current_user).exists() else None
+        else:
+            strain_srx_score = 0
+            strain_review = []
+            favorite = None
+            is_rated = None
+            user_criteria = None
 
         return {
             'strain': StrainDetailSerializer(strain).data,
@@ -39,8 +47,12 @@ class StrainDetailsService:
         return strain_origins
 
     @staticmethod
-    def get_also_like_strains(current_strain, current_user):
-        latest_user_search = UserSearch.objects.filter(user=current_user).order_by('-last_modified_date')[:1]
+    def get_also_like_strains(current_strain, current_user=None):
+        if current_user:
+            latest_user_search = UserSearch.objects.filter(user=current_user).order_by('-last_modified_date')[:1]
+        else:
+            latest_user_search = None
+
         also_like_strains = []
 
         if latest_user_search and len(latest_user_search) > 0:

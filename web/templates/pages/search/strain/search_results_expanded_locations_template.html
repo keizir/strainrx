@@ -17,7 +17,7 @@
         </div>
         <div class="expanded-locations-holder">
             <% _.each(locations, function(l) { %>
-            <%= renderLocation({'l': l, 'formatDistance': formatDistance, 'formatPrice': formatPrice}) %>
+            <%= renderLocation({l: l, strain_id: strain_id, formatDistance: formatDistance, formatPrice: formatPrice}) %>
             <% }); %>
         </div>
     </div>

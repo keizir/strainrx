@@ -36,28 +36,43 @@ W.users.ProximityPage = Class.extend({
     },
 
     initProximityInput: function initProximityInput() {
-        var that = this;
-        $('.proximity-value').on('focusout', function () {
+        var that = this,
+            $proximity = $('.proximity-value');
+
+        $proximity.on('focusout', function () {
             var $input = $(this),
                 $inputVal = $input.val();
 
-            if ($inputVal) {
-                $inputVal = parseFloat($inputVal).toFixed(1);
-                $('.slider').slider('value', $inputVal);
-                that.proximity = $inputVal;
-            } else {
-                that.setProximityValue(0);
-            }
+            that.processProximityValueChange($inputVal);
+        });
 
-            if ($inputVal && $inputVal < 0) {
-                that.setProximityValue(0);
+        $proximity.on('keyup', function (e) {
+            if (e.keyCode === 13) { // Enter Key
+                var $input = $(this),
+                    $inputVal = $input.val();
 
-            }
-
-            if ($inputVal && $inputVal > 50) {
-                that.setProximityValue(50);
+                that.processProximityValueChange($inputVal);
+                that.sendUpdate();
             }
         });
+    },
+
+    processProximityValueChange: function processProximityValueChange($inputVal) {
+        if ($inputVal) {
+            $inputVal = parseFloat($inputVal).toFixed(1);
+            $('.slider').slider('value', $inputVal);
+            this.proximity = $inputVal;
+        } else {
+            this.setProximityValue(0);
+        }
+
+        if ($inputVal && $inputVal < 0) {
+            this.setProximityValue(0);
+        }
+
+        if ($inputVal && $inputVal > 50) {
+            this.setProximityValue(50);
+        }
     },
 
     setProximityValue: function setProximityValue(value) {
@@ -69,22 +84,26 @@ W.users.ProximityPage = Class.extend({
 
     setSliderHandleValue: function setSliderHandleValue(value) {
         $('.proximity-value').off('focusout');
-        $('.ui-slider-handle').html('<input type="number" class="proximity-value" value="{0}">'.format(value));
+        $('.ui-slider-handle').html('<input type="number" class="proximity-value" value="{0}" title="MI">'.format(value));
         this.initProximityInput();
     },
 
     updateProximity: function updateProximity() {
         var that = this;
         $('.btn-update-proximity').on('click', function () {
-            $.ajax({
-                method: 'POST',
-                url: '/api/v1/users/{0}/proximity'.format(that.ui.$userId.val()),
-                dataType: 'json',
-                data: JSON.stringify({'proximity': that.proximity}),
-                success: function () {
-                    window.location.reload();
-                }
-            });
+            that.sendUpdate();
+        });
+    },
+
+    sendUpdate: function sendUpdate() {
+        $.ajax({
+            method: 'POST',
+            url: '/api/v1/users/{0}/proximity'.format(this.ui.$userId.val()),
+            dataType: 'json',
+            data: JSON.stringify({'proximity': this.proximity}),
+            success: function () {
+                window.location.reload();
+            }
         });
     }
 

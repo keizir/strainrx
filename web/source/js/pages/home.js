@@ -32,12 +32,8 @@ W.pages.HomePage = Class.extend({
                 strainVariety = $input.attr('payload-variety'),
                 strainSlug = $input.attr('payload-slug');
 
-            if (AUTHENTICATED) {
-                if (strainName && strainVariety && strainSlug) {
-                    window.location.href = '/{0}/{1}'.format(strainVariety, strainSlug);
-                }
-            } else {
-                window.location.href = '/users/signup/wizard/';
+            if (strainName && strainVariety && strainSlug) {
+                window.location.href = '/{0}/{1}'.format(strainVariety, strainSlug);
             }
         });
     },

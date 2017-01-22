@@ -283,6 +283,7 @@ W.pages.StrainSearchResultsPage = Class.extend({
         $exp.removeClass('hidden');
         $exp.html(that.templates.expandedLocations({
             'locations': locations,
+            'strain_id': $('#strain-id-{0}'.format(position)).val(),
             'formatDistance': that.formatDistance,
             'formatPrice': that.formatPrice,
             'renderLocation': that.templates.expandedLocation
@@ -316,6 +317,7 @@ W.pages.StrainSearchResultsPage = Class.extend({
     renderLocation: function renderLocation(location) {
         return this.templates.expandedLocation({
             'l': location,
+            'strain_id': this.strain_id,
             'formatDistance': this.formatDistance,
             'formatPrice': this.formatPrice
         });
