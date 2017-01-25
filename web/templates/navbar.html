@@ -105,12 +105,10 @@
                                         <a href="{% url "businesses:signup_done" %}">Business Account</a>
                                     {% endif %}
                                 </div>
-                                {% if request.user.is_email_verified %}
-                                    <div class="action">
-                                        <a href="{% url 'users:detail' request.user.id %}"
-                                           class="nav-link">My Account</a>
-                                    </div>
-                                {% endif %}
+                                <div class="action">
+                                    <a href="{% url 'users:detail' request.user.id %}"
+                                       class="nav-link">My Account</a>
+                                </div>
                                 <div class="action">
                                     <a class="nav-link" href="{% url 'account_logout' %}">Sign out</a>
                                 </div>

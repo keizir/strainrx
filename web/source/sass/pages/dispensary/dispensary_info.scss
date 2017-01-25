@@ -301,10 +301,13 @@
                                 border: 1px solid $grey-light;
                                 border-radius: 4em;
 
-                                img {
-                                    width: 3em;
-                                    height: 3em;
-                                    margin: 0.3em 0.4em 0.4em 0.46em;
+                                .image {
+                                    display: block;
+                                    width: 4em;
+                                    height: 4em;
+                                    background-size: cover;
+                                    border-radius: 50%;
+                                    margin: -0.1em;
                                 }
 
                                 .default-image {

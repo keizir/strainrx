@@ -132,7 +132,7 @@ class BusinessLocation(models.Model):
             self.category = 'dispensary' if self.dispensary else 'delivery' if self.delivery else 'dispensary'
 
             # create a slug name
-            slugified_name = slugify(self.location_name)
+            slugified_name = slugify('{0} {1}'.format(self.location_name, self.city))
             if not exist_by_slug_name(slugified_name):
                 self.slug_name = slugified_name
             else:

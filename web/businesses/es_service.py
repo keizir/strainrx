@@ -29,6 +29,10 @@ class BusinessLocationESService(BaseElasticService):
             es_response = self._request(self.METHODS.get('PUT'), url, data=json.dumps(existing_source))
         else:
             data['menu_items'] = []
+            data['location'] = {
+                "lat": data.get('lat') if data.get('lat') else 0,
+                "lon": data.get('lng') if data.get('lng') else 0
+            }
             url = '{base}{index}/{type}'.format(base=self.BASE_ELASTIC_URL, index=self.URLS.get('BUSINESS_LOCATION'),
                                                 type=es_mappings.TYPES.get('business_location'))
             es_response = self._request(self.METHODS.get('POST'), url, data=json.dumps(data))

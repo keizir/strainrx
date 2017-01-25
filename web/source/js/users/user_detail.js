@@ -7,7 +7,7 @@ W.users.DetailPage = Class.extend({
     timezone: null,
 
     ui: {
-        $userId: $('input[name="uid"]'),
+        $userId: $('.user-id'),
         $messagesRegion: $('.messages')
     },
 
