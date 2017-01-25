@@ -66,18 +66,19 @@ class SearchElasticService(BaseElasticService):
                 total = 0
                 pass
             else:
-                processed_results.append({
-                    'id': source.get('id'),
-                    'name': source.get('name'),
-                    'strain_slug': source.get('strain_slug'),
-                    'variety': source.get('variety'),
-                    'category': source.get('category'),
-                    'rating': "{0:.2f}".format(round(rating, 2)) if rating else 'Not Rated',
-                    'image_url': strain_image[0].image.url if len(strain_image) > 0 else None,
-                    'match_percentage': srx_score if srx_score <= 100 else 100,
-                    'deliveries': deliveries,
-                    'locations': dispensaries
-                })
+                if not source.get('removed_date'):
+                    processed_results.append({
+                        'id': source.get('id'),
+                        'name': source.get('name'),
+                        'strain_slug': source.get('strain_slug'),
+                        'variety': source.get('variety'),
+                        'category': source.get('category'),
+                        'rating': "{0:.2f}".format(round(rating, 2)) if rating else 'Not Rated',
+                        'image_url': strain_image[0].image.url if len(strain_image) > 0 else None,
+                        'match_percentage': srx_score if srx_score <= 100 else 100,
+                        'deliveries': deliveries,
+                        'locations': dispensaries
+                    })
 
         response_data = {
             'list': processed_results,
@@ -141,7 +142,8 @@ class SearchElasticService(BaseElasticService):
         if strain_id:
             menu_items_must_query.append({"match": {"menu_items.strain_id": strain_id}})
 
-        must_query = [{"nested": {"path": "menu_items", "query": {"bool": {"must": menu_items_must_query}}}}]
+        must_query = [{"missing": {"field": "removed_date"}},
+                      {"nested": {"path": "menu_items", "query": {"bool": {"must": menu_items_must_query}}}}]
         if location_type:
             must_query.append({"match": {location_type: True}})
 
@@ -496,6 +498,39 @@ class SearchElasticService(BaseElasticService):
                                                         es_id=es_name_suggest[0].get('_id'))
             es_response = self._request(self.METHODS.get('DELETE'), url)
             return es_response
+
+    def create_lookup_strain_name(self, strain):
+        input_variants = [strain.name]
+
+        name_words = strain.name.split(' ')
+        for i, name_word in enumerate(name_words):
+            if i < len(name_words) - 1:
+                input_variants.append('{0} {1}'.format(name_word, name_words[i + 1]))
+            else:
+                input_variants.append(name_word)
+
+        data = {
+            'strain_id': strain.id,
+            'name': strain.name,
+            'name_suggest': {
+                'input': input_variants,
+                'output': strain.name,
+                'payload': {
+                    'id': strain.id,
+                    'name': strain.name,
+                    'strain_slug': strain.strain_slug,
+                    'variety': strain.variety,
+                    'category': strain.category
+                }
+            }
+        }
+
+        method = self.METHODS.get('POST')
+        url = '{base}{index}/{type}'.format(base=self.BASE_ELASTIC_URL,
+                                            index=self.URLS.get('STRAIN'), type='name')
+
+        es_response = self._request(method, url, data=json.dumps(data))
+        return es_response
 
     def _transform_suggest_results(self, es_response):
         suggests = es_response.get('suggest', {}).get('name_suggestion', {})

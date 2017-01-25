@@ -64,14 +64,3 @@ class StrainUserRatingESService(BaseElasticService):
             }))
 
         return es_response
-
-    def delete_user_review(self, db_strain_id, db_user_id):
-        es_response = self.get_user_review(db_strain_id, db_user_id)
-        es_reviews = es_response.get('hits', {}).get('hits', [])
-        if len(es_reviews) > 0:
-            url = '{base}{index}/{type}/{es_id}'.format(base=self.BASE_ELASTIC_URL,
-                                                        index=self.URLS.get('USER_RATINGS'),
-                                                        type=es_mappings.TYPES.get('strain_rating'),
-                                                        es_id=es_reviews[0].get('_id'))
-            es_response = self._request(self.METHODS.get('DELETE'), url)
-            return es_response

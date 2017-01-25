@@ -70,7 +70,7 @@ class BusinessLocation(models.Model):
     )
 
     business = models.ForeignKey(Business, on_delete=models.DO_NOTHING)
-    location_name = models.CharField(max_length=255, blank=True, null=True)
+    location_name = models.CharField(max_length=255, blank=False, null=False)
     manager_name = models.CharField(max_length=255, blank=True, null=True)
     location_email = models.CharField(max_length=255, blank=True, null=True)
 
@@ -82,7 +82,7 @@ class BusinessLocation(models.Model):
                                 help_text='Warning: changing the category will change the URL of this location')
 
     slug_name = models.SlugField(max_length=611, null=True, blank=True,
-                                 help_text='Warning: changing the slug will change the URL of this location')
+                                 help_text='This will be automatically generated from a location name when created')
 
     primary = models.BooleanField(default=False)
     dispensary = models.BooleanField(default=False)
@@ -101,7 +101,7 @@ class BusinessLocation(models.Model):
 
     lat = models.FloatField(_('Latitude'), blank=True, null=True, max_length=50)
     lng = models.FloatField(_('Longitude'), blank=True, null=True, max_length=50)
-    location_raw = JSONField(_('Location Raw JSON'), default={}, max_length=20000)
+    location_raw = JSONField(_('Location Raw JSON'), default={}, blank=True, null=True, max_length=20000)
 
     phone = models.CharField(max_length=15, blank=True, null=True, validators=[phone_number_validator])
     ext = models.CharField(max_length=5, blank=True, null=True)

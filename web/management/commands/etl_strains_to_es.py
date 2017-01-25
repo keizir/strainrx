@@ -116,7 +116,9 @@ class Command(BaseCommand):
                 'side_effects': s.side_effects,
                 'flavor': s.flavor,
                 'about': s.about,
-                'origins': ''
+                'origins': '',
+                'removed_date': s.removed_date.isoformat() if s.removed_date else None,
+                'removed_by_id': s.removed_by,
             }))
 
             if self.UPDATE_SUGGESTER_INDEX:

@@ -72,6 +72,9 @@ class Strain(models.Model):
     about = models.TextField(_('Description'), max_length=1500, null=True, blank=True)
     origins = models.ManyToManyField('self', symmetrical=False, blank=True)
 
+    removed_by = models.CharField(max_length=20, blank=True, null=True)
+    removed_date = models.DateTimeField(blank=True, null=True)
+
     def save(self, *args, **kwargs):
         if self.pk is None and not self.strain_slug:
             self.strain_slug = '{0}-strain'.format(slugify(self.name))
@@ -105,6 +108,19 @@ def validate_image(field_file_obj):
     megabyte_limit = os.environ('MAX_STRAIN_IMAGE_SIZE')
     if file_size > megabyte_limit:
         raise ValidationError("Max file size is %sMB" % str(megabyte_limit))
+
+
+@receiver(post_save, sender=Strain)
+def create_es_strain(sender, **kwargs):
+    strain = kwargs.get('instance')
+    StrainESService().save_strain(strain)
+
+    if User.objects.filter(email='tech+rate_bot@strainrx.co').exists():
+        rate_bot = User.objects.get(email='tech+rate_bot@strainrx.co')
+        if not StrainRating.objects.filter(strain=strain, created_by=rate_bot, removed_date=None).exists():
+            r = StrainRating(strain=strain, created_by=rate_bot, effects=strain.effects, benefits=strain.benefits,
+                             side_effects=strain.side_effects, status='pending')
+            r.save()
 
 
 @python_2_unicode_compatible
