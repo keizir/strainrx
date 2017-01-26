@@ -53,12 +53,6 @@ W.pages.strain.StrainLookup = Class.extend({
                             $lookupInput.val($payloadSpan.text());
                             $payloadsRegion.html('');
                         });
-                    },
-                    error: function (e) {
-                        var status = e.status;
-                        if (400 === status) {
-                            W.common.VerifyEmailDialog();
-                        }
                     }
                 });
             } else {

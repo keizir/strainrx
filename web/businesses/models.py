@@ -144,6 +144,13 @@ class BusinessLocation(models.Model):
 
         super(BusinessLocation, self).save(*args, **kwargs)
 
+    def clean(self):
+        delivery = self.delivery
+        dispensary = self.dispensary
+
+        if not delivery and not dispensary:
+            raise ValidationError('Either delivery or dispensary is required.')
+
     def __str__(self):
         return self.location_name
 

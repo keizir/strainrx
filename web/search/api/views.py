@@ -181,9 +181,6 @@ class StrainLookupView(APIView):
     permission_classes = (permissions.AllowAny,)
 
     def get(self, request):
-        if request.user.is_authenticated() and not request.user.is_email_verified:
-            return Response({'message': 'User must verify the email'}, status=status.HTTP_400_BAD_REQUEST)
-
         query = request.GET.get('q')
         result = SearchElasticService().lookup_strain(query)
         return Response({

@@ -67,7 +67,7 @@ class UserDetailView(LoginRequiredMixin, APIView):
 
             does_exist = User.objects.filter(email=serializer.validated_data.get('email')).exists()
             if does_exist:
-                raise ValidationError('There is already an account associated with that email address')
+                return bad_request('There is already an account associated with that email address')
 
         user.name = serializer.validated_data.get('name')
         user.first_name = serializer.validated_data.get('first_name')

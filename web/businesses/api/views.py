@@ -196,7 +196,8 @@ class BusinessLocationView(APIView):
             current_user = request.user
 
             if current_user.is_authenticated():
-                d['location']['is_favorite'] = UserFavoriteLocation.objects.filter(created_by=current_user).exists()
+                d['location']['is_favorite'] = UserFavoriteLocation.objects.filter(location=location,
+                                                                                   created_by=current_user).exists()
                 d['location']['is_rated'] = LocationReview.objects.filter(location=location,
                                                                           created_by=current_user).exists()
 

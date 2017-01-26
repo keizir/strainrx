@@ -1,5 +1,7 @@
 # -*- coding: utf-8 -*-
+from django import forms
 from django.contrib import admin
+from django.contrib.admin.widgets import AdminTimeWidget
 
 from web.businesses.api.services import BusinessLocationService
 from web.businesses.models import Business, BusinessLocation, LocationReview
@@ -29,8 +31,53 @@ def deactivate_selected_locations(modeladmin, request, queryset):
 deactivate_selected_locations.short_description = 'Deactivate selected'
 
 
+class BusinessLocationAdminForm(forms.ModelForm):
+    class Meta:
+        model = BusinessLocation
+        fields = '__all__'
+
+    location_field = forms.CharField(max_length=255)
+
+    mon_open = forms.TimeField(widget=AdminTimeWidget(format='%I:%M %p'), input_formats=('%I:%M %p',), required=False)
+    mon_close = forms.TimeField(widget=AdminTimeWidget(format='%I:%M %p'), input_formats=('%I:%M %p',), required=False)
+    tue_open = forms.TimeField(widget=AdminTimeWidget(format='%I:%M %p'), input_formats=('%I:%M %p',), required=False)
+    tue_close = forms.TimeField(widget=AdminTimeWidget(format='%I:%M %p'), input_formats=('%I:%M %p',), required=False)
+    wed_open = forms.TimeField(widget=AdminTimeWidget(format='%I:%M %p'), input_formats=('%I:%M %p',), required=False)
+    wed_close = forms.TimeField(widget=AdminTimeWidget(format='%I:%M %p'), input_formats=('%I:%M %p',), required=False)
+    thu_open = forms.TimeField(widget=AdminTimeWidget(format='%I:%M %p'), input_formats=('%I:%M %p',), required=False)
+    thu_close = forms.TimeField(widget=AdminTimeWidget(format='%I:%M %p'), input_formats=('%I:%M %p',), required=False)
+    fri_open = forms.TimeField(widget=AdminTimeWidget(format='%I:%M %p'), input_formats=('%I:%M %p',), required=False)
+    fri_close = forms.TimeField(widget=AdminTimeWidget(format='%I:%M %p'), input_formats=('%I:%M %p',), required=False)
+    sat_open = forms.TimeField(widget=AdminTimeWidget(format='%I:%M %p'), input_formats=('%I:%M %p',), required=False)
+    sat_close = forms.TimeField(widget=AdminTimeWidget(format='%I:%M %p'), input_formats=('%I:%M %p',), required=False)
+    sun_open = forms.TimeField(widget=AdminTimeWidget(format='%I:%M %p'), input_formats=('%I:%M %p',), required=False)
+    sun_close = forms.TimeField(widget=AdminTimeWidget(format='%I:%M %p'), input_formats=('%I:%M %p',), required=False)
+
+    def __init__(self, *args, **kwargs):
+        super(BusinessLocationAdminForm, self).__init__(*args, **kwargs)
+
+        self.fields['location_email'].required = True
+        self.fields['phone'].required = True
+        self.fields['location_field'].required = True
+
+
 @admin.register(BusinessLocation)
 class BusinessLocationAdmin(admin.ModelAdmin):
+    change_form_template = 'admin/business/business_location_change_form.html'
+    form = BusinessLocationAdminForm
+
+    fieldsets = (
+        ('Info',
+         {'fields': ('business', 'location_name', 'manager_name', 'location_email', 'phone', 'ext', 'about',), }),
+        ('Type',
+         {'fields': ('dispensary', 'delivery', 'delivery_radius',), }),
+        ('Location',
+         {'fields': ('location_field', 'street1', 'city', 'state', 'zip_code', 'lat', 'lng', 'location_raw',), }),
+        ('Working Hours',
+         {'fields': ('mon_open', 'mon_close', 'tue_open', 'tue_close', 'wed_open', 'wed_close', 'thu_open', 'thu_close',
+                     'fri_open', 'fri_close', 'sat_open', 'sat_close', 'sun_open', 'sun_close',), }),
+    )
+
     def get_actions(self, request):
         # Disable delete
         actions = super(BusinessLocationAdmin, self).get_actions(request)
@@ -46,7 +93,7 @@ class BusinessLocationAdmin(admin.ModelAdmin):
         return objects_all
 
     list_display = ['business', 'location_name', 'dispensary', 'delivery', 'removed_date', 'removed_by']
-    readonly_fields = ['slug_name']
+    readonly_fields = ['category', 'slug_name', 'primary', 'grow_house']
     ordering = ['location_name']
     actions = [activate_selected_locations, deactivate_selected_locations]
 
