@@ -22,14 +22,18 @@ W.views.LocationView = Class.extend({
                     if (status === 'OK') {
                         if (results) {
                             var address = that.buildAddress(results);
-                            that.saveUserLocation({
-                                lat: position.coords.latitude,
-                                lng: position.coords.longitude,
-                                location_raw: JSON.stringify(results),
-                                street1: address.street1,
-                                city: address.city,
-                                state: address.state,
-                                zipcode: address.zipcode
+                            that.getTimezone(position.coords.latitude, position.coords.longitude, function (json) {
+                                that.timezone = json.timeZoneId;
+
+                                that.saveUserLocation({
+                                    lat: position.coords.latitude,
+                                    lng: position.coords.longitude,
+                                    location_raw: JSON.stringify(results),
+                                    street1: address.street1,
+                                    city: address.city,
+                                    state: address.state,
+                                    zipcode: address.zipcode
+                                });
                             });
                         }
                     } else {
@@ -103,11 +107,25 @@ W.views.LocationView = Class.extend({
             $.ajax({
                 method: 'POST',
                 url: '/api/v1/users/{0}/geo_locations'.format(that.userId),
-                data: JSON.stringify(data)
+                data: JSON.stringify({address: data, timezone: that.timezone || ''})
             });
         } else {
             delete data.location_raw;
             Cookies.set('user_geo_location', JSON.stringify(data));
         }
+    },
+
+    getTimezone: function getTimezone(lat, lng, callback) {
+        var xsr = new XMLHttpRequest();
+        xsr.open(
+            'GET',
+            'https://maps.googleapis.com/maps/api/timezone/json?location={0},{1}&timestamp={2}&key={3}'
+                .format(lat, lng, '1458000000', GOOGLE_API_KEY));
+
+        xsr.onload = function () {
+            callback(JSON.parse(xsr.responseText));
+        };
+
+        xsr.send();
     }
 });

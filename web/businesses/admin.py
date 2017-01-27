@@ -94,6 +94,7 @@ class BusinessLocationAdmin(admin.ModelAdmin):
 
     list_display = ['business', 'location_name', 'dispensary', 'delivery', 'removed_date', 'removed_by']
     readonly_fields = ['category', 'slug_name', 'primary', 'grow_house']
+    search_fields = ['location_name']
     ordering = ['location_name']
     actions = [activate_selected_locations, deactivate_selected_locations]
 

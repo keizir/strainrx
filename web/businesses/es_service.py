@@ -121,7 +121,7 @@ class BusinessLocationESService(BaseElasticService):
 
             for mi in menu_items:
                 if mi.get('id') != menu_item_id:
-                    mi['removed_date'] = datetime.now()
+                    mi['removed_date'] = datetime.now().isoformat()
 
             existing_source['menu_items'] = menu_items
 
