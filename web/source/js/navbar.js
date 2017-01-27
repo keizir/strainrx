@@ -19,6 +19,10 @@ W.Navbar = function () {
                     W.common.VerifyEmailDialog();
                 });
             }
+
+            if ($(document).outerWidth(true) <= 490) {
+                this.hamburgerMenuClickHandler();
+            }
         },
 
         updateAddress: function (location) {
@@ -49,6 +53,17 @@ W.Navbar = function () {
 
                 $('.nav-bar-user-location').text(location_parts.join(', '));
             }
+        },
+
+        hamburgerMenuClickHandler: function hamburgerMenuClickHandler() {
+            $('.nav-list-wrapper').on('click', function () {
+                var navList = $(this).find('.nav-list');
+                if (navList.css('display') === 'block') {
+                    navList.css('display', 'none');
+                } else {
+                    navList.css('display', 'block');
+                }
+            });
         }
     };
 }();

@@ -222,14 +222,20 @@
     .nav-container {
         .nav-list-wrapper:hover {
             .nav-list {
-                display: block;
+                display: none;
+            }
+        }
+
+        .nav-list-wrapper {
+            .nav-list {
+                display: none;
                 position: absolute;
                 left: 0;
                 width: 100%;
 
                 .auth-menu .nav-menu-content {
                     display: block;
-                    width: 100%;
+                    width: 100% !important;
                     position: absolute;
                     right: 0;
                     top: 4em;

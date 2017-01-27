@@ -4,6 +4,12 @@
     height: 60em;
 }
 
+h1 {
+    font-size: 2em;
+    font-weight: normal;
+    line-height: 1em;
+}
+
 .home-row-01 {
     background: $grey-light url(../../images/weed_dark.jpg) no-repeat top center;
     -webkit-background-size: cover;
@@ -14,10 +20,7 @@
     z-index: 1;
 
     h1 {
-        font-size: 2em;
-        font-weight: normal;
         margin: 1.5em 0.5em 0.5em;
-        line-height: 1em;
     }
 
     p {
@@ -231,11 +234,14 @@
         height: 64em;
     }
 
+    h1 {
+        font-size: 3.5em;
+    }
+
     .home-row-01 {
         height: 34em;
 
         h1 {
-            font-size: 3.5em;
             margin-top: 1em;
         }
 
@@ -272,6 +278,10 @@
 
     .home-row-02 {
         top: 38em;
+
+        h1 {
+            margin: 0;
+        }
     }
 }
 

@@ -78,12 +78,14 @@
                         </fieldset>
                     </form>
                 </div>
-                <div class="favorites-holder">
-                <span class="favorites">
-                    <i class="fa fa-heart-o" aria-hidden="true"></i>
-                    <i class="fa fa-sort-desc" aria-hidden="true"></i>
-                </span>
-                </div>
+                {% if request.user.is_authenticated %}
+                    <div class="favorites-holder">
+                    <span class="favorites">
+                        <i class="fa fa-heart-o" aria-hidden="true"></i>
+                        <i class="fa fa-sort-desc" aria-hidden="true"></i>
+                    </span>
+                    </div>
+                {% endif %}
             </div>
             <div class="home-sub-row-02">
                 <h1>Find Your Perfect Strain</h1>
@@ -111,8 +113,8 @@
         <div class="container">
             <div class="search-box">
                 <i class="fa fa-search fa-3x" aria-hidden="true"></i>
-                <h2>Look Up a Strain</h2>
-                <p>Use our specialized search engine to find the strain you're looking for</p>
+                <h1>Look Up a Strain</h1>
+                <p>Have a strain in mind? Look it up here:</p>
 
                 <form class="search-form">
                     {% csrf_token %}

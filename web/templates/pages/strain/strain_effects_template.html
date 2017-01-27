@@ -5,14 +5,17 @@
         <div class="effect-wrapper">
             <% if (effect.missing) { %>
             <div class="effect-name missing-name"><span><%= effect.name %></span></div>
+            <div class="effect missing-effect">
+                <%= effectFillHtml(effect) %>
+                <%= userCriteriaFillHtml(effect) %>
+            </div>
             <% } else { %>
             <div class="effect-name"><span><%= effect.name %></span></div>
-            <% } %>
-
             <div class="effect">
                 <%= effectFillHtml(effect) %>
                 <%= userCriteriaFillHtml(effect) %>
             </div>
+            <% } %>
         </div>
         <% }); %>
         <% } else { %>

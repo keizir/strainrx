@@ -39,8 +39,8 @@ W.pages.strain.StrainReviewDialog = Class.extend({
     buildAndShowReviewDialog: function buildAndShowReviewDialog($link) {
         var that = this,
             effectType = $link.prop('id'),
-            parentWidth = $link.parent().outerWidth(true),
-            dialogWidth = parseInt(parentWidth, 10) * (parentWidth < 480 ? 1.2 : 0.9),
+            parentWidth = $('.strain-effects').outerWidth(true),
+            dialogWidth = parseInt(parentWidth, 10),
 
             effects = 'positive-effects' === effectType ?
                 this.model.get('strain').effects :

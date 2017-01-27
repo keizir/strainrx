@@ -348,7 +348,14 @@
             }
 
             .effect-name.missing-name {
-                color: $red;
+                color: $light-red;
+            }
+
+            .effect.missing-effect {
+                .user-fill {
+                    // this pattern was generated with http://www.patternify.com/
+                    background: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAQAAAAECAYAAACp8Z5+AAAAIklEQVQYV2NkQAK3rS3/M8L4II7q0eOMYAEYB8RmROaABACxvQ5TLDlcxgAAAABJRU5ErkJggg==) repeat;
+                }
             }
 
             .effect {
@@ -1211,6 +1218,11 @@
             .add-effect-button-wrapper {
                 position: absolute;
                 right: 1em;
+                width: 40%;
+
+                .effects-payload {
+                    top: 1.5em;
+                }
 
                 .btn-secondary {
                     padding: 0.2em 0.5em;
