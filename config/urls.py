@@ -5,8 +5,18 @@ from django.conf import settings
 from django.conf.urls import include, url
 from django.conf.urls.static import static
 from django.contrib import admin
+from django.contrib.sitemaps.views import sitemap
 from django.views import defaults as default_views
 from django.views.generic import TemplateView
+
+from web.businesses.sitemaps import BusinessLocationSitemap
+from web.users.sitemaps import StrainSitemap, StaticViewSitemap
+
+sitemaps = {
+    'strain': StrainSitemap,
+    'location': BusinessLocationSitemap,
+    'static': StaticViewSitemap
+}
 
 urlpatterns = [
                   url(r'^$', TemplateView.as_view(template_name='pages/home.html'), name='home'),
@@ -34,6 +44,9 @@ urlpatterns = [
                       include('web.search.api.urls', namespace='search_api', app_name='search_api')),
                   url(r'^api/v1/businesses/',
                       include('web.businesses.api.urls', namespace='businesses_api', app_name='businesses_api')),
+
+                  url(r'^sitemap\.xml$', sitemap, {'sitemaps': sitemaps},
+                      name='django.contrib.sitemaps.views.sitemap')
 
               ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 

@@ -40,8 +40,8 @@ class UsersView(APIView):
     permission_classes = (permissions.AllowAny,)
 
     def get(self, request):
-        email = request.GET.get('email')
-        does_exist = User.objects.filter(email=email).exists()
+        email = request.GET.get('email').lower()
+        does_exist = User.objects.filter(email__iexact=email).exists()
         return Response({'exist': does_exist}, status=status.HTTP_200_OK)
 
 
@@ -59,20 +59,21 @@ class UserDetailView(LoginRequiredMixin, APIView):
 
         user = User.objects.get(pk=user_id)
 
-        if user.email != serializer.validated_data.get('email'):
+        email = serializer.validated_data.get('email').lower()
+        if user.email.lower() != email:
             try:
-                validators.validate_email(serializer.validated_data.get('email'))
+                validators.validate_email(email)
             except ValidationError as e:
                 return bad_request(e.message)
 
-            does_exist = User.objects.filter(email=serializer.validated_data.get('email')).exists()
+            does_exist = User.objects.filter(email__iexact=email).exists()
             if does_exist:
                 return bad_request('There is already an account associated with that email address')
 
         user.name = serializer.validated_data.get('name')
         user.first_name = serializer.validated_data.get('first_name')
         user.last_name = serializer.validated_data.get('last_name')
-        user.email = serializer.validated_data.get('email').lower()
+        user.email = email
         user.birth_month = serializer.validated_data.get('birth_month')
         user.birth_day = serializer.validated_data.get('birth_day')
         user.birth_year = serializer.validated_data.get('birth_year')
@@ -184,11 +185,11 @@ class UserLoginView(APIView):
     permission_classes = (permissions.AllowAny,)
 
     def post(self, request):
-        email = request.data.get('email')
+        email = request.data.get('email').lower()
         pwd = request.data.get('password')
 
         try:
-            user = User.objects.get(email=email)
+            user = User.objects.get(email__iexact=email)
         except User.DoesNotExist:
             return bad_request('Email or password does not match')
 
@@ -235,8 +236,9 @@ class UserSignUpWizardView(APIView):
 
         user_data = user_serializer.validated_data
         l_data = location_serializer.validated_data
+        email = user_data.get('email').lower()
 
-        if User.objects.filter(email=user_data.get('email')).exists():
+        if User.objects.filter(email__iexact=email).exists():
             return bad_request('There is already an account associated with that email address')
 
         try:
@@ -257,12 +259,12 @@ class UserSignUpWizardView(APIView):
         except Exception:
             logger.exception('Cannot sign up user')
 
-            if UserLocation.objects.filter(user__email=user_data.get('email')).exists():
-                l = UserLocation.objects.get(user__email=user_data.get('email'))
+            if UserLocation.objects.filter(user__email__iexact=email).exists():
+                l = UserLocation.objects.get(user__email__iexact=email)
                 l.delete()
 
-            if User.objects.filter(email=user_data.get('email')).exists():
-                u = User.objects.get(email=user_data.get('email'))
+            if User.objects.filter(email__iexact=email).exists():
+                u = User.objects.get(email__iexact=email)
                 u.delete()
 
             return bad_request('Something gone wrong. Please, try again.')
@@ -331,7 +333,7 @@ class ResetPasswordView(APIView):
         return bad_request('Cannot determine required action.')
 
     def process_send_reset_email_action(self, request):
-        email = request.data.get('email')
+        email = request.data.get('email').lower()
 
         if not email:
             return bad_request('Email is required')
@@ -343,7 +345,7 @@ class ResetPasswordView(APIView):
             return bad_request('Invalid email format')
 
         try:
-            user = User.objects.get(email=email)
+            user = User.objects.get(email__iexact=email)
         except User.DoesNotExist:
             user = None
 
