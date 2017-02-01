@@ -113,14 +113,15 @@ W.common.ReviewDialog = function ($el, closeCallback, options) {
                 'ui-dialog': 'srx-dialog'
             },
             closeOnEscape: true,
-            minHeight: 'auto',
-            height: 'auto',
-            width: options && options.width || 'auto',
+            height: (options && options.height) || 'auto',
+            width: (options && options.width) || 'auto',
             modal: true,
             draggable: false,
             resizable: false,
             create: function () {
-                $(this).css("maxWidth", options && options.maxWidth || "450px");
+                $(this).css('max-width', (options && options.maxWidth) || '450px');
+                $(this).css('min-height', (options && options.minHeight) || 'auto');
+                $('.srx-dialog').css('min-height', (options && options.minHeight) || 'auto');
             },
             close: function (e, ui) {
                 if (closeCallback) {

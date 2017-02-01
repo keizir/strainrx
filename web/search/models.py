@@ -92,7 +92,9 @@ class Strain(models.Model):
         effects = []
         json = loads(dumps(effects_object))
         for key in json:
-            effects.append({'name': key, 'value': json[key]})
+            value = json[key]
+            if value > 0:
+                effects.append({'name': key, 'value': value})
         return effects
 
     def __str__(self):

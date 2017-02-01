@@ -75,11 +75,12 @@ class StrainDetailsService:
                     break
 
         if len(also_like_strains) == 0:
-            search_criteria = current_strain.to_search_criteria()
-            search_criteria['strain_types'] = 'skipped'
-            data = SearchElasticService().query_strain_srx_score(search_criteria, 6, 0, include_locations=False)
-            for s in data.get('list')[1:]:
-                also_like_strains.append(s)
+            criteria = current_strain.to_search_criteria()
+            if len(criteria['effects']) > 0 or len(criteria['benefits']) > 0 or len(criteria['side_effects']) > 0:
+                criteria['strain_types'] = 'skipped'
+                data = SearchElasticService().query_strain_srx_score(criteria, 6, 0, include_locations=False)
+                for s in data.get('list')[1:]:
+                    also_like_strains.append(s)
 
         return also_like_strains
 

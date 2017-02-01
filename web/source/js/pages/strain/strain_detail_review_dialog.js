@@ -66,7 +66,8 @@ W.pages.strain.StrainReviewDialog = Class.extend({
             that.reviewEffects = [];
         }, {
             width: '{0}px'.format(dialogWidth),
-            maxWidth: '{0}px'.format(dialogWidth)
+            maxWidth: '{0}px'.format(dialogWidth),
+            minHeight: '300px'
         });
 
         this.initAddButton(effectType);

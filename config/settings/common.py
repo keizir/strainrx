@@ -194,7 +194,7 @@ STATIC_ROOT = str(ROOT_DIR('staticfiles'))
 
 # See: https://docs.djangoproject.com/en/dev/ref/settings/#static-url
 STATIC_URL = '/static/'
-STATICSITEMAPS_ROOT_SITEMAP = 'web.sitemaps.sitemaps'
+STATICSITEMAPS_ROOT_SITEMAP = 'config.urls.sitemaps'
 
 # See: https://docs.djangoproject.com/en/dev/ref/contrib/staticfiles/#std:setting-STATICFILES_DIRS
 STATICFILES_DIRS = (
