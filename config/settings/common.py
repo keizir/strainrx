@@ -49,6 +49,7 @@ THIRD_PARTY_APPS = (
     'rest_framework',  # API,
     'storages',
     'raven.contrib.django.raven_compat',
+    'tinymce'
 )
 
 # Apps specific for this project go here.
@@ -393,3 +394,8 @@ LOGGING = {
 }
 
 PROFILE = 'local'
+
+TINYMCE_DEFAULT_CONFIG = {
+    'theme': "advanced",
+    'custom_undo_redo_levels': 10,
+}

@@ -120,4 +120,4 @@ srx_error.log
 .env
 
 ansible/site.retry
-
+staticfiles

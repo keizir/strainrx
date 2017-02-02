@@ -2,6 +2,7 @@
 from django import forms
 from django.contrib import admin
 from django.contrib.admin.widgets import AdminTimeWidget
+from tinymce.widgets import TinyMCE
 
 from web.businesses.api.services import BusinessLocationService
 from web.businesses.models import Business, BusinessLocation, LocationReview
@@ -36,6 +37,7 @@ class BusinessLocationAdminForm(forms.ModelForm):
         model = BusinessLocation
         fields = '__all__'
 
+    about = forms.CharField(widget=TinyMCE(attrs={'cols': 80, 'rows': 20}), max_length=1000)
     location_field = forms.CharField(max_length=255)
 
     mon_open = forms.TimeField(widget=AdminTimeWidget(format='%I:%M %p'), input_formats=('%I:%M %p',), required=False)

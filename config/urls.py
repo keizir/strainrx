@@ -46,7 +46,9 @@ urlpatterns = [
                       include('web.businesses.api.urls', namespace='businesses_api', app_name='businesses_api')),
 
                   url(r'^sitemap\.xml$', sitemap, {'sitemaps': sitemaps},
-                      name='django.contrib.sitemaps.views.sitemap')
+                      name='django.contrib.sitemaps.views.sitemap'),
+
+                  url(r'^tinymce/', include('tinymce.urls')),
 
               ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 

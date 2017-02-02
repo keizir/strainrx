@@ -1,5 +1,7 @@
 # -*- coding: utf-8 -*-
+from django import forms
 from django.contrib import admin
+from tinymce.widgets import TinyMCE
 
 from web.businesses.es_service import BusinessLocationESService
 from web.businesses.models import BusinessLocationMenuItem
@@ -44,8 +46,18 @@ def deactivate_selected_strains(modeladmin, request, queryset):
 deactivate_selected_strains.short_description = 'Deactivate selected'
 
 
+class StrainAdminForm(forms.ModelForm):
+    class Meta:
+        model = Strain
+        fields = '__all__'
+
+    about = forms.CharField(widget=TinyMCE(attrs={'cols': 80, 'rows': 20}), max_length=1500)
+
+
 @admin.register(Strain)
 class StrainAdmin(admin.ModelAdmin):
+    form = StrainAdminForm
+
     def get_actions(self, request):
         # Disable delete
         actions = super(StrainAdmin, self).get_actions(request)
