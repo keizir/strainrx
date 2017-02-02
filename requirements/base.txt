@@ -59,3 +59,4 @@ requests==2.11.1
 raven==5.32.0
 django-static-sitemaps==4.2.1
 django-tinymce==2.6.0
+django-cors-headers==2.0.1

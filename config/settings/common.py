@@ -49,7 +49,8 @@ THIRD_PARTY_APPS = (
     'rest_framework',  # API,
     'storages',
     'raven.contrib.django.raven_compat',
-    'tinymce'
+    'tinymce',
+    'corsheaders',
 )
 
 # Apps specific for this project go here.
@@ -69,6 +70,7 @@ INSTALLED_APPS = DJANGO_APPS + THIRD_PARTY_APPS + LOCAL_APPS
 # MIDDLEWARE CONFIGURATION
 # ------------------------------------------------------------------------------
 MIDDLEWARE_CLASSES = (
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -76,7 +78,13 @@ MIDDLEWARE_CLASSES = (
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'web.middleware.middleware.TimezoneMiddleware'
+    'web.middleware.middleware.TimezoneMiddleware',
+)
+
+CORS_ORIGIN_WHITELIST = (
+    'staging.strainrx.co',
+    'strainrx.co',
+    's3.amazonaws.com',
 )
 
 # MIGRATIONS CONFIGURATION
