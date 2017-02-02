@@ -51,7 +51,7 @@ class StrainAdminForm(forms.ModelForm):
         model = Strain
         fields = '__all__'
 
-    about = forms.CharField(widget=TinyMCE(attrs={'cols': 80, 'rows': 20}), max_length=1500)
+    about = forms.CharField(widget=TinyMCE(attrs={'cols': 80, 'rows': 20}))
 
 
 @admin.register(Strain)

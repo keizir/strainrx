@@ -37,7 +37,7 @@ class BusinessLocationAdminForm(forms.ModelForm):
         model = BusinessLocation
         fields = '__all__'
 
-    about = forms.CharField(widget=TinyMCE(attrs={'cols': 80, 'rows': 20}), max_length=1000)
+    about = forms.CharField(widget=TinyMCE(attrs={'cols': 80, 'rows': 20}))
     location_field = forms.CharField(max_length=255)
 
     mon_open = forms.TimeField(widget=AdminTimeWidget(format='%I:%M %p'), input_formats=('%I:%M %p',), required=False)

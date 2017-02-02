@@ -69,7 +69,7 @@ class Strain(models.Model):
                                 "tar": 0, "tea": 0, "tobacco": 0, "tree_fruit": 0, "tropical": 0,
                                 "vanilla": 0, "violet": 0, "woody": 0})
 
-    about = models.TextField(_('Description'), max_length=1500, null=True, blank=True)
+    about = models.TextField(_('Description'), null=True, blank=True)
     origins = models.ManyToManyField('self', symmetrical=False, blank=True)
 
     removed_by = models.CharField(max_length=20, blank=True, null=True)
