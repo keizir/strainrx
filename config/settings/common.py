@@ -407,3 +407,5 @@ TINYMCE_DEFAULT_CONFIG = {
     'theme': "advanced",
     'custom_undo_redo_levels': 10,
 }
+
+TINYMCE_JS_ROOT = '/tinymce-static'

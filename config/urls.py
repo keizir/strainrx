@@ -19,38 +19,42 @@ sitemaps = {
 }
 
 urlpatterns = [
-                  url(r'^$', TemplateView.as_view(template_name='pages/home.html'), name='home'),
-                  url(r'^about$', TemplateView.as_view(template_name='pages/about.html'), name='about'),
-                  url(r'^privacy$', TemplateView.as_view(template_name='pages/privacy.html'), name='privacy'),
-                  url(r'^terms$', TemplateView.as_view(template_name='pages/terms.html'), name='terms'),
-                  url(r'^contact$', TemplateView.as_view(template_name='pages/contact.html'), name='contact'),
+    url(r'^$', TemplateView.as_view(template_name='pages/home.html'), name='home'),
+    url(r'^about$', TemplateView.as_view(template_name='pages/about.html'), name='about'),
+    url(r'^privacy$', TemplateView.as_view(template_name='pages/privacy.html'), name='privacy'),
+    url(r'^terms$', TemplateView.as_view(template_name='pages/terms.html'), name='terms'),
+    url(r'^contact$', TemplateView.as_view(template_name='pages/contact.html'), name='contact'),
 
-                  # Django Admin, use {% url 'admin:index' %}
-                  url(settings.ADMIN_URL, include(admin.site.urls)),
+    # Django Admin, use {% url 'admin:index' %}
+    url(settings.ADMIN_URL, include(admin.site.urls)),
 
-                  # User management
-                  url(r'^users/', include('web.users.urls', namespace='users')),
-                  url(r'^', include('web.search.urls', namespace='search')),
-                  url(r'^', include('web.businesses.urls', namespace='businesses')),
-                  url(r'^accounts/', include('allauth.urls')),
+    # User management
+    url(r'^users/', include('web.users.urls', namespace='users')),
+    url(r'^', include('web.search.urls', namespace='search')),
+    url(r'^', include('web.businesses.urls', namespace='businesses')),
+    url(r'^accounts/', include('allauth.urls')),
 
-                  # Your stuff: custom urls includes go here
-                  url(r'^api-auth/', include('rest_framework.urls', namespace='rest_framework')),
+    # Your stuff: custom urls includes go here
+    url(r'^api-auth/', include('rest_framework.urls', namespace='rest_framework')),
 
-                  # API
-                  url(r'^api/v1/users/',
-                      include('web.users.api.urls', namespace='users_api', app_name='users_api')),
-                  url(r'^api/v1/search/',
-                      include('web.search.api.urls', namespace='search_api', app_name='search_api')),
-                  url(r'^api/v1/businesses/',
-                      include('web.businesses.api.urls', namespace='businesses_api', app_name='businesses_api')),
+    # API
+    url(r'^api/v1/users/',
+      include('web.users.api.urls', namespace='users_api', app_name='users_api')),
+    url(r'^api/v1/search/',
+      include('web.search.api.urls', namespace='search_api', app_name='search_api')),
+    url(r'^api/v1/businesses/',
+      include('web.businesses.api.urls', namespace='businesses_api', app_name='businesses_api')),
 
-                  url(r'^sitemap\.xml$', sitemap, {'sitemaps': sitemaps},
-                      name='django.contrib.sitemaps.views.sitemap'),
+    url(r'^sitemap\.xml$', sitemap, {'sitemaps': sitemaps},
+      name='django.contrib.sitemaps.views.sitemap'),
 
-                  url(r'^tinymce/', include('tinymce.urls')),
+    url(r'^tinymce/', include('tinymce.urls')),
+    url(r'^tinymce-static/(?P<path>.*)$', 'django.views.static.serve', {
+            'document_root': settings.STATIC_ROOT,
+        }),
 
-              ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+
+] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
 if settings.DEBUG:
     # This allows the error pages to be debugged during development, just visit

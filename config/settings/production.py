@@ -44,6 +44,7 @@ SECURE_SSL_REDIRECT = env.bool('DJANGO_SECURE_SSL_REDIRECT', default=True)
 CSRF_COOKIE_SECURE = True
 CSRF_COOKIE_HTTPONLY = False
 # X_FRAME_OPTIONS = 'DENY'
+X_FRAME_OPTIONS = 'SAMEDOMAIN'
 
 # SITE CONFIGURATION
 # ------------------------------------------------------------------------------
