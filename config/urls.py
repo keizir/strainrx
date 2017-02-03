@@ -8,6 +8,7 @@ from django.contrib import admin
 from django.contrib.sitemaps.views import sitemap
 from django.views import defaults as default_views
 from django.views.generic import TemplateView
+from django.views.static import serve
 
 from web.businesses.sitemaps import BusinessLocationSitemap
 from web.users.sitemaps import StrainSitemap, StaticViewSitemap
@@ -50,7 +51,7 @@ urlpatterns = [
 
     url(r'^tinymce/', include('tinymce.urls')),
     url(r'^tinymce-static/(?P<path>.*)$', 'django.views.static.serve', {
-            'document_root': settings.STATIC_ROOT,
+            'document_root': str(settings.ROOT_DIR.path('tinymce-static')),
         }),
 
 
