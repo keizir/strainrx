@@ -134,9 +134,10 @@ class StrainSearchResultsView(LoginRequiredMixin, APIView):
                 strain = Strain.objects.get(id=k)
                 data = SearchElasticService().query_strain_srx_score(strain.to_search_criteria(),
                                                                      strain_ids=[strain.id], current_user=current_user)
-                users_strain = data.get('list')[0]
-                users_strain['match_percentage'] = user_review_scores.get(k)
-                result_list.append(users_strain)
+                if len(data.get('list')) > 0:
+                    users_strain = data.get('list')[0]
+                    users_strain['match_percentage'] = user_review_scores.get(k)
+                    result_list.append(users_strain)
 
         result_list = sorted(result_list, key=itemgetter('match_percentage'), reverse=True)
         return result_list

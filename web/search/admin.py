@@ -5,16 +5,11 @@ from tinymce.widgets import TinyMCE
 
 from web.businesses.es_service import BusinessLocationESService
 from web.businesses.models import BusinessLocationMenuItem
-from web.search.es_service import SearchElasticService
 from web.search.models import *
 
 
 def activate_selected_strains(modeladmin, request, queryset):
-    search_elastic_service = SearchElasticService()
-
     for strain in queryset:
-        search_elastic_service.create_lookup_strain_name(strain)
-
         strain.removed_by = None
         strain.removed_date = None
         strain.save()
@@ -25,7 +20,6 @@ activate_selected_strains.short_description = 'Activate selected'
 
 def deactivate_selected_strains(modeladmin, request, queryset):
     business_location_es_service = BusinessLocationESService()
-    search_elastic_service = SearchElasticService()
 
     for strain in queryset:
         # Delete strain from locations menu
@@ -35,9 +29,7 @@ def deactivate_selected_strains(modeladmin, request, queryset):
                 mi.removed_date = datetime.now()
                 mi.save()
 
-        # Delete strain itself and name from suggester
-        search_elastic_service.delete_lookup_strain_name(strain.id)
-
+        # Delete strain itself
         strain.removed_by = request.user.id
         strain.removed_date = datetime.now()
         strain.save()

@@ -98,7 +98,7 @@ class StrainDetailsService:
             else:
                 data = SearchElasticService().query_strain_srx_score(latest_user_search[0].to_search_criteria(),
                                                                      strain_ids=[current_strain.id])
-                strain = data.get('list')[0]
+                strain = data.get('list')[0] if len(data.get('list')) > 0 else {'match_percentage': 0}
                 return strain.get('match_percentage')
 
         return 0

@@ -92,41 +92,6 @@ class StrainESService(BaseElasticService):
                                                 type=es_mappings.TYPES.get('strain'))
             es_response = self._request(self.METHODS.get('POST'), url, data=json.dumps(data))
 
-            self.create_lookup_strain_name(strain)
-
-        return es_response
-
-    def create_lookup_strain_name(self, strain):
-        input_variants = [strain.name]
-
-        name_words = strain.name.split(' ')
-        for i, name_word in enumerate(name_words):
-            if i < len(name_words) - 1:
-                input_variants.append('{0} {1}'.format(name_word, name_words[i + 1]))
-            else:
-                input_variants.append(name_word)
-
-        data = {
-            'strain_id': strain.id,
-            'name': strain.name,
-            'name_suggest': {
-                'input': input_variants,
-                'output': strain.name,
-                'payload': {
-                    'id': strain.id,
-                    'name': strain.name,
-                    'strain_slug': strain.strain_slug,
-                    'variety': strain.variety,
-                    'category': strain.category
-                }
-            }
-        }
-
-        method = self.METHODS.get('POST')
-        url = '{base}{index}/{type}'.format(base=self.BASE_ELASTIC_URL,
-                                            index=self.URLS.get('STRAIN'), type='name')
-
-        es_response = self._request(method, url, data=json.dumps(data))
         return es_response
 
     def delete_strain(self, strain_id):

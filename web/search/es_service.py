@@ -465,55 +465,6 @@ class SearchElasticService(BaseElasticService):
         results = self._transform_suggest_results(es_response)
         return results
 
-    def delete_lookup_strain_name(self, strain_id):
-        method = self.METHODS.get('POST')
-        url = '{base}{index}/{type}/_search'.format(base=self.BASE_ELASTIC_URL,
-                                                    index=self.URLS.get('STRAIN'), type='name')
-
-        query = {"query": {"term": {"strain_id": strain_id}}}
-        es_response = self._request(method, url, data=json.dumps(query))
-        es_name_suggest = es_response.get('hits', {}).get('hits', [])
-
-        if len(es_name_suggest) > 0:
-            url = '{base}{index}/{type}/{es_id}'.format(base=self.BASE_ELASTIC_URL,
-                                                        index=self.URLS.get('STRAIN'), type='name',
-                                                        es_id=es_name_suggest[0].get('_id'))
-            es_response = self._request(self.METHODS.get('DELETE'), url)
-            return es_response
-
-    def create_lookup_strain_name(self, strain):
-        input_variants = [strain.name]
-
-        name_words = strain.name.split(' ')
-        for i, name_word in enumerate(name_words):
-            if i < len(name_words) - 1:
-                input_variants.append('{0} {1}'.format(name_word, name_words[i + 1]))
-            else:
-                input_variants.append(name_word)
-
-        data = {
-            'strain_id': strain.id,
-            'name': strain.name,
-            'name_suggest': {
-                'input': input_variants,
-                'output': strain.name,
-                'payload': {
-                    'id': strain.id,
-                    'name': strain.name,
-                    'strain_slug': strain.strain_slug,
-                    'variety': strain.variety,
-                    'category': strain.category
-                }
-            }
-        }
-
-        method = self.METHODS.get('POST')
-        url = '{base}{index}/{type}'.format(base=self.BASE_ELASTIC_URL,
-                                            index=self.URLS.get('STRAIN'), type='name')
-
-        es_response = self._request(method, url, data=json.dumps(data))
-        return es_response
-
     def _transform_suggest_results(self, es_response):
         suggests = es_response.get('suggest', {}).get('name_suggestion', [])
         total = 0
@@ -523,7 +474,9 @@ class SearchElasticService(BaseElasticService):
             suggestion = suggests[0]
             total = len(suggestion.get('options'))
             for option in suggestion.get('options'):
-                payloads.append(option.get('_source'))
+                strain = option.get('_source')
+                if not strain.get('removed_date'):
+                    payloads.append(strain)
 
         return {
             'total': total,
