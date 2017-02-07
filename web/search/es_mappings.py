@@ -133,39 +133,9 @@ strain_mapping = {
         },
         "about": {"type": "string"},
         "origins": {"type": "string"},
-        "removed_by_id": {"type": "long"},
-        "removed_date": {"type": "date"},
-    }
-}
-
-strain_suggester_mapping = {
-    "properties": {
-        "strain_id": {
-            "type": "long",
-            "index": "not_analyzed"
-        },
-        "name": {
-            "type": "string",
-            "index": "analyzed",
-            "analyzer": "name_analyzer",
-            "norms": {
-                "enabled": False
-            },
-            "fields": {
-                "raw": {
-                    "type": "string",
-                    "index": "not_analyzed"
-                },
-                "stemmed": {
-                    "type": "string",
-                    "analyzer": "snowball"
-                }
-            }
-        },
         "name_suggest": {
             "type": "completion",
-            "analyzer": "name_analyzer",
-            "payloads": True
+            "analyzer": "name_analyzer"
         }
     }
 }

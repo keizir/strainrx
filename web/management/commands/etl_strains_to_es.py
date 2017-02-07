@@ -6,7 +6,7 @@ import time
 from django.core.management.base import BaseCommand, CommandError
 
 from web.search import es_mappings
-from web.search.es_mappings import strain_mapping, strain_suggester_mapping, strain_review_mapping
+from web.search.es_mappings import strain_mapping, strain_review_mapping
 from web.search.es_service import SearchElasticService as ElasticService
 from web.search.models import Strain, StrainReview
 from web.search.strain_es_service import StrainESService
@@ -31,12 +31,6 @@ class Command(BaseCommand):
                             dest='index',
                             help='Name of ES index to store results in')
 
-        parser.add_argument('--create_or_update_suggester',
-                            action='store_true',
-                            default=None,
-                            dest='update_suggester',
-                            help='If arg is included will create/recreate strain suggester index')
-
     def handle(self, *args, **options):
         if options.get('index'):
             self.INDEX = options.get('index').lower()
@@ -44,9 +38,6 @@ class Command(BaseCommand):
             raise CommandError('Index is required')
 
         self.DROP_AND_REBUILD = options.get('drop_and_rebuild', False)
-        self.UPDATE_SUGGESTER_INDEX = options.get('update_suggester', False)
-        self.SUGGESTER_INDEX_TYPE = 'name'
-
         self.etl_strains()
 
     def etl_strains(self):
@@ -54,7 +45,7 @@ class Command(BaseCommand):
             self.drop_and_rebuild()
 
         self.load_strains()
-        time.sleep(1)
+        time.sleep(2)
         self.load_strain_reviews()
 
     def drop_and_rebuild(self):
@@ -85,9 +76,6 @@ class Command(BaseCommand):
         # set analyzer
         es.set_settings(self.INDEX, index_settings)
 
-        if self.UPDATE_SUGGESTER_INDEX:
-            es.set_mapping(self.INDEX, self.SUGGESTER_INDEX_TYPE, strain_suggester_mapping)
-
         self.stdout.write('1. Setup complete for [{0}] index'.format(self.INDEX))
 
     def load_strains(self):
@@ -96,13 +84,20 @@ class Command(BaseCommand):
         strains = Strain.objects.all()
 
         bulk_strain_data = []
-        bulk_strain_suggester_data = []
 
         # build up bulk update
         for s in strains:
             action_data = json.dumps({
                 'index': {}
             })
+
+            input_variants = [s.name]
+            name_words = s.name.split(' ')
+            for i, name_word in enumerate(name_words):
+                if i < len(name_words) - 1:
+                    input_variants.append('{0} {1}'.format(name_word, name_words[i + 1]))
+                else:
+                    input_variants.append(name_word)
 
             bulk_strain_data.append(action_data)
             bulk_strain_data.append(json.dumps({
@@ -119,34 +114,10 @@ class Command(BaseCommand):
                 'origins': '',
                 'removed_date': s.removed_date.isoformat() if s.removed_date else None,
                 'removed_by_id': s.removed_by,
+                'name_suggest': {
+                    'input': input_variants
+                }
             }))
-
-            if self.UPDATE_SUGGESTER_INDEX:
-                input_variants = [s.name]
-
-                name_words = s.name.split(' ')
-                for i, name_word in enumerate(name_words):
-                    if i < len(name_words) - 1:
-                        input_variants.append('{0} {1}'.format(name_word, name_words[i + 1]))
-                    else:
-                        input_variants.append(name_word)
-
-                bulk_strain_suggester_data.append(action_data)
-                bulk_strain_suggester_data.append(json.dumps({
-                    'strain_id': s.id,
-                    'name': s.name,
-                    'name_suggest': {
-                        'input': input_variants,
-                        'output': s.name,
-                        'payload': {
-                            'id': s.id,
-                            'name': s.name,
-                            'strain_slug': s.strain_slug,
-                            'variety': s.variety,
-                            'category': s.category
-                        }
-                    }
-                }))
 
         if len(bulk_strain_data) == 0:
             self.stdout.write('   ---> Nothing to update')
@@ -166,23 +137,6 @@ class Command(BaseCommand):
         self.stdout.write(
             '2. Updated [{0}] index with {1} strains'.format(self.INDEX, len(strains))
         )
-
-        if self.UPDATE_SUGGESTER_INDEX:
-            transformed_bulk_suggester_data = '{0}\n'.format('\n'.join(bulk_strain_suggester_data))
-            results_suggester = es.bulk_index(transformed_bulk_suggester_data, index=self.INDEX,
-                                              index_type=self.SUGGESTER_INDEX_TYPE)
-
-            if results_suggester.get('success') is False:
-                # keep track of any errors we get
-                logger.error(('Error updating {index}/{index_type} in ES. Errors: {errors}'.format(
-                    index=self.INDEX,
-                    index_type=self.SUGGESTER_INDEX_TYPE,
-                    errors=results_suggester.get('errors')
-                )))
-
-            self.stdout.write(
-                '2.1. Created [{0}] suggester'.format(self.SUGGESTER_INDEX_TYPE)
-            )
 
     def load_strain_reviews(self):
         self.stdout.write('3. Updating a strain reviews')

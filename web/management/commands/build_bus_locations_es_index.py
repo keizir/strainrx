@@ -89,46 +89,51 @@ class Command(BaseCommand):
                 'index': {}
             })
             locations_data.append(action_data)
-            locations_data.append(json.dumps({
-                "business_id": l.business.pk,
-                "business_location_id": l.pk,
-                "category": l.category,
-                "slug_name": l.slug_name,
-                "location_name": l.location_name,
-                "manager_name": l.manager_name,
-                "location_email": l.location_email,
-                "dispensary": l.dispensary,
-                "delivery": l.delivery,
-                "grow_house": l.grow_house,
-                "delivery_radius": l.delivery_radius,
-                "street1": l.street1,
-                "city": l.city,
-                "state": l.state,
-                "zip_code": l.zip_code,
-                "location": {"lat": l.lat, "lon": l.lng},
-                "location_raw": l.location_raw,
-                "phone": l.phone,
-                "ext": l.ext,
-                "timezone": l.timezone,
-                "removed_by_id": l.removed_by,
-                "removed_date": l.removed_date.isoformat() if l.removed_date else None,
-                "created_date": l.created_date.isoformat() if l.created_date else None,
-                "mon_open": l.mon_open.isoformat() if l.mon_open else None,
-                "mon_close": l.mon_close.isoformat() if l.mon_close else None,
-                "tue_open": l.tue_open.isoformat() if l.tue_open else None,
-                "tue_close": l.tue_close.isoformat() if l.tue_close else None,
-                "wed_open": l.wed_open.isoformat() if l.wed_open else None,
-                "wed_close": l.wed_close.isoformat() if l.wed_close else None,
-                "thu_open": l.thu_open.isoformat() if l.thu_open else None,
-                "thu_close": l.thu_close.isoformat() if l.thu_close else None,
-                "fri_open": l.fri_open.isoformat() if l.fri_open else None,
-                "fri_close": l.fri_close.isoformat() if l.fri_close else None,
-                "sat_open": l.sat_open.isoformat() if l.sat_open else None,
-                "sat_close": l.sat_close.isoformat() if l.sat_close else None,
-                "sun_open": l.sun_open.isoformat() if l.sun_open else None,
-                "sun_close": l.sun_close.isoformat() if l.sun_close else None,
-                "menu_items": menu_items
-            }))
+            location_data = {"business_id": l.business.pk,
+                             "business_location_id": l.pk,
+                             "category": l.category,
+                             "slug_name": l.slug_name,
+                             "location_name": l.location_name,
+                             "manager_name": l.manager_name,
+                             "location_email": l.location_email,
+                             "dispensary": l.dispensary,
+                             "delivery": l.delivery,
+                             "grow_house": l.grow_house,
+                             "delivery_radius": l.delivery_radius,
+                             "street1": l.street1,
+                             "city": l.city,
+                             "state": l.state,
+                             "zip_code": l.zip_code,
+                             "phone": l.phone,
+                             "ext": l.ext,
+                             "timezone": l.timezone,
+                             "removed_by_id": l.removed_by,
+                             "removed_date": l.removed_date.isoformat() if l.removed_date else None,
+                             "created_date": l.created_date.isoformat() if l.created_date else None,
+                             "mon_open": l.mon_open.isoformat() if l.mon_open else None,
+                             "mon_close": l.mon_close.isoformat() if l.mon_close else None,
+                             "tue_open": l.tue_open.isoformat() if l.tue_open else None,
+                             "tue_close": l.tue_close.isoformat() if l.tue_close else None,
+                             "wed_open": l.wed_open.isoformat() if l.wed_open else None,
+                             "wed_close": l.wed_close.isoformat() if l.wed_close else None,
+                             "thu_open": l.thu_open.isoformat() if l.thu_open else None,
+                             "thu_close": l.thu_close.isoformat() if l.thu_close else None,
+                             "fri_open": l.fri_open.isoformat() if l.fri_open else None,
+                             "fri_close": l.fri_close.isoformat() if l.fri_close else None,
+                             "sat_open": l.sat_open.isoformat() if l.sat_open else None,
+                             "sat_close": l.sat_close.isoformat() if l.sat_close else None,
+                             "sun_open": l.sun_open.isoformat() if l.sun_open else None,
+                             "sun_close": l.sun_close.isoformat() if l.sun_close else None,
+                             "menu_items": menu_items}
+
+            if l.lat and l.lng:
+                location_data["location"] = {"lat": l.lat, "lon": l.lng}
+                location_data["location_raw"] = l.location_raw
+            else:
+                location_data["location"] = None
+                location_data["location_raw"] = ""
+
+            locations_data.append(json.dumps(location_data))
 
         if len(locations_data) == 0:
             self.stdout.write('   ---> Nothing to update')

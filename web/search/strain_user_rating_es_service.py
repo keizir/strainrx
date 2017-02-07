@@ -16,8 +16,8 @@ class StrainUserRatingESService(BaseElasticService):
                         {"term": {"strain_id": db_strain_id}},
                         {"term": {"user_id": db_user_id}}
                     ],
-                    "filter": {
-                        "missing": {"field": "removed_date"}
+                    "must_not": {
+                        "exists": {"field": "menu_items.removed_date"}
                     }
                 }
             }

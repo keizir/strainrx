@@ -8,7 +8,7 @@ from web.system.models import SystemProperty
 
 
 class SearchElasticService(BaseElasticService):
-    srx_score_script_min = "def psa=effectSum+benefitSum;def benefitPoints=0;def effectPoints=0;def negEffectPoints=0;for(e in userEffects){e=e.key;def strainE=_source['effects'][e];def userE=userEffects[e];def effectBonus=0.0;dist=strainE-userE;if(dist>0){npe=-0.01;}else{if(dist==0){npe=0;};if(dist<0&&dist>=-1){npe=-0.14*userE;};if(dist<-1&&dist>=-2){npe=-0.33*userE;};if(dist<-2&&dist>=-3){npe=-0.51*userE;};if(dist<-3&&dist>=-4){npe=-0.8*userE;};if(dist<-4&&dist>=-5){npe=-1*userE;};};if(userE==strainE){switch(strainE){case 3:effectBonus=0.3;break;case 4:effectBonus=0.5;break;case 5:effectBonus=1.0;break;}};effectPoints+=effectBonus+userE+npe;};for(b in userBenefits){b=b.key;def strainB=_source['benefits'][b];def userB=userBenefits[b];def benefitBonus=0.0;dist=strainB-userB;if(dist>0){npb=-0.01;}else{if(dist==0){npb=0;};if(dist<0&&dist>=-1){npb=-0.14*userB;};if(dist<-1&&dist>=-2){npb=-0.33*userB;};if(dist<-2&&dist>=-3){npb=-0.51*userB;};if(dist<-3&&dist>=-4){npb=-0.8*userB;};if(dist<-4&&dist>=-5){npb=-1*userB;};};if(userB==strainB){switch(strainB){case 3:benefitBonus=0.3;break;case 4:benefitBonus=0.5;break;case 5:benefitBonus=1.0;break;}};benefitPoints+=benefitBonus+userB+npb;};for(ne in userNegEffects){ne=ne.key;def strainNE=_source['side_effects'][ne];def userNE=userNegEffects[ne];negPoints=0;if(userNE==0||strainNE==0){negPoints=0;}else{negPoints=(((userNE-strainNE)**2)*-1)/psa;};negEffectPoints+=negPoints;};def tp=effectPoints+negEffectPoints+benefitPoints;return(tp/psa)*100;"
+    srx_score_script_min = "def psa=params.effectSum+params.benefitSum;def benefitPoints=0.0f;def effectPoints=0.0f;def negEffectPoints=0.0f;for(e in params.userEffects.entrySet()){def strainE=(float)params._source['effects'][e.getKey()];def userE=(float)e.getValue();def effectBonus=0.0f;def dist=strainE-userE;def npe=0.0f;if(dist>0){npe=-0.01f;}else{if(dist==0){npe=0.0f;}if(dist<0&&dist>=-1){npe=-0.14f*userE;}if(dist<-1&&dist>=-2){npe=-0.33f*userE;}if(dist<-2&&dist>=-3){npe=-0.51f*userE;}if(dist<-3&&dist>=-4){npe=-0.8f*userE;}if(dist<-4&&dist>=-5){npe=-1.0f*userE;}}if(userE==strainE){if(strainE==3){effectBonus=0.3f;}if(strainE==4){effectBonus=0.5f;}if(strainE==5){effectBonus=1.0f;}}effectPoints+=effectBonus+userE+npe;}for(b in params.userBenefits.entrySet()){def strainB=(float)params._source['benefits'][b.getKey()];def userB=(float)b.getValue();def benefitBonus=0.0f;def dist=strainB-userB;def npb=0.0f;if(dist>0){npb=-0.01f;}else{if(dist==0){npb=0.0f;}if(dist<0&&dist>=-1){npb=-0.14f*userB;}if(dist<-1&&dist>=-2){npb=-0.33f*userB;}if(dist<-2&&dist>=-3){npb=-0.51f*userB;}if(dist<-3&&dist>=-4){npb=-0.8f*userB;}if(dist<-4&&dist>=-5){npb=-1.0f*userB;}}if(userB==strainB){if(strainB==3){benefitBonus=0.3f;}if(strainB==4){benefitBonus=0.5f;}if(strainB==5){benefitBonus=1.0f;}}benefitPoints+=benefitBonus+userB+npb;}for(ne in params.userNegEffects.entrySet()){def strainNE=(float)params._source['side_effects'][ne.getKey()];def userNE=(float)ne.getValue();def negPoints=0.0f;if(userNE==0||strainNE==0){negPoints=0.0f;}else{negPoints=(float)((Math.pow(userNE-strainNE,2))*-1)/(float)psa;}negEffectPoints+=negPoints;}def tp=effectPoints+negEffectPoints+benefitPoints;return((float)tp/(float)psa)*100;"
 
     def _transform_strain_results(self, results, current_user=None, result_filter=None, include_locations=True,
                                   is_similar=False, similar_strain_id=None):
@@ -123,11 +123,11 @@ class SearchElasticService(BaseElasticService):
             sort_query.append({order_field: {"order": order_dir}})
 
         if order_field.startswith('menu_items'):
-            order_field_must = [{"missing": {"field": "menu_items.removed_date"}}]
+            order_field_bool = {"must_not": {"exists": {"field": "menu_items.removed_date"}}}
             if strain_id:
-                order_field_must.append({"match": {"menu_items.strain_id": strain_id}})
+                order_field_bool["must"] = {"match": {"menu_items.strain_id": strain_id}}
             sort_query.append({order_field: {"order": order_dir, "nested_path": "menu_items",
-                                             "nested_filter": {"bool": {"must": order_field_must}}}})
+                                             "nested_filter": {"bool": order_field_bool}}})
 
         if lat and lon:
             if order_field == 'distance':
@@ -138,12 +138,12 @@ class SearchElasticService(BaseElasticService):
                 sort_query.append({"_geo_distance": {
                     "location": {"lat": lat, "lon": lon}, "order": "asc", "unit": "mi", "distance_type": "plane"}})
 
-        menu_items_must_query = [{"missing": {"field": "menu_items.removed_date"}}]
+        bool_menu_items = {"must_not": {"exists": {"field": "menu_items.removed_date"}}}
         if strain_id:
-            menu_items_must_query.append({"match": {"menu_items.strain_id": strain_id}})
+            bool_menu_items["must"] = {"match": {"menu_items.strain_id": strain_id}}
 
-        must_query = [{"missing": {"field": "removed_date"}},
-                      {"nested": {"path": "menu_items", "query": {"bool": {"must": menu_items_must_query}}}}]
+        must_query = [{"nested": {"path": "menu_items", "query": {"bool": bool_menu_items}}}]
+
         if location_type:
             must_query.append({"match": {location_type: True}})
 
@@ -253,6 +253,7 @@ class SearchElasticService(BaseElasticService):
                                                     type=es_mappings.TYPES.get('strain_rating'))
 
         query = self.build_srx_score_user_review_es_query(criteria, strain_id, user_id)
+
         es_response = self._request(method, url, data=json.dumps(query))
 
         # remove extra info returned by ES and do any other necessary transforms
@@ -265,15 +266,13 @@ class SearchElasticService(BaseElasticService):
         side_effects_data = self.parse_criteria_data(criteria.get('side_effects'))
 
         strain_filter = {
-            "query": {
-                "bool": {
-                    "must": [
-                        {"term": {"strain_id": strain_id}},
-                        {"term": {"user_id": user_id}}
-                    ],
-                    "filter": {
-                        "missing": {"field": "removed_date"}
-                    }
+            "bool": {
+                "must": [
+                    {"term": {"strain_id": strain_id}},
+                    {"term": {"user_id": user_id}}
+                ],
+                "must_not": {
+                    "exists": {"field": "removed_date"}
                 }
             }
         }
@@ -282,9 +281,10 @@ class SearchElasticService(BaseElasticService):
             "query": {
                 "function_score": {
                     "query": strain_filter,
-                    "functions": [
-                        {
-                            "script_score": {
+                    "functions": [{
+                        "script_score": {
+                            "script": {
+                                "lang": "painless",
                                 "params": {
                                     "effectSum": effects_data.get('sum'),
                                     "benefitSum": benefits_data.get('sum'),
@@ -292,10 +292,10 @@ class SearchElasticService(BaseElasticService):
                                     "userBenefits": benefits_data.get('data'),
                                     "userNegEffects": side_effects_data.get('data')
                                 },
-                                "script": self.srx_score_script_min
+                                "inline": self.srx_score_script_min
                             }
                         }
-                    ]
+                    }]
                 }
             }
         }
@@ -355,29 +355,9 @@ class SearchElasticService(BaseElasticService):
         benefits_data = self.parse_criteria_data(criteria.get('benefits'))
         side_effects_data = self.parse_criteria_data(criteria.get('side_effects'))
 
-        strain_variety_filter = {
-            "filtered": {
-                "filter": {
-                    "terms": {
-                        "variety": criteria_strain_types
-                    }
-                }
-            }
-        }
-
-        strain_id_filter = {
-            "filtered": {
-                "filter": {
-                    "terms": {
-                        "id": strain_ids
-                    }
-                }
-            }
-        }
-
-        match_all_varieties = {
-            "match_all": {}
-        }
+        strain_variety_filter = {"bool": {"must": [{"terms": {"variety": criteria_strain_types}}]}}
+        strain_id_filter = {"bool": {"must": [{"terms": {"id": strain_ids}}]}}
+        match_all_varieties = {"match_all": {}}
 
         # if user skipped picking variety match all strains
         strain_filter = strain_variety_filter if criteria_strain_types else match_all_varieties
@@ -406,7 +386,10 @@ class SearchElasticService(BaseElasticService):
                     },
                     "srx_score": {
                         "max": {
-                            "script": "_score"
+                            "script": {
+                                "inline": "_score",
+                                "lang": "painless"
+                            }
                         }
                     }
                 }
@@ -418,9 +401,10 @@ class SearchElasticService(BaseElasticService):
             "query": {
                 "function_score": {
                     "query": strain_filter,
-                    "functions": [
-                        {
-                            "script_score": {
+                    "functions": [{
+                        "script_score": {
+                            "script": {
+                                "lang": "painless",
                                 "params": {
                                     "effectSum": effects_data.get('sum'),
                                     "benefitSum": benefits_data.get('sum'),
@@ -428,10 +412,10 @@ class SearchElasticService(BaseElasticService):
                                     "userBenefits": benefits_data.get('data'),
                                     "userNegEffects": side_effects_data.get('data')
                                 },
-                                "script": self.srx_score_script_min
+                                "inline": self.srx_score_script_min
                             }
                         }
-                    ]
+                    }]
                 }
             }
         }
@@ -463,7 +447,7 @@ class SearchElasticService(BaseElasticService):
         url = '{base}{index}/{type}/_search'.format(
             base=self.BASE_ELASTIC_URL,
             index=self.URLS.get('STRAIN'),
-            type='name'
+            type=es_mappings.TYPES.get('strain')
         )
 
         query = {
@@ -478,8 +462,6 @@ class SearchElasticService(BaseElasticService):
         }
 
         es_response = self._request(method, url, data=json.dumps(query))
-
-        # remove extra info returned by ES and do any other necessary transforms
         results = self._transform_suggest_results(es_response)
         return results
 
@@ -533,16 +515,15 @@ class SearchElasticService(BaseElasticService):
         return es_response
 
     def _transform_suggest_results(self, es_response):
-        suggests = es_response.get('suggest', {}).get('name_suggestion', {})
+        suggests = es_response.get('suggest', {}).get('name_suggestion', [])
         total = 0
         payloads = []
 
-        for s in suggests:
-            options = s.get('options')
-            if options:
-                total = len(options)
-                for o in options:
-                    payloads.append(o.get('payload'))
+        if len(suggests) > 0:
+            suggestion = suggests[0]
+            total = len(suggestion.get('options'))
+            for option in suggestion.get('options'):
+                payloads.append(option.get('_source'))
 
         return {
             'total': total,
@@ -634,136 +615,133 @@ def userNegEffects = [
 //***********************************************************************
 
 // points available
-def psa = effectSum + benefitSum;
+def psa = params.effectSum + params.benefitSum;
 
 // calculate distance
-def benefitPoints = 0;
-def effectPoints = 0;
-def negEffectPoints = 0;
+def benefitPoints = 0.0f;
+def effectPoints = 0.0f;
+def negEffectPoints = 0.0f;
 
 // calc all effect points awarded
-for (e in userEffects) {
-    e = e.key;
-    def strainE = _source['effects'][e];
-    def userE = userEffects[e];
-    def effectBonus = 0.0;
+for (e in params.userEffects.entrySet()) {
+    def strainE = (float) params._source['effects'][e.getKey()];
+    def userE = (float) e.getValue();
+    def effectBonus = 0.0f;
 
-    dist = strainE - userE;
+    def dist = strainE - userE;
+    def npe = 0.0f;
     if (dist > 0) {
-        npe = -0.01;
+        npe = -0.01f;
     } else {
         if (dist == 0) {
-            npe = 0;
-        };
+            npe = 0.0f;
+        }
 
         if (dist < 0 && dist >= -1) {
-            npe = -0.14 * userE;
-        };
+            npe = -0.14f * userE;
+        }
 
         if (dist < -1 && dist >= -2) {
-            npe = -0.33 * userE;
-        };
+            npe = -0.33f * userE;
+        }
 
         if (dist < -2 && dist >= -3) {
-            npe = -0.51 * userE;
-        };
+            npe = -0.51f * userE;
+        }
 
         if (dist < -3 && dist >= -4) {
-            npe = -0.8 * userE;
-        };
+            npe = -0.8f * userE;
+        }
 
         if (dist < -4 && dist >= -5) {
-            npe = -1 * userE;
-        };
-    };
+            npe = -1.0f * userE;
+        }
+    }
 
     if (userE == strainE) {
-        switch (strainE) {
-            // 0-2 are +0 so ignore
-            case 3:
-                effectBonus = 0.3;
-                break;
-            case 4:
-                effectBonus = 0.5;
-                break;
-            case 5:
-                effectBonus = 1.0;
-                break;
+        if (strainE == 3) {
+            effectBonus = 0.3f;
         }
-    };
+
+        if (strainE == 4) {
+            effectBonus = 0.5f;
+        }
+
+        if (strainE == 5) {
+            effectBonus = 1.0f;
+        }
+    }
 
     effectPoints += effectBonus + userE + npe;
-};
+}
 
 // calc all benefit points awarded
-for (b in userBenefits) {
-    b = b.key;
-    def strainB = _source['benefits'][b];
-    def userB = userBenefits[b];
-    def benefitBonus = 0.0;
+for (b in params.userBenefits.entrySet()) {
+    def strainB = (float) params._source['benefits'][b.getKey()];
+    def userB = (float) b.getValue();
+    def benefitBonus = 0.0f;
 
-    dist = strainB - userB;
+    def dist = strainB - userB;
+    def npb = 0.0f;
     if (dist > 0) {
-        npb = -0.01;
+        npb = -0.01f;
     } else {
         if (dist == 0) {
-            npb = 0;
-        };
+            npb = 0.0f;
+        }
 
         if (dist < 0 && dist >= -1) {
-            npb = -0.14 * userB;
-        };
+            npb = -0.14f * userB;
+        }
 
         if (dist < -1 && dist >= -2) {
-            npb = -0.33 * userB;
-        };
+            npb = -0.33f * userB;
+        }
 
         if (dist < -2 && dist >= -3) {
-            npb = -0.51 * userB;
-        };
+            npb = -0.51f * userB;
+        }
 
         if (dist < -3 && dist >= -4) {
-            npb = -0.8 * userB;
-        };
+            npb = -0.8f * userB;
+        }
 
         if (dist < -4 && dist >= -5) {
-            npb = -1 * userB;
-        };
-    };
+            npb = -1.0f * userB;
+        }
+    }
 
     if (userB == strainB) {
-        switch (strainB) {
-            // 0-2 are +0 so ignore
-            case 3:
-                benefitBonus = 0.3;
-                break;
-            case 4:
-                benefitBonus = 0.5;
-                break;
-            case 5:
-                benefitBonus = 1.0;
-                break;
+        if (strainB == 3) {
+            benefitBonus = 0.3f;
         }
-    };
+
+        if (strainB == 4) {
+            benefitBonus = 0.5f;
+        }
+
+        if (strainB == 5) {
+            benefitBonus = 1.0f;
+        }
+    }
 
     benefitPoints += benefitBonus + userB + npb;
-};
+}
 
-for (ne in userNegEffects) {
-    ne = ne.key;
-    def strainNE = _source['side_effects'][ne];
-    def userNE = userNegEffects[ne];
-    negPoints = 0;
+for (ne in params.userNegEffects.entrySet()) {
+    def strainNE = (float) params._source['side_effects'][ne.getKey()];
+    def userNE = (float) ne.getValue();
+    def negPoints = 0.0f;
 
     if (userNE == 0 || strainNE == 0) {
-        negPoints = 0;
+        negPoints = 0.0f;
     } else {
-        negPoints = (((userNE - strainNE)**2) * -1) / psa;
-    };
+        negPoints = (float) ((Math.pow(userNE - strainNE, 2)) * -1) / (float) psa;
+    }
 
     negEffectPoints += negPoints;
-};
+}
 
 def tp = effectPoints + negEffectPoints + benefitPoints;
-return (tp / psa) * 100;​
+return ((float) tp / (float) psa) * 100;​
 """
