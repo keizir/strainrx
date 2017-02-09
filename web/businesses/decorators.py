@@ -21,3 +21,15 @@ def user_is_owner(function):
     wrap.__doc__ = function.__doc__
     wrap.__name__ = function.__name__
     return wrap
+
+
+def authorized_for_signup(function):
+    def wrap(request, *args, **kwargs):
+        if request.user.is_authenticated():
+            return redirect('/')
+
+        return function(request, *args, **kwargs)
+
+    wrap.__doc__ = function.__doc__
+    wrap.__name__ = function.__name__
+    return wrap

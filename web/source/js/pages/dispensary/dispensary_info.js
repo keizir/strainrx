@@ -239,7 +239,7 @@ W.pages.dispensary.DispensaryInfo = Class.extend({
     showPhoneDialog: function showPhoneDialog() {
         W.common.Dialog($('.phone-dialog'), function () {
             $('.btn-close-phone-dialog').off('click');
-        }, {height: 300, width: 400});
+        }, {height: 400, width: 370});
 
         $('.dialog-phone-message').text('Call: {0}'.format(this.location.phone));
         $('.btn-close-phone-dialog').on('click', function () {

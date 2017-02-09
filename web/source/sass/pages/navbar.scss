@@ -34,6 +34,19 @@
     .nav-brand-wrapper {
         display: inline-block;
         float: left;
+        width: 10em;
+        height: 4em;
+
+        .logo {
+            display: block;
+            width: 10em;
+            height: 4em;
+
+            img {
+                width: 10em;
+                vertical-align: middle;
+            }
+        }
     }
 
     .nav-list-wrapper {

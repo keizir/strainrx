@@ -4,7 +4,9 @@
 <nav class="nav-region navbar">
     <div class="container nav-container">
         <div class="nav-brand-wrapper">
-            <a class="navbar-brand logo" href="{% url 'home' %}">Strains</a>
+            <a class="navbar-brand logo" href="{% url 'home' %}">
+                <img src="{% static 'images/logo_hr.png' %}" alt="Strains">
+            </a>
         </div>
         {% if request.user.is_authenticated %}
             {% if request.user.type == 'consumer' %}

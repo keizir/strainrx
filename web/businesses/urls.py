@@ -3,13 +3,13 @@ from __future__ import absolute_import, unicode_literals
 
 from django.conf.urls import url
 
-from web.businesses.decorators import user_is_owner
+from web.businesses.decorators import user_is_owner, authorized_for_signup
 from . import views
 
 urlpatterns = [
     url(
         regex=r'^businesses/signup/$',
-        view=views.BusinessSignUpWizardView.as_view(),
+        view=authorized_for_signup(views.BusinessSignUpWizardView.as_view()),
         name='signup'
     ),
     url(

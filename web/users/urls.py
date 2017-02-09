@@ -3,7 +3,7 @@ from __future__ import absolute_import, unicode_literals
 
 from django.conf.urls import url
 
-from web.users.decorators import user_is_owner
+from web.users.decorators import user_is_owner, authorized_for_signup
 from . import views
 
 urlpatterns = [
@@ -64,7 +64,7 @@ urlpatterns = [
     ),
     url(
         regex=r'^signup/wizard/$',
-        view=views.UserSignUpWizardView.as_view(),
+        view=authorized_for_signup(views.UserSignUpWizardView.as_view()),
         name='signup'
     ),
 ]
