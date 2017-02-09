@@ -1,7 +1,7 @@
 {% load staticfiles i18n %}
 
 <script type="x/srx-template" id="strain_details_page">
-    <div class="detail-section">
+    <div class="detail-section strain-header-section">
         <div class="detail-header">
             <% if (model.from_search) { %>
             <div class="back-to-search-wrapper">
@@ -63,7 +63,7 @@
                 <div class="location-controls">
                     <div class="filter-menu">
                         <div class="active-link popup-container">
-                            <span><b>AVAILABLE</b> at these locations</span>
+                            <span><strong>AVAILABLE</strong> at these locations</span>
                             <i class="fa fa-caret-down" aria-hidden="true"></i>
                         </div>
                         <div class="locations hidden"></div>
