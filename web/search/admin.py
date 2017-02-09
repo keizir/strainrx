@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 from django import forms
 from django.contrib import admin
+from django.contrib.admin import SimpleListFilter
 from tinymce.widgets import TinyMCE
 
 from web.businesses.es_service import BusinessLocationESService
@@ -46,6 +47,27 @@ class StrainAdminForm(forms.ModelForm):
     about = forms.CharField(widget=TinyMCE(attrs={'cols': 80, 'rows': 20}))
 
 
+class StrainRemovedFilter(SimpleListFilter):
+    title = 'Removed'
+    parameter_name = 'status'
+
+    def lookups(self, request, model_admin):
+        return [
+            ('active', 'Active'),
+            ('inactive', 'Inactive')
+        ]
+
+    def queryset(self, request, queryset):
+        removed_value = self.value()
+
+        if removed_value == 'inactive':
+            return queryset.exclude(removed_date=None)
+        elif removed_value == 'active':
+            return queryset.filter(removed_date=None)
+
+        return queryset.all()
+
+
 @admin.register(Strain)
 class StrainAdmin(admin.ModelAdmin):
     form = StrainAdminForm
@@ -62,7 +84,7 @@ class StrainAdmin(admin.ModelAdmin):
 
     list_display = ['name', 'category', 'variety', 'removed_date']
     search_fields = ['name', 'category', 'variety']
-    list_filter = ['name', 'category', 'variety']
+    list_filter = [StrainRemovedFilter, 'category', 'variety', 'name']
     ordering = ['name']
     actions = [activate_selected_strains, deactivate_selected_strains]
 

@@ -7,6 +7,7 @@ import pytz
 from django.conf import settings
 from django.contrib.postgres.fields import JSONField
 from django.core.exceptions import ValidationError
+from django.core.urlresolvers import reverse
 from django.db import models
 from django.db.models.signals import post_save
 from django.dispatch import receiver
@@ -150,6 +151,10 @@ class BusinessLocation(models.Model):
 
         if not delivery and not dispensary:
             raise ValidationError('Either delivery or dispensary is required.')
+
+    def get_absolute_url(self):
+        return reverse('businesses:dispensary_info',
+                       kwargs={'location_category': self.category, 'location_slug': self.slug_name})
 
     def __str__(self):
         return self.location_name

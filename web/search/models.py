@@ -7,6 +7,7 @@ from uuid import uuid4
 
 from django.contrib.postgres.fields import JSONField
 from django.core.exceptions import ValidationError
+from django.core.urlresolvers import reverse
 from django.db import models
 from django.db.models.signals import post_save
 from django.dispatch import receiver
@@ -96,6 +97,9 @@ class Strain(models.Model):
             if value > 0:
                 effects.append({'name': key, 'value': value})
         return effects
+
+    def get_absolute_url(self):
+        return reverse('search:strain_detail', kwargs={'strain_variety': self.variety, 'slug_name': self.strain_slug})
 
     def __str__(self):
         return '{0} - {1}'.format(self.name, self.category)
