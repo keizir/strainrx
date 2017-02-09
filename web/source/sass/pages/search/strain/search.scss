@@ -314,6 +314,10 @@
     }
 }
 
+.info-dialog {
+    line-height: 1.5em;
+}
+
 @media (max-width: $screen-sm-max) {
     .strain-search-wrapper .effects-form {
         width: 70%;

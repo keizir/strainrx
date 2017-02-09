@@ -86,11 +86,11 @@ W.users.ReviewsPage = Class.extend({
     },
 
     renderDispensariesReviews: function renderDispensariesReviews(reviews) {
-        this.regions.$reviews.html('ToBeDone - Dispensaries Reviews'); // TODO render
+        this.regions.$reviews.html('No Reviews Added'); // TODO render
     },
 
     renderDeliveriesReviews: function renderDeliveriesReviews(reviews) {
-        this.regions.$reviews.html('ToBeDone - Deliveries Reviews'); // TODO render
+        this.regions.$reviews.html('No Reviews Added'); // TODO render
     },
 
     preformatReview: function preformatReview(review) {

@@ -45,7 +45,10 @@ W.pages.search.strain.SearchWizardStep1 = W.pages.search.strain.SearchWizardStep
     clickTypeInfo: function clickTypeInfo() {
         $('.type-info').on('click', function (e) {
             e.preventDefault();
-            W.common.Dialog($('.' + $(this).parent().find('.type').attr('id') + '-dialog'));
+            W.common.Dialog($('.' + $(this).parent().find('.type').attr('id') + '-dialog'), null, {
+                width: 370,
+                height: 300
+            });
         });
     },
 

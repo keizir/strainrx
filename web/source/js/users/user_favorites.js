@@ -85,11 +85,11 @@ W.users.FavoritesPage = Class.extend({
     },
 
     renderDispensariesFavorites: function renderDispensariesFavorites(favorites) {
-        this.regions.$favorites.html('ToBeDone - Dispensaries favorites'); // TODO render
+        this.regions.$favorites.html('No Dispensaries Added'); // TODO render
     },
 
     renderDeliveriesFavorites: function renderDeliveriesFavorites(favorites) {
-        this.regions.$favorites.html('ToBeDone - Deliveries favorites'); // TODO render
+        this.regions.$favorites.html('No Deliveries Added'); // TODO render
     },
 
     preformatFavorite: function preformatFavorite(review) {
