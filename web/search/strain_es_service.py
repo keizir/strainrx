@@ -64,6 +64,16 @@ class StrainESService(BaseElasticService):
         es_serializer = StrainESSerializer(strain)
         data = es_serializer.data
 
+        input_variants = [data.get('name')]
+        name_words = data.get('name').split(' ')
+        for i, name_word in enumerate(name_words):
+            if i < len(name_words) - 1:
+                input_variants.append('{0} {1}'.format(name_word, name_words[i + 1]))
+            else:
+                input_variants.append(name_word)
+
+        data['name_suggest'] = {'input': input_variants}
+
         if len(es_strains) > 0:
             es_strain = es_strains[0]
             es_strain_source = es_strain.get('_source')
@@ -79,6 +89,7 @@ class StrainESService(BaseElasticService):
             es_strain_source['about'] = data.get('about')
             es_strain_source['removed_date'] = data.get('removed_date')
             es_strain_source['removed_by_id'] = data.get('removed_by')
+            es_strain_source['name_suggest'] = data.get('name_suggest')
 
             url = '{base}{index}/{type}/{es_id}'.format(base=self.BASE_ELASTIC_URL, index=self.URLS.get('STRAIN'),
                                                         type=es_mappings.TYPES.get('strain'),

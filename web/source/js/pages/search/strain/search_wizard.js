@@ -111,7 +111,10 @@ W.pages.search.strain.SearchWizard = W.common.Wizard.extend({
         this.steps[4] = new W.pages.search.strain.SearchWizardStep4(stepData);
 
         $(window).hashchange(function () {
-            that.refreshSearchSettingAndRenderStep({step: parseInt(location.hash.split('#')[1], 10)});
+            var step = parseInt(location.hash.split('#')[1], 10);
+            if (step) {
+                that.refreshSearchSettingAndRenderStep({step: step});
+            }
         });
     },
 

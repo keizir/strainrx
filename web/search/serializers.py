@@ -13,7 +13,7 @@ class StrainESSerializer(serializers.Serializer):
     side_effects = serializers.JSONField()
     flavor = serializers.JSONField()
 
-    about = serializers.CharField(max_length=1500)
+    about = serializers.CharField()
 
     removed_by = serializers.CharField(max_length=20)
     removed_date = serializers.DateTimeField()
