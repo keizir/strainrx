@@ -72,7 +72,7 @@ class StrainESService(BaseElasticService):
             else:
                 input_variants.append(name_word)
 
-        data['name_suggest'] = {'input': input_variants}
+        data['name_suggest'] = {'input': input_variants, 'weight': 100 - len(input_variants)}
 
         if len(es_strains) > 0:
             es_strain = es_strains[0]

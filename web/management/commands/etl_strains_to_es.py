@@ -93,11 +93,12 @@ class Command(BaseCommand):
 
             input_variants = [s.name]
             name_words = s.name.split(' ')
-            for i, name_word in enumerate(name_words):
-                if i < len(name_words) - 1:
-                    input_variants.append('{0} {1}'.format(name_word, name_words[i + 1]))
-                else:
-                    input_variants.append(name_word)
+            if len(name_words) > 1:
+                for i, name_word in enumerate(name_words):
+                    if i < len(name_words) - 1:
+                        input_variants.append('{0} {1}'.format(name_word, name_words[i + 1]))
+                    else:
+                        input_variants.append(name_word)
 
             bulk_strain_data.append(action_data)
             bulk_strain_data.append(json.dumps({
@@ -115,7 +116,8 @@ class Command(BaseCommand):
                 'removed_date': s.removed_date.isoformat() if s.removed_date else None,
                 'removed_by_id': s.removed_by,
                 'name_suggest': {
-                    'input': input_variants
+                    'input': input_variants,
+                    'weight': 100 - len(input_variants)
                 }
             }))
 

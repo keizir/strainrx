@@ -451,11 +451,13 @@ class SearchElasticService(BaseElasticService):
         )
 
         query = {
+            "_source": ["id", "name", "variety", "strain_slug"],
             "suggest": {
                 "name_suggestion": {
                     "text": query,
                     "completion": {
-                        "field": "name_suggest"
+                        "field": "name_suggest",
+                        "size": 25
                     }
                 }
             }

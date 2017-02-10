@@ -10,6 +10,7 @@ W.pages.strain.StrainLookup = Class.extend({
         this.onReturn = options && options.onReturn;
 
         this.changeLookupInput();
+        this.clickOutsidePayloadArea();
     },
 
     changeLookupInput: function changeLookupInput() {
@@ -130,5 +131,14 @@ W.pages.strain.StrainLookup = Class.extend({
                 return payloadHtml;
             }
         }
+    },
+
+    clickOutsidePayloadArea: function clickOutsidePayloadArea() {
+        $(document).on('click', function (e) {
+            var elem = $(e.target);
+            if (!(elem.parents('.payloads-region').length)) {
+                $('.payloads-region').html('');
+            }
+        });
     }
 });

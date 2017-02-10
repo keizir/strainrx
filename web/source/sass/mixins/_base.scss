@@ -252,6 +252,8 @@ fieldset {
         position: absolute;
         top: 2.5em;
         width: 90%;
+        max-height: 16em;
+        overflow: scroll;
         font-size: 0.7em;
         color: $grey-normal;
         background-color: $white;
