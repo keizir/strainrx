@@ -4,7 +4,7 @@
     display: block;
     position: relative;
     border-radius: 0;
-    height: 4em;
+    height: 5em;
     z-index: 100;
     background-color: $almost-white;
 
@@ -28,22 +28,22 @@
 .nav-container {
     display: block;
     padding: 0 1.3em;
-    line-height: 4em;
-    height: 4em;
+    line-height: 5em;
+    height: 5em;
 
     .nav-brand-wrapper {
         display: inline-block;
         float: left;
-        width: 10em;
-        height: 4em;
+        width: 16em;
+        height: 5em;
 
         .logo {
             display: block;
-            width: 10em;
-            height: 4em;
+            width: 16em;
+            height: 5em;
 
             img {
-                width: 10em;
+                width: 16em;
                 vertical-align: middle;
             }
         }
@@ -70,8 +70,8 @@
 .nav-tabs-wrapper {
     display: inline-block;
     position: relative;
-    width: 50%;
-    margin-left: 3em;
+    width: 23em;
+    margin-left: 2em;
 
     .action {
         display: inline-block;

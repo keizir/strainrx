@@ -621,13 +621,17 @@ W.pages.strain.StrainDetailPage = Class.extend({
                 $('.dispensary-rating').each(function () {
                     var $this = $(this);
                     if ($this.text() !== 'Not Rated') {
-                        W.common.Rating.readOnly($this, {rating: $this.text()});
+                        that.initLocationRating($this, $this.text());
                     }
                 });
 
                 that.initSortActions();
             });
         });
+    },
+
+    initLocationRating: function initLocationRating($el, rating) {
+        W.common.Rating.readOnly($el, {rating: rating, starWidth: '12px'});
     },
 
     renderLocation: function renderLocation(location) {
@@ -695,8 +699,9 @@ W.pages.strain.StrainDetailPage = Class.extend({
                     });
 
                     $.each($expandedHolder.find('.dispensary-rating'), function (i, el) {
-                        var $ratingSelector = $(el);
-                        that.initRating($ratingSelector, $ratingSelector.text());
+                        var $ratingSelector = $(el),
+                            rating = $ratingSelector.text();
+                        that.initLocationRating($ratingSelector, rating !== 'Not Rated' ? rating : 0);
                     });
 
                     $.each($('.price'), function () {
@@ -733,8 +738,9 @@ W.pages.strain.StrainDetailPage = Class.extend({
                     });
 
                     $.each($expandedHolder.find('.dispensary-rating'), function (i, el) {
-                        var $ratingSelector = $(el);
-                        that.initRating($ratingSelector, $ratingSelector.text());
+                        var $ratingSelector = $(el),
+                            rating = $ratingSelector.text();
+                        that.initLocationRating($ratingSelector, rating !== 'Not Rated' ? rating : 0);
                     });
 
                     $('.price-value').each(function (index, $el) {

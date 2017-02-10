@@ -161,11 +161,12 @@
 
                             .col-2 {
                                 display: inline-block;
-                                width: 22%;
+                                width: 22% !important;
                                 text-align: left;
                                 float: left;
-                                margin-left: -10px;
+                                margin-left: -4px;
                                 margin-top: 2px;
+                                padding: 0;
                             }
 
                             .col-3 {
