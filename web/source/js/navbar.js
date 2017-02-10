@@ -74,6 +74,16 @@ W.Navbar = function () {
                     }
                 }
             });
+
+            $(document).on('tap', function (e) {
+                var elem = $(e.target);
+                if (!(elem.parents('.nav-list-wrapper').length)) {
+                    var navList = $('.nav-list');
+                    if (navList.css('display') === 'block') {
+                        navList.css('display', 'none');
+                    }
+                }
+            });
         }
     };
 }();
