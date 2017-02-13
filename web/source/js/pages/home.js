@@ -25,17 +25,29 @@ W.pages.HomePage = Class.extend({
     },
 
     clickLookupSubmit: function clickLookupSubmit() {
+        var that = this;
+
         $('.lookup-submit').on('click', function (e) {
             e.preventDefault();
-            var $input = $('.lookup-input'),
-                strainName = $input.val(),
-                strainVariety = $input.attr('payload-variety'),
-                strainSlug = $input.attr('payload-slug');
+            that.navigateToStrainDetailPage();
+        });
 
-            if (strainName && strainVariety && strainSlug) {
-                window.location.href = '/{0}/{1}'.format(strainVariety, strainSlug);
+        $(document).on('keyup', function (e) {
+            if (e.keyCode === 13) { // Enter Key
+                that.navigateToStrainDetailPage();
             }
         });
+    },
+
+    navigateToStrainDetailPage: function navigateToStrainDetailPage() {
+        var $input = $('.lookup-input'),
+            strainName = $input.val(),
+            strainVariety = $input.attr('payload-variety'),
+            strainSlug = $input.attr('payload-slug');
+
+        if (strainName && strainVariety && strainSlug) {
+            window.location.href = '/{0}/{1}'.format(strainVariety, strainSlug);
+        }
     },
 
     preFillUserLocation: function preFillUserLocation() {

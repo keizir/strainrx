@@ -52,7 +52,7 @@
                     position: absolute;
                     right: 10%;
                     background: $white;
-                    width: 45%;
+                    width: 35em;
                     border: 1px solid $grey-normal;
                     padding: 8px;
                     color: $black;
@@ -149,6 +149,7 @@
                                     display: inline-block;
                                     float: left;
                                     width: 78%;
+                                    line-height: 1.2em;
                                 }
 
                                 .icon {
