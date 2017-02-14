@@ -43,6 +43,7 @@ class StrainAdminForm(forms.ModelForm):
     class Meta:
         model = Strain
         fields = '__all__'
+        exclude = ['internal_id', 'removed_by', 'removed_date']
 
     about = forms.CharField(widget=TinyMCE(attrs={'cols': 80, 'rows': 20}))
 
@@ -71,6 +72,12 @@ class StrainRemovedFilter(SimpleListFilter):
 @admin.register(Strain)
 class StrainAdmin(admin.ModelAdmin):
     form = StrainAdminForm
+    readonly_fields = ('id',)
+    fieldsets = (
+        ('Info', {'fields': ('id', 'name', 'strain_slug'), }),
+        ('Effects', {'fields': ('effects', 'benefits', 'side_effects', 'flavor'), }),
+        ('Additional', {'fields': ('about', 'origins',), }),
+    )
 
     def get_actions(self, request):
         # Disable delete

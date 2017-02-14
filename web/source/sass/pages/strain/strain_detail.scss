@@ -199,7 +199,7 @@
 
         .strain-photo-wrapper {
             display: inline-block;
-            width: 77%;
+            width: 60%;
             vertical-align: top;
             margin: 1em auto;
             text-align: left;
@@ -211,10 +211,10 @@
 
         .strain-info-wrapper {
             display: inline-block;
-            width: 19%;
+            width: 20%;
             text-align: center;
             float: right;
-            margin: 2em auto;
+            margin: 1.5em auto;
 
             .popularity-wrapper .title {
                 font-size: 1.5em;
@@ -930,68 +930,86 @@
 }
 
 @media (min-width: $screen-md-min) {
-    .strain-detail-wrapper .detail-section .second-row .photo-controls {
-        width: 50%;
-    }
+    .strain-detail-wrapper {
+        .detail-section {
+            .second-row {
+                .photo-controls {
+                    width: 50%;
+                }
 
-    .strain-detail-wrapper .detail-section .second-row .location-controls {
-        width: 49%;
+                .location-controls {
+                    width: 49%;
+                }
+            }
+        }
     }
 }
 
 @media (max-width: $screen-sm-min) {
-    .strain-detail-wrapper .detail-section .strain-info-wrapper .popularity-wrapper .title {
-        font-size: 1em;
-    }
-
-    .strain-detail-wrapper .detail-section .strain-info-wrapper .popularity-wrapper h1 {
-        margin: 0 auto;
-        font-size: 6em;
-        width: 1em;
-        border-bottom: 1px solid $grey-light;
-        padding-bottom: 10px;
-    }
-
-    .strain-detail-wrapper .detail-section .strain-info-wrapper .match-score-wrapper .title {
-        display: block;
-        font-size: 1em;
-    }
-
-    .strain-detail-wrapper .detail-section .strain-info-wrapper .match-score-wrapper .score-value {
-        font-size: 3.5em;
-    }
-
-    .strain-detail-wrapper .detail-section .strain-info-wrapper .match-score-wrapper .percent-sign {
-        font-size: 1.8em;
-        vertical-align: top;
-        position: relative;
-        top: 10px;
-    }
-
-    .strain-detail-wrapper .detail-section .effects-wrapper .effect-wrapper {
-        height: 3.5em;
-    }
-
-    .strain-detail-wrapper .detail-section .effects-wrapper .effect-name {
-        display: block;
-        width: 100%;
-        margin-bottom: 5px;
-    }
-
-    .strain-detail-wrapper .detail-section .effects-wrapper .effect {
-        display: block;
-        width: 100%;
-    }
-
-    .strain-detail-wrapper .detail-section .strain-reviews {
-        .review-wrapper {
-            .user-info {
-                width: 20%;
+    .strain-detail-wrapper .detail-section {
+        .strain-info-wrapper {
+            .popularity-wrapper .title {
+                font-size: 1em;
             }
 
-            .review {
-                width: 70%;
+            .popularity-wrapper h1 {
+                margin: 0 auto;
+                font-size: 6em;
+                width: 1em;
+                border-bottom: 1px solid $grey-light;
+                padding-bottom: 10px;
             }
+
+            .match-score-wrapper {
+                .title {
+                    display: block;
+                    font-size: 1em;
+                }
+
+                .score-value {
+                    font-size: 3.5em;
+                }
+
+                .percent-sign {
+                    font-size: 1.8em;
+                    vertical-align: top;
+                    position: relative;
+                    top: 10px;
+                }
+            }
+        }
+
+        .effects-wrapper {
+            .effect-wrapper {
+                height: 3.5em;
+            }
+
+            .effect-name {
+                display: block;
+                width: 100%;
+                margin-bottom: 5px;
+            }
+
+            .effect {
+                display: block;
+                width: 100%;
+            }
+        }
+
+        .strain-reviews {
+            .review-wrapper {
+                .user-info {
+                    width: 20%;
+                }
+
+                .review {
+                    width: 70%;
+                }
+            }
+        }
+
+        .strain-photo-wrapper {
+            width: 70%;
         }
     }
 }
