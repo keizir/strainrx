@@ -75,6 +75,7 @@ class StrainAdmin(admin.ModelAdmin):
     readonly_fields = ('id',)
     fieldsets = (
         ('Info', {'fields': ('id', 'name', 'strain_slug'), }),
+        ('Type', {'fields': ('variety', 'category',), }),
         ('Effects', {'fields': ('effects', 'benefits', 'side_effects', 'flavor'), }),
         ('Additional', {'fields': ('about', 'origins',), }),
     )

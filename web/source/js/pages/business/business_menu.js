@@ -49,7 +49,6 @@ W.pages.business.BusinessMenu = Class.extend({
             success: function (data) {
                 if (data.menu) {
                     $.each(data.menu, function (i, item) {
-                        that.preformatMenuItem(item);
                         that.pushMenuItem(item.strain_variety, item);
                     });
                     that.renderMenus();
@@ -149,7 +148,6 @@ W.pages.business.BusinessMenu = Class.extend({
                             that.deleteMenuItem(variety, menuItem.id);
                         }
 
-                        that.preformatMenuItem(menuItem);
                         that.pushMenuItem(variety, menuItem);
                         that.reRenderVarietyMenu(variety);
                     }
@@ -246,15 +244,6 @@ W.pages.business.BusinessMenu = Class.extend({
 
             that.retrieveMenu($(this).val());
         });
-    },
-
-    preformatMenuItem: function preformatMenuItem(item) {
-        if (item) {
-            item.price_gram = this.formatPriceValue(item.price_gram);
-            item.price_eighth = this.formatPriceValue(item.price_eighth);
-            item.price_quarter = this.formatPriceValue(item.price_quarter);
-            item.price_half = this.formatPriceValue(item.price_half);
-        }
     },
 
     pushMenuItem: function (variety, strain) {

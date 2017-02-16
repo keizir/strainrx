@@ -2,10 +2,31 @@
     <div class="menu-item-wrapper">
         <input type="hidden" class="menu-item-<%= item.id %>" value="<%= item.id %>">
         <div class="menu-item strains"><%= item.strain_name %></div>
-        <div class="menu-item gram"><%= item.price_gram %></div>
-        <div class="menu-item eighth"><%= item.price_eighth %></div>
-        <div class="menu-item quarter"><%= item.price_quarter %></div>
-        <div class="menu-item half"><%= item.price_half %></div>
+
+        <% if (item.price_gram) { %>
+        <div class="menu-item gram">$ <%= item.price_gram %></div>
+        <% } else { %>
+        <div class="menu-item gram">--</div>
+        <% } %>
+
+        <% if (item.price_eighth) { %>
+        <div class="menu-item eighth">$ <%= item.price_eighth %></div>
+        <% } else { %>
+        <div class="menu-item eighth">--</div>
+        <% } %>
+
+        <% if (item.price_quarter) { %>
+        <div class="menu-item quarter">$ <%= item.price_quarter %></div>
+        <% } else { %>
+        <div class="menu-item quarter">--</div>
+        <% } %>
+
+        <% if (item.price_half) { %>
+        <div class="menu-item half">$ <%= item.price_half %></div>
+        <% } else { %>
+        <div class="menu-item half">--</div>
+        <% } %>
+
         <div class="menu-item in-stock">
             <label>
                 <% if (item.in_stock) { %>
