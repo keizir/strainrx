@@ -12,7 +12,7 @@ from web.search.api.serializers import SearchCriteriaSerializer, StrainReviewFor
 from web.search.api.services import StrainDetailsService
 from web.search.es_service import SearchElasticService
 from web.search.models import Strain, StrainImage, Effect, StrainReview, StrainRating, UserFavoriteStrain, \
-    UserSearch
+    UserSearch, Flavor
 from web.search.strain_es_service import StrainESService
 from web.search.strain_user_rating_es_service import StrainUserRatingESService
 from web.system.models import SystemProperty
@@ -411,3 +411,18 @@ class StrainEffectView(LoginRequiredMixin, APIView):
             })
 
         return Response(effects, status=status.HTTP_200_OK)
+
+
+class StrainFlavorView(LoginRequiredMixin, APIView):
+    def get(self, request):
+        flavors_raw = Flavor.objects.all()
+        flavors = []
+
+        for e in flavors_raw:
+            flavors.append({
+                'data_name': e.data_name,
+                'display_name': e.display_name,
+                'image': e.image.url if e.image else None
+            })
+
+        return Response(flavors, status=status.HTTP_200_OK)

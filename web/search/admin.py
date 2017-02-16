@@ -178,6 +178,14 @@ class EffectAdmin(admin.ModelAdmin):
     pass
 
 
+@admin.register(Flavor)
+class FlavorAdmin(admin.ModelAdmin):
+    list_display = ['display_name', 'data_name', 'image']
+    search_fields = ['display_name', 'data_name']
+    ordering = ['display_name']
+    readonly_fields = ['data_name']
+
+
 @admin.register(UserSearch)
 class UserSearchAdmin(admin.ModelAdmin):
     pass

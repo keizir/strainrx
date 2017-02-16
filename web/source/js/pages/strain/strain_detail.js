@@ -7,7 +7,7 @@ W.pages.strain.StrainDetailPage = Class.extend({
     effectNames: W.common.Constants.effectNames,
     benefitNames: W.common.Constants.benefitNames,
     sideEffectNames: W.common.Constants.sideEffectNames,
-    flavorsNames: W.common.Constants.flavors,
+    flavorsData: [],
 
     ui: {
         $strainId: $('.strain-id')
@@ -27,18 +27,22 @@ W.pages.strain.StrainDetailPage = Class.extend({
             that.recalculateSimilarStrainsSectionWidth();
         }, 250));
 
-        this.retrieveStrain(function (strain_data) {
-            if (strain_data) {
-                var qs = W.qs(),
-                    search = qs['search'];
+        that.retrieveFlavors(function (flavors) {
+            that.flavorsData = flavors;
 
-                that.model = new W.common.Model(strain_data);
-                that.model.set('from_search', search);
-                that.model.set('share_urls', W.common.Sharer.getSharerUrls(encodeURIComponent(window.location.href)));
+            that.retrieveStrain(function (strain_data) {
+                if (strain_data) {
+                    var qs = W.qs(),
+                        search = qs['search'];
 
-                that.preformatModel();
-                that.renderStrainDetails();
-            }
+                    that.model = new W.common.Model(strain_data);
+                    that.model.set('from_search', search);
+                    that.model.set('share_urls', W.common.Sharer.getSharerUrls(encodeURIComponent(window.location.href)));
+
+                    that.preformatModel();
+                    that.renderStrainDetails();
+                }
+            });
         });
 
         W.subscribe.apply(this);
@@ -47,6 +51,16 @@ W.pages.strain.StrainDetailPage = Class.extend({
     _on_close_popup: function _on_close_popup() {
         $('.locations').addClass('hidden');
         $('.filter-menu').removeClass('expanded');
+    },
+
+    retrieveFlavors: function retrieveFlavors(success) {
+        $.ajax({
+            method: 'GET',
+            url: '/api/v1/search/flavors',
+            success: function (data) {
+                success(data);
+            }
+        });
     },
 
     retrieveStrain: function retrieveStrain(success) {
@@ -425,14 +439,20 @@ W.pages.strain.StrainDetailPage = Class.extend({
         var that = this,
             flavorsToDisplay = [];
 
-        $.each(this.model.get('strain').flavor, function (name, value) {
+        $.each(this.model.get('strain').flavor, function (data_name, value) {
             if (value > 0) {
-                var flavor = that.flavorsNames[name];
-                flavorsToDisplay.push({
-                    name: flavor.name,
-                    img: '<img src="{0}{1}"/>'.format(STATIC_URL, flavor.image),
-                    value: value
+                var flavor = _.filter(that.flavorsData, function (f) {
+                    return f.data_name === data_name;
                 });
+
+                if (flavor && flavor.length > 0) {
+                    flavorsToDisplay.push({
+                        name: flavor[0].display_name,
+                        img: flavor[0].image ? '<img src="{0}"/>'.format(flavor[0].image) :
+                            '<img src="{0}{1}"/>'.format(STATIC_URL, '/images/flavors/apple-512.png'),
+                        value: value
+                    });
+                }
             }
         });
 

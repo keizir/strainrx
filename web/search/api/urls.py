@@ -9,6 +9,11 @@ urlpatterns = [
         name='effect_type'
     ),
     url(
+        regex=r'^flavors$',
+        view=StrainFlavorView.as_view(),
+        name='flavors'
+    ),
+    url(
         regex=r'^strain/(?P<strain_id>[0-9]+)/image',
         view=StrainUploadImageView.as_view(),
         name='upload_strain_image'

@@ -165,6 +165,34 @@ class Effect(models.Model):
         return '{0} - {1}'.format(self.effect_type, self.display_name)
 
 
+def upload_flavor_image_to(instance, filename):
+    return 'flavors/images/{0}___{1}'.format(instance.data_name, filename)
+
+
+def validate_flavor_image(field_file_obj):
+    file_size = field_file_obj.file.size
+    one_megabyte = 1 * 1024 * 1024
+    if file_size > one_megabyte:
+        raise ValidationError("Max file size is %sMB" % str(1))
+
+
+@python_2_unicode_compatible
+class Flavor(models.Model):
+    data_name = models.SlugField(max_length=100, help_text='This will be slugified automatically from Display Name')
+    display_name = models.CharField(max_length=100)
+    image = models.ImageField(max_length=255, upload_to=upload_flavor_image_to, blank=True,
+                              help_text='Maximum file size allowed is 1Mb',
+                              validators=[validate_flavor_image])
+
+    def save(self, *args, **kwargs):
+        self.data_name = slugify(self.display_name)
+        print('{0} {1}'.format(self.data_name, self.display_name))
+        super(Flavor, self).save(*args, **kwargs)
+
+    def __str__(self):
+        return '{0} ({1})'.format(self.data_name, self.display_name)
+
+
 @python_2_unicode_compatible
 class UserSearch(models.Model):
     user = models.ForeignKey(User, on_delete=models.DO_NOTHING)
