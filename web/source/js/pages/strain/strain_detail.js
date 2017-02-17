@@ -538,67 +538,76 @@ W.pages.strain.StrainDetailPage = Class.extend({
 
     uploadPhotoListener: function uploadPhotoListener() {
         var that = this;
+
         $('.add-photo-link').on('click', function (e) {
             e.preventDefault();
-            W.common.Dialog($('.upload-image-dialog'));
-
-            $('.image-upload-form').on('submit', function (e) {
-                e.preventDefault();
-                $('.loader').removeClass('hidden');
-                $('.btn-upload-image-submit').addClass('hidden');
-
-                var file = $('.upload-image')[0].files[0],
-                    formData = new FormData();
-
-                formData.append('file', file);
-                formData.append('name', file.name);
-
-                $.ajax({
-                    type: 'POST',
-                    url: '/api/v1/search/strain/{0}/image'.format(that.ui.$strainId.val()),
-                    enctype: 'multipart/form-data',
-                    data: formData,
-                    processData: false,
-                    contentType: false,
-                    success: function () {
-                        $('.loader').addClass('hidden');
-                        $('.btn-upload-image-submit').addClass('hidden');
-                        $('.submitted-message').removeClass('hidden');
-
-                        var $btn = $('.btn-close');
-                        $btn.removeClass('hidden');
-                        $btn.on('click', function () {
-                            $btn.addClass('hidden');
-                            $('.btn-upload-image-submit').removeClass('hidden');
-                            $('.photo-camera-wrapper').removeClass('hidden');
-                            $('.preview-image-wrapper').addClass('hidden');
-                            $('.submitted-message').addClass('hidden');
-                            $('.upload-image-dialog').dialog('close');
-                        });
-                    }
-                });
+            W.common.Dialog($('.upload-image-dialog'), function () {
+                that.closeUploadDialog();
             });
+        });
 
-            $('.upload-image').on('change', function (e) {
-                e.preventDefault();
-                var $el = $(this),
-                    preview = $('.preview-image'),
-                    file = $el[0].files[0],
-                    reader = new FileReader();
+        $('.image-upload-form').on('submit', function (e) {
+            e.preventDefault();
+            $('.loader').removeClass('hidden');
+            $('.btn-upload-image-submit').addClass('hidden');
 
-                reader.addEventListener('load', function () {
-                    $('.photo-camera-wrapper').addClass('hidden');
-                    $('.preview-image-wrapper').removeClass('hidden');
-                    $('.btn-upload-image-submit').removeAttr('disabled');
-                    $('label[for="image-file"]').addClass('hidden');
-                    preview[0].src = reader.result;
-                }, false);
+            var file = $('.upload-image')[0].files[0],
+                formData = new FormData();
 
-                if (file) {
-                    reader.readAsDataURL(file);
+            formData.append('file', file);
+            formData.append('name', file.name);
+
+            $.ajax({
+                type: 'POST',
+                url: '/api/v1/search/strain/{0}/image'.format(that.ui.$strainId.val()),
+                enctype: 'multipart/form-data',
+                data: formData,
+                processData: false,
+                contentType: false,
+                success: function () {
+                    $('.loader').addClass('hidden');
+                    $('.btn-upload-image-submit').addClass('hidden');
+                    $('.submitted-message').removeClass('hidden');
+
+                    var $btn = $('.btn-close');
+                    $btn.removeClass('hidden');
+                    $btn.on('click', function () {
+                        that.closeUploadDialog();
+                    });
                 }
             });
         });
+
+        $('.upload-image').on('change', function (e) {
+            e.preventDefault();
+            var $el = $(this),
+                preview = $('.preview-image'),
+                file = $el[0].files[0],
+                reader = new FileReader();
+
+            reader.addEventListener('load', function () {
+                $('.photo-camera-wrapper').addClass('hidden');
+                $('.preview-image-wrapper').removeClass('hidden');
+                $('.btn-upload-image-submit').removeAttr('disabled');
+                $('label[for="image-file"]').addClass('hidden');
+                preview[0].src = reader.result;
+            }, false);
+
+            if (file) {
+                reader.readAsDataURL(file);
+            }
+        });
+    },
+
+    closeUploadDialog: function closeUploadDialog() {
+        $('.btn-close').addClass('hidden');
+        $('.image-upload-form').get(0).reset();
+        $('.btn-upload-image-submit').removeClass('hidden').attr('disabled', 'disabled');
+        $('.photo-camera-wrapper').removeClass('hidden');
+        $('label[for="image-file"]').removeClass('hidden');
+        $('.preview-image-wrapper').addClass('hidden');
+        $('.submitted-message').addClass('hidden');
+        $('.upload-image-dialog').dialog('close');
     },
 
     buildLocationsMenu: function buildLocationsMenu() {
