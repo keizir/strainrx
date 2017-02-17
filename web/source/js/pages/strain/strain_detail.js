@@ -449,7 +449,7 @@ W.pages.strain.StrainDetailPage = Class.extend({
                     flavorsToDisplay.push({
                         name: flavor[0].display_name,
                         img: flavor[0].image ? '<img src="{0}"/>'.format(flavor[0].image) :
-                            '<img src="{0}{1}"/>'.format(STATIC_URL, '/images/flavors/apple-512.png'),
+                            '<img src="{0}{1}"/>'.format(STATIC_URL, 'images/flavors/apple-512.png'),
                         value: value
                     });
                 }

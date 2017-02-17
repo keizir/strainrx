@@ -185,8 +185,8 @@ class Flavor(models.Model):
                               validators=[validate_flavor_image])
 
     def save(self, *args, **kwargs):
-        self.data_name = slugify(self.display_name)
-        print('{0} {1}'.format(self.data_name, self.display_name))
+        if self.pk is None and not self.data_name:
+            self.data_name = slugify(self.display_name)
         super(Flavor, self).save(*args, **kwargs)
 
     def __str__(self):
