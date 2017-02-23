@@ -23,13 +23,13 @@ W.pages.strain.StrainDetailPage = Class.extend({
         var that = this;
         this.name = 'StrainDetailPage';
 
+
         $(window).on('resize', _.debounce(function () {
             that.recalculateSimilarStrainsSectionWidth();
         }, 250));
 
         that.retrieveFlavors(function (flavors) {
             that.flavorsData = flavors;
-
             that.retrieveStrain(function (strain_data) {
                 if (strain_data) {
                     var qs = W.qs(),
@@ -89,6 +89,7 @@ W.pages.strain.StrainDetailPage = Class.extend({
 
     renderStrainDetails: function renderStrainDetails() {
         var template = _.template($('#strain_details_page').html());
+
         $('.strain-detail-wrapper').append(template({
             'model': this.model.getData(),
             'abbreviateStrainName': abbreviateStrainName,

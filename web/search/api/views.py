@@ -413,7 +413,8 @@ class StrainEffectView(LoginRequiredMixin, APIView):
         return Response(effects, status=status.HTTP_200_OK)
 
 
-class StrainFlavorView(LoginRequiredMixin, APIView):
+class StrainFlavorView(APIView):
+    permission_classes = (permissions.AllowAny,)
     def get(self, request):
         flavors_raw = Flavor.objects.all()
         flavors = []
