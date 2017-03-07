@@ -5,11 +5,11 @@
         <div class="location-name col-1">
             <div class="name">
                 <% if (from_search) { %>
-                <a href="/${d.category}/${d.slug_name}/?strain_id=${strain_id}&search=true">
+                <a href="/dispensaries/${d.state.toLowerCase()}/${d.city_slug}/${d.slug_name}/?strain_id=${strain_id}&search=true">
                     <%=d.location_name %>
                 </a>
                 <% } else { %>
-                <a href="/${d.category}/${d.slug_name}/?strain_id=${strain_id}">
+                <a href="/dispensaries/${d.state.toLowerCase()}/${d.city_slug}/${d.slug_name}/?strain_id=${strain_id}">
                     <%=d.location_name %>
                 </a>
                 <% } %>

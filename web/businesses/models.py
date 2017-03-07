@@ -79,8 +79,7 @@ class BusinessLocation(models.Model):
                               help_text='Maximum file size allowed is 5Mb',
                               validators=[validate_business_image])
 
-    category = models.CharField(max_length=20, default='dispensary', choices=CATEGORY_CHOICES,
-                                help_text='Warning: changing the category will change the URL of this location')
+    category = models.CharField(max_length=20, default='dispensary', choices=CATEGORY_CHOICES)
 
     slug_name = models.SlugField(max_length=611, null=True, blank=True,
                                  help_text='This will be automatically generated from a location name when created')
@@ -97,6 +96,9 @@ class BusinessLocation(models.Model):
     state = models.CharField(max_length=50)
     zip_code = models.CharField(max_length=10)
     timezone = models.CharField(max_length=100, null=True, choices=zip(pytz.common_timezones, pytz.common_timezones))
+
+    city_slug = models.SlugField(max_length=611, null=True, blank=True,
+                                 help_text='This will be automatically generated from a city when updated')
 
     about = models.TextField(blank=True, null=True, default='')
 
@@ -133,7 +135,7 @@ class BusinessLocation(models.Model):
             self.category = 'dispensary' if self.dispensary else 'delivery' if self.delivery else 'dispensary'
 
             # create a slug name
-            slugified_name = slugify('{0} {1}'.format(self.location_name, self.city))
+            slugified_name = slugify(self.location_name)
             if not exist_by_slug_name(slugified_name):
                 self.slug_name = slugified_name
             else:
@@ -142,6 +144,9 @@ class BusinessLocation(models.Model):
                     if not exist_by_slug_name(new_slug_name):
                         self.slug_name = new_slug_name
                         break
+
+        if self.city:
+            self.city_slug = slugify(self.city)
 
         super(BusinessLocation, self).save(*args, **kwargs)
 
@@ -154,7 +159,7 @@ class BusinessLocation(models.Model):
 
     def get_absolute_url(self):
         return reverse('businesses:dispensary_info',
-                       kwargs={'location_category': self.category, 'location_slug': self.slug_name})
+                       kwargs={'state': self.state.lower(), 'city_slug': self.city_slug, 'slug_name': self.slug_name})
 
     def __str__(self):
         return self.location_name

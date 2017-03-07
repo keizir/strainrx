@@ -4,7 +4,9 @@ from __future__ import absolute_import, unicode_literals
 from datetime import datetime
 
 import pytz
+from django.core.urlresolvers import reverse
 from django.http import Http404
+from django.views.generic import RedirectView
 from django.views.generic import TemplateView
 
 from web.businesses.models import Business, BusinessLocation
@@ -79,8 +81,15 @@ class DispensaryInfoView(TemplateView):
     def get_context_data(self, **kwargs):
         context = super(DispensaryInfoView, self).get_context_data(**kwargs)
 
-        if BusinessLocation.objects.filter(slug_name=kwargs.get('location_slug'), removed_date=None).exists():
-            location = BusinessLocation.objects.get(slug_name=kwargs.get('location_slug'), removed_date=None)
+        if BusinessLocation.objects.filter(state__iexact=kwargs.get('state').lower(),
+                                           city_slug__iexact=kwargs.get('city_slug').lower(),
+                                           slug_name__iexact=kwargs.get('slug_name').lower(),
+                                           removed_date=None).exists():
+
+            location = BusinessLocation.objects.get(state__iexact=kwargs.get('state').lower(),
+                                                    city_slug__iexact=kwargs.get('city_slug').lower(),
+                                                    slug_name__iexact=kwargs.get('slug_name').lower(),
+                                                    removed_date=None)
             context['business_id'] = location.business.id
             context['location_id'] = location.id
             context['strain_id'] = self.request.GET.get('strain_id')
@@ -88,3 +97,12 @@ class DispensaryInfoView(TemplateView):
             raise Http404
 
         return context
+
+
+class DispensariesInfoView(TemplateView):
+    template_name = 'pages/dispensary/dispensaries_list.html'
+
+
+class DispensaryRedirectView(RedirectView):
+    def get_redirect_url(self, *args, **kwargs):
+        return reverse('businesses:dispensaries_list')

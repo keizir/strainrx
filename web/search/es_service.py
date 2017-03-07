@@ -1,5 +1,7 @@
 import json
 
+from django.template.defaultfilters import slugify
+
 from web.businesses.api.services import get_open_closed, get_location_rating
 from web.es_service import BaseElasticService
 from web.search import es_mappings
@@ -202,6 +204,8 @@ class SearchElasticService(BaseElasticService):
             'business_id': s.get('business_id'), 'location_id': s.get('business_location_id'),
             'category': s.get('category', 'dispensary'),
             'slug_name': s.get('slug_name'),
+            'city_slug': slugify(s.get('city')),
+            'state': s.get('state'),
             'location_name': s.get('location_name'), 'distance': distance,
             'menu_item_id': menu_item_id, 'in_stock': in_stock,
             'price_gram': price_gram, 'price_half': price_half,

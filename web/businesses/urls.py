@@ -38,8 +38,18 @@ urlpatterns = [
         name='locations'
     ),
     url(
-        regex=r'^(?P<location_category>dispensary|delivery)/(?P<location_slug>.+)/$',
+        regex=r'^dispensary/$',
+        view=views.DispensaryRedirectView.as_view(),
+        name='dispensary_redirect_view'
+    ),
+    url(
+        regex=r'^dispensaries/(?P<state>.+)/(?P<city_slug>.+)/(?P<slug_name>.+)/',
         view=views.DispensaryInfoView.as_view(),
         name='dispensary_info'
+    ),
+    url(
+        regex=r'^dispensaries/$',
+        view=views.DispensariesInfoView.as_view(),
+        name='dispensaries_list'
     ),
 ]
