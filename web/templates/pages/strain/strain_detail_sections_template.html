@@ -228,7 +228,7 @@
             </span>
             <div class="lineage-region">
                 <% $.each(model.strain_origins, function(i, origin) { %>
-                <a href="/<%= origin.variety %>/<%= origin.strain_slug %>">
+                <a href="/strains/<%= origin.variety %>/<%= origin.strain_slug %>">
                     <div class="lineage-wrapper">
                         <span class="abbreviation"><%= abbreviateStrainName(origin.name)%></span>
                         <span class="name"><%= origin.name %></span>

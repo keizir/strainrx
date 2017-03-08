@@ -17,7 +17,7 @@ urlpatterns = [
         name='strain_results'
     ),
     url(
-        regex=r'^(?P<strain_variety>sativa|hybrid|indica)/(?P<slug_name>.+)/$',
+        regex=r'^strains/(?P<strain_variety>sativa|hybrid|indica)/(?P<slug_name>.+)/$',
         view=views.StrainDetailView.as_view(),
         name='strain_detail'
     ),
