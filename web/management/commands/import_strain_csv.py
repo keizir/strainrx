@@ -68,6 +68,7 @@ class Command(BaseCommand):
                 if Strain.objects.filter(name=name, category=category).exists():
                     strain = Strain.objects.get(name=name, category=category)
                     strain.internal_id = internal_id
+                    strain.strain_slug = slugify(name)
                     strain.variety = variety
                     strain.effects = effects
                     strain.benefits = benefits
@@ -105,7 +106,7 @@ class Command(BaseCommand):
                     origins_split = origins.split(',')
                     for name in origins_split:
                         name_cleared = name.strip()
-                        strain_slug = '{0}-{1}'.format(slugify(name_cleared), slugify(s.category))
+                        strain_slug = slugify(name_cleared)
                         if Strain.objects.filter(strain_slug=strain_slug).exists():
                             existing = Strain.objects.get(strain_slug=strain_slug)
                             s.origins.add(existing.id)
@@ -233,7 +234,7 @@ class Command(BaseCommand):
                 "apple": self.get_flavor_value(row.get('Apple')),
                 "apricot": self.get_flavor_value(row.get('Apricot')),
                 "berry": self.get_flavor_value(row.get('Berry')),
-                "blue_cheese": self.get_flavor_value(row.get('Blue Cheese')),
+                "blue-cheese": self.get_flavor_value(row.get('Blue Cheese')),
                 "blueberry": self.get_flavor_value(row.get('Blueberry')),
                 "buttery": self.get_flavor_value(row.get('Buttery')),
                 "cheese": self.get_flavor_value(row.get('Cheese')),
@@ -266,13 +267,13 @@ class Command(BaseCommand):
                 "rose": self.get_flavor_value(row.get('Rose')),
                 "sage": self.get_flavor_value(row.get('Sage')),
                 "skunk": self.get_flavor_value(row.get('Skunk')),
-                "spicy_herbal": self.get_flavor_value(row.get('Spicy/Herbal')),
+                "spicy-herbal": self.get_flavor_value(row.get('Spicy/Herbal')),
                 "strawberry": self.get_flavor_value(row.get('Strawberry')),
                 "sweet": self.get_flavor_value(row.get('Sweet')),
                 "tar": self.get_flavor_value(row.get('Tar')),
                 "tea": self.get_flavor_value(row.get('Tea')),
                 "tobacco": self.get_flavor_value(row.get('Tobacco')),
-                "tree_fruit": self.get_flavor_value(row.get('Tree Fruit')),
+                "tree-fruit": self.get_flavor_value(row.get('Tree Fruit')),
                 "tropical": self.get_flavor_value(row.get('Tropical')),
                 "vanilla": self.get_flavor_value(row.get('Vanilla')),
                 "violet": self.get_flavor_value(row.get('Violet')),
