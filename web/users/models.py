@@ -74,7 +74,7 @@ class User(AbstractUser):
         return self.email
 
     def get_absolute_url(self):
-        return reverse('users:detail', kwargs={'username': self.username})
+        return reverse('users:detail', kwargs={'user_id': self.id})
 
     def get_location(self):
         if UserLocation.objects.filter(user__id=self.pk).exists():
