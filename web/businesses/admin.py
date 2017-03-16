@@ -5,7 +5,7 @@ from django.contrib.admin.widgets import AdminTimeWidget
 from tinymce.widgets import TinyMCE
 
 from web.businesses.api.services import BusinessLocationService
-from web.businesses.models import Business, BusinessLocation, LocationReview
+from web.businesses.models import Business, BusinessLocation, LocationReview, State, City
 
 
 @admin.register(Business)
@@ -121,3 +121,41 @@ class LocationReviewAdmin(admin.ModelAdmin):
     readonly_fields = ['location', 'rating', 'review', 'created_date', 'created_by',
                        'last_modified_date', 'last_modified_by']
     actions = [approve_selected_ratings]
+
+
+class StateAdminForm(forms.ModelForm):
+    class Meta:
+        model = State
+        fields = '__all__'
+
+    description = forms.CharField(widget=TinyMCE(attrs={'cols': 80, 'rows': 20}))
+    description2 = forms.CharField(widget=TinyMCE(attrs={'cols': 80, 'rows': 20}))
+
+
+@admin.register(State)
+class StateAdmin(admin.ModelAdmin):
+    form = StateAdminForm
+
+    list_display = ['abbreviation', 'full_name']
+    search_fields = ['abbreviation', 'full_name']
+    list_filter = ['abbreviation', 'full_name']
+    ordering = ['abbreviation']
+
+
+class CityAdminForm(forms.ModelForm):
+    class Meta:
+        model = City
+        fields = '__all__'
+
+    description = forms.CharField(widget=TinyMCE(attrs={'cols': 80, 'rows': 20}))
+
+
+@admin.register(City)
+class CityAdmin(admin.ModelAdmin):
+    form = CityAdminForm
+
+    list_display = ['full_name', 'state', 'description']
+    search_fields = ['state__abbreviation', 'full_name']
+    list_filter = ['state__abbreviation', 'full_name']
+    ordering = ['full_name']
+    readonly_fields = ['full_name_slug']

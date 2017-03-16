@@ -43,9 +43,19 @@ urlpatterns = [
         name='dispensary_redirect_view'
     ),
     url(
-        regex=r'^dispensaries/(?P<state>.+)/(?P<city_slug>.+)/(?P<slug_name>.+)/',
+        regex=r'^dispensaries/(?P<state>.+)/(?P<city_slug>.+)/(?P<slug_name>.+)/$',
         view=views.DispensaryInfoView.as_view(),
         name='dispensary_info'
+    ),
+    url(
+        regex=r'^dispensaries/(?P<state>.+)/(?P<city_slug>.+)$',
+        view=views.DispensariesCitiesView.as_view(),
+        name='dispensaries_city_list'
+    ),
+    url(
+        regex=r'^dispensaries/(?P<state>.+)$',
+        view=views.DispensariesStatesView.as_view(),
+        name='dispensaries_state_list'
     ),
     url(
         regex=r'^dispensaries/$',

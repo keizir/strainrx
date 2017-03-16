@@ -9,7 +9,7 @@ from django.contrib.postgres.fields import JSONField
 from django.core.exceptions import ValidationError
 from django.core.urlresolvers import reverse
 from django.db import models
-from django.db.models.signals import post_save
+from django.db.models.signals import post_save, pre_save
 from django.dispatch import receiver
 from django.template.defaultfilters import slugify
 from django.utils.encoding import python_2_unicode_compatible
@@ -19,6 +19,36 @@ from web.businesses.es_serializers import BusinessLocationESSerializer, MenuItem
 from web.businesses.es_service import BusinessLocationESService
 from web.search.models import Strain
 from web.users.models import User
+
+
+@python_2_unicode_compatible
+class State(models.Model):
+    abbreviation = models.CharField(max_length=2, blank=False, null=False, db_index=True)
+    full_name = models.CharField(max_length=100, blank=True, null=True)
+    description = models.TextField(blank=True, null=True,
+                                   help_text='This will be used on /dispensaries page as a state description')
+    description2 = models.TextField(blank=True, null=True,
+                                    help_text='This will be used on /dispensaries/{state} page as a state description')
+
+    def __str__(self):
+        return self.abbreviation
+
+
+@python_2_unicode_compatible
+class City(models.Model):
+    state = models.ForeignKey(State, on_delete=models.DO_NOTHING)
+    full_name = models.CharField(max_length=100, blank=True, null=True)
+    full_name_slug = models.SlugField(max_length=150, null=True, blank=True, db_index=True,
+                                      help_text='This will be automatically changed from a city full name when updated')
+    description = models.TextField(blank=True, null=True)
+
+    def save(self, *args, **kwargs):
+        self.full_name_slug = slugify(self.full_name)
+        super(City, self).save(*args, **kwargs)
+
+
+    def __str__(self):
+        return self.full_name
 
 
 def upload_business_image_to(instance, filename):
@@ -65,6 +95,9 @@ class Business(models.Model):
 
 @python_2_unicode_compatible
 class BusinessLocation(models.Model):
+    class Meta:
+        unique_together = (("state_fk", "city_fk", "slug_name"),)
+
     CATEGORY_CHOICES = (
         ('dispensary', 'Dispensary'),
         ('delivery', 'Delivery'),
@@ -99,6 +132,9 @@ class BusinessLocation(models.Model):
 
     city_slug = models.SlugField(max_length=611, null=True, blank=True,
                                  help_text='This will be automatically generated from a city when updated')
+
+    state_fk = models.ForeignKey(State, on_delete=models.DO_NOTHING, null=True)
+    city_fk = models.ForeignKey(City, on_delete=models.DO_NOTHING, null=True)
 
     about = models.TextField(blank=True, null=True, default='')
 
@@ -169,8 +205,14 @@ def exist_by_slug_name(location_slug_name):
     return BusinessLocation.objects.filter(slug_name=location_slug_name).exists()
 
 
+@receiver(pre_save, sender=BusinessLocation)
+def pre_save_business_location(sender, **kwargs):
+    business_location = kwargs.get('instance')
+    save_city_and_state(business_location)
+
+
 @receiver(post_save, sender=BusinessLocation)
-def save_es_business_location(sender, **kwargs):
+def post_save_business_location(sender, **kwargs):
     business_location = kwargs.get('instance')
     es_serializer = BusinessLocationESSerializer(business_location)
     data = es_serializer.data
@@ -179,6 +221,26 @@ def save_es_business_location(sender, **kwargs):
     data['removed_by_id'] = business_location.removed_by
     data['slug_name'] = business_location.slug_name
     BusinessLocationESService().save_business_location(data, business_location.pk)
+
+
+def save_city_and_state(business_location):
+    state = business_location.state
+    city = business_location.city
+
+    if state and not State.objects.filter(abbreviation__iexact=state.lower()).exists():
+        s = State(abbreviation=state.upper())
+        s.save()
+    else:
+        s = State.objects.get(abbreviation__iexact=state.lower())
+
+    if city and not City.objects.filter(state=s, full_name__iexact=city.lower()).exists():
+        c = City(state=s, full_name=city)
+        c.save()
+    else:
+        c = City.objects.get(state=s, full_name__iexact=city.lower())
+
+    business_location.state_fk = s
+    business_location.city_fk = c
 
 
 @python_2_unicode_compatible

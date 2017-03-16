@@ -18,8 +18,9 @@ from web.businesses.api.services import BusinessSignUpService, BusinessLocationS
     get_location_rating
 from web.businesses.emails import EmailService
 from web.businesses.models import Business, BusinessLocation, BusinessLocationMenuItem, LocationReview, \
-    UserFavoriteLocation
+    UserFavoriteLocation, State, City
 from web.businesses.serializers import BusinessSerializer, BusinessLocationSerializer
+from web.businesses.utils import NamePaginator
 from web.search.api.services import StrainDetailsService
 from web.search.models import Strain
 from web.users.api.serializers import UserSerializer
@@ -311,3 +312,36 @@ class BusinessLocationMenuView(APIView):
             'price_half': menu_item.price_half,
             'in_stock': menu_item.in_stock
         }
+
+
+class BusinessLocationsPerCityView(APIView):
+    permission_classes = (permissions.AllowAny,)
+
+    def get(self, request, state_abbreviation, city_slug):
+        if State.objects.filter(abbreviation__iexact=state_abbreviation.lower()).exists():
+            state = State.objects.get(abbreviation__iexact=state_abbreviation.lower())
+        else:
+            return Response({
+                "error": "State {0} not found.".format(state_abbreviation)
+            }, status=status.HTTP_404_NOT_FOUND)
+
+        if City.objects.filter(state=state, full_name_slug=city_slug).exists():
+            city = City.objects.get(state=state, full_name_slug=city_slug)
+        else:
+            return Response({
+                "error": "City {0} not found in the state {1}.".format(city_slug, state_abbreviation)
+            }, status=status.HTTP_404_NOT_FOUND)
+
+        dispensaries = BusinessLocation.objects.filter(city_fk=city, removed_date=None).order_by('location_name')
+        dispensaries_paged = NamePaginator(dispensaries, on='location_name', per_page=10000)
+        data = {}
+
+        for page in dispensaries_paged.pages:
+            current_page = []
+
+            for d in page.object_list:
+                current_page.append(BusinessLocationSerializer(d).data)
+
+            data[page.start_letter] = current_page
+
+        return Response(data, status=status.HTTP_200_OK)

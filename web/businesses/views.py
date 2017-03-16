@@ -9,7 +9,8 @@ from django.http import Http404
 from django.views.generic import RedirectView
 from django.views.generic import TemplateView
 
-from web.businesses.models import Business, BusinessLocation
+from web.businesses.models import Business, BusinessLocation, State, City
+from web.businesses.utils import NamePaginator
 from web.users.models import User
 
 
@@ -80,14 +81,13 @@ class DispensaryInfoView(TemplateView):
 
     def get_context_data(self, **kwargs):
         context = super(DispensaryInfoView, self).get_context_data(**kwargs)
-
-        if BusinessLocation.objects.filter(state__iexact=kwargs.get('state').lower(),
-                                           city_slug__iexact=kwargs.get('city_slug').lower(),
+        if BusinessLocation.objects.filter(state_fk__abbreviation__iexact=kwargs.get('state').lower(),
+                                           city_fk__full_name_slug__iexact=kwargs.get('city_slug').lower(),
                                            slug_name__iexact=kwargs.get('slug_name').lower(),
                                            removed_date=None).exists():
 
-            location = BusinessLocation.objects.get(state__iexact=kwargs.get('state').lower(),
-                                                    city_slug__iexact=kwargs.get('city_slug').lower(),
+            location = BusinessLocation.objects.get(state_fk__abbreviation__iexact=kwargs.get('state').lower(),
+                                                    city_fk__full_name_slug__iexact=kwargs.get('city_slug').lower(),
                                                     slug_name__iexact=kwargs.get('slug_name').lower(),
                                                     removed_date=None)
             context['business_id'] = location.business.id
@@ -101,6 +101,44 @@ class DispensaryInfoView(TemplateView):
 
 class DispensariesInfoView(TemplateView):
     template_name = 'pages/dispensary/dispensaries_list.html'
+
+    def get_context_data(self, **kwargs):
+        context = super(DispensariesInfoView, self).get_context_data(**kwargs)
+        context['states'] = State.objects.all().order_by('abbreviation')
+        return context
+
+
+class DispensariesStatesView(TemplateView):
+    template_name = 'pages/dispensary/dispensaries_state_list.html'
+
+    def get_context_data(self, **kwargs):
+        context = super(DispensariesStatesView, self).get_context_data(**kwargs)
+        if State.objects.filter(abbreviation__iexact=kwargs.get('state').lower()).exists():
+            active_state = State.objects.get(abbreviation__iexact=kwargs.get('state').lower())
+            context['active_state'] = active_state
+            cities = City.objects.filter(state=active_state).order_by('full_name')
+            context['cities_paged'] = NamePaginator(cities, on='full_name', per_page=10000)
+        else:
+            raise Http404
+        return context
+
+
+class DispensariesCitiesView(TemplateView):
+    template_name = 'pages/dispensary/dispensaries_city_list.html'
+
+    def get_context_data(self, **kwargs):
+        context = super(DispensariesCitiesView, self).get_context_data(**kwargs)
+        if City.objects.filter(state__abbreviation__iexact=kwargs.get('state').lower(),
+                               full_name_slug=kwargs.get('city_slug')).exists():
+
+            active_state = State.objects.get(abbreviation__iexact=kwargs.get('state').lower())
+            active_city = City.objects.get(state=active_state, full_name_slug=kwargs.get('city_slug'))
+            context['active_state'] = active_state
+            context['active_city'] = active_city
+        else:
+            raise Http404
+
+        return context
 
 
 class DispensaryRedirectView(RedirectView):
