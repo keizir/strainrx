@@ -1,0 +1,89 @@
+{% extends "base.html" %}
+
+{% load staticfiles i18n %}
+{% load search_template_tags %}
+
+{% block title %}Strains Sativa Root{% endblock %}
+
+{% block css %}
+    {{ block.super }}
+    <link href="{% static 'css/pages/strain/strains_root.css' %}" rel="stylesheet">
+{% endblock %}
+
+{% block content %}
+    <div class="strains-root-container container">
+        <h1>Sativa</h1>
+        <div class="social-icons">
+            <span class="social-fb">
+                <a href="#" class="facebook-share-link" target="_blank">
+                    <i class="fa fa-facebook-square" aria-hidden="true"></i>
+                </a>
+            </span>
+            <span class="social-google">
+                <a href="#" class="google-share-link" target="_blank">
+                    <i class="fa fa-google-plus-square" aria-hidden="true"></i>
+                </a>
+            </span>
+            <span class="social-twitter">
+                <a href="#" class="twitter-share-link" target="_blank">
+                    <i class="fa fa-twitter-square" aria-hidden="true"></i>
+                </a>
+            </span>
+        </div>
+        <div class="breadcrumbs">
+            <div class="breadcrumb"><a href="{% url 'home' %}" class="link">Home</a></div>
+            <div class="breadcrumb-arrow">></div>
+            <div class="breadcrumb"><a href="{% url 'search:strains_root' %}" class="link">Strains</a></div>
+            <div class="breadcrumb-arrow">></div>
+            <div class="breadcrumb active">Sativa</div>
+        </div>
+        <div class="text">
+            Sativas are tall plants that can reach a height of 20 feet, with loose branches covered in long and narrow
+            leaves. Sativa thrives in warm climates, such as Thailand, Mexico, Columbia and Southeast Asia – regions
+            that are in close proximity to the equator. The plant takes longer to flower, relative to its
+            <a href="{% url 'search:strains_indica_root' %}">Indica</a> counterpart, and appears as a lighter shade of
+            green. Sativas also provide a higher yield, typically between 3 ounces to a pound per each individual plant.
+            The presence of red or orange color on the buds is a good sign of a sativa lineage, along with a more fruity
+            or tropical aroma.
+        </div>
+        <div class="map-image-wrapper">
+            <img src="{% static 'images/sativa-origins-map-01.png' %}"/>
+        </div>
+        <div class="text">
+            Sativas are more psychoactive, characterized by energetic, stimulating and mind-altering effects that can
+            complement physical activity, social gatherings, or even to boost productivity and focus. Better suited for
+            daytime consumption, Sativas can be used to help patients suffering from fatigue and depression, ADD, mood
+            disorders, multiple sclerosis, muscle spasms or fibromyalgia. As cerebral as it is, Sativa is known for its
+            abilities to stimulate introspection and creative thinking, making it popular among artists, writers and
+            others whose work constitutes original thinking. As for naming sativas, it is very common to encounter the
+            word "Haze" in the moniker.
+        </div>
+        <h3>Some of the most popular strains of sativa include:</h3>
+        <div class="strains-example-wrapper">
+            <div class="list"></div>
+            <div class="pager">
+                <span class="prev-page"> < </span>
+                <span class="page-num active">1</span>
+                <span class="page-num">2</span>
+                <span class="page-num">3</span>
+                <span class="page-num">4</span>
+                <span class="page-num">5</span>
+                <span class="next-page"> > </span>
+            </div>
+        </div>
+    </div>
+
+    {% include 'pages/strain/strains_example_item_template.html' %}
+
+{% endblock %}
+
+{% block javascript %}
+    {{ block.super }}
+    <script src="{% static 'js/pages/strain/strains_root.js' %}"></script>
+    <script src="{% static 'js/pages/strain/strains_root_view.js' %}"></script>
+    <script type="text/javascript">
+        W.pages.strain.StrainsRootView.init({
+            type: 'sativa'
+        });
+    </script>
+{% endblock %}

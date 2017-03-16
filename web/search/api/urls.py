@@ -14,6 +14,11 @@ urlpatterns = [
         name='flavors'
     ),
     url(
+        regex=r'^strains/(?P<strain_variety>.+)$',
+        view=StrainsListByVarietyView.as_view(),
+        name='strains_list'
+    ),
+    url(
         regex=r'^strain/(?P<strain_id>[0-9]+)/image',
         view=StrainUploadImageView.as_view(),
         name='upload_strain_image'

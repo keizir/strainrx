@@ -415,6 +415,7 @@ class StrainEffectView(LoginRequiredMixin, APIView):
 
 class StrainFlavorView(APIView):
     permission_classes = (permissions.AllowAny,)
+
     def get(self, request):
         flavors_raw = Flavor.objects.all()
         flavors = []
@@ -427,3 +428,26 @@ class StrainFlavorView(APIView):
             })
 
         return Response(flavors, status=status.HTTP_200_OK)
+
+
+class StrainsListByVarietyView(APIView):
+    permission_classes = (permissions.AllowAny,)
+
+    def get(self, request, strain_variety):
+        limit = request.GET.get('limit')
+        strains = []
+        if limit:
+            strains_raw = Strain.objects.filter(variety=strain_variety).order_by('id')[:int(limit)]
+        else:
+            strains_raw = Strain.objects.filter(variety=strain_variety).order_by('id')
+
+        for e in strains_raw:
+            images = StrainImage.objects.filter(strain=e)
+            strains.append({
+                'image': images[0].image.url if len(images) > 0 and images[0].image else None,
+                'name': e.name,
+                'variety': e.variety,
+                'slug': e.strain_slug
+            })
+
+        return Response(strains, status=status.HTTP_200_OK)

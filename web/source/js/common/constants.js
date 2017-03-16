@@ -82,6 +82,12 @@ W.common.Constants = {
         'headache': 'Headache',
         'dizziness': 'Dizziness',
         'dry_eyes': 'Dry Eyes'
+    },
+
+    strainVarieties: {
+        indica: 'Indica',
+        sativa: 'Sativa',
+        hybrid: 'Hybrid'
     }
 
 };

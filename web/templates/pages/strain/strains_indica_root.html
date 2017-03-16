@@ -1,0 +1,92 @@
+{% extends "base.html" %}
+
+{% load staticfiles i18n %}
+{% load search_template_tags %}
+
+{% block title %}Strains Sativa Root{% endblock %}
+
+{% block css %}
+    {{ block.super }}
+    <link href="{% static 'css/pages/strain/strains_root.css' %}" rel="stylesheet">
+{% endblock %}
+
+{% block content %}
+    <div class="strains-root-container container">
+        <h1>Indica</h1>
+        <div class="social-icons">
+            <span class="social-fb">
+                <a href="#" class="facebook-share-link" target="_blank">
+                    <i class="fa fa-facebook-square" aria-hidden="true"></i>
+                </a>
+            </span>
+            <span class="social-google">
+                <a href="#" class="google-share-link" target="_blank">
+                    <i class="fa fa-google-plus-square" aria-hidden="true"></i>
+                </a>
+            </span>
+            <span class="social-twitter">
+                <a href="#" class="twitter-share-link" target="_blank">
+                    <i class="fa fa-twitter-square" aria-hidden="true"></i>
+                </a>
+            </span>
+        </div>
+        <div class="breadcrumbs">
+            <div class="breadcrumb"><a href="{% url 'home' %}" class="link">Home</a></div>
+            <div class="breadcrumb-arrow">></div>
+            <div class="breadcrumb"><a href="{% url 'search:strains_root' %}" class="link">Strains</a></div>
+            <div class="breadcrumb-arrow">></div>
+            <div class="breadcrumb active">Indica</div>
+        </div>
+        <div class="text">
+            Indicas are thought of as having originated from a region of the Middle East (and possibly Central Asia
+            before that), specifically the mountain ranges of Afghanistan appropriately called The Hindu Kush mountains.
+            Growing in such a tough environment, characterized by a harsh and variable climate, has forced the plant to
+            develop a thick and bushy coat of resin as a defense against the elements. Indica tends to be shorter, has
+            wider leaves, and is a more resilient plant compared to its
+            <a href="{% url 'search:strains_sativa_root' %}">Sativa</a> counterpart. It also has a shorter flowering
+            cycle. Additionally, indicas tend to emit a stronger, more pungent fragrance compared to an indica plant.
+        </div>
+        <div class="map-image-wrapper">
+            <img src="{% static 'images/indica-origins-map-01.png' %}"/>
+        </div>
+        <div class="text">
+            Indicas are also differentiated by higher THC content and they produce more relaxing and sedating effects
+            that can be felt throughout the entire body (as opposed to being limited to cerebral effects and experienced
+            mainly in the head). Medicating with indicas is a great option for people who seek pain relief, want to
+            alleviate muscle spasms, treat insomnia, or deal with anxiety issues. A typical yield on an indica plant
+            ranges from 1.5 – 2.5 ounces.
+        </div>
+        <div class="text">
+            As for naming the various indica strains, it is common to see the word "Kush" included in the title, which
+            happens to be a reliable indicator of indica or indica-dominant genetics. The moniker is used as a token of
+            respect or homage to the original source of the plant.
+        </div>
+        <h3>Some of the most popular indica strains are the following:</h3>
+        <div class="strains-example-wrapper">
+            <div class="list"></div>
+            <div class="pager">
+                <span class="prev-page"> < </span>
+                <span class="page-num active">1</span>
+                <span class="page-num">2</span>
+                <span class="page-num">3</span>
+                <span class="page-num">4</span>
+                <span class="page-num">5</span>
+                <span class="next-page"> > </span>
+            </div>
+        </div>
+    </div>
+
+    {% include 'pages/strain/strains_example_item_template.html' %}
+
+{% endblock %}
+
+{% block javascript %}
+    {{ block.super }}
+    <script src="{% static 'js/pages/strain/strains_root.js' %}"></script>
+    <script src="{% static 'js/pages/strain/strains_root_view.js' %}"></script>
+    <script type="text/javascript">
+        W.pages.strain.StrainsRootView.init({
+            type: 'indica'
+        });
+    </script>
+{% endblock %}

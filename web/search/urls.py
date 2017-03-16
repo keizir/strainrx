@@ -17,6 +17,26 @@ urlpatterns = [
         name='strain_results'
     ),
     url(
+        regex=r'^strains/$',
+        view=views.StrainsRootView.as_view(),
+        name='strains_root'
+    ),
+    url(
+        regex=r'^strains/sativa$',
+        view=views.StrainsSativaRootView.as_view(),
+        name='strains_sativa_root'
+    ),
+    url(
+        regex=r'^strains/indica$',
+        view=views.StrainsIndicaRootView.as_view(),
+        name='strains_indica_root'
+    ),
+    url(
+        regex=r'^strains/hybrid$',
+        view=views.StrainsHybridRootView.as_view(),
+        name='strains_hybrid_root'
+    ),
+    url(
         regex=r'^strains/(?P<strain_variety>sativa|hybrid|indica)/(?P<slug_name>.+)/$',
         view=views.StrainDetailView.as_view(),
         name='strain_detail'

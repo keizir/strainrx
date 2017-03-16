@@ -24,3 +24,19 @@ class StrainDetailView(TemplateView):
         context = super(StrainDetailView, self).get_context_data(**kwargs)
         context['strain_id'] = strain.id
         return context
+
+
+class StrainsRootView(TemplateView):
+    template_name = 'pages/strain/strains_root.html'
+
+
+class StrainsSativaRootView(TemplateView):
+    template_name = 'pages/strain/strains_sativa_root.html'
+
+
+class StrainsIndicaRootView(TemplateView):
+    template_name = 'pages/strain/strains_indica_root.html'
+
+
+class StrainsHybridRootView(TemplateView):
+    template_name = 'pages/strain/strains_hybrid_root.html'

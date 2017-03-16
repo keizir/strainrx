@@ -1,0 +1,21 @@
+{% load staticfiles i18n %}
+
+<script type="x/srx-template" id="strains_example_item_template">
+    <div class="strain-example">
+        <div class="img-wrapper">
+            <% if (image) { %>
+            <img src="${image}"/>
+            <% } else if (variety === 'indica') { %>
+            <img src="{% static 'images/product_04.jpg' %}"/>
+            <% } else if (variety === 'sativa') { %>
+            <img src="{% static 'images/product_01.jpg' %}"/>
+            <% } else if (variety === 'hybrid') { %>
+            <img src="{% static 'images/product_07.jpg' %}"/>
+            <% } %>
+        </div>
+        <div class="name">
+            <a href="/strains/${variety}/${slug}">${name}</a>
+        </div>
+        <div class="variety">${varietyName}</div>
+    </div>
+</script>
