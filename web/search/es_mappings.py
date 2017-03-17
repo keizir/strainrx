@@ -76,7 +76,9 @@ strain_mapping = {
                 "paranoia": {"type": "short"},
                 "headache": {"type": "short"},
                 "dizziness": {"type": "short"},
-                "dry_eyes": {"type": "short"}
+                "dry_eyes": {"type": "short"},
+                "spacey": {"type": "short"},
+                "lazy": {"type": "short"}
             }
         },
         "flavor": {

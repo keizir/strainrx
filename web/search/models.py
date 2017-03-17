@@ -57,7 +57,8 @@ class Strain(models.Model):
                                   "help_with_seizures": 0, "restore_appetite": 0, "help_with_insomnia": 0})
 
     side_effects = JSONField(default={"anxiety": 0, "dry_mouth": 0, "paranoia": 0,
-                                      "headache": 0, "dizziness": 0, "dry_eyes": 0})
+                                      "headache": 0, "dizziness": 0, "dry_eyes": 0,
+                                      "spacey": 0, "lazy": 0})
 
     flavor = JSONField(default={"ammonia": 0, "apple": 0, "apricot": 0, "berry": 0, "blue-cheese": 0,
                                 "blueberry": 0, "buttery": 0, "cheese": 0, "chemical": 0, "chestnut": 0,
