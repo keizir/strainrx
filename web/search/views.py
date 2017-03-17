@@ -23,6 +23,7 @@ class StrainDetailView(TemplateView):
         strain = Strain.objects.get(strain_slug=slug_name)
         context = super(StrainDetailView, self).get_context_data(**kwargs)
         context['strain_id'] = strain.id
+        context['strain_name'] = strain.name
         return context
 
 

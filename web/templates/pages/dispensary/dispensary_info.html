@@ -2,7 +2,9 @@
 
 {% load staticfiles i18n %}
 
-{% block title %}Business Location Detail{% endblock %}
+{% block title %}
+    {{ location.location_name }} Dispensary in {{ active_city.full_name }}, {{ location.street1 }}
+{% endblock %}
 
 {% block css %}
     {{ block.super }}

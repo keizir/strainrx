@@ -2,7 +2,14 @@
 
 {% load staticfiles i18n %}
 
-{% block title %}Dispensaries List{% endblock %}
+{% block title %}
+    Dispensaries in
+    {% if active_state.full_name %}
+        {{ active_state.full_name }}
+    {% else %}
+        {{ active_state.abbreviation }}
+    {% endif %}
+{% endblock %}
 
 {% block css %}
     {{ block.super }}

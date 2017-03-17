@@ -95,6 +95,7 @@ class DispensaryInfoView(TemplateView):
             context['strain_id'] = self.request.GET.get('strain_id')
             context['active_state'] = location.state_fk
             context['active_city'] = location.city_fk
+            context['location'] = location
         else:
             raise Http404
 
