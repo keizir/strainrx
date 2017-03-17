@@ -128,8 +128,10 @@ class StateAdminForm(forms.ModelForm):
         model = State
         fields = '__all__'
 
-    description = forms.CharField(widget=TinyMCE(attrs={'cols': 80, 'rows': 20}))
-    description2 = forms.CharField(widget=TinyMCE(attrs={'cols': 80, 'rows': 20}))
+    description = forms.CharField(widget=TinyMCE(attrs={'cols': 80, 'rows': 20}),
+                                  help_text='This will be used on /dispensaries page as a state description')
+    description2 = forms.CharField(widget=TinyMCE(attrs={'cols': 80, 'rows': 20}),
+                                   help_text='This will be used on /dispensaries/{state} page as a state description')
 
 
 @admin.register(State)

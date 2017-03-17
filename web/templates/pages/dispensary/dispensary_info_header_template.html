@@ -19,11 +19,15 @@
                     <span class="arrow">></span>
                 </li>
                 <li>
-                    <a href="{% url 'businesses:dispensaries_state_list' active_state.abbreviation|lower %}">State</a>
+                    <a href="{% url 'businesses:dispensaries_state_list' active_state.abbreviation|lower %}">
+                        {{ active_state.abbreviation }}
+                    </a>
                     <span class="arrow">></span>
                 </li>
                 <li>
-                    <a href="{% url 'businesses:dispensaries_city_list' active_state.abbreviation|lower active_city.full_name_slug %}">City</a>
+                    <a href="{% url 'businesses:dispensaries_city_list' active_state.abbreviation|lower active_city.full_name_slug %}">
+                        {{ active_city.full_name }}
+                    </a>
                     <span class="arrow">></span>
                 </li>
                 <li class="active">${ l.location_name }</li>

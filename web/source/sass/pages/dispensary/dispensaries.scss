@@ -112,10 +112,18 @@
     }
 
     .dispensaries-wrapper {
+        .page {
+            margin: 1em auto;
+        }
+
+        hr:last-child {
+            display: none;
+        }
+
         .dispensary-item {
             display: inline-block;
             width: 48%;
-            margin-bottom: 3em;
+            margin-bottom: 2em;
             min-height: 13em;
 
             h2 {

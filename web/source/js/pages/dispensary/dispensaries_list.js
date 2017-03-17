@@ -44,8 +44,8 @@ W.pages.dispensary.DispensariesList = Class.extend({
         if (this.activeState && this.activeCity) {
             this.getPagedDispensaries(function (data) {
                 that.pagedDispensaries = data;
-                that.renderPageByLetter('A');
-                that.initDispensariesPager();
+                that.renderAllDispensaries();
+                that.initScrollPager();
             });
         }
     },
@@ -60,21 +60,30 @@ W.pages.dispensary.DispensariesList = Class.extend({
         });
     },
 
-    renderPageByLetter: function renderPageByLetter(letter) {
-        if (this.pagedDispensaries && this.pagedDispensaries[letter]) {
+    renderAllDispensaries: function renderPageByLetter() {
+        if (this.pagedDispensaries) {
             var that = this,
-                dispensaries = this.pagedDispensaries[letter],
+                pages = this.pagedDispensaries,
+                sorted = this.sortKeysBy(pages),
                 Dispensary = this.templates.dispensary;
 
-            that.regions.$dispensaries.html('');
+            $.each(sorted, function (i, page) {
+                if (i && i !== 'null' && page) {
+                    that.regions.$dispensaries.append('<div class="page" id="letter-{0}"></div>'.format(i.toLowerCase()));
 
-            $.each(dispensaries, function (i, d) {
-                that.regions.$dispensaries.append(Dispensary({
-                    d: d,
-                    state: that.activeState,
-                    city: that.activeCity,
-                    formatLocation: that.formatLocation
-                }));
+                    var $pageWrapper = $('#letter-{0}'.format(i.toLowerCase()));
+
+                    $.each(page, function (j, dispensary) {
+                        $pageWrapper.append(Dispensary({
+                            d: dispensary,
+                            state: that.activeState,
+                            city: that.activeCity,
+                            formatLocation: that.formatLocation
+                        }));
+                    });
+
+                    that.regions.$dispensaries.append('<hr/>');
+                }
             });
         } else {
             this.regions.$dispensaries.html('No dispensaries found in this city.');
@@ -91,18 +100,11 @@ W.pages.dispensary.DispensariesList = Class.extend({
         });
     },
 
-    initDispensariesPager: function initDispensariesPager() {
-        var that = this;
-        this.ui.$pageSelector.on('click', function (e) {
-            e.preventDefault();
-            var $selectedPage = $(this);
-            that.ui.$pageSelector.removeClass('active');
-            $selectedPage.addClass('active');
-            that.renderPageByLetter($selectedPage.text());
-        });
+    initStatesView: function initStatesView() {
+        this.initScrollPager();
     },
 
-    initStatesView: function initStatesView() {
+    initScrollPager: function initScrollPager() {
         var that = this;
         this.ui.$pageSelector.on('click', function (e) {
             e.preventDefault();
@@ -117,6 +119,16 @@ W.pages.dispensary.DispensariesList = Class.extend({
                 $scrollTo.get(0).scrollIntoView();
             }
         });
+    },
+
+    sortKeysBy: function sortKeysBy(obj, comparator) {
+        var keys = _.sortBy(_.keys(obj), function (key) {
+            return comparator ? comparator(obj[key], key) : key;
+        });
+
+        return _.object(keys, _.map(keys, function (key) {
+            return obj[key];
+        }));
     }
 
 });
