@@ -8,6 +8,27 @@
                 <i class="fa fa-arrow-left" aria-hidden="true"></i>back to search results</a>
         </div>
         <% } %>
+        <div class="breadcrumbs">
+            <ol>
+                <li>
+                    <a href="{% url 'home' %}">Home</a>
+                    <span class="arrow">></span>
+                </li>
+                <li>
+                    <a href="{% url 'businesses:dispensaries_list' %}">Dispensaries</a>
+                    <span class="arrow">></span>
+                </li>
+                <li>
+                    <a href="{% url 'businesses:dispensaries_state_list' active_state.abbreviation|lower %}">State</a>
+                    <span class="arrow">></span>
+                </li>
+                <li>
+                    <a href="{% url 'businesses:dispensaries_city_list' active_state.abbreviation|lower active_city.full_name_slug %}">City</a>
+                    <span class="arrow">></span>
+                </li>
+                <li class="active">${ l.location_name }</li>
+            </ol>
+        </div>
         <div class="image-wrapper">
             <% if (l.image) { %>
             <img class="location-logo" src="${ l.image }">

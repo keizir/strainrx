@@ -14,6 +14,10 @@
         font-size: 1.5em;
     }
 
+    .row {
+        position: relative;
+    }
+
     .detail-section {
         display: block;
         width: 90%;
@@ -270,7 +274,7 @@
 
         .strain-data {
             display: inline-block;
-            width: 80%;
+            width: 100%;
 
             .strain-name {
                 font-size: 2em;
@@ -296,12 +300,17 @@
             .rating-row span {
                 display: inline-block;
             }
+
+            .breadcrumbs {
+                margin: 1em auto;
+            }
         }
 
         .social-icons {
             display: inline-block;
-            width: 20%;
-            float: right;
+            position: absolute;
+            top: 0;
+            right: 0;
             text-align: right;
             cursor: default;
 
@@ -1034,8 +1043,8 @@
         }
 
         .social-icons {
-            position: absolute;
-            left: 3%;
+            right: initial;
+            left: 0;
             font-size: 1.2em;
         }
 

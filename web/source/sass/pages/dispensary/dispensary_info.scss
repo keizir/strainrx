@@ -22,7 +22,7 @@
         display: block;
         position: relative;
         color: $grey-normal;
-        margin-top: 6em;
+        margin-top: 9em;
         height: 40em;
 
         .back-to-search-wrapper {
@@ -33,6 +33,12 @@
             i {
                 margin-right: 0.5em;
             }
+        }
+
+        .breadcrumbs {
+            position: absolute;
+            top: -5em;
+            margin: 2em auto;
         }
 
         .image-wrapper {
@@ -66,7 +72,7 @@
                 .favorite-wrapper {
                     display: inline-block;
                     position: absolute;
-                    top: -4.5em;
+                    top: -6.5em;
                     right: 1em;
                     width: auto;
                     margin-left: 1em;
@@ -235,7 +241,7 @@
         .socials-row {
             display: inline-block;
             position: absolute;
-            top: -4.2em;
+            top: -6.2em;
             left: 0;
             width: 7em;
 
@@ -662,6 +668,11 @@
                 i {
                     margin-right: 0.5em;
                 }
+            }
+
+            .breadcrumbs {
+                position: relative;
+                top: initial;
             }
 
             .image-wrapper {

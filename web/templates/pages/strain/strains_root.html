@@ -31,9 +31,13 @@
             </span>
         </div>
         <div class="breadcrumbs">
-            <div class="breadcrumb"><a href="{% url 'home' %}" class="link">Home</a></div>
-            <div class="breadcrumb-arrow">></div>
-            <div class="breadcrumb active">Strains</div>
+            <ol>
+                <li>
+                    <a href="{% url 'home' %}">Home</a>
+                    <span class="arrow">></span>
+                </li>
+                <li class="active">Strains</li>
+            </ol>
         </div>
         <div class="text">
             Cannabis is thought of as having originated in Central Asia, from where it was spread by human hands to all

@@ -31,11 +31,17 @@
             </span>
         </div>
         <div class="breadcrumbs">
-            <div class="breadcrumb"><a href="{% url 'home' %}" class="link">Home</a></div>
-            <div class="breadcrumb-arrow">></div>
-            <div class="breadcrumb"><a href="{% url 'search:strains_root' %}" class="link">Strains</a></div>
-            <div class="breadcrumb-arrow">></div>
-            <div class="breadcrumb active">Hybrid</div>
+            <ol>
+                <li>
+                    <a href="{% url 'home' %}">Home</a>
+                    <span class="arrow">></span>
+                </li>
+                <li>
+                    <a href="{% url 'search:strains_root' %}">Strains</a>
+                    <span class="arrow">></span>
+                </li>
+                <li class="active">Hybrid</li>
+            </ol>
         </div>
         <div class="text">
             There are 2 different species of cannabis - the marijuana plant as we know it today: indica and sativa.

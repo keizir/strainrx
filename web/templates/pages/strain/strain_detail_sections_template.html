@@ -29,6 +29,35 @@
                         <span class="rate-link"><a href="#">Rate</a></span>
                         <% } %>
                     </div>
+                    <div class="breadcrumbs">
+                        <ol>
+                            <li>
+                                <a href="{% url 'home' %}">Home</a>
+                                <span class="arrow">></span>
+                            </li>
+                            <li>
+                                <a href="{% url 'search:strains_root' %}">Strains</a>
+                                <span class="arrow">></span>
+                            </li>
+                            <% if (model.strain.variety === 'sativa') { %>
+                            <li>
+                                <a href="{% url 'search:strains_sativa_root' %}">Sativa</a>
+                                <span class="arrow">></span>
+                            </li>
+                            <% } else if (model.strain.variety === 'indica') { %>
+                            <li>
+                                <a href="{% url 'search:strains_indica_root' %}">Indica</a>
+                                <span class="arrow">></span>
+                            </li>
+                            <% } else if (model.strain.variety === 'hybrid') { %>
+                            <li>
+                                <a href="{% url 'search:strains_hybrid_root' %}">Hybrid</a>
+                                <span class="arrow">></span>
+                            </li>
+                            <% } %>
+                            <li class="active">${ model.strain.name }</li>
+                        </ol>
+                    </div>
                 </div>
                 <div class="social-icons">
                     <span class="social-fb">

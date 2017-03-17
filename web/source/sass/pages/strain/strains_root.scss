@@ -39,21 +39,6 @@
         }
     }
 
-    .breadcrumbs {
-        div {
-            display: inline-block;
-            margin-right: 0.5em;
-        }
-
-        .breadcrumb a {
-            color: $grey;
-        }
-
-        .active {
-            color: $iris-blue;
-        }
-    }
-
     .text {
         margin: 2em auto;
         line-height: 1.6em;

@@ -39,30 +39,6 @@
         }
     }
 
-    .breadcrumbs {
-        ol {
-            list-style: none;
-            overflow: hidden;
-
-            li {
-                float: left;
-                cursor: default;
-
-                a {
-                    color: $grey;
-                }
-
-                span {
-                    margin: 0 0.5em;
-                }
-            }
-
-            li.active {
-                color: $iris-blue;
-            }
-        }
-    }
-
     .text {
         margin: 2em auto;
         line-height: 1.6em;
