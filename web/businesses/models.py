@@ -172,11 +172,14 @@ class BusinessLocation(models.Model):
 
             # create a slug name
             slugified_name = slugify(self.location_name)
+            slugified_name_and_street = '{0}-{1}'.format(slugify(self.location_name), slugify(self.street1))
             if not exist_by_slug_name(slugified_name):
                 self.slug_name = slugified_name
+            elif not exist_by_slug_name(slugified_name_and_street):
+                self.slug_name = slugified_name_and_street
             else:
                 for x in range(1, 1000):
-                    new_slug_name = '{0}-{1}'.format(slugified_name, x)
+                    new_slug_name = '{0}-{1}'.format(slugified_name_and_street, x)
                     if not exist_by_slug_name(new_slug_name):
                         self.slug_name = new_slug_name
                         break
