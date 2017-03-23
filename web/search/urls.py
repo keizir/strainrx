@@ -22,17 +22,17 @@ urlpatterns = [
         name='strains_root'
     ),
     url(
-        regex=r'^strains/sativa$',
+        regex=r'^strains/sativa/$',
         view=views.StrainsSativaRootView.as_view(),
         name='strains_sativa_root'
     ),
     url(
-        regex=r'^strains/indica$',
+        regex=r'^strains/indica/$',
         view=views.StrainsIndicaRootView.as_view(),
         name='strains_indica_root'
     ),
     url(
-        regex=r'^strains/hybrid$',
+        regex=r'^strains/hybrid/$',
         view=views.StrainsHybridRootView.as_view(),
         name='strains_hybrid_root'
     ),

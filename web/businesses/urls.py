@@ -23,17 +23,17 @@ urlpatterns = [
         name='confirm_email'
     ),
     url(
-        regex=r'^businesses/(?P<business_id>[0-9]+)/info$',
+        regex=r'^businesses/(?P<business_id>[0-9]+)/info/$',
         view=user_is_owner(views.BusinessDetailView.as_view()),
         name='detail'
     ),
     url(
-        regex=r'^businesses/(?P<business_id>[0-9]{1,})/menu$',
+        regex=r'^businesses/(?P<business_id>[0-9]{1,})/menu/$',
         view=user_is_owner(views.BusinessMenuView.as_view()),
         name='menu'
     ),
     url(
-        regex=r'^businesses/(?P<business_id>[0-9]{1,})/locations$',
+        regex=r'^businesses/(?P<business_id>[0-9]{1,})/locations/$',
         view=user_is_owner(views.BusinessLocationsView.as_view()),
         name='locations'
     ),
@@ -48,12 +48,12 @@ urlpatterns = [
         name='dispensary_info'
     ),
     url(
-        regex=r'^dispensaries/(?P<state>.+)/(?P<city_slug>.+)$',
+        regex=r'^dispensaries/(?P<state>.+)/(?P<city_slug>.+)/$',
         view=views.DispensariesCitiesView.as_view(),
         name='dispensaries_city_list'
     ),
     url(
-        regex=r'^dispensaries/(?P<state>.+)$',
+        regex=r'^dispensaries/(?P<state>.+)/$',
         view=views.DispensariesStatesView.as_view(),
         name='dispensaries_state_list'
     ),

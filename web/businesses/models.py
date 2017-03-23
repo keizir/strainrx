@@ -30,6 +30,9 @@ class State(models.Model):
     description2 = models.TextField(blank=True, null=True,
                                     help_text='This will be used on /dispensaries/{state} page as a state description')
 
+    def get_absolute_url(self):
+        return reverse('businesses:dispensaries_state_list', kwargs={'state': self.abbreviation.lower()})
+
     def __str__(self):
         return self.abbreviation
 
@@ -46,6 +49,9 @@ class City(models.Model):
         self.full_name_slug = slugify(self.full_name)
         super(City, self).save(*args, **kwargs)
 
+    def get_absolute_url(self):
+        return reverse('businesses:dispensaries_city_list',
+                       kwargs={'state': self.abbreviation.lower(), 'city_slug': self.full_name_slug})
 
     def __str__(self):
         return self.full_name
@@ -198,7 +204,8 @@ class BusinessLocation(models.Model):
 
     def get_absolute_url(self):
         return reverse('businesses:dispensary_info',
-                       kwargs={'state': self.state.lower(), 'city_slug': self.city_slug, 'slug_name': self.slug_name})
+                       kwargs={'state': self.state_fk.abbreviation.lower(), 'city_slug': self.city_fk.full_name_slug,
+                               'slug_name': self.slug_name})
 
     def __str__(self):
         return self.location_name

@@ -14,3 +14,14 @@ class BusinessLocationSitemap(Sitemap):
 
     def lastmod(self, obj):
         return datetime.now()
+
+
+class DispensariesRootSitemap(Sitemap):
+    changefreq = 'daily'
+    protocol = 'https'
+
+    def items(self):
+        return ['dispensaries_list']
+
+    def lastmod(self, obj):
+        return datetime.now()

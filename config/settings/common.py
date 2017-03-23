@@ -410,3 +410,5 @@ TINYMCE_DEFAULT_CONFIG = {
 
 TINYMCE_JS_ROOT = '/tinymce-static'
 TINYMCE_JS_URL = '/tinymce-static/tiny_mce/tiny_mce.js'
+
+APPEND_SLASH = True
