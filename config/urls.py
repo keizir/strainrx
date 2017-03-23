@@ -8,14 +8,18 @@ from django.contrib import admin
 from django.contrib.sitemaps.views import sitemap
 from django.views import defaults as default_views
 from django.views.generic import TemplateView
-from django.views.static import serve
 
-from web.businesses.sitemaps import BusinessLocationSitemap
+from web.businesses.sitemaps import BusinessLocationSitemap, DispensariesRootSitemap, StateRootSitemap, CityRootSitemap
+from web.search.sitemaps import StrainRootSitemap
 from web.users.sitemaps import StrainSitemap, StaticViewSitemap
 
 sitemaps = {
     'strain': StrainSitemap,
-    'location': BusinessLocationSitemap,
+    'strain_root': StrainRootSitemap,
+    'dispensaries': BusinessLocationSitemap,
+    'dispensaries_root': DispensariesRootSitemap,
+    'dispensaries_state_root': StateRootSitemap,
+    'dispensaries_city_root': CityRootSitemap,
     'static': StaticViewSitemap
 }
 
@@ -46,8 +50,7 @@ urlpatterns = [
     url(r'^api/v1/businesses/',
       include('web.businesses.api.urls', namespace='businesses_api', app_name='businesses_api')),
 
-    url(r'^sitemap\.xml$', sitemap, {'sitemaps': sitemaps},
-      name='django.contrib.sitemaps.views.sitemap'),
+    url(r'^sitemap\.xml$', sitemap, {'sitemaps': sitemaps}, name='django.contrib.sitemaps.views.sitemap'),
 
     url(r'^tinymce/', include('tinymce.urls')),
     url(r'^tinymce-static/(?P<path>.*)$', 'django.views.static.serve', {

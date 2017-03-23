@@ -1,8 +1,9 @@
 from datetime import datetime
 
 from django.contrib.sitemaps import Sitemap
+from django.core.urlresolvers import reverse
 
-from web.businesses.models import BusinessLocation
+from web.businesses.models import BusinessLocation, State, City
 
 
 class BusinessLocationSitemap(Sitemap):
@@ -16,12 +17,37 @@ class BusinessLocationSitemap(Sitemap):
         return datetime.now()
 
 
+class StateRootSitemap(Sitemap):
+    changefreq = 'daily'
+    protocol = 'https'
+
+    def items(self):
+        return State.objects.all()
+
+    def lastmod(self, obj):
+        return datetime.now()
+
+
+class CityRootSitemap(Sitemap):
+    changefreq = 'daily'
+    protocol = 'https'
+
+    def items(self):
+        return City.objects.all()
+
+    def lastmod(self, obj):
+        return datetime.now()
+
+
 class DispensariesRootSitemap(Sitemap):
     changefreq = 'daily'
     protocol = 'https'
 
     def items(self):
-        return ['dispensaries_list']
+        return ['businesses:dispensaries_list']
+
+    def location(self, item):
+        return reverse(item)
 
     def lastmod(self, obj):
         return datetime.now()

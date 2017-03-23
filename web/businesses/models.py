@@ -51,7 +51,7 @@ class City(models.Model):
 
     def get_absolute_url(self):
         return reverse('businesses:dispensaries_city_list',
-                       kwargs={'state': self.abbreviation.lower(), 'city_slug': self.full_name_slug})
+                       kwargs={'state': self.state.abbreviation.lower(), 'city_slug': self.full_name_slug})
 
     def __str__(self):
         return self.full_name
