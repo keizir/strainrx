@@ -24,6 +24,7 @@ class StrainDetailView(TemplateView):
         context = super(StrainDetailView, self).get_context_data(**kwargs)
         context['strain_id'] = strain.id
         context['strain_name'] = strain.name
+        context['strain_variety'] = strain.variety
         return context
 
 

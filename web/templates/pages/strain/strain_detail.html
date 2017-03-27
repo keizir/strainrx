@@ -5,6 +5,12 @@
 
 {% block title %}{{ strain_name }} Cannabis Strain Information{% endblock %}
 
+{% block meta %}
+    {{ block.super }}
+    <meta name="Description"
+          content="Everything you need to know about the {{ strain_name }} {{ strain_variety }} strain: medical benefits, negative & positive effects and where to get it in your area.">
+{% endblock %}
+
 {% block css %}
     {{ block.super }}
     <link href="{% static 'css/pages/strain/strain_detail.css' %}" rel="stylesheet">

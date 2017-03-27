@@ -2,8 +2,12 @@
 
 {% load staticfiles i18n %}
 
-{% block title %}
-    {{ location.location_name }} Dispensary in {{ active_city.full_name }}, {{ location.street1 }}
+{% block title %}{{ location.location_name }} Dispensary in {{ active_city.full_name }}, {{ location.street1 }}{% endblock %}
+
+{% block meta %}
+    {{ block.super }}
+    <meta name="Description"
+          content="StrainRx brings you the most up to date menu and the latest deals from {{ location.location_name }} in {{ active_city.full_name }}.">
 {% endblock %}
 
 {% block css %}
