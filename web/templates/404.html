@@ -1,10 +1,27 @@
 {% extends "base.html" %}
 
-{% block title %}Page Not found{% endblock %}
+{% load staticfiles i18n %}
+{% load search_template_tags %}
+
+{% block title %}Not Found{% endblock %}
+
+{% block css %}
+    {{ block.super }}
+    <link href="{% static 'css/pages/404.css' %}" rel="stylesheet">
+{% endblock %}
 
 {% block content %}
-    <div class="error-container">
-        <h1>Page Not found</h1>
-        <p>This is not the page you were looking for.</p>
+    <div class="container 404-container">
+        <div class="content">
+            <h1>Oops!</h1>
+            <span>We can't seem to find the page your are looking for.</span>
+            <span><strong>Error code: 404</strong></span>
+            <span>Here are some helpful links instead:</span>
+            <ul>
+                <li><a href="{% url 'home' %}">Home</a></li>
+                <li><a href="{% url 'search:strain_wizard' %}">Find Your Perfect Strain</a></li>
+                <li><a href="{% url 'home' %}">Strain Search</a></li>
+            </ul>
+        </div>
     </div>
-{% endblock content %}
+{% endblock %}
