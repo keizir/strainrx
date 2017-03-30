@@ -46,10 +46,11 @@ class BusinessSignUpWizardView(APIView):
         except ValidationError as e:
             return bad_request(e.message)
 
-        try:
-            EmailService().send_confirmation_email(business.created_by)
-        except Exception:
-            logger.exception('Cannot send an email to {0}'.format(business.created_by.email))
+        if not business.created_by.is_email_verified:
+            try:
+                EmailService().send_confirmation_email(business.created_by)
+            except Exception:
+                logger.exception('Cannot send an email to {0}'.format(business.created_by.email))
 
         authenticated = authenticate(username=business.created_by.email, password=serializer.validated_data.get('pwd'))
         if authenticated is None:

@@ -52,7 +52,7 @@
                     <a href="{% url 'businesses:dispensaries_list' %}">Dispensaries</a>
                     <span class="arrow">></span>
                 </li>
-                <li class="active">State</li>
+                <li class="active">{{ active_state.abbreviation|upper }}</li>
             </ol>
         </div>
         <div class="text">

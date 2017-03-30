@@ -6,6 +6,7 @@ from django.core.exceptions import ValidationError
 from django.db.models import Avg
 
 from web.businesses.models import BusinessLocation, Business, LocationReview
+from web.system.models import SystemProperty
 from web.users import validators
 from web.users.models import User, UserLocation
 
@@ -30,11 +31,13 @@ class BusinessSignUpService:
         if not data.get('certified_legal_compliance'):
             raise ValidationError('Certification is required')
 
+        verify_automatically = SystemProperty.objects.get(name='auto_email_verification_for_business')
+
         user = User(
             email=data.get('email'),
             username=str(uuid.uuid4())[:30],
             is_age_verified=True,
-            is_email_verified=False,
+            is_email_verified=verify_automatically and verify_automatically.value == 'true',
             type='business'
         )
         user.set_password(data.get('pwd'))
