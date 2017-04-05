@@ -55,6 +55,9 @@
         </div>
         <div class="strains-example-wrapper">
             <div class="pager">
+                <span class="page-letter {% if current_letter == '#' %}active{% endif %}">
+                    <a href="{% url 'search:strains_type_by_name' variety '#' %}">#</a>
+                </span>
                 <span class="page-letter {% if current_letter == 'a' %}active{% endif %}">
                     <a href="{% url 'search:strains_type_by_name' variety 'a' %}">A</a>
                 </span>

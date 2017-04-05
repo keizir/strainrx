@@ -39,22 +39,20 @@
                                 <a href="{% url 'search:strains_root' %}">Strains</a>
                                 <span class="arrow">></span>
                             </li>
-                            <% if (model.strain.variety === 'sativa') { %>
                             <li>
+                                <% if (model.strain.variety === 'sativa') { %>
                                 <a href="{% url 'search:strains_sativa_root' %}">Sativa</a>
-                                <span class="arrow">></span>
-                            </li>
-                            <% } else if (model.strain.variety === 'indica') { %>
-                            <li>
+                                <% } else if (model.strain.variety === 'indica') { %>
                                 <a href="{% url 'search:strains_indica_root' %}">Indica</a>
-                                <span class="arrow">></span>
-                            </li>
-                            <% } else if (model.strain.variety === 'hybrid') { %>
-                            <li>
+                                <% } else if (model.strain.variety === 'hybrid') { %>
                                 <a href="{% url 'search:strains_hybrid_root' %}">Hybrid</a>
+                                <% } %>
                                 <span class="arrow">></span>
                             </li>
-                            <% } %>
+                            <li>
+                                <a href="/strains/${model.strain.variety}/${model.strain.first_letter_esc}/">${model.strain.first_letter.toUpperCase()}</a>
+                                <span class="arrow">></span>
+                            </li>
                             <li class="active">${ model.strain.name }</li>
                         </ol>
                     </div>

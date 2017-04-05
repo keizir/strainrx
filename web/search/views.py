@@ -2,6 +2,7 @@
 from __future__ import absolute_import, unicode_literals
 
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.db.models import Q
 from django.http import Http404
 from django.views.generic import TemplateView
 
@@ -61,8 +62,18 @@ class StrainsByNameView(TemplateView):
         strain_variety = kwargs.get('strain_variety')
         first_letter = kwargs.get('letter')
 
-        context['strains'] = Strain.objects.filter(variety=strain_variety,
-                                                   name__istartswith=first_letter).order_by('name')
+        if first_letter == '#':
+            exclude_first_letters = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p',
+                                     'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z']
+            query = Q()
+            for letter in exclude_first_letters:
+                query = query | Q(name__istartswith=letter)
+
+            strains = Strain.objects.filter(variety=strain_variety).exclude(query).order_by('name')
+        else:
+            strains = Strain.objects.filter(variety=strain_variety, name__istartswith=first_letter).order_by('name')
+
+        context['strains'] = strains
         context['current_letter'] = first_letter
         context['variety'] = strain_variety
         return context

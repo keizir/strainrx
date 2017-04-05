@@ -33,11 +33,19 @@ W.pages.strain.StrainDetailPage = Class.extend({
             that.retrieveStrain(function (strain_data) {
                 if (strain_data) {
                     var qs = W.qs(),
-                        search = qs['search'];
+                        search = qs['search'],
+                        allowedLetters = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z'],
+                        firstLetter;
 
                     that.model = new W.common.Model(strain_data);
                     that.model.set('from_search', search);
                     that.model.set('share_urls', W.common.Sharer.getSharerUrls(encodeURIComponent(window.location.href)));
+
+                    firstLetter = that.model.get('strain').name.charAt(0).toLowerCase();
+                    firstLetter = allowedLetters.indexOf(firstLetter) > -1 ? firstLetter : '#';
+
+                    that.model.get('strain').first_letter = firstLetter;
+                    that.model.get('strain').first_letter_esc = encodeURIComponent(firstLetter);
 
                     that.preformatModel();
                     that.renderStrainDetails();
