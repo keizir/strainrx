@@ -26,7 +26,7 @@ class StrainsLetterPagedSitemap(Sitemap):
     def items(self):
         items = []
         letters = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm',
-                   'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z', '#']
+                   'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z', 'other']
 
         for l in letters:
             items.append({'url': 'search:strains_type_by_name', 'letter': l, 'variety': 'sativa'})

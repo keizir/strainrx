@@ -42,10 +42,10 @@ W.pages.strain.StrainDetailPage = Class.extend({
                     that.model.set('share_urls', W.common.Sharer.getSharerUrls(encodeURIComponent(window.location.href)));
 
                     firstLetter = that.model.get('strain').name.charAt(0).toLowerCase();
-                    firstLetter = allowedLetters.indexOf(firstLetter) > -1 ? firstLetter : '#';
+                    firstLetter = allowedLetters.indexOf(firstLetter) > -1 ? firstLetter : 'other';
 
-                    that.model.get('strain').first_letter = firstLetter;
-                    that.model.get('strain').first_letter_esc = encodeURIComponent(firstLetter);
+                    that.model.get('strain').first_letter = firstLetter === 'other' ? 'Other' : firstLetter.toUpperCase();
+                    that.model.get('strain').first_letter_esc = firstLetter;
 
                     that.preformatModel();
                     that.renderStrainDetails();

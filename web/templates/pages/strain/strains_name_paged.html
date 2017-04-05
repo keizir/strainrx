@@ -50,14 +50,11 @@
                     {% endif %}
                     <span class="arrow">></span>
                 </li>
-                <li class="active">{{ current_letter|upper }}</li>
+                <li class="active">{{ current_letter|title }}</li>
             </ol>
         </div>
         <div class="strains-example-wrapper">
             <div class="pager">
-                <span class="page-letter {% if current_letter == '#' %}active{% endif %}">
-                    <a href="{% url 'search:strains_type_by_name' variety '#' %}">#</a>
-                </span>
                 <span class="page-letter {% if current_letter == 'a' %}active{% endif %}">
                     <a href="{% url 'search:strains_type_by_name' variety 'a' %}">A</a>
                 </span>
@@ -135,6 +132,9 @@
                 </span>
                 <span class="page-letter {% if current_letter == 'z' %}active{% endif %}">
                     <a href="{% url 'search:strains_type_by_name' variety 'z' %}">Z</a>
+                </span>
+                <span class="page-letter {% if current_letter == 'other' %}active{% endif %}">
+                    <a href="{% url 'search:strains_type_by_name' variety 'other' %}">Other</a>
                 </span>
             </div>
             {% if strains|length > 0 %}

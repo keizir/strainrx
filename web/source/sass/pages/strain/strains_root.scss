@@ -180,7 +180,9 @@
             .page-letter {
                 display: inline-block;
                 border: 1px solid $grey;
-                width: 1.4em;
+                width: auto;
+                min-width: 1.1em;
+                padding: 0 0.2em;
                 height: 1.4em;
                 text-align: center;
             }

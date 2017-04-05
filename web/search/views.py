@@ -62,7 +62,7 @@ class StrainsByNameView(TemplateView):
         strain_variety = kwargs.get('strain_variety')
         first_letter = kwargs.get('letter')
 
-        if first_letter == '#':
+        if first_letter == 'other':
             exclude_first_letters = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p',
                                      'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z']
             query = Q()
