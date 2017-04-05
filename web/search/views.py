@@ -50,3 +50,19 @@ class StrainsIndicaRootView(TemplateView):
 
 class StrainsHybridRootView(TemplateView):
     template_name = 'pages/strain/strains_hybrid_root.html'
+
+
+class StrainsByNameView(TemplateView):
+    template_name = 'pages/strain/strains_name_paged.html'
+
+    def get_context_data(self, **kwargs):
+        context = super(StrainsByNameView, self).get_context_data(**kwargs)
+
+        strain_variety = kwargs.get('strain_variety')
+        first_letter = kwargs.get('letter')
+
+        context['strains'] = Strain.objects.filter(variety=strain_variety,
+                                                   name__istartswith=first_letter).order_by('name')
+        context['current_letter'] = first_letter
+        context['variety'] = strain_variety
+        return context

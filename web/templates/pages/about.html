@@ -1,7 +1,13 @@
 {% extends "base.html" %}
 {% load staticfiles i18n %}
 
-{% block title %}About{% endblock %}
+{% block title %}About StrainRx{% endblock %}
+
+{% block meta %}
+    {{ block.super }}
+    <meta name="Description"
+          content="StrainRx is a source of strain information for cannabis users to identify and locate the medicine is optimal for their particular needs.">
+{% endblock %}
 
 {% block css %}
     {{ block.super }}

@@ -3,7 +3,13 @@
 {% load staticfiles i18n %}
 {% load search_template_tags %}
 
-{% block title %}Strains Sativa{% endblock %}
+{% block title %}Sativa Cannabis Strains, Effects, Benefits & Side Effects{% endblock %}
+
+{% block meta %}
+    {{ block.super }}
+    <meta name="Description"
+          content="Sativa strains of cannabis - Explore their effects, medical benefits and side effects to find the perfect strain for you.">
+{% endblock %}
 
 {% block css %}
     {{ block.super }}
@@ -68,13 +74,32 @@
         <div class="strains-example-wrapper">
             <div class="list"></div>
             <div class="pager">
-                <span class="prev-page" rel="prev"> < </span>
-                <span class="page-num active">1</span>
-                <span class="page-num">2</span>
-                <span class="page-num">3</span>
-                <span class="page-num">4</span>
-                <span class="page-num">5</span>
-                <span class="next-page" rel="next"> > </span>
+                <span class="page-letter"><a href="{% url 'search:strains_type_by_name' 'sativa' 'a' %}">A</a></span>
+                <span class="page-letter"><a href="{% url 'search:strains_type_by_name' 'sativa' 'b' %}">B</a></span>
+                <span class="page-letter"><a href="{% url 'search:strains_type_by_name' 'sativa' 'c' %}">C</a></span>
+                <span class="page-letter"><a href="{% url 'search:strains_type_by_name' 'sativa' 'd' %}">D</a></span>
+                <span class="page-letter"><a href="{% url 'search:strains_type_by_name' 'sativa' 'e' %}">E</a></span>
+                <span class="page-letter"><a href="{% url 'search:strains_type_by_name' 'sativa' 'f' %}">F</a></span>
+                <span class="page-letter"><a href="{% url 'search:strains_type_by_name' 'sativa' 'g' %}">G</a></span>
+                <span class="page-letter"><a href="{% url 'search:strains_type_by_name' 'sativa' 'h' %}">H</a></span>
+                <span class="page-letter"><a href="{% url 'search:strains_type_by_name' 'sativa' 'i' %}">I</a></span>
+                <span class="page-letter"><a href="{% url 'search:strains_type_by_name' 'sativa' 'j' %}">J</a></span>
+                <span class="page-letter"><a href="{% url 'search:strains_type_by_name' 'sativa' 'k' %}">K</a></span>
+                <span class="page-letter"><a href="{% url 'search:strains_type_by_name' 'sativa' 'l' %}">L</a></span>
+                <span class="page-letter"><a href="{% url 'search:strains_type_by_name' 'sativa' 'm' %}">M</a></span>
+                <span class="page-letter"><a href="{% url 'search:strains_type_by_name' 'sativa' 'n' %}">N</a></span>
+                <span class="page-letter"><a href="{% url 'search:strains_type_by_name' 'sativa' 'o' %}">O</a></span>
+                <span class="page-letter"><a href="{% url 'search:strains_type_by_name' 'sativa' 'p' %}">P</a></span>
+                <span class="page-letter"><a href="{% url 'search:strains_type_by_name' 'sativa' 'q' %}">Q</a></span>
+                <span class="page-letter"><a href="{% url 'search:strains_type_by_name' 'sativa' 'r' %}">R</a></span>
+                <span class="page-letter"><a href="{% url 'search:strains_type_by_name' 'sativa' 's' %}">S</a></span>
+                <span class="page-letter"><a href="{% url 'search:strains_type_by_name' 'sativa' 't' %}">T</a></span>
+                <span class="page-letter"><a href="{% url 'search:strains_type_by_name' 'sativa' 'u' %}">U</a></span>
+                <span class="page-letter"><a href="{% url 'search:strains_type_by_name' 'sativa' 'v' %}">V</a></span>
+                <span class="page-letter"><a href="{% url 'search:strains_type_by_name' 'sativa' 'w' %}">W</a></span>
+                <span class="page-letter"><a href="{% url 'search:strains_type_by_name' 'sativa' 'x' %}">X</a></span>
+                <span class="page-letter"><a href="{% url 'search:strains_type_by_name' 'sativa' 'y' %}">Y</a></span>
+                <span class="page-letter"><a href="{% url 'search:strains_type_by_name' 'sativa' 'z' %}">Z</a></span>
             </div>
         </div>
     </div>

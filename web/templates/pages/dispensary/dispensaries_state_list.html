@@ -3,12 +3,20 @@
 {% load staticfiles i18n %}
 
 {% block title %}
-    Dispensaries in
+    Marijuana Dispensaries in
     {% if active_state.full_name %}
         {{ active_state.full_name }}
     {% else %}
         {{ active_state.abbreviation }}
-    {% endif %}
+    {% endif %} - Find Closest & Best Rated
+{% endblock %}
+
+{% block meta %}
+    {{ block.super }}
+    <meta name="Description"
+          content="Discover marijuana dispensaries in
+
+                  {% if active_state.full_name %}{{ active_state.full_name }}{% else %}{{ active_state.abbreviation }}{% endif %} - find the nearest, highest rated and recommended locations.">
 {% endblock %}
 
 {% block css %}

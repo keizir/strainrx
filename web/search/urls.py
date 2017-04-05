@@ -37,6 +37,11 @@ urlpatterns = [
         name='strains_hybrid_root'
     ),
     url(
+        regex=r'^strains/(?P<strain_variety>sativa|hybrid|indica)/(?P<letter>[a-z])/$',
+        view=views.StrainsByNameView.as_view(),
+        name='strains_type_by_name'
+    ),
+    url(
         regex=r'^strains/(?P<strain_variety>sativa|hybrid|indica)/(?P<slug_name>.+)/$',
         view=views.StrainDetailView.as_view(),
         name='strain_detail'

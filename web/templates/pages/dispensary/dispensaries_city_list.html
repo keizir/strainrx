@@ -3,8 +3,13 @@
 {% load staticfiles i18n %}
 
 {% block title %}
-    Dispensaries in {{ active_city.full_name }},
-    {% if active_state.full_name %}{{ active_state.full_name }}{% else %}{{ active_state.abbreviation }}{% endif %}
+    Marijuana Dispensaries in {{ active_city.full_name }} - Find Closest & Best Rated
+{% endblock %}
+
+{% block meta %}
+    {{ block.super }}
+    <meta name="Description"
+          content="Find local marijuana dispensaries in {{ active_city.full_name }} - see the menus, ratings and reviews. We make it easy to find the medicine you need.">
 {% endblock %}
 
 {% block css %}

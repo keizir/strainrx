@@ -1,0 +1,166 @@
+{% extends "base.html" %}
+
+{% load staticfiles i18n %}
+{% load search_template_tags %}
+
+{% block title %}{{ current_letter|upper }} {{ variety|title }} Strains{% endblock %}
+
+{% block css %}
+    {{ block.super }}
+    <link href="{% static 'css/pages/strain/strains_root.css' %}" rel="stylesheet">
+{% endblock %}
+
+{% block content %}
+    <div class="strains-root-container container">
+        <h1>{{ variety|title }}</h1>
+        <div class="social-icons">
+            <span class="social-fb">
+                <a href="#" class="facebook-share-link" target="_blank">
+                    <i class="fa fa-facebook-square" aria-hidden="true"></i>
+                </a>
+            </span>
+            <span class="social-google">
+                <a href="#" class="google-share-link" target="_blank">
+                    <i class="fa fa-google-plus-square" aria-hidden="true"></i>
+                </a>
+            </span>
+            <span class="social-twitter">
+                <a href="#" class="twitter-share-link" target="_blank">
+                    <i class="fa fa-twitter-square" aria-hidden="true"></i>
+                </a>
+            </span>
+        </div>
+        <div class="breadcrumbs">
+            <ol>
+                <li>
+                    <a href="{% url 'home' %}">Home</a>
+                    <span class="arrow">></span>
+                </li>
+                <li>
+                    <a href="{% url 'search:strains_root' %}">Strains</a>
+                    <span class="arrow">></span>
+                </li>
+                <li>
+                    {% if variety == 'sativa' %}
+                        <a href="{% url 'search:strains_sativa_root' %}">{{ variety|title }}</a>
+                    {% elif variety == 'indica' %}
+                        <a href="{% url 'search:strains_indica_root' %}">{{ variety|title }}</a>
+                    {% elif variety == 'hybrid' %}
+                        <a href="{% url 'search:strains_hybrid_root' %}">{{ variety|title }}</a>
+                    {% endif %}
+                    <span class="arrow">></span>
+                </li>
+                <li class="active">{{ current_letter|upper }}</li>
+            </ol>
+        </div>
+        <div class="strains-example-wrapper">
+            <div class="pager">
+                <span class="page-letter {% if current_letter == 'a' %}active{% endif %}">
+                    <a href="{% url 'search:strains_type_by_name' variety 'a' %}">A</a>
+                </span>
+                <span class="page-letter {% if current_letter == 'b' %}active{% endif %}">
+                    <a href="{% url 'search:strains_type_by_name' variety 'b' %}">B</a>
+                </span>
+                <span class="page-letter {% if current_letter == 'c' %}active{% endif %}">
+                    <a href="{% url 'search:strains_type_by_name' variety 'c' %}">C</a>
+                </span>
+                <span class="page-letter {% if current_letter == 'd' %}active{% endif %}">
+                    <a href="{% url 'search:strains_type_by_name' variety 'd' %}">D</a>
+                </span>
+                <span class="page-letter {% if current_letter == 'e' %}active{% endif %}">
+                    <a href="{% url 'search:strains_type_by_name' variety 'e' %}">E</a>
+                </span>
+                <span class="page-letter {% if current_letter == 'f' %}active{% endif %}">
+                    <a href="{% url 'search:strains_type_by_name' variety 'f' %}">F</a>
+                </span>
+                <span class="page-letter {% if current_letter == 'g' %}active{% endif %}">
+                    <a href="{% url 'search:strains_type_by_name' variety 'g' %}">G</a>
+                </span>
+                <span class="page-letter {% if current_letter == 'h' %}active{% endif %}">
+                    <a href="{% url 'search:strains_type_by_name' variety 'h' %}">H</a>
+                </span>
+                <span class="page-letter {% if current_letter == 'i' %}active{% endif %}">
+                    <a href="{% url 'search:strains_type_by_name' variety 'i' %}">I</a>
+                </span>
+                <span class="page-letter {% if current_letter == 'j' %}active{% endif %}">
+                    <a href="{% url 'search:strains_type_by_name' variety 'j' %}">J</a>
+                </span>
+                <span class="page-letter {% if current_letter == 'k' %}active{% endif %}">
+                    <a href="{% url 'search:strains_type_by_name' variety 'k' %}">K</a>
+                </span>
+                <span class="page-letter {% if current_letter == 'l' %}active{% endif %}">
+                    <a href="{% url 'search:strains_type_by_name' variety 'l' %}">L</a>
+                </span>
+                <span class="page-letter {% if current_letter == 'm' %}active{% endif %}">
+                    <a href="{% url 'search:strains_type_by_name' variety 'm' %}">M</a>
+                </span>
+                <span class="page-letter {% if current_letter == 'n' %}active{% endif %}">
+                    <a href="{% url 'search:strains_type_by_name' variety 'n' %}">N</a>
+                </span>
+                <span class="page-letter {% if current_letter == 'o' %}active{% endif %}">
+                    <a href="{% url 'search:strains_type_by_name' variety 'o' %}">O</a>
+                </span>
+                <span class="page-letter {% if current_letter == 'p' %}active{% endif %}">
+                    <a href="{% url 'search:strains_type_by_name' variety 'p' %}">P</a>
+                </span>
+                <span class="page-letter {% if current_letter == 'q' %}active{% endif %}">
+                    <a href="{% url 'search:strains_type_by_name' variety 'q' %}">Q</a>
+                </span>
+                <span class="page-letter {% if current_letter == 'r' %}active{% endif %}">
+                    <a href="{% url 'search:strains_type_by_name' variety 'r' %}">R</a>
+                </span>
+                <span class="page-letter {% if current_letter == 's' %}active{% endif %}">
+                    <a href="{% url 'search:strains_type_by_name' variety 's' %}">S</a>
+                </span>
+                <span class="page-letter {% if current_letter == 't' %}active{% endif %}">
+                    <a href="{% url 'search:strains_type_by_name' variety 't' %}">T</a>
+                </span>
+                <span class="page-letter {% if current_letter == 'u' %}active{% endif %}">
+                    <a href="{% url 'search:strains_type_by_name' variety 'u' %}">U</a>
+                </span>
+                <span class="page-letter {% if current_letter == 'v' %}active{% endif %}">
+                    <a href="{% url 'search:strains_type_by_name' variety 'v' %}">V</a>
+                </span>
+                <span class="page-letter {% if current_letter == 'w' %}active{% endif %}">
+                    <a href="{% url 'search:strains_type_by_name' variety 'w' %}">W</a>
+                </span>
+                <span class="page-letter {% if current_letter == 'x' %}active{% endif %}">
+                    <a href="{% url 'search:strains_type_by_name' variety 'x' %}">X</a>
+                </span>
+                <span class="page-letter {% if current_letter == 'y' %}active{% endif %}">
+                    <a href="{% url 'search:strains_type_by_name' variety 'y' %}">Y</a>
+                </span>
+                <span class="page-letter {% if current_letter == 'z' %}active{% endif %}">
+                    <a href="{% url 'search:strains_type_by_name' variety 'z' %}">Z</a>
+                </span>
+            </div>
+            {% if strains|length > 0 %}
+                <div class="paged-list">
+                    {% for s in strains %}
+                        <div class="strain-example">
+                            <div class="img-wrapper">
+                                {% if s.variety == 'indica' %}
+                                    <img src="{% static 'images/product_04.jpg' %}"/>
+                                {% elif s.variety == 'sativa' %}
+                                    <img src="{% static 'images/product_01.jpg' %}"/>
+                                {% elif s.variety == 'hybrid' %}
+                                    <img src="{% static 'images/product_07.jpg' %}"/>
+                                {% endif %}
+                            </div>
+                            <div class="name">
+                                <a href="{% url 'search:strain_detail' s.variety s.strain_slug %}">{{ s.name }}</a>
+                            </div>
+                            <div class="variety">{{ s.variety }}</div>
+                        </div>
+                    {% endfor %}
+                </div>
+            {% else %}
+                <div>No strains found</div>
+            {% endif %}
+        </div>
+    </div>
+{% endblock %}
+
+{% block javascript %}
+
+{% endblock %}

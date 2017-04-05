@@ -3,7 +3,13 @@
 {% load staticfiles i18n %}
 {% load search_template_tags %}
 
-{% block title %}Strains{% endblock %}
+{% block title %}The Effects & Benefits of Sativa, Indica & Hybrid Strains{% endblock %}
+
+{% block meta %}
+    {{ block.super }}
+    <meta name="Description"
+          content="Learn all about the different strains of marijuana: their effects, medical benefits and side effects. ">
+{% endblock %}
 
 {% block css %}
     {{ block.super }}

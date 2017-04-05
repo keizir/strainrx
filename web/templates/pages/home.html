@@ -2,7 +2,13 @@
 
 {% load staticfiles i18n %}
 
-{% block title %}Home{% endblock %}
+{% block title %}A Tool To Find Perfect Cannabis Strains & Best Marijuana Dispensaries{% endblock %}
+
+{% block meta %}
+    {{ block.super }}
+    <meta name="Description"
+          content="StrainRx is the premiere online source for strain intelligence. We help cannabis users find the perfect strain that's ideally suited for their needs.">
+{% endblock %}
 
 {% block css %}
     {{ block.super }}
