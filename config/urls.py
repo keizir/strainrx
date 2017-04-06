@@ -10,13 +10,12 @@ from django.views import defaults as default_views
 from django.views.generic import TemplateView
 
 from web.businesses.sitemaps import BusinessLocationSitemap, DispensariesRootSitemap, StateRootSitemap, CityRootSitemap
-from web.search.sitemaps import StrainRootSitemap, StrainsLetterPagedSitemap
+from web.search.sitemaps import StrainRootSitemap
 from web.users.sitemaps import StrainSitemap, StaticViewSitemap
 
 sitemaps = {
     'strain': StrainSitemap,
     'strain_root': StrainRootSitemap,
-    'strain_paged': StrainsLetterPagedSitemap,
     'dispensaries': BusinessLocationSitemap,
     'dispensaries_root': DispensariesRootSitemap,
     'dispensaries_state_root': StateRootSitemap,

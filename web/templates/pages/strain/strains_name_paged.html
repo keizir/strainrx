@@ -3,7 +3,13 @@
 {% load staticfiles i18n %}
 {% load search_template_tags %}
 
-{% block title %}{{ current_letter|upper }} {{ variety|title }} Strains{% endblock %}
+{% block title %}{{ current_letter|title }} {{ variety|title }} Strains{% endblock %}
+
+{% block meta %}
+    {{ block.super }}
+    <meta name="Description"
+          content="See all {{ variety|title }} cannabis strains beginning with the letter '{{ current_letter|title }}'">
+{% endblock %}
 
 {% block css %}
     {{ block.super }}
@@ -12,7 +18,7 @@
 
 {% block content %}
     <div class="strains-root-container container">
-        <h1>{{ variety|title }}</h1>
+        <h1>{{ variety|title }} Strains Starting With the Letter "{{ current_letter|title }}"</h1>
         <div class="social-icons">
             <span class="social-fb">
                 <a href="#" class="facebook-share-link" target="_blank">

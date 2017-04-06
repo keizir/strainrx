@@ -277,7 +277,10 @@
             width: 100%;
 
             .strain-name {
+                display: inline-block;
                 font-size: 2em;
+                margin: 0;
+                font-weight: normal;
             }
 
             .strain-like-wrapper {

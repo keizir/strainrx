@@ -455,7 +455,7 @@ class SearchElasticService(BaseElasticService):
         )
 
         query = {
-            "_source": ["id", "name", "variety", "strain_slug"],
+            "_source": ["id", "name", "variety", "strain_slug", "removed_date"],
             "suggest": {
                 "name_suggestion": {
                     "text": query,
