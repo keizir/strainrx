@@ -1,4 +1,6 @@
 from django import template
+from django.conf import settings
+from django.core.urlresolvers import reverse
 
 register = template.Library()
 
@@ -43,3 +45,10 @@ def abbreviate_strain_name(origin_name):
             abbreviation += word[:1].upper()
 
     return abbreviation
+
+
+@register.simple_tag
+def strain_letter_page_url(variety, letter):
+    return '{0}{1}'.format(settings.HOST, reverse('search:strains_type_by_name', kwargs={
+        'strain_variety': variety, 'letter': letter
+    }))

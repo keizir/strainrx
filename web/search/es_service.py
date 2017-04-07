@@ -45,7 +45,7 @@ class SearchElasticService(BaseElasticService):
             source = s.get('_source', {})
             db_strain = Strain.objects.get(pk=source.get('id'))
             rating = strain_ratings.get(source.get('id'))
-            strain_image = StrainImage.objects.filter(strain=db_strain)[:1]
+            strain_image = StrainImage.objects.filter(strain=db_strain, is_approved=True)[:1]
             srx_score = int(round(s.get('_score')))
 
             if include_locations:

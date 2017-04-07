@@ -7,8 +7,16 @@
 
 {% block meta %}
     {{ block.super }}
+
     <meta name="Description"
           content="See all {{ variety|title }} cannabis strains beginning with the letter '{{ current_letter|title }}'">
+
+    {% if prev_letter %}
+        <link rel="prev" href="{% strain_letter_page_url variety prev_letter %}">
+    {% endif %}
+    {% if next_letter %}
+        <link rel="next" href="{% strain_letter_page_url variety next_letter %}">
+    {% endif %}
 {% endblock %}
 
 {% block css %}
@@ -145,21 +153,23 @@
             </div>
             {% if strains|length > 0 %}
                 <div class="paged-list">
-                    {% for s in strains %}
+                    {% for result in strains %}
                         <div class="strain-example">
                             <div class="img-wrapper">
-                                {% if s.variety == 'indica' %}
+                                {% if result.strain_image %}
+                                    <img src="{{ result.strain_image }}"/>
+                                {% elif result.strain.variety == 'indica' %}
                                     <img src="{% static 'images/product_04.jpg' %}"/>
-                                {% elif s.variety == 'sativa' %}
+                                {% elif result.strain.variety == 'sativa' %}
                                     <img src="{% static 'images/product_01.jpg' %}"/>
-                                {% elif s.variety == 'hybrid' %}
+                                {% elif result.strain.variety == 'hybrid' %}
                                     <img src="{% static 'images/product_07.jpg' %}"/>
                                 {% endif %}
                             </div>
                             <div class="name">
-                                <a href="{% url 'search:strain_detail' s.variety s.strain_slug %}">{{ s.name }}</a>
+                                <a href="{% url 'search:strain_detail' result.strain.variety result.strain.strain_slug %}">{{ result.strain.name }}</a>
                             </div>
-                            <div class="variety">{{ s.variety }}</div>
+                            <div class="variety">{{ result.strain.variety }}</div>
                         </div>
                     {% endfor %}
                 </div>

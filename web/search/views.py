@@ -6,7 +6,7 @@ from django.db.models import Q
 from django.http import Http404
 from django.views.generic import TemplateView
 
-from web.search.models import Strain
+from web.search.models import Strain, StrainImage
 
 
 class StrainSearchWizardView(LoginRequiredMixin, TemplateView):
@@ -60,20 +60,36 @@ class StrainsByNameView(TemplateView):
         context = super(StrainsByNameView, self).get_context_data(**kwargs)
 
         strain_variety = kwargs.get('strain_variety')
-        first_letter = kwargs.get('letter')
+        current_letter = kwargs.get('letter')
+        paging_letters = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p',
+                          'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z']
+        paging_letters_len = len(paging_letters)
 
-        if first_letter == 'other':
-            exclude_first_letters = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p',
-                                     'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z']
+        for i, l in enumerate(paging_letters):
+            if l == current_letter:
+                if i - 1 >= 0:
+                    context['prev_letter'] = paging_letters[i - 1]
+                if i + 1 < paging_letters_len:
+                    context['next_letter'] = paging_letters[i + 1]
+                break
+
+        if current_letter == 'other':
             query = Q()
-            for letter in exclude_first_letters:
+            for letter in paging_letters:
                 query = query | Q(name__istartswith=letter)
 
             strains = Strain.objects.filter(variety=strain_variety).exclude(query).order_by('name')
+            context['prev_letter'] = 'z'
         else:
-            strains = Strain.objects.filter(variety=strain_variety, name__istartswith=first_letter).order_by('name')
+            strains = Strain.objects.filter(variety=strain_variety, name__istartswith=current_letter).order_by('name')
 
-        context['strains'] = strains
-        context['current_letter'] = first_letter
+        transformed = []
+        for s in strains:
+            strain_image = StrainImage.objects.filter(strain=s.id, is_approved=True)[:1]
+            strain_image = strain_image[0].image.url if len(strain_image) > 0 else None
+            transformed.append({'strain': s, 'strain_image': strain_image})
+
+        context['strains'] = transformed
+        context['current_letter'] = current_letter
         context['variety'] = strain_variety
         return context
