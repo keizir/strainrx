@@ -11,18 +11,22 @@
                             <span><%= _.escape(b.display_name) %></span>
                         </div>
                     </div>
+                    <div class="effect-config-box <%= _.escape(b.data_name) %>-config-box hidden">
+                        <div class="close-box" title="Close">x</div>
+                        <div class="slider-wrapper hidden">
+                            <span class="step-label label-1 hidden">Marginally Important</span>
+                            <span class="step-label label-2 hidden">Somewhat Important</span>
+                            <span class="step-label label-3 hidden">Important</span>
+                            <span class="step-label label-4 hidden">Very Important</span>
+                            <span class="step-label label-5 hidden">Must Have</span>
+                            <div class="arrow-down"></div>
+                            <div class="slider"></div>
+                        </div>
+                    </div>
                     <span class="step-3 importance-value hidden">1</span>
                     <span class="step-3 removable hidden"></span>
                 </div>
                 <% }); %>
-            </div>
-            <div class="slider-wrapper hidden">
-                <span class="slider-step-label">Marginally Important</span>
-                <span class="slider-step-label">Somewhat Important</span>
-                <span class="slider-step-label">Important</span>
-                <span class="slider-step-label">Very Important</span>
-                <span class="slider-step-label">Must Have</span>
-                <div class="slider"></div>
             </div>
             <span class="error-message"></span>
             <div class="form-actions">

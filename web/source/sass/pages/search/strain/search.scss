@@ -72,57 +72,102 @@
         }
     }
 
+    .arrow-down {
+        position: absolute;
+        width: 0;
+        height: 0;
+        border-left: 6px solid transparent;
+        border-right: 6px solid transparent;
+        border-top: 6px solid $green-emerald;
+    }
+
     .effects-form {
         display: inline-block;
         width: 100%;
         margin: 0 auto;
         line-height: 3em;
         text-align: left;
-    }
 
-    .effects-form .form-field {
-        position: relative;
-        margin: 0 0.3em;
-        width: 12em;
-        height: 3em;
-    }
+        .form-field {
+            position: relative;
+            margin: 0 0.3em;
+            width: 12em;
+            height: 3em;
 
-    .effects-form .slider-wrapper {
-        text-align: center;
-        margin: 3em auto;
-    }
+            .effect-config-box {
+                position: absolute;
+                border: 1px solid $green-apple;
+                width: 12em;
+                height: 6.5em;
+                background-color: $green-apple;
+                z-index: 1;
 
-    .effects-form .slider-wrapper .slider-step-label {
-        color: $grey-light;
-        display: inline-block;
-        width: 6em;
-        margin: 0 3em;
-        cursor: default;
-        line-height: 1.5em;
-    }
+                .close-box {
+                    position: absolute;
+                    line-height: 0.7em;
+                    color: white;
+                    top: -0.5em;
+                    right: 5%;
+                    cursor: pointer;
+                }
 
-    .effects-form .slider {
-        width: 50em;
-        display: block;
-        margin: 3em auto 5em;
-        background-color: $grey-normal;
-        border-color: $grey-normal;
+                .slider-wrapper {
+                    .step-label {
+                        font-size: 0.8em;
+                        display: block;
+                        width: 90%;
+                        padding: 0.5em;
+                        margin: 5% auto 0;
+                        line-height: 1em;
+                        background: $green-emerald;
+                        color: $white;
+                        text-align: center;
+                        cursor: default;
+                    }
 
-        span {
-            background-color: $grey-dark;
-            border-color: $grey-dark;
-            height: 1.5em;
-            width: 1.5em;
-            top: -0.45em;
-            outline: none;
-        }
+                    .slider {
+                        display: block;
+                        width: 90%;
+                        height: 1em;
+                        margin: 1em auto 0;
+                        background-color: $green-atlantis;
+                        border-color: $green-atlantis;
+                        border-radius: 0;
 
-        span:focus {
-            box-shadow: 0 0 2pt 1pt $iris-blue;
-        }
+                        span {
+                            background-color: $white;
+                            border-color: $white;
+                            height: 1em;
+                            width: 1em;
+                            top: 0.1em;
+                            outline: none;
+                        }
 
-        span:hover {
-            box-shadow: 0 0 2pt 1pt $iris-blue;
+                        span:focus {
+                            box-shadow: 0 0 2pt 1pt $iris-blue;
+                        }
+
+                        span:hover {
+                            box-shadow: 0 0 2pt 1pt $iris-blue;
+                        }
+
+                        label {
+                            font-size: 0.8em;
+                            position: absolute;
+                            width: 16px;
+                            margin-left: -8px;
+                            text-align: center;
+                            color: $white;
+                            margin-top: 0.3em;
+                            cursor: pointer;
+                        }
+
+                        label.active {
+                            color: $green-atlantis
+                        }
+                    }
+                }
+            }
         }
     }
 }
@@ -201,12 +246,12 @@
         padding: 0.4em;
         border: 1px solid $iris-blue;
         color: $iris-blue;
-        border-radius: 0.3em;
         line-height: 1.3em;
         text-align: center;
         cursor: pointer;
         font-weight: bold;
         vertical-align: top;
+        user-select: none;
     }
 
     .form-field .strain-effect .benefit-text {
@@ -228,6 +273,10 @@
         cursor: pointer;
     }
 
+    .form-field .removable.selected {
+        display: none;
+    }
+
     .form-field .step-3.removable {
         bottom: 2.75em;
     }
@@ -242,12 +291,24 @@
         cursor: default;
     }
 
+    .form-field .importance-value.selected {
+        color: $white;
+    }
+
     .form-field .step-3.importance-value {
         bottom: 3.55em;
     }
 
     .form-field .strain-effect.active {
-        border: 3px solid $avocado-green;
+        border: 2px solid $avocado-green;
+        color: $green-apple;
+        font-weight: bold;
+    }
+
+    .form-field .strain-effect.selected {
+        border-color: $green-apple;
+        background-color: $green-apple;
+        color: $white;
     }
 
     .form-field .strain-effect.disabled {
@@ -322,9 +383,6 @@
     .strain-search-wrapper .effects-form {
         width: 70%;
     }
-    .strain-search-wrapper .effects-form .slider-wrapper .slider-step-label {
-        margin: 0 2em;
-    }
 }
 
 @media (max-width: $screen-xs-max) {
@@ -390,17 +448,6 @@
 
     .search-form-wrapper .form-field .step-3.removable {
         bottom: 1.2em;
-    }
-
-    .strain-search-wrapper .effects-form .slider {
-        width: 90%;
-    }
-
-    .strain-search-wrapper .effects-form .slider-wrapper .slider-step-label {
-        width: 17%;
-        margin: 0 0.2em;
-        cursor: default;
-        font-size: 10px;
     }
 
     .search-form-wrapper .form-field .importance-value {

@@ -40,6 +40,13 @@ W.pages.search.strain.SearchWizardStep = W.common.WizardStep.extend({
             e.preventDefault();
             that.back();
         });
+
+        $(document).on('click', function (e) {
+            var elem = $(e.target);
+            if (!(elem.parents('.form-field').length || elem.hasClass('.form-field'))) {
+                that.closeAllEffectBoxes();
+            }
+        });
     },
 
     validate: function validate() {
@@ -60,14 +67,14 @@ W.pages.search.strain.SearchWizardStep = W.common.WizardStep.extend({
 
     showDialogOrProceed: function showDialogOrProceed(container, proceedCallback) {
         var that = this;
-        W.users.UserSettings.get(that.currentUserId, that.settingName_NeverShowPopupAgain, function (setting) {
+        W.users.UserSettings.get(that.currentUserId, that.settingName_NeverShowPopupAgain, function (/* setting */) {
             // TODO do not show the dialog for now (changed under WEED-201)
             /*var doNotShowAgain = setting && setting.doNotShowAgain;
-            if (container[container.length - 1].value === 1 && !that.popupDismissed && !doNotShowAgain) {
-                that.showJustASecondDialog();
-            } else {
-                proceedCallback();
-            }*/
+             if (container[container.length - 1].value === 1 && !that.popupDismissed && !doNotShowAgain) {
+             that.showJustASecondDialog();
+             } else {
+             proceedCallback();
+             }*/
 
             proceedCallback();
         });
@@ -115,9 +122,8 @@ W.pages.search.strain.SearchWizardStep = W.common.WizardStep.extend({
         });
 
         if (container.length > 0) {
-            that.toggleButtonsAndSliderState(container);
+            that.toggleButtonsState(container);
             that.currentEffectName = container[container.length - 1].name;
-            $('.slider').slider('value', container[container.length - 1].value);
         }
 
         if (step !== 4 && container.length === 5) {
@@ -125,41 +131,16 @@ W.pages.search.strain.SearchWizardStep = W.common.WizardStep.extend({
         }
     },
 
-    toggleButtonsAndSliderState: function toggleButtonsAndSliderState(container) {
+    toggleButtonsState: function toggleButtonsState(container) {
         if (container.length > 0) {
-            this.activateSlider(container);
             $(this.submit_el).removeAttr('disabled');
             $(this.skip_el).attr('disabled', 'disabled');
-        } else {
-            $('.slider-wrapper').addClass('hidden');
         }
     },
 
     isStepSkipped: function isStepSkipped(step) {
         var data = this.model.get(step);
         return data && data.skipped;
-    },
-
-    activateSlider: function activateSlider(container) {
-        var that = this;
-        $('.slider-wrapper').removeClass('hidden');
-        $('.slider').slider({
-            value: 1, min: 1, max: 5, step: 1,
-            slide: function (event, ui) {
-                that.handleSlideChange(ui.value, container)
-            }
-        });
-    },
-
-    handleSlideChange: function handleSlideChange(value, container) {
-        var that = this;
-        container.forEach(function (effect) {
-            if (effect.name === that.currentEffectName) {
-                var $effectValue = $('#' + that.currentEffectName).parent().find('.importance-value');
-                effect.value = value;
-                $effectValue.text(value);
-            }
-        });
     },
 
     disableNotActiveEffects: function disableNotActiveEffects() {
@@ -183,9 +164,18 @@ W.pages.search.strain.SearchWizardStep = W.common.WizardStep.extend({
                     return effect.name === effectName;
                 });
 
+            if ($effect.hasClass('selected')) {
+                that.closeEffectBox($('.{0}-config-box'.format(effectName)), $effect);
+                return;
+            }
+
+            that.closeAllEffectBoxes();
+
+            $effect.addClass('selected');
             that.currentEffectName = effectName;
+
             if (presentEffect.length > 0) {
-                $('.slider').slider('value', $effect.parent().find('.importance-value').text());
+                that.showConfigBox($effect, effectName, container, $effect.parent().find('.importance-value').text());
                 return;
             }
 
@@ -208,8 +198,89 @@ W.pages.search.strain.SearchWizardStep = W.common.WizardStep.extend({
                 $(that.skip_el).attr('disabled', 'disabled');
             }
 
-            that.toggleButtonsAndSliderState(container);
+            that.toggleButtonsState(container);
+            that.showConfigBox($effect, effectName, container);
         });
+    },
+
+    showConfigBox: function showConfigBox($effect, effectName, container, effectValue) {
+        var that = this,
+            $configBox = $('.{0}-config-box'.format(effectName)),
+            $sliderWrapper = $configBox.find('.slider-wrapper'),
+            sliderValue = effectValue || 1;
+
+        $configBox.removeClass('hidden');
+        $sliderWrapper.removeClass('hidden');
+        $sliderWrapper.find('.slider').slider({
+            value: sliderValue, min: 1, max: 5, step: 1,
+            slide: function (event, ui) {
+                that.handleSlideChange(ui.value, container, $sliderWrapper);
+            }
+        }).each(function () {
+            // Add labels to slider whose values are specified by min, max and whose step is set to 1
+            var $slider = $(this),
+                opt = $slider.data().uiSlider.options, // Get the options for this slider
+                vals = opt.max - opt.min; // Get the number of possible values
+
+            // Space out values
+            for (var i = 0; i <= vals; i++) {
+                var el = $('<label class="point point-{0}">{1}</label>'.format(i + 1, i + 1)).css('left', '{0}%'.format(i / vals * 100));
+                $slider.append(el);
+            }
+        });
+
+        $sliderWrapper.find('.label-{0}'.format(sliderValue)).removeClass('hidden');
+        var $activePoint = $sliderWrapper.find('.point-{0}'.format(sliderValue));
+        $activePoint.addClass('active');
+
+        var left = $activePoint.css('left');
+        $('.arrow-down').css('left', left === '0px' ? '5%' : left);
+
+        $effect.parent().find('.importance-value').addClass('selected');
+        $effect.parent().find('.removable').addClass('selected');
+
+        $('.close-box').on('click', function () {
+            that.closeEffectBox($configBox, $effect);
+            $(this).off('click');
+        });
+    },
+
+    handleSlideChange: function handleSlideChange(value, container, $sliderWrapper) {
+        var that = this;
+        container.forEach(function (effect) {
+            if (effect.name === that.currentEffectName) {
+                var $effectValue = $('#' + that.currentEffectName).parent().find('.importance-value');
+                effect.value = value;
+                $effectValue.text(value);
+
+                $('.step-label').addClass('hidden');
+                $('.point').removeClass('active');
+
+                $sliderWrapper.find('.label-{0}'.format(value)).removeClass('hidden');
+                var $activePoint = $sliderWrapper.find('.point-{0}'.format(value));
+                $activePoint.addClass('active');
+
+                var left = $activePoint.css('left');
+                $('.arrow-down').css('left', left === '0px' ? '5%' : left);
+            }
+        });
+    },
+
+    closeEffectBox: function ($configBox, $effect) {
+        var $sliderWrapper = $configBox.find('.slider-wrapper');
+        $sliderWrapper.addClass('hidden');
+        $sliderWrapper.find('.step-label').addClass('hidden');
+        $configBox.addClass('hidden');
+        $effect.parent().find('.importance-value').removeClass('selected');
+        $effect.parent().find('.removable').removeClass('selected');
+        $effect.removeClass('selected');
+    },
+
+    closeAllEffectBoxes: function () {
+        $('.effect-config-box').addClass('hidden');
+        $('.strain-effect').removeClass('selected');
+        $('.importance-value').removeClass('selected');
+        $('.removable').removeClass('selected');
     },
 
     clickRemoveEffect: function clickRemoveEffect(container) {
@@ -240,7 +311,6 @@ W.pages.search.strain.SearchWizardStep = W.common.WizardStep.extend({
             }
 
             if (container.length === 0) {
-                $('.slider-wrapper').addClass('hidden');
                 that.currentEffectName = '';
                 $(that.submit_el).attr('disabled', 'disabled');
                 $(that.skip_el).removeAttr('disabled');
