@@ -32,6 +32,19 @@ def deactivate_selected_locations(modeladmin, request, queryset):
 deactivate_selected_locations.short_description = 'Deactivate selected'
 
 
+def verify_email_for_selected_locations(modeladmin, request, queryset):
+    for l in queryset:
+        location_creator = l.business.created_by
+        is_verified = location_creator.is_email_verified
+
+        if not is_verified:
+            location_creator.is_email_verified = True
+            location_creator.save()
+
+
+verify_email_for_selected_locations.short_description = 'Verify email'
+
+
 class BusinessLocationAdminForm(forms.ModelForm):
     class Meta:
         model = BusinessLocation
@@ -94,11 +107,11 @@ class BusinessLocationAdmin(admin.ModelAdmin):
         objects_all = BusinessLocation.objects.all()
         return objects_all
 
-    list_display = ['business', 'location_name', 'dispensary', 'delivery', 'removed_date', 'removed_by']
+    list_display = ['business', 'location_name', 'dispensary', 'delivery', 'removed_date']
     readonly_fields = ['category', 'slug_name', 'primary', 'grow_house']
     search_fields = ['location_name']
     ordering = ['location_name']
-    actions = [activate_selected_locations, deactivate_selected_locations]
+    actions = [activate_selected_locations, deactivate_selected_locations, verify_email_for_selected_locations]
 
 
 def approve_selected_ratings(modeladmin, request, queryset):
