@@ -41,7 +41,7 @@ W.pages.search.strain.SearchWizardStep = W.common.WizardStep.extend({
             that.back();
         });
 
-        $(document).on('click', function (e) {
+        $(document).on('click touchstart', function (e) {
             var elem = $(e.target);
             if (!(elem.parents('.form-field').length || elem.hasClass('.form-field'))) {
                 that.closeAllEffectBoxes();

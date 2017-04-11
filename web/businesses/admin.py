@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 from django import forms
 from django.contrib import admin
+from django.contrib.admin import SimpleListFilter
 from django.contrib.admin.widgets import AdminTimeWidget
 from tinymce.widgets import TinyMCE
 
@@ -76,6 +77,19 @@ class BusinessLocationAdminForm(forms.ModelForm):
         self.fields['location_field'].required = True
 
 
+class OwnerEmailVerifiedFilter(SimpleListFilter):
+    title = 'Owner Email Verified'
+    parameter_name = 'owner_email_verified'
+
+    def lookups(self, request, model_admin):
+        return [('verified', 'Verified'), ('not_verified', 'Not Verified')]
+
+    def queryset(self, request, queryset):
+        if self.value():
+            is_verified = self.value() == 'verified'
+            return queryset.filter(business__created_by__is_email_verified=is_verified)
+
+
 @admin.register(BusinessLocation)
 class BusinessLocationAdmin(admin.ModelAdmin):
     change_form_template = 'admin/business/business_location_change_form.html'
@@ -107,11 +121,16 @@ class BusinessLocationAdmin(admin.ModelAdmin):
         objects_all = BusinessLocation.objects.all()
         return objects_all
 
-    list_display = ['business', 'location_name', 'dispensary', 'delivery', 'removed_date']
+    list_display = ['business', 'location_name', 'dispensary', 'delivery', 'removed_date', 'owner_email_verified']
     readonly_fields = ['category', 'slug_name', 'primary', 'grow_house']
     search_fields = ['location_name']
+    list_filter = [OwnerEmailVerifiedFilter]
     ordering = ['location_name']
     actions = [activate_selected_locations, deactivate_selected_locations, verify_email_for_selected_locations]
+
+    @staticmethod
+    def owner_email_verified(obj):
+        return obj.business.created_by.is_email_verified
 
 
 def approve_selected_ratings(modeladmin, request, queryset):
