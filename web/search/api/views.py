@@ -8,7 +8,7 @@ from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
-from web.search.api.serializers import SearchCriteriaSerializer, StrainReviewFormSerializer
+from web.search.api.serializers import SearchCriteriaSerializer, StrainReviewFormSerializer, StrainImageSerializer
 from web.search.api.services import StrainDetailsService
 from web.search.es_service import SearchElasticService
 from web.search.models import Strain, StrainImage, Effect, StrainReview, StrainRating, UserFavoriteStrain, \
@@ -190,7 +190,12 @@ class StrainLookupView(APIView):
         }, status=status.HTTP_200_OK)
 
 
-class StrainUploadImageView(LoginRequiredMixin, APIView):
+class StrainImagesView(LoginRequiredMixin, APIView):
+    def get(self, request, strain_id):
+        images = StrainImage.objects.filter(is_approved=True, strain=strain_id)
+        serializer = StrainImageSerializer(images, many=True)
+        return Response({'images': serializer.data}, status=status.HTTP_200_OK)
+
     def post(self, request, strain_id):
         file = request.FILES.get('file')
         strain = Strain.objects.get(pk=strain_id)

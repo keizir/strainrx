@@ -7,7 +7,9 @@ W.pages.strain.StrainDetailPage = Class.extend({
     effectNames: W.common.Constants.effectNames,
     benefitNames: W.common.Constants.benefitNames,
     sideEffectNames: W.common.Constants.sideEffectNames,
+
     flavorsData: [],
+    images: [],
 
     ui: {
         $strainId: $('.strain-id')
@@ -120,6 +122,7 @@ W.pages.strain.StrainDetailPage = Class.extend({
         }
 
         this.retrieveAndRenderAlsoLikeStrains();
+        this.retrieveAndRenderImages();
 
         this.populateEffects();
         this.populateBenefits();
@@ -169,6 +172,67 @@ W.pages.strain.StrainDetailPage = Class.extend({
         setTimeout(function () {
             $('#loading-spinner').hide();
         }, 500);
+    },
+
+    retrieveAndRenderImages: function retrieveAndRenderImages() {
+        var that = this,
+            $loader = $('.strain-photo-wrapper .loader');
+
+        $loader.html(W.common.Constants.html.loader);
+
+        $.ajax({
+            method: 'GET',
+            url: '/api/v1/search/strain/{0}/images/'.format($('.strain-id').val()),
+            success: function (data) {
+                $loader.html('');
+
+                if (data && data.images && data.images.length > 0) {
+                    that.images = data.images;
+                    that.populateImages();
+                } else {
+                    $('.strain-photo-wrapper .main-image img').removeClass('hidden');
+                }
+            }
+        });
+
+        // 500 ms to hide a default ajax loader spinner
+        setTimeout(function () {
+            $('#loading-spinner').hide();
+        }, 500);
+    },
+
+    populateImages: function populateImages() {
+        if (this.images.length > 0) {
+            var $imageCarousel = $('.image-carousel'),
+                $mainImage = $('.strain-photo-wrapper .main-image'),
+                $mainImageImg = $mainImage.find('img'),
+                $carouselImageWrapper = $('.carousel-images-wrapper'),
+                firstImage = this.images[0],
+                $docWidth = $(document).width(),
+                $cover;
+
+            $imageCarousel.removeClass('hidden');
+
+            $mainImageImg.attr('src', firstImage.image);
+            $mainImageImg.removeClass('hidden');
+
+            $.each(this.images, function (index, img) {
+                $carouselImageWrapper.append('<div class="img-wrapper"><img src="{0}"/><div class="cover"></div></div>'.format(img.image));
+            });
+
+            if ($docWidth > 480) {
+                $imageCarousel.css('height', $mainImage.height());
+            }
+
+            $cover = $('.cover');
+            $cover.first().addClass('active');
+            $cover.on('click', function () {
+                var $el = $(this);
+                $cover.removeClass('active');
+                $mainImageImg.attr('src', $el.parent().find('img').attr('src'));
+                $el.addClass('active');
+            });
+        }
     },
 
     recalculateSimilarStrainsSectionWidth: function recalculateSimilarStrainsSectionWidth() {
@@ -568,7 +632,7 @@ W.pages.strain.StrainDetailPage = Class.extend({
 
             $.ajax({
                 type: 'POST',
-                url: '/api/v1/search/strain/{0}/image'.format(that.ui.$strainId.val()),
+                url: '/api/v1/search/strain/{0}/images/'.format(that.ui.$strainId.val()),
                 enctype: 'multipart/form-data',
                 data: formData,
                 processData: false,

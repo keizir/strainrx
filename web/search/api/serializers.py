@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-from web.search.models import Strain, StrainReview, StrainRating
+from web.search.models import Strain, StrainReview, StrainRating, StrainImage
 
 
 class SearchCriteriaSerializer(serializers.Serializer):
@@ -34,3 +34,8 @@ class StrainReviewFormSerializer(serializers.ModelSerializer):
     class Meta:
         model = StrainReview
         fields = ('rating', 'review')
+
+
+class StrainImageSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = StrainImage

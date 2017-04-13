@@ -97,11 +97,21 @@
     </div>
     <div class="detail-section info-image-section">
         <div class="strain-photo-wrapper">
-            <% if (model.strain_image) { %>
-            <img src="<%= model.strain_image %>" alt="Strain Image"/>
-            <% } else { %>
-            <img src="{% static 'images/weed_small.jpg' %}" alt="Strain Image"/>
-            <% } %>
+            <div class="main-image">
+                <img src="{% static 'images/weed_small.jpg' %}" alt="Strain Image" class="hidden"/>
+            </div>
+            <div class="image-carousel hidden">
+                <div class="carousel-arrow arrow-up">
+                    <i class="fa-2x fa-angle-up" aria-hidden="true"></i>
+                    <i class="fa-2x fa-angle-left" aria-hidden="true"></i>
+                </div>
+                <div class="carousel-images-wrapper"></div>
+                <div class="carousel-arrow arrow-down">
+                    <i class="fa-2x fa-angle-down" aria-hidden="true"></i>
+                    <i class="fa-2x fa-angle-right" aria-hidden="true"></i>
+                </div>
+            </div>
+            <div class="loader"></div>
         </div>
         <div class="strain-info-wrapper">
             <div class="popularity-wrapper">

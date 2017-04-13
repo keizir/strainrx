@@ -201,59 +201,6 @@
             }
         }
 
-        .strain-photo-wrapper {
-            display: inline-block;
-            width: 60%;
-            vertical-align: top;
-            margin: 1em auto;
-            text-align: left;
-        }
-
-        .strain-photo-wrapper img {
-            width: 100%;
-        }
-
-        .strain-info-wrapper {
-            display: inline-block;
-            width: 20%;
-            text-align: center;
-            float: right;
-            margin: 1.5em auto;
-
-            .popularity-wrapper .title {
-                font-size: 1.5em;
-            }
-
-            .popularity-wrapper h1 {
-                margin: 0 auto;
-                font-size: 7em;
-                width: 1em;
-                border-bottom: 1px solid $grey-light;
-                padding-bottom: 10px;
-            }
-
-            .match-score-wrapper {
-                margin-top: 2em;
-
-                .title {
-                    display: block;
-                    font-size: 1.5em;
-                }
-
-                .score-value {
-                    font-size: 5em;
-                }
-
-                .percent-sign {
-                    font-size: 2.4em;
-                    vertical-align: top;
-                    position: relative;
-                    top: 10px;
-                    z-index: 1;
-                }
-            }
-        }
-
         .section-header {
             display: block;
             font-size: 1.4em;
@@ -428,6 +375,134 @@
                         font-size: 14px;
                         font-weight: bold;
                     }
+                }
+            }
+        }
+    }
+
+    .info-image-section {
+        position: relative;
+        height: 26em;
+
+        .strain-photo-wrapper {
+            display: inline-block;
+            width: 70%;
+            height: 100%;
+            vertical-align: top;
+            margin: 1em auto;
+            text-align: left;
+
+            .main-image {
+                display: inline-block;
+                width: 80%;
+                height: 25em;
+                vertical-align: top;
+
+                img {
+                    max-width: 100%;
+                    max-height: 100%;
+                }
+            }
+
+            .image-carousel {
+                display: inline-block;
+                position: relative;
+                width: 15%;
+                height: 24em;
+                text-align: center;
+                vertical-align: top;
+
+                .fa-angle-up, .fa-angle-down {
+                    display: block;
+                }
+
+                .fa-angle-left, .fa-angle-right {
+                    display: none;
+                }
+
+                .carousel-images-wrapper {
+                    overflow: scroll;
+                    height: 100%;
+
+                    .img-wrapper {
+                        display: block;
+                        position: relative;
+                        max-width: 100%;
+                        max-height: 5em;
+                        width: 5em;
+                        height: 3em;
+                        margin: 0.4em auto;
+                        text-align: center;
+                        cursor: pointer;
+
+                        img {
+                            position: relative;
+                            max-width: 100%;
+                            max-height: 100%;
+                            height: 5em;
+                            z-index: 1;
+                        }
+
+                        .cover {
+                            position: absolute;
+                            top: 0;
+                            width: 100%;
+                            height: 100%;
+                            background-color: $grey;
+                            opacity: 0.6;
+                            z-index: 2;
+                        }
+
+                        .cover.active {
+                            background-color: transparent;
+                            box-shadow: 0 0 10px $black;
+                        }
+                    }
+                }
+
+                .carousel-images-wrapper::-webkit-scrollbar {
+                    display: none;
+                }
+            }
+        }
+
+        .strain-info-wrapper {
+            display: inline-block;
+            width: 20%;
+            text-align: center;
+            float: right;
+            margin: 1.5em auto;
+
+            .popularity-wrapper .title {
+                font-size: 1.5em;
+            }
+
+            .popularity-wrapper h1 {
+                margin: 0 auto;
+                font-size: 7em;
+                width: 1em;
+                border-bottom: 1px solid $grey-light;
+                padding-bottom: 10px;
+            }
+
+            .match-score-wrapper {
+                margin-top: 2em;
+
+                .title {
+                    display: block;
+                    font-size: 1.5em;
+                }
+
+                .score-value {
+                    font-size: 5em;
+                }
+
+                .percent-sign {
+                    font-size: 2.4em;
+                    vertical-align: top;
+                    position: relative;
+                    top: 10px;
+                    z-index: 1;
                 }
             }
         }
@@ -1031,6 +1106,10 @@
         background-color: $grey-dark;
     }
 
+    .strain-detail-wrapper .info-image-section {
+        height: auto;
+    }
+
     .strain-detail-wrapper .detail-section {
         width: 95%;
 
@@ -1068,6 +1147,31 @@
             display: block;
             width: 100%;
             vertical-align: top;
+
+            .main-image {
+                display: block;
+                width: 100%;
+                height: 16em;
+            }
+
+            .image-carousel {
+                display: block;
+                width: 100%;
+                height: 10em;
+
+                .fa-angle-up, .fa-angle-down {
+                    display: none;
+                }
+
+                .carousel-images-wrapper {
+                    overflow: scroll;
+                    height: 100%;
+
+                    .img-wrapper {
+                        display: inline-block;
+                    }
+                }
+            }
         }
 
         .strain-info-wrapper {
