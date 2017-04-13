@@ -188,10 +188,11 @@ W.pages.strain.StrainDetailPage = Class.extend({
 
                 if (data && data.images && data.images.length > 0) {
                     that.images = data.images;
-                    that.populateImages();
                 } else {
                     $('.strain-photo-wrapper .main-image img').removeClass('hidden');
                 }
+
+                that.populateImages();
             }
         });
 
@@ -202,37 +203,44 @@ W.pages.strain.StrainDetailPage = Class.extend({
     },
 
     populateImages: function populateImages() {
+        var $imageCarousel = $('.image-carousel'),
+            $mainImage = $('.strain-photo-wrapper .main-image'),
+            $mainImageImg = $mainImage.find('img'),
+            $carouselImageWrapper = $('.carousel-images-wrapper'),
+            imgWrapperTemplate = '<div class="img-wrapper"><img src="{0}"/><div class="cover"></div></div>',
+            firstImage = $mainImageImg.attr('src'),
+            $docWidth = $(document).width(),
+            $cover;
+
+        $imageCarousel.removeClass('hidden');
+
         if (this.images.length > 0) {
-            var $imageCarousel = $('.image-carousel'),
-                $mainImage = $('.strain-photo-wrapper .main-image'),
-                $mainImageImg = $mainImage.find('img'),
-                $carouselImageWrapper = $('.carousel-images-wrapper'),
-                firstImage = this.images[0],
-                $docWidth = $(document).width(),
-                $cover;
-
-            $imageCarousel.removeClass('hidden');
-
-            $mainImageImg.attr('src', firstImage.image);
-            $mainImageImg.removeClass('hidden');
+            firstImage = this.images[0].image;
 
             $.each(this.images, function (index, img) {
-                $carouselImageWrapper.append('<div class="img-wrapper"><img src="{0}"/><div class="cover"></div></div>'.format(img.image));
+                $carouselImageWrapper.append(imgWrapperTemplate.format(img.image));
             });
-
-            if ($docWidth > 480) {
-                $imageCarousel.css('height', $mainImage.height());
+        } else {
+            for (var i = 0; i <= 4; i++) {
+                $carouselImageWrapper.append(imgWrapperTemplate.format(firstImage));
             }
-
-            $cover = $('.cover');
-            $cover.first().addClass('active');
-            $cover.on('click', function () {
-                var $el = $(this);
-                $cover.removeClass('active');
-                $mainImageImg.attr('src', $el.parent().find('img').attr('src'));
-                $el.addClass('active');
-            });
         }
+
+        if ($docWidth > 480) {
+            $imageCarousel.css('height', $mainImage.height());
+        }
+
+        $cover = $('.cover');
+        $cover.first().addClass('active');
+        $cover.on('click', function () {
+            var $el = $(this);
+            $cover.removeClass('active');
+            $mainImageImg.attr('src', $el.parent().find('img').attr('src'));
+            $el.addClass('active');
+        });
+
+        $mainImageImg.attr('src', firstImage);
+        $mainImageImg.removeClass('hidden');
     },
 
     recalculateSimilarStrainsSectionWidth: function recalculateSimilarStrainsSectionWidth() {
