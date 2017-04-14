@@ -124,7 +124,7 @@ class BusinessLocationReviewView(APIView):
     @staticmethod
     def build_review(review):
         created_by = review.created_by
-        display_user_name = '{0} {1}'.format(created_by.first_name, created_by.last_name) \
+        display_user_name = '{0} {1}.'.format(created_by.first_name, created_by.last_name[0]) \
             if created_by.first_name and created_by.last_name \
             else created_by.email.split('@')[0]
 
