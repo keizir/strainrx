@@ -1,6 +1,5 @@
 {% load staticfiles i18n %}
-<!DOCTYPE html>
-<html lang="en" style="height: 100%; position: relative; margin: 0;">
+<html>
 <head>
     {% block css %}
         <style>
@@ -14,21 +13,19 @@
         </style>
     {% endblock %}
 </head>
-<body style="min-height: 100%; position: relative; margin: 0;">
-<div class="email-wrapper" style="height: 520px; position: relative; margin: 0;">
+<body>
+
+<table width="100%" align="center" border="0" cellpadding="0" cellspacing="0">
 
     {% include 'emails/header.html' %}
 
-    <main class="email-content"
-          style="display: block; text-align: center; margin: 100px auto 10px; position: relative;">
+    <tbody align="center">
+    {% block content %}{% endblock %}
+    </tbody>
 
-        {% block content %}
-            <p>Email content goes here.</p>
-        {% endblock content %}
-    </main>
-</div>
+    {% include 'emails/footer.html' %}
 
-{% include 'emails/footer.html' %}
+</table>
 
 </body>
 </html>

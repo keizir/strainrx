@@ -1,13 +1,18 @@
 {% load staticfiles i18n %}
-
-<footer class="email-footer" style="position: relative; margin: 0;">
-    <hr/>
-    <div class="copyright-holder" style="padding: 28px; position: relative; margin: 0;">
-        <span class="copyrights">Copyright &copy; {% now "Y" %} StrainTech. All rights reserved. We value you
-            <a href="{% url 'privacy' %}">privacy</a>.
-        </span>
-    </div>
-    <div class="info" style="padding: 0 28px 28px; position: relative; margin: 0;">
+<tfoot>
+<tr>
+    <td>
+        <hr/>
+    </td>
+</tr>
+<tr>
+    <td style="padding: 10px">
+        Copyright &copy; {% now "Y" %} StrainTech. All rights reserved. We value you <a href="{% url 'privacy' %}">privacy</a>.
+    </td>
+</tr>
+<tr>
+    <td style="padding: 10px">
         This email was sent to {{ sent_to }}. You received this email because you are registered user of StrainRx.
-    </div>
-</footer>
+    </td>
+</tr>
+</tfoot>

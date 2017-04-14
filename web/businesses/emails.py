@@ -1,13 +1,21 @@
 import sendgrid
 from django.conf import settings
+from django.contrib.staticfiles.storage import staticfiles_storage
 from django.core.urlresolvers import reverse
+from django.template.loader import render_to_string
 from sendgrid.helpers.mail import *
 
 
 class EmailService:
+    host = settings.HOST
+
     basic_email_subject = 'StrainRx: {0}'
     basic_email_with_link_pattern = '<html><body><div style="font-size: 18px">{text} ' \
                                     '<a href="{link_url}">link</a>.</div></body></html>'
+
+    header_logo_url = staticfiles_storage.url('images/logo_hr.png')
+    envelope_image_url = staticfiles_storage.url('images/email-envelope.png')
+    leaf_image_url = staticfiles_storage.url('images/favicon.png')
 
     def send_confirmation_email(self, user):
         sg = sendgrid.SendGridAPIClient(apikey=settings.SENDGRID_API_KEY)
@@ -15,13 +23,19 @@ class EmailService:
         confirmation_url = '{host}{url}'.format(host=settings.HOST,
                                                 url=reverse('businesses:confirm_email', kwargs={'uid': user.id}))
 
-        html_content = self.basic_email_with_link_pattern.format(text='To verify your email click this',
-                                                                 link_url=confirmation_url)
-
         from_email = Email(settings.DEFAULT_FROM_EMAIL)
         to_email = Email(user.email)
         subject = self.basic_email_subject.format('Verify Your Email')
-        content = Content('text/html', html_content)
 
-        m = Mail(from_email, subject, to_email, content)
+        html_template = render_to_string('emails/user_consumer_confirmation_email.html', {
+            'confirmation_url': confirmation_url,
+            'sent_to': user.email,
+            'header_logo_url': self.header_logo_url,
+            'envelope_image_url': self.envelope_image_url,
+            'leaf_image_url': self.leaf_image_url
+        })
+
+        html_content = Content('text/html', html_template)
+
+        m = Mail(from_email, subject, to_email, html_content)
         return sg.client.mail.send.post(request_body=m.get())
