@@ -1,0 +1,18 @@
+{% extends "emails/base.html" %}
+
+{% load staticfiles i18n %}
+
+{% block content %}
+    <h1 style="font-size: 44px; margin: 16px auto; position: relative;">Confirm Your Email Address</h1>
+
+    <p style="font-size: 18px; margin: 20px auto; position: relative;">
+        Your account has been created. To verify you email please click this <a href="{{ confirmation_url }}">link</a>.
+    </p>
+
+    <h2 style="font-size: 28px; margin: 32px auto; position: relative;">Thank you for confirming!</h2>
+
+    <div class="leaf-img" style="height: 60px; position: relative; margin: 0;">
+        <img src="{{ leaf_image_url }}" alt="Leaf"
+             style="height: 60px; margin: 20px; position: relative;"/>
+    </div>
+{% endblock %}
