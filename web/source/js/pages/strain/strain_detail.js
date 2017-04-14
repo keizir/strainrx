@@ -215,19 +215,25 @@ W.pages.strain.StrainDetailPage = Class.extend({
         $imageCarousel.removeClass('hidden');
 
         if (this.images.length > 0) {
-            firstImage = this.images[0].image;
-
             $.each(this.images, function (index, img) {
                 $carouselImageWrapper.append(imgWrapperTemplate.format(img.image));
             });
+
+            if (this.images.length < 5) {
+                for (var j = 0; j < 5 - this.images.length; j++) {
+                    $carouselImageWrapper.append(imgWrapperTemplate.format(firstImage));
+                }
+
+                $('.carousel-arrow').addClass('hidden');
+            }
+
+            firstImage = this.images[0].image;
         } else {
             for (var i = 0; i <= 4; i++) {
                 $carouselImageWrapper.append(imgWrapperTemplate.format(firstImage));
             }
-        }
 
-        if ($docWidth > 480) {
-            $imageCarousel.css('height', $mainImage.height());
+            $('.carousel-arrow').addClass('hidden');
         }
 
         $cover = $('.cover');
