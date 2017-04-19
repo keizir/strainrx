@@ -209,7 +209,6 @@ W.pages.strain.StrainDetailPage = Class.extend({
             $carouselImageWrapper = $('.carousel-images-wrapper'),
             imgWrapperTemplate = '<div class="img-wrapper"><img src="{0}"/><div class="cover"></div></div>',
             firstImage = $mainImageImg.attr('src'),
-            $docWidth = $(document).width(),
             $cover;
 
         $imageCarousel.removeClass('hidden');
@@ -247,6 +246,14 @@ W.pages.strain.StrainDetailPage = Class.extend({
 
         $mainImageImg.attr('src', firstImage);
         $mainImageImg.removeClass('hidden');
+
+        $('.arrow-up').on('click', function (e) {
+            $carouselImageWrapper.scrollTop($carouselImageWrapper.scrollTop() - $('.img-wrapper').height());
+        });
+
+        $('.arrow-down').on('click', function (e) {
+            $carouselImageWrapper.scrollTop($carouselImageWrapper.scrollTop() + $('.img-wrapper').height());
+        });
     },
 
     recalculateSimilarStrainsSectionWidth: function recalculateSimilarStrainsSectionWidth() {
