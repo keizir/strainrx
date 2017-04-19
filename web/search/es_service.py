@@ -30,14 +30,15 @@ class SearchElasticService(BaseElasticService):
 
         to_transform = []
         if is_similar:
-            start_index = 0
+            start_index = -1
             for index, s in enumerate(strains):
                 source = s.get('_source', {})
                 if int(source.get('id')) == int(similar_strain_id):
                     start_index = index
+                    continue
 
-            if start_index > 0:
-                to_transform = strains[start_index:start_index + 6]
+                if start_index > -1 and len(to_transform) < 5 and not source.get('removed_date'):
+                    to_transform.append(s)
         else:
             to_transform = strains
 

@@ -59,27 +59,17 @@ class StrainDetailsService:
             data = SearchElasticService().query_strain_srx_score(latest_user_search[0].to_search_criteria(), 2000, 0,
                                                                  include_locations=False, is_similar=True,
                                                                  similar_strain_id=current_strain.id)
-
-            start_index = 0
-            initial = 0
             for index, s in enumerate(data.get('list')):
-                if s.get('id') == current_strain.id:
-                    start_index = index + 1
-                    initial = index + 1
-
-                if index + 1 != start_index and 0 < start_index < initial + 5:
-                    also_like_strains.append(s)
-                    start_index += 1
-
-                if start_index == initial + 5:
-                    break
+                also_like_strains.append(s)
 
         if len(also_like_strains) == 0:
             criteria = current_strain.to_search_criteria()
             if len(criteria['effects']) > 0 or len(criteria['benefits']) > 0 or len(criteria['side_effects']) > 0:
                 criteria['strain_types'] = 'skipped'
-                data = SearchElasticService().query_strain_srx_score(criteria, 6, 0, include_locations=False)
-                for s in data.get('list')[1:]:
+                data = SearchElasticService().query_strain_srx_score(criteria, 2000, 0,
+                                                                     include_locations=False, is_similar=True,
+                                                                     similar_strain_id=current_strain.id)
+                for s in data.get('list'):
                     also_like_strains.append(s)
 
         return also_like_strains
