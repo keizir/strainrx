@@ -1018,6 +1018,18 @@
     }
 }
 
+@media (min-width: $screen-xl-min) {
+    .strain-detail-wrapper {
+        .info-image-section {
+            .strain-photo-wrapper {
+                .main-image {
+                    width: 65%;
+                }
+            }
+        }
+    }
+}
+
 @media (min-width: $screen-md-min) {
     .strain-detail-wrapper {
         .detail-section {
