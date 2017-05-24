@@ -190,13 +190,18 @@ class StrainLookupView(APIView):
         }, status=status.HTTP_200_OK)
 
 
-class StrainImagesView(LoginRequiredMixin, APIView):
+class StrainImagesView(APIView):
+    permission_classes = (permissions.AllowAny,)
+
     def get(self, request, strain_id):
         images = StrainImage.objects.filter(is_approved=True, strain=strain_id)
         serializer = StrainImageSerializer(images, many=True)
         return Response({'images': serializer.data}, status=status.HTTP_200_OK)
 
     def post(self, request, strain_id):
+        if not request.user.is_authenticated():
+            return Response({}, status=status.HTTP_401_UNAUTHORIZED)
+
         file = request.FILES.get('file')
         strain = Strain.objects.get(pk=strain_id)
         image = StrainImage(image=file, strain=strain, created_by=request.user)
