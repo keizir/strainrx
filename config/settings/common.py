@@ -16,6 +16,8 @@ import environ
 import raven
 from boto.s3.connection import OrdinaryCallingFormat
 
+gettext = lambda s: s
+
 ROOT_DIR = environ.Path(__file__) - 3  # (web/config/settings/common.py - 3 = web/)
 APPS_DIR = ROOT_DIR.path('web')
 
@@ -60,8 +62,19 @@ LOCAL_APPS = (
     'web.search.apps.SearchConfig',
     'web.businesses.apps.BusinessConfig',
     'web.system.apps.SystemConfig',
+    'web.articles.apps.ArticlesConfig',
     # Your stuff: custom apps go here
     'web',
+
+    # cms admin
+    'cms',
+    'menus',
+    'treebeard',
+    'djangocms_text_ckeditor',
+    'filer',
+    'ckeditor_filebrowser_filer',
+    'easy_thumbnails',    
+    
 )
 
 # See: https://docs.djangoproject.com/en/dev/ref/settings/#installed-apps
@@ -143,7 +156,7 @@ DATABASES['default']['ATOMIC_REQUESTS'] = True
 TIME_ZONE = 'UTC'
 
 # See: https://docs.djangoproject.com/en/dev/ref/settings/#language-code
-LANGUAGE_CODE = 'en-us'
+LANGUAGE_CODE = 'en'
 
 # See: https://docs.djangoproject.com/en/dev/ref/settings/#site-id
 SITE_ID = 1
@@ -412,3 +425,83 @@ TINYMCE_JS_ROOT = '/tinymce-static'
 TINYMCE_JS_URL = '/tinymce-static/tiny_mce/tiny_mce.js'
 
 APPEND_SLASH = True
+
+# START CMS SETTINGS
+LANGUAGES = (
+    ## Customize this
+    ('en', gettext('en')),
+)
+
+CMS_LANGUAGES = {
+    ## Customize this
+    1: [
+        {
+            'name': gettext('en'),
+            'hide_untranslated': False,
+            'redirect_on_fallback': True,
+            'public': True,
+            'code': 'en',
+        },
+    ],
+    'default': {
+        'hide_untranslated': False,
+        'public': True,
+        'redirect_on_fallback': True,
+    },
+}
+
+CMS_TEMPLATES = (
+    ## Customize this
+    ('fullwidth.html', 'Fullwidth'),
+    ('homepage.html', 'Home Page'),
+    ('sidebar_left.html', 'Sidebar Left'),
+    ('sidebar_right.html', 'Sidebar Right')
+)
+
+CMS_PERMISSION = True
+
+CMS_PLACEHOLDER_CONF = {}
+
+MAX_IMAGE_SIZE = 10 * 1024 * 1024 #10mb
+
+# CKEDITOR_SETTINGS = {
+#     'language': '{{ language }}',
+#     'toolbar': 'default',
+#     'toolbar_Custom': [
+#         ['FilerImage']
+#     ],    
+#     'skin': 'moono',
+#     'toolbarCanCollapse': False,
+#     'extraPlugins': 'filerimage',
+# }
+
+CKEDITOR_SETTINGS = {
+    'language': '{{ language }}',
+    'toolbar': [
+        ['Undo', 'Redo'],
+        ['Styles', 'Format', 'Font', 'FontSize'],
+        ['TextColor', 'BGColor'],
+        #['cmsplugins', '-', 'ShowBlocks'],
+        ['Bold', 'Italic', 'Underline', 'Strike', 'Subscript', 'Superscript', '-', 'RemoveFormat'],
+        ['NumberedList', 'BulletedList', '-', 'Outdent', 'Indent', '-', 'Blockquote', 'JustifyLeft', 'JustifyCenter', 'JustifyRight', 'JustifyBlock'],
+        ['Source'],
+        ['Find', 'Replace', '-', 'SelectAll'],
+        ['FilerImage']
+    ],
+    'skin': 'moono',
+    'extraPlugins': 'filerimage',    
+}
+
+# CKEDITOR_SETTINGS = {
+#     'language': '{{ language }}',
+#     'CMS': [
+#         ['Undo', 'Redo'],
+#         ['cmsplugins', '-', 'ShowBlocks'],
+#         ['Format', 'Styles'],
+#         ['FilerImage'],
+#     ],
+#     'skin': 'moono-lisa',
+# }
+
+
+# END CMS SETTINGS

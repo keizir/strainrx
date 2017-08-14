@@ -83,7 +83,7 @@ class StrainAdmin(admin.ModelAdmin):
     def get_actions(self, request):
         # Disable delete
         actions = super(StrainAdmin, self).get_actions(request)
-        del actions['delete_selected']
+        #del actions['delete_selected']
         return actions
 
     def has_delete_permission(self, request, obj=None):
@@ -189,3 +189,4 @@ class FlavorAdmin(admin.ModelAdmin):
 @admin.register(UserSearch)
 class UserSearchAdmin(admin.ModelAdmin):
     pass
+
