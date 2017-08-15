@@ -11,10 +11,11 @@ You should have python 3.5.1 installed as well as Nodejs 4.4.7
 1. create a virtualenv and activate it
 2. From the cloned directory run:  
     `pip3 install -r requirements/local.txt`
+    
     `npm install`  
-3. Create a local Postgre DB (`createdb`) then change your `local.py` settings to point to your DB.  
-4. Run `python manage.py migrate`.  
-5. Run `gulp` (builds all static files and will watch for changes and rebuild while it is running)
+3. Run `gulp` (builds all static files and will watch for changes and rebuild while it is running)
+4. Create a local Postgre DB (`createdb`) then change your `local.py` settings to point to your DB.  
+5. Run `python manage.py migrate`.  
 6. To create a superuser: `python manage.py createsuperuser`
 1. To run server: `python manage.py runserver` and visit localhost:8000
 
@@ -27,15 +28,17 @@ You should have python 3.5.1 installed as well as Nodejs 4.4.7
 1. From within Kibana directory run `./bin/kibana`
     1. You should now be able to use sense to interact with ES at http://localhost:5601/app/sense
 1. In the ES directory under `/config/elasticsearch.yml` add these two lines to enable inline scripts:
-    1. 
+    
         ```
+        
            script.engine.groovy.inline.aggs: on
+           
            script.engine.groovy.inline.search: on
         ```
         
 ## Common Management Commands to Init Data
+1. Import all strains to ES: `python manage.py etl_strains_to_es --drop_and_rebuild --index=strain`
 1. Import all strains to psql: `python manage.py import_strain_csv --csv_path=data/full_strain_db.csv`
-1. Import all strains to ES: `python manage.py etl_strains_to_es --drop_and_rebuild --index=strain --create_or_update_suggester`
 1. Build user ratings: `python manage.py build_strain_rating_es_index --index=user_ratings --drop_and_rebuild`
 1. Import all biz locations and menus to ES: `python manage.py build_bus_locations_es_index --index=business_location --drop_and_rebuild`
 

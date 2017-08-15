@@ -58,12 +58,13 @@ class Article(models.Model):
         self.slug = slugify(self.title)
       
         super(Article, self).save(*args, **kwargs)
-        try:
-            ping_google()
-        except Exception as e:
-            logger.error("Unable to ping google for sitemap update")
-            # Bare 'except' because we could get a variety of HTTP-related exceptions.
-            pass        
+        
+        # try:
+        #     ping_google()
+        # except Exception as e:
+        #     logger.error("Unable to ping google for sitemap update")
+        #     # Bare 'except' because we could get a variety of HTTP-related exceptions.
+        #     pass        
 
     def get_absolute_url(self):
         return reverse('article', kwargs={'slug': self.slug})
