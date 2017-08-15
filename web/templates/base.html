@@ -42,6 +42,8 @@
 
     <script>
         var STATIC_URL = '{% static '' %}',
+            HTTP_USERNAME = '{% http_username %}',
+            HTTP_PASSWORD = '{% http_password %}',
             GOOGLE_API_KEY = '{% google_maps_api_key %}',
             AUTHENTICATED = '{{ request.user.is_authenticated }}' === 'True',
             EMAIL_VERIFIED = '{{ request.user.is_email_verified }}' === 'True',
