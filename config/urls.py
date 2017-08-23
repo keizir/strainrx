@@ -41,7 +41,7 @@ urlpatterns = [
     url(r'^accounts/', include('allauth.urls')),
 
     # articles
-    url(r'^(?P<category_slug>[\w-]+)/(?P<article_slug>[\w-]+)/$', 
+    url(r'^(?P<category_slug>[\w-]+)/(?P<article_slug>[\w-]+)$', 
         view=view_article,
         name='view_article'
     ),    
