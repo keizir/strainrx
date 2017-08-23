@@ -68,7 +68,10 @@ class Article(models.Model):
         #     pass        
 
     def get_absolute_url(self):
-        return reverse('article', kwargs={'slug': self.slug})
+        if self.is_page:
+            return reverse('view_page', kwargs={'slug': self.slug})
+        else:
+            return reverse('view_article', kwargs={'category_slug': self.cagetory.slug, 'slug': self.slug})
 
     @property
     def short_title(self):

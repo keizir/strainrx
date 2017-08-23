@@ -41,7 +41,7 @@ urlpatterns = [
     url(r'^accounts/', include('allauth.urls')),
 
     # articles
-    url(r'^(?P<category_slug>[\w-]+)/(?P<article_slug>[\w-]+)$', 
+    url(r'^(?P<category_slug>[\w-]+)/(?P<article_slug>[\w-]+)/$', 
         view=view_article,
         name='view_article'
     ),    
@@ -69,8 +69,8 @@ urlpatterns = [
     url(r'^filebrowser_filer/', include('ckeditor_filebrowser_filer.urls')),
 
     # must be at end!
-        # articles
-    url(r'^(?P<page_slug>[\w-]+)/', 
+    # view pages
+    url(r'^(?P<page_slug>[\w-]+)/$', 
         view=view_page,
         name='view_page'
     ),    

@@ -46,7 +46,7 @@ W.pages.HomePage = Class.extend({
             strainSlug = $input.attr('payload-slug');
 
         if (strainName && strainVariety && strainSlug) {
-            window.location.href = '/strains/{0}/{1}'.format(strainVariety, strainSlug);
+            window.location.href = '/strains/{0}/{1}/'.format(strainVariety, strainSlug);
         }
     },
 
