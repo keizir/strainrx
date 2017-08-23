@@ -50,11 +50,11 @@ class SearchElasticService(BaseElasticService):
             srx_score = int(round(s.get('_score')))
 
             if include_locations:
-                dispensaries = self.get_locations(source.get('id'), "dispensary", current_user, result_filter)
+                dispensaries = self.get_locations(source.get('id'), "dispensary", current_user, result_filter, only_active=True)
                 dispensaries = self.transform_location_results(dispensaries, source.get('id'), result_filter,
                                                                current_user)
 
-                deliveries = self.get_locations(source.get('id'), "delivery", current_user, result_filter)
+                deliveries = self.get_locations(source.get('id'), "delivery", current_user, result_filter, only_active=True)
                 deliveries = self.transform_location_results(deliveries, source.get('id'), result_filter, current_user)
             else:
                 dispensaries = []
@@ -91,7 +91,7 @@ class SearchElasticService(BaseElasticService):
         return response_data
 
     def get_locations(self, strain_id=None, location_type=None, current_user=None, result_filter=None,
-                      order_field="menu_items.price_gram", order_dir="asc", size=None):
+                      order_field="menu_items.price_gram", order_dir="asc", size=None, only_active=False):
 
         method = self.METHODS.get('GET')
         url = '{0}{1}{2}'.format(self.BASE_ELASTIC_URL, self.URLS.get('BUSINESS_LOCATION'), '/_search')
@@ -142,6 +142,7 @@ class SearchElasticService(BaseElasticService):
                     "location": {"lat": lat, "lon": lon}, "order": "asc", "unit": "mi", "distance_type": "plane"}})
 
         bool_menu_items = {"must_not": {"exists": {"field": "menu_items.removed_date"}}}
+
         if strain_id:
             bool_menu_items["must"] = {"match": {"menu_items.strain_id": strain_id}}
 
@@ -150,10 +151,16 @@ class SearchElasticService(BaseElasticService):
         if location_type:
             must_query.append({"match": {location_type: True}})
 
+        must_not_query = {}
+
+        if only_active:
+            must_not_query.update({"exists": { "field": "removed_date" }})
+
         query = {
             "query": {
                 "bool": {
                     "must": must_query,
+                    "must_not": must_not_query,
                     "filter": filter_query
                 }
             },

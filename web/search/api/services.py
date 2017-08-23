@@ -148,6 +148,7 @@ class StrainDetailsService:
         service = SearchElasticService()
         es_response = service.get_locations(strain_id=strain_id, current_user=current_user, result_filter=result_filter,
                                             order_field=order_field, order_dir=order_dir, location_type=location_type,
-                                            size=6)
+                                            size=6, only_active=True)
+
         locations = service.transform_location_results(es_response, strain_id=strain_id, result_filter=result_filter)
         return {'locations': locations}

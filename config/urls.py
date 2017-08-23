@@ -12,8 +12,7 @@ from django.views.generic import TemplateView
 from web.businesses.sitemaps import BusinessLocationSitemap, DispensariesRootSitemap, StateRootSitemap, CityRootSitemap
 from web.search.sitemaps import StrainRootSitemap
 from web.users.sitemaps import StrainSitemap, StaticViewSitemap
-from web.articles.views import view_article
-
+from web.articles.views import view_article, view_page
 
 sitemaps = {
     'strain': StrainSitemap,
@@ -68,6 +67,13 @@ urlpatterns = [
     # cms
     url(r'^filer/', include('filer.urls')),
     url(r'^filebrowser_filer/', include('ckeditor_filebrowser_filer.urls')),
+
+    # must be at end!
+        # articles
+    url(r'^(?P<page_slug>[\w-]+)/', 
+        view=view_page,
+        name='view_page'
+    ),    
 
 
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

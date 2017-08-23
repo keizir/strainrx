@@ -3,7 +3,7 @@ from web.articles.models import Article, Category
 
 class ArticleAdmin(admin.ModelAdmin):
     search_fields = ('title',)
-    list_filter = ('featured', 'is_sponsored', 'published_date', 'category')
+    list_filter = ('is_page', 'category')
     list_display = ['short_title', 'article_url', 'featured', 'published_date', 'deleted_date', 'category',]
 
     def has_delete_permission(self, request, obj=None):

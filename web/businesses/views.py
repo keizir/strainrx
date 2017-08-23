@@ -73,6 +73,9 @@ class BusinessLocationsView(TemplateView):
         context['business'] = business
         context['locations'] = BusinessLocation.objects.filter(business=business, removed_date=None).order_by('id')
         context['tab'] = 'locations'
+        context['social_desc'] = business.meta_desc
+        context['social_image'] = business.social_image.url if strain.social_image else ""
+
         return context
 
 
@@ -91,11 +94,15 @@ class DispensaryInfoView(TemplateView):
                                                     slug_name__iexact=kwargs.get('slug_name').lower(),
                                                     removed_date=None)
             context['business_id'] = location.business.id
+            context['business_name'] = location.business.name
             context['location_id'] = location.id
             context['strain_id'] = self.request.GET.get('strain_id')
             context['active_state'] = location.state_fk
             context['active_city'] = location.city_fk
             context['location'] = location
+            context['meta_desc'] = location.meta_desc
+            context['social_image'] = location.social_image.url if location.social_image else "https://s3.amazonaws.com/srx-prod/static/images/logo_hr.b6cd6d08fabe.png"
+
         else:
             raise Http404
 

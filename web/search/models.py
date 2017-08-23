@@ -1,5 +1,5 @@
 from __future__ import unicode_literals, absolute_import
-
+from django.conf import settings
 import os
 from datetime import datetime
 from json import loads, dumps
@@ -18,7 +18,11 @@ from django.utils.translation import ugettext_lazy as _
 from web.search.serializers import StrainReviewESSerializer
 from web.search.strain_es_service import StrainESService
 from web.users.models import User
+from django_resized import ResizedImageField
 
+def upload_to(instance, filename):
+    path = 'articles/{0}_{1}'.format(uuid4(), filename)
+    return path
 
 @python_2_unicode_compatible
 class Strain(models.Model):
@@ -76,6 +80,19 @@ class Strain(models.Model):
 
     removed_by = models.CharField(max_length=20, blank=True, null=True)
     removed_date = models.DateTimeField(blank=True, null=True)
+
+    # social fields
+    meta_desc = models.CharField(max_length=3072, blank=True)
+    meta_keywords = models.CharField(max_length=3072, blank=True)
+
+    def validate_image(field_file_obj):
+        file_size = field_file_obj.file.size
+        megabyte_limit = settings.MAX_IMAGE_SIZE
+        if file_size > megabyte_limit:
+            raise ValidationError("Max file size is %sMB" % str(megabyte_limit))
+
+    social_image = ResizedImageField(max_length=255, blank=True, help_text='Maximum file size allowed is 10Mb', validators=[validate_image], quality=75, size=[1024, 1024], upload_to=upload_to)
+
 
     def save(self, *args, **kwargs):
         if self.pk is None and not self.strain_slug:

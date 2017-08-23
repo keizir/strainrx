@@ -53,6 +53,7 @@ class Article(models.Model):
     image = ResizedImageField(max_length=255, blank=True, help_text='Maximum file size allowed is 10Mb', validators=[validate_image], quality=75, size=[1024, 1024], upload_to=upload_to)
     image_caption = models.CharField(max_length=1024, blank=True)
     slug = models.SlugField(max_length=1024, default=None, blank=True, null=True)
+    is_page = models.BooleanField(default=False)
 
     def save(self, *args, **kwargs):
         self.slug = slugify(self.title)
@@ -75,7 +76,10 @@ class Article(models.Model):
 
     @property
     def url(self):
-        return '/%s/%s' % (self.category.slug, self.slug) if self.category is not None else ""
+        if self.is_page:
+            return '/%s' % self.slug
+        else:
+            return '/%s/%s' % (self.category.slug, self.slug) if self.category is not None else ""
 
     def __str__(self):
         return self.title

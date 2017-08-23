@@ -11,6 +11,21 @@
           content="Everything you need to know about the {{ strain_name }} {{ strain_variety }} strain: medical benefits, negative & positive effects and where to get it in your area.">
 {% endblock %}
 
+{% block meta_social %}
+    <meta property="og:url" content="{{ request.build_absolute_uri }}" />
+    <meta property="og:type" content="article" />
+    <meta property="og:title" content="{{ strain_name }} {{ strain_variety }} strain" />
+    <meta property="og:description" content="{{ social_desc }}" />
+    <meta property="og:image" content="{{ social_image }}" />
+
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:site" content="http://strainrx.co">
+    <meta name="twitter:title" content="{{ strain_name }} {{ strain_variety }} strain">
+    <meta name="twitter:description" content="{{ social_desc }}">
+    <meta name="twitter:image" content="{{ social_image }}">
+{% endblock %}
+
+
 {% block css %}
     {{ block.super }}
     <link href="{% static 'css/pages/strain/strain_detail.css' %}" rel="stylesheet">

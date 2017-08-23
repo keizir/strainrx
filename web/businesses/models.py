@@ -19,7 +19,8 @@ from web.businesses.es_serializers import BusinessLocationESSerializer, MenuItem
 from web.businesses.es_service import BusinessLocationESService
 from web.search.models import Strain
 from web.users.models import User
-
+from django.conf import settings
+from django_resized import ResizedImageField
 
 @python_2_unicode_compatible
 class State(models.Model):
@@ -94,10 +95,14 @@ class Business(models.Model):
     created_by = models.ForeignKey(User, on_delete=models.DO_NOTHING, related_name='business_created_by')
     created_date = models.DateTimeField(auto_now_add=True)
     trial_period_start_date = models.DateTimeField(blank=True, null=True)
+    is_active = models.BooleanField(default=True)
 
     def __str__(self):
         return self.name
 
+def upload_to(instance, filename):
+    path = 'articles/{0}_{1}'.format(uuid4(), filename)
+    return path
 
 @python_2_unicode_compatible
 class BusinessLocation(models.Model):
@@ -170,6 +175,18 @@ class BusinessLocation(models.Model):
     sat_close = models.TimeField(blank=True, null=True)
     sun_open = models.TimeField(blank=True, null=True)
     sun_close = models.TimeField(blank=True, null=True)
+
+    # social fields
+    meta_desc = models.CharField(max_length=3072, blank=True)
+    meta_keywords = models.CharField(max_length=3072, blank=True)
+
+    def validate_image(field_file_obj):
+        file_size = field_file_obj.file.size
+        megabyte_limit = settings.MAX_IMAGE_SIZE
+        if file_size > megabyte_limit:
+            raise ValidationError("Max file size is %sMB" % str(megabyte_limit))
+
+    social_image = ResizedImageField(max_length=255, blank=True, help_text='Maximum file size allowed is 10Mb', validators=[validate_image], quality=75, size=[1024, 1024], upload_to=upload_to)
 
     def save(self, *args, **kwargs):
         if self.pk is None and not self.slug_name:

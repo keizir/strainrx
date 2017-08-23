@@ -54,13 +54,13 @@
 
                 .locations-area {
                     position: absolute;
-                    right: 10%;
+                    right: 0;
                     background: $white;
                     width: 35em;
                     border: 1px solid $grey-normal;
                     padding: 8px;
                     color: $black;
-                    z-index: 2;
+                    z-index: 5;
 
                     .message {
                         margin: 1em;

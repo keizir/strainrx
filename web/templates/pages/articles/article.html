@@ -16,13 +16,13 @@
     <meta property="og:type" content="article" />
     <meta property="og:title" content="{{ article.title }}" />
     <meta property="og:description" content="{{ article.meta_desc }}" />
-    <meta property="og:image" content="{{ article.image.url }}" />
+    <meta property="og:image" content="{% if article.image %}{{ article.image.url }}{% else %}{% endif %}" />
 
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:site" content="">
     <meta name="twitter:title" content="{{ article.title }}">
     <meta name="twitter:description" content="{{ article.meta_desc }}">
-    <meta name="twitter:image" content="{{ article.image.url }}">
+    <meta name="twitter:image" content="{% if article.image %}{{ article.image.url }}{% else %}{% endif %}">
 {% endblock %}
 
 {% block css %}

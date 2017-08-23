@@ -11,7 +11,12 @@ from web.businesses.models import Business, BusinessLocation, LocationReview, St
 
 @admin.register(Business)
 class BusinessAdmin(admin.ModelAdmin):
-    pass
+    list_display = ['name', 'is_active']
+    search_fields = ('name',)
+
+    def has_delete_permission(self, request, obj=None):
+        # Disable delete
+        return False
 
 
 def activate_selected_locations(modeladmin, request, queryset):
@@ -53,7 +58,7 @@ class BusinessLocationAdminForm(forms.ModelForm):
 
     about = forms.CharField(widget=TinyMCE(attrs={'cols': 80, 'rows': 20}))
     location_field = forms.CharField(max_length=255)
-
+    
     mon_open = forms.TimeField(widget=AdminTimeWidget(format='%I:%M %p'), input_formats=('%I:%M %p',), required=False)
     mon_close = forms.TimeField(widget=AdminTimeWidget(format='%I:%M %p'), input_formats=('%I:%M %p',), required=False)
     tue_open = forms.TimeField(widget=AdminTimeWidget(format='%I:%M %p'), input_formats=('%I:%M %p',), required=False)
@@ -97,7 +102,9 @@ class BusinessLocationAdmin(admin.ModelAdmin):
 
     fieldsets = (
         ('Info',
-         {'fields': ('business', 'location_name', 'manager_name', 'location_email', 'phone', 'ext', 'about',), }),
+         {'fields': ('business', 'removed_date', 'location_name', 'manager_name', 'location_email', 'phone', 'ext', 'about',), }),
+        ('Social',
+         {'fields': ('meta_desc','meta_keywords', 'social_image'), }),
         ('Type',
          {'fields': ('dispensary', 'delivery', 'delivery_radius',), }),
         ('Location',

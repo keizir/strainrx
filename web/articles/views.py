@@ -8,3 +8,10 @@ def view_article(request, category_slug, article_slug):
     return render(request, 'pages/articles/article.html', {
         "article": article,
         })
+
+def view_page(request, page_slug):
+    article = Article.objects.get(slug=page_slug)
+
+    return render(request, 'pages/articles/article.html', {
+        "article": article,
+        })
