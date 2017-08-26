@@ -171,7 +171,7 @@ class StrainImageAdmin(admin.ModelAdmin):
     list_filter = ['is_approved', 'created_date']
     ordering = ['-created_date']
     readonly_fields = ['strain', 'created_by', 'created_date', 'image']
-    actions = [approve_strain_image]
+    actions = [approve_strain_image, 'delete_selected']
 
 
 @admin.register(Effect)
