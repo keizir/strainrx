@@ -40,6 +40,10 @@ urlpatterns = [
     url(r'^', include('web.businesses.urls', namespace='businesses')),
     url(r'^accounts/', include('allauth.urls')),
 
+    # cms
+    url(r'^filer/', include('filer.urls')),
+    url(r'^filebrowser_filer/', include('ckeditor_filebrowser_filer.urls')),
+
     # articles
     url(r'^(?P<category_slug>[\w-]+)/(?P<article_slug>[\w-]+)/$', 
         view=view_article,
@@ -63,10 +67,6 @@ urlpatterns = [
     url(r'^tinymce-static/(?P<path>.*)$', 'django.views.static.serve', {
             'document_root': str(settings.ROOT_DIR.path('tinymce-static')),
         }),
-
-    # cms
-    url(r'^filer/', include('filer.urls')),
-    url(r'^filebrowser_filer/', include('ckeditor_filebrowser_filer.urls')),
 
     # must be at end!
     # view pages
