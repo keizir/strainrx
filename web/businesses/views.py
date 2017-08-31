@@ -73,8 +73,6 @@ class BusinessLocationsView(TemplateView):
         context['business'] = business
         context['locations'] = BusinessLocation.objects.filter(business=business, removed_date=None).order_by('id')
         context['tab'] = 'locations'
-        context['social_desc'] = business.meta_desc
-        context['social_image'] = business.social_image.url if strain.social_image else ""
 
         return context
 
