@@ -21,7 +21,7 @@ You should have python 3.5.1 installed as well as Nodejs 4.4.7
 
 
 ## Install ElasticSearch
-1. Download ES 2.4.x and Kibana 4.6.x from https://www.elastic.co/downloads
+1. Download ES 5.2.x and matching Kibana from https://www.elastic.co/downloads
     1. Unzip and move both to directory of your choice
 1. From within ES directory run `bin/elasticsearch` - ES should now be running at http://localhost:9200
 1. From within Kibana directory run `./bin/kibana plugin --install elastic/sense` to install sense plugin
