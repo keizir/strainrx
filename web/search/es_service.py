@@ -553,7 +553,7 @@ class SearchElasticService(BaseElasticService):
             for option in suggestion.get('options'):
                 biz_location = option.get('_source')
                 biz_location['distance'] = option.get('fields', {}).get('distance', [])[0] if option.get('fields', {}).get('distance') else None
-                biz_location['image'] = biz_location['image'] if biz_location['image'] else 'default'
+                biz_location['image'] = biz_location['image'] if biz_location['image'] else None
                 biz_location['open'] = get_open_closed(biz_location) in ['Opened', 'Closing Soon']
                 payloads.append(biz_location)
 
