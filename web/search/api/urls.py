@@ -78,4 +78,9 @@ urlpatterns = [
         view=StrainSearchResultsView.as_view(),
         name='strain_result'
     ),
+    url(
+        regex=r'^dispensary/lookup/$',
+        view=DispensaryLookupView.as_view(),
+        name='dispensary_lookup'
+    ),
 ]

@@ -19,6 +19,12 @@ class BusinessLocationESService(BaseElasticService):
         es_response = self.get_business_location_by_db_id(business_location_id)
         es_location = es_response.get('hits', {}).get('hits', [])
 
+        # regardless of new or update, add auto complete info
+        data['location_name_suggest'] = self.generate_autocomplete_data(data.get('location_name'),
+                                                                        data.get('dispensary'),
+                                                                        data.get('delivery'),
+                                                                        data.get('grow_house'))
+
         if len(es_location) > 0:
             existing_source = es_location[0].get('_source')
             self.update_business_location_data(existing_source, data)
@@ -76,6 +82,40 @@ class BusinessLocationESService(BaseElasticService):
         existing_data['sat_close'] = new_data.get('sat_close')
         existing_data['sun_open'] = new_data.get('sun_open')
         existing_data['sun_close'] = new_data.get('sun_close')
+        existing_data['image'] = new_data.get('image')
+        existing_data['url'] = new_data.get('url')
+        existing_data['location_name_suggest'] = new_data.get('location_name_suggest')
+
+    def generate_autocomplete_data(self, location_name, dispensary, delivery, grow_house):
+        # generate variants of name for suggestion
+        input_variants = [location_name]
+        name_words = location_name.split(' ')
+        if len(name_words) > 1:
+            for i, name_word in enumerate(name_words):
+                if i < len(name_words) - 1:
+                    input_variants.append('{0} {1}'.format(name_word, name_words[i + 1]))
+                else:
+                    input_variants.append(name_word)
+
+        # set business type for context suggestions
+        bus_type = []
+
+        if dispensary:
+            bus_type.append('dispensary')
+
+        if delivery:
+            bus_type.append('delivery')
+
+        if grow_house:
+            bus_type.append('grow_house')
+
+        return {
+            "input": input_variants,
+            "weight": 100 - len(input_variants),
+            "contexts": {
+                "bus_type": bus_type
+            }
+        }
 
     def save_menu_item(self, data, menu_item_id, business_location_id):
         es_response = self.get_business_location_by_db_id(business_location_id)

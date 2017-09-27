@@ -137,7 +137,10 @@ strain_mapping = {
         "origins": {"type": "string"},
         "name_suggest": {
             "type": "completion",
-            "analyzer": "name_analyzer"
+            "analyzer": "name_analyzer",
+            "preserve_separators": True,
+            "preserve_position_increments": True,
+            "max_input_length": 50
         }
     }
 }
@@ -363,6 +366,27 @@ business_location_mapping = {
                 "in_stock": {"type": "boolean"},
                 "removed_date": {"type": "date"}
             }
+        },
+        "image": {"type": "string"},
+        "url": {"type": "string"},
+        "location_name_suggest": {
+            "type": "completion",
+            "analyzer": "name_analyzer",
+            "preserve_separators": True,
+            "preserve_position_increments": True,
+            "max_input_length": 50,
+            "contexts": [
+                {
+                    "name": "bus_type",
+                    "type": "category"
+                },
+                {
+                    "name": "location",
+                    "type": "geo",
+                    # "precision": '100km',
+                    "path": "location"
+                }
+            ]
         }
     }
 }

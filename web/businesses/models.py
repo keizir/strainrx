@@ -188,6 +188,13 @@ class BusinessLocation(models.Model):
 
     social_image = ResizedImageField(max_length=255, blank=True, help_text='Maximum file size allowed is 10Mb', validators=[validate_image], quality=75, size=[1024, 1024], upload_to=upload_to)
 
+    def image_url(self):
+        # helper to get image url or return default
+        if self.image and hasattr(self.image, 'url') and self.image.url:
+            return self.image.url
+        else:
+            return None
+
     def save(self, *args, **kwargs):
         if self.pk is None and not self.slug_name:
             # determine a category
@@ -247,6 +254,8 @@ def post_save_business_location(sender, **kwargs):
     data['business_location_id'] = business_location.pk
     data['removed_by_id'] = business_location.removed_by
     data['slug_name'] = business_location.slug_name
+    data['url'] = business_location.get_absolute_url()
+    data['image'] = business_location.image_url()
     BusinessLocationESService().save_business_location(data, business_location.pk)
 
 

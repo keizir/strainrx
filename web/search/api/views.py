@@ -1,4 +1,4 @@
-import logging
+import logging, json
 from datetime import datetime
 from operator import itemgetter
 
@@ -461,3 +461,20 @@ class StrainsListByVarietyView(APIView):
             })
 
         return Response(strains, status=status.HTTP_200_OK)
+
+
+class DispensaryLookupView(APIView):
+    permission_classes = (permissions.AllowAny,)
+
+    def get(self, request):
+        query = request.GET.get('q')
+        # in future when we want to support autocomplete beyond dispensaries
+        #bus_type = request.GET.get('bus_type')
+        location = json.loads(request.GET.get('loc')) if request.GET.get('loc') else None
+        tz = request.GET.get('tz')
+        result = SearchElasticService().lookup_dispensary(query, bus_type=['dispensary'], location=location, timezone=tz)
+
+        return Response({
+            'total': result.get('total'),
+            'payloads': result.get('payloads')
+        }, status=status.HTTP_200_OK)

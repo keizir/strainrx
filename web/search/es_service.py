@@ -479,6 +479,89 @@ class SearchElasticService(BaseElasticService):
         results = self._transform_suggest_results(es_response)
         return results
 
+    def lookup_dispensary(self, query, bus_type=['dispensary'], location=None, timezone=None):
+        method = self.METHODS.get('POST')
+        url = '{base}{index}/_search'.format(
+            base=self.BASE_ELASTIC_URL,
+            index=self.URLS.get('BUSINESS_LOCATION'),
+        )
+
+        # context suggestor: https://www.elastic.co/guide/en/elasticsearch/reference/current/suggester-context.html
+        contexts = {
+            "bus_type": bus_type
+        }
+
+        query = {
+            "_source": {
+                "excludes": ["menu_items", "phone", "ext", "removed_by_id", "created_date", "manager_name", "location_email",
+                             "location_raw", "location_name_suggest"]
+            },
+            "suggest": {
+                "location_suggestion": {
+                    "text": query,
+                    "completion": {
+                        "field": "location_name_suggest",
+                        "size": 25,
+                        "contexts": contexts
+                    }
+                }
+            }
+        }
+
+        if location:
+            # add user location if we have one
+            query['suggest']['location_suggestion']['completion']['contexts']['location'] = location
+
+            # add sort by location
+            query['sort'] = [
+                {
+                    "_geo_distance": {
+                        "location": {
+                            "lat": location['lat'],
+                            "lon": location['lon']
+                        },
+                        "order": "asc",
+                        "unit": "mi",
+                        "distance_type": "plane"
+                    }
+                }
+            ]
+
+            # inline script here gets distance from each dispensary and converts to km then to miles
+            query['script_fields'] = {
+                "distance": {
+                    "script": {
+                        "lang": "painless",
+                        "inline": "return doc['location'].arcDistance({lat}, {lon}) * 0.001 * 0.6213712".format(**location)
+                    }
+                }
+            }
+
+
+        es_response = self._request(method, url, data=json.dumps(query))
+        results = self._transform_dispensary_suggest_results(es_response)
+        return results
+
+    def _transform_dispensary_suggest_results(self, es_response):
+        suggests = es_response.get('suggest', {}).get('location_suggestion', [])
+        total = 0
+        payloads = []
+
+        if len(suggests) > 0:
+            suggestion = suggests[0]
+            total = len(suggestion.get('options'))
+            for option in suggestion.get('options'):
+                biz_location = option.get('_source')
+                biz_location['distance'] = option.get('fields', {}).get('distance', [])[0] if option.get('fields', {}).get('distance') else None
+                biz_location['image'] = biz_location['image'] if biz_location['image'] else 'default'
+                biz_location['open'] = get_open_closed(biz_location) in ['Opened', 'Closing Soon']
+                payloads.append(biz_location)
+
+        return {
+            'total': total,
+            'payloads': payloads
+        }
+
     def _transform_suggest_results(self, es_response):
         suggests = es_response.get('suggest', {}).get('name_suggestion', [])
         total = 0

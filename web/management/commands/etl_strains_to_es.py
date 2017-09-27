@@ -197,3 +197,4 @@ class Command(BaseCommand):
         self.stdout.write(
             'Updated [{0}] index with {1} strain reviews'.format(self.INDEX, len(reviews))
         )
+
