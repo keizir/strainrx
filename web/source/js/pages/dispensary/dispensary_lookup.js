@@ -120,7 +120,7 @@ W.pages.dispensary.DispensaryLookup = Class.extend({
         if (data) {
             var totalResults = data.total,
                 payloads = data.payloads,
-                itemHtml = '<span class="search-payload" id="{id}" url="{url}" name="{name}"><img width="20" height="20" src="{img_src}"/>{name} ({loc}) {dist} {open}</span>',
+                itemHtml = '<span class="search-payload" id="{id}" url="{url}" name="{name}"><img width="20" height="20" src="{img_src}"/><strong>{name}</strong> ({loc}) {dist} {open}</span>',
                 payloadHtml = '';
 
             if (totalResults && totalResults > 0) {

@@ -532,7 +532,7 @@ class SearchElasticService(BaseElasticService):
                 "distance": {
                     "script": {
                         "lang": "painless",
-                        "inline": "return doc['location'].arcDistance({lat}, {lon}) * 0.001 * 0.6213712".format(**location)
+                        "inline": "return doc['location'].planeDistance({lat}, {lon}) * 0.001 * 0.6213712".format(**location)
                     }
                 }
             }
@@ -552,6 +552,8 @@ class SearchElasticService(BaseElasticService):
             total = len(suggestion.get('options'))
             for option in suggestion.get('options'):
                 biz_location = option.get('_source')
+                if not biz_location:
+                    continue
                 biz_location['distance'] = option.get('fields', {}).get('distance', [])[0] if option.get('fields', {}).get('distance') else None
                 biz_location['image'] = biz_location['image'] if biz_location['image'] else None
                 biz_location['open'] = get_open_closed(biz_location) in ['Opened', 'Closing Soon']

@@ -41,6 +41,36 @@ W.pages.dispensary.Dispensaries = Class.extend({
                 that.navigateToDispDetailPage();
             }
         });
+
+        $('.disp-location-label').on('click', function (e) {
+            e.preventDefault();
+
+            $('.disp-location-value').val('loading location...');
+            that.clearDispLocation();
+
+            navigator.geolocation.getCurrentPosition(function (position) {
+                var geoCoder = new google.maps.Geocoder(),
+                    pos = {lat: position.coords.latitude, lng: position.coords.longitude};
+
+                geoCoder.geocode({'location': pos}, function (results, status) {
+                    if (status === 'OK') {
+                        if (results) {
+                            that.updateDispLocationTime(that.GoogleLocations, {
+                                lat: position.coords.latitude,
+                                lng: position.coords.longitude
+                            });
+                            $('.disp-location-value').val(results[0].formatted_address);
+                        }
+                    } else {
+                        console.log('Geocoder failed due to: ' + status);
+                        $('.disp-location-value').val('');
+                    }
+                });
+            }, function () {
+                console.log('Cannot locate user');
+                $('.disp-location-value').val('');
+            });
+        });
     },
     initLocation: function initLocation() {
         // for top location bar (like home page)
@@ -89,28 +119,28 @@ W.pages.dispensary.Dispensaries = Class.extend({
     },
     initDispLocation: function initDispLocation() {
         // for dispensary lookup location
-        var that = this,
-            GoogleLocations = new W.Common.GoogleLocations({$input: $('#disp-location').get(0)});
+        var that = this;
+        this.GoogleLocations = new W.Common.GoogleLocations({$input: $('#disp-location').get(0)});
 
-        GoogleLocations.initGoogleAutocomplete(
+        this.GoogleLocations.initGoogleAutocomplete(
             function (autocomplete, $input) {
                 var $el = $($input),
-                    address = GoogleLocations.getAddressFromAutocomplete(autocomplete);
+                    address = that.GoogleLocations.getAddressFromAutocomplete(autocomplete);
 
                 $el.val(W.common.Format.formatAddress(address));
                 $el.blur();
 
-                that.updateDispLocationTime(GoogleLocations, address);
+                that.updateDispLocationTime(that.GoogleLocations, address);
             },
             function (results, status, $input) {
                 if (status === 'OK') {
                     var $el = $($input),
-                        address = GoogleLocations.getAddressFromPlace(results[0]);
+                        address = that.GoogleLocations.getAddressFromPlace(results[0]);
 
                     $el.val(W.common.Format.formatAddress(address));
                     $el.blur();
 
-                    that.updateDispLocationTime(GoogleLocations, address);
+                    that.updateDispLocationTime(that.GoogleLocations, address);
                 }
             },
             function ($input) {

@@ -155,21 +155,33 @@
             .search-form {
                 display: block;
                 position: relative;
-                width: 80%;
+                width: 100%;
                 margin: 0 auto;
                 height: 8em;
 
                 .dispensary-name-field {
                     display: inline-block;
-                    width: 25em;
+                    width: 30em;
                     text-align: left;
                 }
 
-                .fa {
+                .disp-location-label {
                     display: inline-block;
                     position: relative;
                     left: 0.5em;
-                    top: 4em;
+                    top: 1.1em;
+                    color: $grey-normal;
+
+                    &:hover {
+                        cursor: pointer;
+                        color: $grey-dark;
+                    }
+                }
+
+                .disp-lookup-label {
+                    position: relative;
+                    top: 1em;
+                    left: 0.5em;
                     color: $grey-normal;
                 }
 
@@ -198,6 +210,7 @@
                     border: none;
                     border-radius: 0.5em;
                     margin: 1.5em auto 0;
+                    margin-top: -1.75em;
                     color: $grey-normal;
                     line-height: 1.2em;
                 }
@@ -210,9 +223,8 @@
                 .payloads-region {
                     display: block;
                     position: absolute;
-                    top: 9.25em;
-                    width: 35.75em;
-                    font-size: 0.7em;
+                    top: 3.25em;
+                    width: 30em;
                     color: $grey-normal;
                     background-color: $white;
                     border-bottom-left-radius: 0.5em;
@@ -221,13 +233,21 @@
 
                     img {
                         padding-right: 0.25em;
+                        top: 0.35em;
+                        position: relative;
                     }
 
                     .search-payload {
                         display: block;
-                        padding: 1em;
+                        padding: 0.25em;
                         text-align: left;
                         cursor: pointer;
+                        font-size: 0.8em;
+
+                        strong {
+                            font-family: 'gotham_boldregular', sans-serif;
+                            font-size: 1.2em;
+                        }
                     }
 
                     .search-payload.active,
@@ -495,6 +515,22 @@
                 .your-location {
                     padding: 0.72em 0.75em 0.8em;
                     margin-right: -6px;
+                }
+            }
+        }
+
+        .disp-sub-row-02 {
+            .search-box {
+                width: 80%;
+
+                .search-form {
+                    .disp-location-label {
+                        top: 1em;
+                    }
+
+                    .disp-location-value {
+                        margin: 1.5em auto 0;
+                    }
                 }
             }
         }
