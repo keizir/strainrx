@@ -119,7 +119,6 @@
             <div class="states-wrapper">
                 <a href="{% url 'businesses:dispensaries_state_list' s.abbreviation|lower %}">
                     {% if s.full_name %}{{ s.full_name }}{% else %}{{ s.abbreviation }}{% endif %}</a>
-                <span class="dash">-</span>
                 <div class="description">
                     {% if s.description %}{{ s.description|safe }}{% else %}No data about this state{% endif %}
                 </div>
