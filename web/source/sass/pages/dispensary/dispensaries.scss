@@ -155,13 +155,14 @@
             .search-form {
                 display: block;
                 position: relative;
-                width: 100%;
+                width: 70%;
                 margin: 0 auto;
                 height: 8em;
 
                 .dispensary-name-field {
                     display: inline-block;
-                    width: 30em;
+                    width: 100%;
+                    max-width: 30em;
                     text-align: left;
                 }
 
@@ -189,7 +190,10 @@
                     position: relative;
                     text-align: left;
                     display: inline-block;
-                    width: 18em;
+                    width: 100%;
+                    max-width: 30em;
+                    padding: 0;
+                    margin: 0 0 1em 0;
                 }
 
                 .lookup-submit {
@@ -233,7 +237,7 @@
 
                     img {
                         padding-right: 0.25em;
-                        top: 0.35em;
+                        top: 0.6em;
                         position: relative;
                     }
 
@@ -244,8 +248,7 @@
                         cursor: pointer;
                         font-size: 0.8em;
 
-                        strong {
-                            font-family: 'gotham_boldregular', sans-serif;
+                        .disp-name {
                             font-size: 1.2em;
                         }
                     }
@@ -494,6 +497,18 @@
                 }
             }
         }
+
+        .disp-sub-row-02 {
+            .search-box {
+                .search-form {
+                    .payloads-region {
+                        img {
+                            top: 0.5em;
+                        }
+                    }
+                }
+            }
+        }
     }
 }
 
@@ -521,15 +536,27 @@
 
         .disp-sub-row-02 {
             .search-box {
-                width: 80%;
+                width: 90%;
 
                 .search-form {
+                    width: 100%;
+
                     .disp-location-label {
                         top: 1em;
                     }
 
                     .disp-location-value {
                         margin: 1.5em auto 0;
+                    }
+
+                    fieldset {
+                        width: 18em;
+                    }
+
+                    .payloads-region {
+                        img {
+                            top: 0.4em;
+                        }
                     }
                 }
             }
@@ -543,6 +570,12 @@
 
     .disp-row-01 {
         height: 34em;
+
+        .disp-sub-row-02 {
+            .search-box {
+                width: 80%;
+            }
+        }
     }
 }
 
