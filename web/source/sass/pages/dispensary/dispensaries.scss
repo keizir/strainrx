@@ -155,7 +155,7 @@
             .search-form {
                 display: block;
                 position: relative;
-                width: 70%;
+                width: 90%;
                 margin: 0 auto;
                 height: 8em;
 
@@ -228,7 +228,8 @@
                     display: block;
                     position: absolute;
                     top: 3.25em;
-                    width: 30em;
+                    width: 100%;
+                    max-width: 30em;
                     color: $grey-normal;
                     background-color: $white;
                     border-bottom-left-radius: 0.5em;
