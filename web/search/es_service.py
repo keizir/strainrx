@@ -512,21 +512,6 @@ class SearchElasticService(BaseElasticService):
             # add user location if we have one
             query['suggest']['location_suggestion']['completion']['contexts']['location'] = location
 
-            # add sort by location
-            query['sort'] = [
-                {
-                    "_geo_distance": {
-                        "location": {
-                            "lat": location['lat'],
-                            "lon": location['lon']
-                        },
-                        "order": "asc",
-                        "unit": "mi",
-                        "distance_type": "plane"
-                    }
-                }
-            ]
-
             # inline script here gets distance from each dispensary and converts to km then to miles
             query['script_fields'] = {
                 "distance": {
@@ -536,7 +521,6 @@ class SearchElasticService(BaseElasticService):
                     }
                 }
             }
-
 
         es_response = self._request(method, url, data=json.dumps(query))
         results = self._transform_dispensary_suggest_results(es_response)
@@ -558,6 +542,11 @@ class SearchElasticService(BaseElasticService):
                 biz_location['image'] = biz_location['image'] if biz_location['image'] else None
                 biz_location['open'] = get_open_closed(biz_location) in ['Opened', 'Closing Soon']
                 payloads.append(biz_location)
+
+            # ES suggest searches don't like to sort by anything other than suggestion weight
+            # so sort in python here so closest is always first. Maybe this will change in the future
+            # see https://www.elastic.co/guide/en/elasticsearch/reference/5.6/suggester-context.html#_geo_location_query
+            payloads.sort(key=lambda x: x.get('distance'))
 
         return {
             'total': total,
