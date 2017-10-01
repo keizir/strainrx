@@ -530,6 +530,7 @@ class SearchElasticService(BaseElasticService):
         suggests = es_response.get('suggest', {}).get('location_suggestion', [])
         total = 0
         payloads = []
+        has_location = False
 
         if len(suggests) > 0:
             suggestion = suggests[0]
@@ -541,12 +542,20 @@ class SearchElasticService(BaseElasticService):
                 biz_location['distance'] = option.get('fields', {}).get('distance', [])[0] if option.get('fields', {}).get('distance') else None
                 biz_location['image'] = biz_location['image'] if biz_location['image'] else None
                 biz_location['open'] = get_open_closed(biz_location) in ['Opened', 'Closing Soon']
+
+                # sort by location only if all locations are present
+                if biz_location['distance'] is not None:
+                    has_location = True
+                else:
+                    has_location = False
+
                 payloads.append(biz_location)
 
             # ES suggest searches don't like to sort by anything other than suggestion weight
             # so sort in python here so closest is always first. Maybe this will change in the future
             # see https://www.elastic.co/guide/en/elasticsearch/reference/5.6/suggester-context.html#_geo_location_query
-            payloads.sort(key=lambda x: x.get('distance'))
+            if has_location:
+                payloads.sort(key=lambda x: x.get('distance'))
 
         return {
             'total': total,
