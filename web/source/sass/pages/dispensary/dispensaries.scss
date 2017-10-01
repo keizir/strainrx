@@ -235,6 +235,8 @@
                     border-bottom-left-radius: 0.5em;
                     border-bottom-right-radius: 0.5em;
                     z-index: 5;
+                    max-height: 12em;
+                    overflow-y: scroll;
 
                     img {
                         padding-right: 0.25em;
