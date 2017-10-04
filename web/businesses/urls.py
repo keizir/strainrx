@@ -62,4 +62,10 @@ urlpatterns = [
         view=views.DispensariesInfoView.as_view(),
         name='dispensaries_list'
     ),
+    url(
+        regex=r'^businesses/(?P<business_id>[0-9]{1,})/analytics/$',
+        view=user_is_owner(views.BusinessAnalyticsView.as_view()),
+        name='analytics'
+    ),
+
 ]

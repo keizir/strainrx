@@ -153,10 +153,18 @@ W.pages.dispensary.Dispensaries = Class.extend({
     },
     navigateToDispDetailPage: function navigateToDispDetailPage() {
         var $input = $('.lookup-input'),
-            dispUrl = $input.attr('payload-url');
+            dispUrl = $input.attr('payload-url'),
+            business_id = $input.attr('business_id');
+
+        W.track({
+            event: "DISP_LOOKUP",
+            entity_id: business_id
+        })
 
         if (dispUrl) {
-            window.location.href = dispUrl;
+            setTimeout(function(){
+                window.location.href = dispUrl;
+            }, 1000)
         }
     },
     updateDispLocationTime: function updateDispLocationTime(GoogleLocations, address) {

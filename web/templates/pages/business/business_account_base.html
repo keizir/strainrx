@@ -68,6 +68,9 @@
                 <span class="account-menu-nav-link {% if tab == 'menu' %}active{% endif %}">
                     <a href="{% url 'businesses:menu' request.session.business.id %}">Menu</a>
                 </span>
+                <span class="account-menu-nav-link {% if tab == 'analytics' %}active{% endif %}">
+                    <a href="{% url 'businesses:analytics' request.session.business.id %}">Analytics</a>
+                </span>
             </div>
             <div class="business-account-tab-content">
                 {% block business_account_tab_content %}

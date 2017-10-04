@@ -19,6 +19,7 @@ W.pages.dispensary.DispensaryLookup = Class.extend({
             var text = $(this).val(),
                 $payloadsRegion = $('.payloads-region'),
                 url = $payloadsRegion.find('.search-payload.active').attr('url'),
+                business_id = $payloadsRegion.find('.search-payload.active').attr('business_id'),
                 $activePayload = $payloadsRegion.find('.search-payload.active'),
                 $firstPayload = $payloadsRegion.find('.search-payload:nth-child(1)'),
                 $lastPayload = $payloadsRegion.find('.search-payload:last-child');
@@ -34,7 +35,7 @@ W.pages.dispensary.DispensaryLookup = Class.extend({
             }
 
             if (e.keyCode === 13) { // Enter Key
-                that.onEnterKeyPress(e, url, text);
+                that.onEnterKeyPress(e, url, text, business_id);
                 return;
             }
 
@@ -103,7 +104,7 @@ W.pages.dispensary.DispensaryLookup = Class.extend({
         }
     },
 
-    onEnterKeyPress: function onEnterKeyPress(e, url, text) {
+    onEnterKeyPress: function onEnterKeyPress(e, url, text, business_id) {
         e.preventDefault();
 
         if (url && text) {
@@ -111,6 +112,7 @@ W.pages.dispensary.DispensaryLookup = Class.extend({
                 $payloadsRegion = $('.payloads-region');
 
             $lookupInput.attr('payload-url', url);
+            $lookupInput.attr('business_id', business_id);
             $lookupInput.val(text);
             $payloadsRegion.html('');
         }
@@ -120,7 +122,7 @@ W.pages.dispensary.DispensaryLookup = Class.extend({
         if (data) {
             var totalResults = data.total,
                 payloads = data.payloads,
-                itemHtml = '<span class="search-payload" id="{id}" url="{url}" name="{name}"><img width="20" height="20" src="{img_src}"/><span class="disp-name">{name}</span> ({loc}) {dist} {open}</span>',
+                itemHtml = '<span class="search-payload" id="{id}" url="{url}" business_id="{business_id}" name="{name}"><img width="20" height="20" src="{img_src}"/><span class="disp-name">{name}</span> ({loc}) {dist} {open}</span>',
                 payloadHtml = '';
 
             if (totalResults && totalResults > 0) {
@@ -132,7 +134,8 @@ W.pages.dispensary.DispensaryLookup = Class.extend({
                         'name': payload.location_name,
                         'open': (payload.open) ? 'Open' : 'Closed',
                         'loc': '{0}, {1}'.format(payload.city, payload.state),
-                        'dist': (payload.distance) ? '{0} Miles'.format(Math.round(payload.distance * 10) / 10) : ''
+                        'dist': (payload.distance) ? '{0} Miles'.format(Math.round(payload.distance * 10) / 10) : '',
+                        'business_id': payload.business_id
                     });
                 });
 
@@ -150,9 +153,10 @@ W.pages.dispensary.DispensaryLookup = Class.extend({
             if (elem.hasClass('search-payload')) {
                 // click on autocomplete result
                 var url = elem.attr('url'),
-                    text = elem.attr('name');
+                    text = elem.attr('name'),
+                    business_id = elem.attr('business_id');
 
-                that.onEnterKeyPress(e, url, text);
+                that.onEnterKeyPress(e, url, text, business_id);
             } else if (!(elem.parents('.payloads-region').length)) {
                 $('.payloads-region').html('');
             }

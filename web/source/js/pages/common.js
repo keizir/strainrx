@@ -143,6 +143,16 @@ var W = {
         }
 
         return data;
+    },
+    track: function(event_data){
+        $.ajax({
+            method: 'POST',
+            data:  JSON.stringify(event_data),
+            url: '/api/v1/analytics/track',
+            success: function (data) {
+                console.log(data);
+            }
+        });        
     }
 };
 

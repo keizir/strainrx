@@ -59,6 +59,8 @@ urlpatterns = [
       include('web.search.api.urls', namespace='search_api', app_name='search_api')),
     url(r'^api/v1/businesses/',
       include('web.businesses.api.urls', namespace='businesses_api', app_name='businesses_api')),
+    url(r'^api/v1/analytics/',
+      include('web.analytics.api.urls', namespace='analytics_api', app_name='analytics_api')),
 
     url(r'^sitemap\.xml$', sitemap, {'sitemaps': sitemaps}, name='django.contrib.sitemaps.views.sitemap'),
 

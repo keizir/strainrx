@@ -63,6 +63,7 @@ LOCAL_APPS = (
     'web.businesses.apps.BusinessConfig',
     'web.system.apps.SystemConfig',
     'web.articles.apps.ArticlesConfig',
+    'web.analytics.apps.AnalyticsConfig',
     # Your stuff: custom apps go here
     'web',
 

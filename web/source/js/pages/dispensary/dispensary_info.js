@@ -245,6 +245,13 @@ W.pages.dispensary.DispensaryInfo = Class.extend({
         $('.btn-close-phone-dialog').on('click', function () {
             $('.phone-dialog').dialog('close');
         });
+
+        W.track({
+            event: "DISP_CALL",
+            entity_id: this.ui.$businessId.val()
+        })
+
+
     },
 
     clickPlaceOrderBtn: function clickPlaceOrderBtn() {
@@ -262,8 +269,17 @@ W.pages.dispensary.DispensaryInfo = Class.extend({
         if ($btn && $btn.length != 0) {
             $btn.on('click', function () {
                 q = W.common.Format.formatAddress(that.location);
+                
+                W.track({
+                    event: "DISP_GETDIR",
+                    entity_id: that.ui.$businessId.val()
+                })
+
                 if (q) {
-                    window.open('http://maps.google.com/?daddr={0}?sadds='.format(q), '_blank').focus();
+                    setTimeout(function(){
+                        window.open('http://maps.google.com/?daddr={0}?sadds='.format(q), '_blank');
+                    }, 1200);
+                    
                 }
             });
         }
