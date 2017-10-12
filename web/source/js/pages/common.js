@@ -75,6 +75,11 @@ var W = {
     },
     C: { // global constants
         API_BASE: '/api/v1',
+        CHROME: 'CHROME',
+        SAFARI: 'SAFARI',
+        IE: 'IE',
+        FF: 'FF',
+        OTHER: 'OTHER'
     },
     getCookie: function getCookie(name) {
         // based on https://github.com/HenrikJoreteg/cookie-getter
@@ -153,7 +158,61 @@ var W = {
                 console.log(data);
             }
         });        
+    },
+    detectBrowser: function detectBrowser() {
+        var safari = /.*?(Safari)/i,
+            chrome = /.*?(Chrome)/i,
+            firefox = /.*?(Firefox)/i,
+            ie = /.*?(Trident)/i,
+            opera = /.*?(Opera)/i,
+            safariVer = /Version\S(\d+).(\d+).(\d+)/i,
+            firefoxVer = /Firefox\S(\d+).(\d+)/i,
+            chromeVer = /Chrome\S(\d+).(\d+).(\d+).(\d+)/i,
+            operaVer = /Version\S(\d+).(\d+)/i,
+            ieVer = /rv:(\d+).(\d+)/i,
+            browserInfo = {
+                type: '',
+                version: ''
+
+            },
+            userAgent = window.navigator.userAgent;
+
+        try {
+
+            // detect browser type and version
+            if (chrome.test(userAgent)) {
+                // chrome
+                browserInfo.type = W.C.CHROME;
+                browserInfo.version = (userAgent.match(chromeVer) === null) ? W.C.OTHER : userAgent.match(chromeVer)[0].split('/')[1];
+            } else if (safari.test(userAgent) && !chrome.test(userAgent)) {
+                // safari
+                browserInfo.type = W.C.SAFARI;
+                browserInfo.version = (userAgent.match(safariVer) === null) ? W.C.OTHER : userAgent.match(safariVer)[0].split('/')[1];
+            } else if (firefox.test(userAgent)) {
+                // firefox
+                browserInfo.type = W.C.FF;
+                browserInfo.version = (userAgent.match(firefoxVer) === null) ? W.C.OTHER : userAgent.match(firefoxVer)[0].split('/')[1];
+            } else if (ie.test(userAgent)) {
+                // ie
+                browserInfo.type = W.C.IE;
+                browserInfo.version = (userAgent.match(ieVer) === null) ? W.C.OTHER : parseInt(userAgent.match(ieVer)[0].split(':')[1]);
+            } else if (opera.test(userAgent)) {
+                // opera
+                browserInfo.type = W.C.OPR;
+                browserInfo.version = (userAgent.match(operaVer) === null) ? W.C.OTHER : userAgent.match(operaVer)[0].split('/')[1];
+            } else {
+                // other
+                browserInfo.type = W.C.OTHER;
+                browserInfo.version = W.C.OTHER;
+            }
+        } catch (e) {
+            console.error('Error detecting browser');
+        }
+
+        return browserInfo;
     }
+
+
 };
 
 /*

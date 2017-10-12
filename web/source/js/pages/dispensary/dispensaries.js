@@ -9,18 +9,24 @@ W.pages.dispensary.Dispensaries = Class.extend({
         this.userId = options && options.userId;
         this.dispTimezone = null;
         this.dispLocation = null;
+        this.browserInfo = W.detectBrowser();
 
         this.initDispensaryLookupField();
-        this.preFillUserLocation();
-        this.initLocation();
+        //this.preFillUserLocation();
+        //this.initLocation();
         this.initDispLocation();
         this.initEventHandlers();
+        this.ieHack();
+    },
+    ieHack: function idHack() {
+        if (this.browserInfo.type === W.C.IE && this.browserInfo.version <= 11) {
+            $('.lookup-submit').css({
+                position: 'relative',
+                top: '1em'
+            });
+        }
     },
     initDispensaryLookupField: function initDispensaryLookupField() {
-        //var lookupTemplate = _.template($('#dispensary-lookup-field').html());
-        //$('.dispensary-name-field').html(lookupTemplate({
-        //    'lookup_placeholder': 'Search Dispensaries by Name'
-        //}));
         new W.pages.dispensary.DispensaryLookup();
     },
     preFillUserLocation: function preFillUserLocation() {

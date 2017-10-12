@@ -30,6 +30,7 @@ class State(models.Model):
                                    help_text='This will be used on /dispensaries page as a state description')
     description2 = models.TextField(blank=True, null=True,
                                     help_text='This will be used on /dispensaries/{state} page as a state description')
+    active = models.BooleanField(default=True, help_text='Display this state on the dispensaries list page?')
 
     def get_absolute_url(self):
         return reverse('businesses:dispensaries_state_list', kwargs={'state': self.abbreviation.lower()})

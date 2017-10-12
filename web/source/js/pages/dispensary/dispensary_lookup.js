@@ -59,11 +59,13 @@ W.pages.dispensary.DispensaryLookup = Class.extend({
                             $lookupInput.attr('payload-id', $payloadSpan.attr('id'));
                             $lookupInput.val($payloadSpan.text());
                             $payloadsRegion.html('');
+                            $payloadsRegion.hide();
                         });
                     }
                 });
             } else {
                 $payloadsRegion.html('');
+                $payloadsRegion.hide();
             }
         });
     },
@@ -115,6 +117,7 @@ W.pages.dispensary.DispensaryLookup = Class.extend({
             $lookupInput.attr('business_id', business_id);
             $lookupInput.val(text);
             $payloadsRegion.html('');
+            $payloadsRegion.hide();
         }
     },
 
@@ -139,8 +142,12 @@ W.pages.dispensary.DispensaryLookup = Class.extend({
                     });
                 });
 
+                $('.payloads-region').show();
+
                 return payloadHtml;
             }
+        } else {
+            $('.payloads-region').hide();
         }
     },
 
@@ -159,6 +166,7 @@ W.pages.dispensary.DispensaryLookup = Class.extend({
                 that.onEnterKeyPress(e, url, text, business_id);
             } else if (!(elem.parents('.payloads-region').length)) {
                 $('.payloads-region').html('');
+                $('.payloads-region').hide();
             }
         });
     }

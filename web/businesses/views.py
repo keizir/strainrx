@@ -129,7 +129,7 @@ class DispensariesInfoView(TemplateView):
 
     def get_context_data(self, **kwargs):
         context = super(DispensariesInfoView, self).get_context_data(**kwargs)
-        context['states'] = State.objects.all().order_by('abbreviation')
+        context['states'] = State.objects.filter(active=True).order_by('abbreviation')
         return context
 
 

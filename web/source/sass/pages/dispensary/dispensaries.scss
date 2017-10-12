@@ -38,93 +38,12 @@
 
     }
 
-    .disp-sub-row-01 {
-        display: block;
-        position: relative;
-        width: 100%;
-        height: 8em;
-
-        .location-holder {
-            display: inline-block;
-            position: absolute;
-            left: 0;
-            margin-top: 2em;
-            line-height: 3em;
-            width: 11em;
-
-            form > fieldset {
-                position: relative;
-                border: none;
-                padding: 0.35em 0.3em;
-                margin: 0;
-                text-align: left;
-            }
-
-            .check {
-                margin-left: -30px;
-            }
-
-            .removable {
-                display: none;
-                position: relative;
-                right: 2.4em;
-                top: 0.44em;
-                cursor: pointer;
-            }
-
-            .your-location {
-                padding: 0.75em;
-                border-radius: 0.5em;
-                margin-right: 0;
-                border: none;
-                color: $white;
-                background: $grey;
-                opacity: 0.8;
-            }
-
-            .your-location-value {
-                display: none;
-                border: 1px solid $grey-dark;
-                border-left: none;
-                border-radius: 0 0.5em 0.5em 0;
-                padding: 0.75em;
-                width: 30em;
-                opacity: 0.8;
-                color: $grey-dark;
-            }
-        }
-
-        .favorites-holder {
-            display: inline-block;
-            position: absolute;
-            right: 0;
-            margin-top: 2em;
-            line-height: 3em;
-            padding: 0.35em 0;
-            opacity: 0.8;
-
-            .favorites {
-                border: 1px solid $grey;
-                padding: 0.75em 1em;
-                border-radius: 0.5em;
-                background: $grey;
-                color: $white;
-                cursor: pointer;
-
-                .fa-sort-desc {
-                    position: relative;
-                    top: -0.2em;
-                    margin-left: 0.3em;
-                }
-            }
-        }
-    }
-
     .disp-sub-row-02 {
         display: block;
         width: 100%;
         color: $white;
         line-height: 2.5em;
+        padding-top: 2em;
 
         .btn-lets-go {
             width: 20.5em;
@@ -186,7 +105,7 @@
                     color: $grey-normal;
                 }
 
-                fieldset {
+                .disp-location-container {
                     position: relative;
                     text-align: left;
                     display: inline-block;
@@ -202,7 +121,13 @@
                     background-color: $green-apple;
                     font-size: 1em;
                     font-weight: 500;
-                    padding: 0.75em 0;
+                    padding: 0.15em 0;
+                    display: inline-block;
+                    border-radius: 0.5em;
+
+                    &:hover {
+                        cursor: pointer;
+                    }
                 }
 
                 input[type="text"] {
@@ -225,7 +150,7 @@
                 }
 
                 .payloads-region {
-                    display: block;
+                    display: none;
                     position: absolute;
                     top: 3.25em;
                     width: 100%;
@@ -552,7 +477,7 @@
                         margin: 1.5em auto 0;
                     }
 
-                    fieldset {
+                    .disp-location-container {
                         width: 18em;
                     }
 

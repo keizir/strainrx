@@ -18,31 +18,6 @@
 {% block content %}
     <div class="disp-row-01">
         <div class="container">
-            <div class="disp-sub-row-01">
-                <div class="location-holder">
-                    <form method="post">
-                        {% csrf_token %}
-                        <fieldset>
-                            <label for="location" class="your-location">
-                                <i class="fa fa-dot-circle-o" aria-hidden="true"></i> Your Location:</label>
-                            <input id="location" type="text" class="your-location-value"
-                                   placeholder="Enter your address"/>
-                            <i class="fa fa-check check" aria-hidden="true"></i>
-                            <span class="removable remove-location hidden" title="Clear value"></span>
-                        </fieldset>
-                    </form>
-                </div>
-                {% if request.user.is_authenticated %}
-                    <div class="favorites-holder">
-                        <a href="{% url 'users:favorites' request.user.id %}">
-                            <span class="favorites">
-                                <i class="fa fa-heart-o" aria-hidden="true"></i>
-                                <i class="fa fa-sort-desc" aria-hidden="true"></i>
-                            </span>
-                        </a>
-                    </div>
-                {% endif %}
-            </div>
             <div class="disp-sub-row-02">
                 <h1>Find a Dispensary</h1>
                 <div class="subtitle-container">
@@ -59,14 +34,14 @@
                             <input id="disp-lookup" class="lookup-input" type="text" placeholder="Search Dispensaries by Name"/>
                             <div class="payloads-region"></div>
                         </div>
-                        <fieldset>
+                        <div class="disp-location-container">
                             <label for="disp-location" class="disp-location-label">
                                 <i class="fa fa-dot-circle-o" aria-hidden="true"></i>
                             </label>
                             <input id="disp-location" type="text" class="disp-location-value"
                                    placeholder="Filter by Location"/>
-                        </fieldset>
-                        <button class="btn-primary lookup-submit" type="button">Find Dispensary</button>
+                        </div>
+                        <div class="lookup-submit">Find Dispensary</div>
                     </div>
                 </div>
                 <!--<a class="find-delivery" href="#">or Find Delivery Service</a>-->
