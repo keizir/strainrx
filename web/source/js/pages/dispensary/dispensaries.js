@@ -12,8 +12,6 @@ W.pages.dispensary.Dispensaries = Class.extend({
         this.browserInfo = W.detectBrowser();
 
         this.initDispensaryLookupField();
-        //this.preFillUserLocation();
-        //this.initLocation();
         this.initDispLocation();
         this.initEventHandlers();
         this.ieHack();
@@ -28,11 +26,6 @@ W.pages.dispensary.Dispensaries = Class.extend({
     },
     initDispensaryLookupField: function initDispensaryLookupField() {
         new W.pages.dispensary.DispensaryLookup();
-    },
-    preFillUserLocation: function preFillUserLocation() {
-        if (this.location) {
-            $('.your-location-value').val(W.common.Format.formatAddress(this.location)).trigger('change');
-        }
     },
     initEventHandlers: function initEventHandlers() {
         var that = this;
@@ -77,51 +70,6 @@ W.pages.dispensary.Dispensaries = Class.extend({
                 $('.disp-location-value').val('');
             });
         });
-    },
-    initLocation: function initLocation() {
-        // for top location bar (like home page)
-        var that = this,
-            GoogleLocations = new W.Common.GoogleLocations({$input: $('#location').get(0)});
-
-        GoogleLocations.initGoogleAutocomplete(
-            function (autocomplete, $input) {
-                var $el = $($input),
-                    address = GoogleLocations.getAddressFromAutocomplete(autocomplete);
-
-                $el.val(W.common.Format.formatAddress(address));
-                $el.blur();
-
-                that.updateTimezone(GoogleLocations, address, function () {
-                    that.saveUserLocation(address);
-                });
-            },
-            function (results, status, $input) {
-                if (status === 'OK') {
-                    var $el = $($input),
-                        address = GoogleLocations.getAddressFromPlace(results[0]);
-
-                    $el.val(W.common.Format.formatAddress(address));
-                    $el.blur();
-
-                    that.updateTimezone(GoogleLocations, address, function () {
-                        that.saveUserLocation(address);
-                    });
-                }
-            },
-            function ($input) {
-                var $removeBtn = $('.remove-location');
-                $('.check').hide();
-                $removeBtn.removeClass('hidden');
-                $removeBtn.on('click', function () {
-                    if (!that.authenticated) {
-                        Cookies.remove('user_geo_location');
-                    }
-
-                    $removeBtn.addClass('hidden');
-                    $('.check').show();
-                    $($input).val('');
-                });
-            });
     },
     initDispLocation: function initDispLocation() {
         // for dispensary lookup location
