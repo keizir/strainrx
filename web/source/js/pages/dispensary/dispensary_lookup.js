@@ -10,9 +10,23 @@ W.pages.dispensary.DispensaryLookup = Class.extend({
         this.onReturn = options && options.onReturn;
 
         this.changeLookupInput();
+        this.initEventHandlers();
         this.clickOutsidePayloadArea();
     },
+    initEventHandlers: function initEventHandlers() {
+        var that = this;
 
+        $('.payloads-region').on('click', '.search-payload', function (e) {
+            var text = $('.lookup-input').val(),
+                selectedItem = $(e.currentTarget),
+                url = selectedItem.attr('url'),
+                business_id = selectedItem.attr('business_id');
+
+            that.onEnterKeyPress(e, url, text, business_id);
+
+            DispensaryPage.navigateToDispDetailPage();
+        });
+    },
     changeLookupInput: function changeLookupInput() {
         var that = this;
         $('.lookup-input').on('keyup', function (e) {
@@ -52,15 +66,6 @@ W.pages.dispensary.DispensaryLookup = Class.extend({
                     success: function (data) {
                         $payloadsRegion.html('');
                         $payloadsRegion.append(that.buildPayloadLookupArea(data));
-
-                        $('.search-payload').on('click', function () {
-                            var $payloadSpan = $(this),
-                                $lookupInput = $('.lookup-input');
-                            $lookupInput.attr('payload-id', $payloadSpan.attr('id'));
-                            $lookupInput.val($payloadSpan.text());
-                            $payloadsRegion.html('');
-                            $payloadsRegion.hide();
-                        });
                     }
                 });
             } else {

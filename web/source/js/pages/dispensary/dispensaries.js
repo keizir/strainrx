@@ -41,6 +41,8 @@ W.pages.dispensary.Dispensaries = Class.extend({
             }
         });
 
+
+
         $('.disp-location-label').on('click', function (e) {
             e.preventDefault();
 
@@ -113,7 +115,7 @@ W.pages.dispensary.Dispensaries = Class.extend({
         W.track({
             event: "DISP_LOOKUP",
             entity_id: business_id
-        })
+        });
 
         if (dispUrl) {
             setTimeout(function(){
