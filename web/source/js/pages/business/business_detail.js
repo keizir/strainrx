@@ -190,11 +190,6 @@ W.pages.business.BusinessDetail = Class.extend({
             return;
         }
 
-        if (about && about.length > 1000) {
-            $errorMessage.text('About Us max length is 1000 chars');
-            return;
-        }
-
         var dayInvalid = false;
         $.each(W.common.Constants.days, function (index, day) {
             var openTime = that.getOpenTime(day.value),
