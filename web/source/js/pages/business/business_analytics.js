@@ -70,12 +70,13 @@ W.pages.business.Analytics = Class.extend({
                 type:"category",
                 labels: {
                    rotation: 20,
-                },
+                } 
             },
             yAxis: {
                 title: {
                     text: 'Views'
-                }
+                },
+                tickInterval: 1                
             },
             series: [{
                 name: 'Views',
@@ -110,12 +111,13 @@ W.pages.business.Analytics = Class.extend({
                 type:"category",
                 labels: {
                    rotation: 20,
-                },
+                }
             },
             yAxis: {
                 title: {
                     text: 'Views'
-                }
+                },
+                tickInterval: 1
             },
             series: [{
                 name: 'Views',

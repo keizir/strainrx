@@ -1,5 +1,10 @@
 @import '../../mixins/variables';
 
+select {
+    padding: 0 !important;
+}
+
+
 #analytics {
     margin-top: 1em;
 
@@ -16,11 +21,12 @@
         right: 0;
         padding: .25em;
 
-        input {
+        #from, #to {
             width: 8em;
-            height: 2em;
+            height: 3.5em;
             font-size: .7em;
             padding: 1em;
+            color: black;
         }
 
         button {
@@ -29,7 +35,8 @@
             padding: .5em;
             font-size: .75em;
         }
-    }
+
+  }
 
     #overall-section {
 
@@ -57,7 +64,7 @@
             position: relative;
             text-align: center;
 
-            input {
+            #to, #from {
                 width: 12em;
                 height: 3em;
                 font-size: 1em;
