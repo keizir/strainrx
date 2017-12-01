@@ -6,7 +6,7 @@
             <div class="about-wrapper">
                 <h2>About This Place</h2>
                 <% if (l.about) { %>
-                <span class="about">${ l.about }</span>
+                <span class="about">${ l.about.replace(new RegExp('\r?\n', 'g'), '<br />')  }</span>
                 <% } else { %>
                 <span class="about">--</span>
                 <% } %>
