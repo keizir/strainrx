@@ -77,7 +77,7 @@ class Command(BaseCommand):
     def load_business_locations(self):
         es = ElasticService()
         bes = BusinessLocationESService()
-        locations = BusinessLocation.objects.all()
+        locations = BusinessLocation.objects.filter(removed_date__isnull=True)
         locations_data = []
 
         for l in locations:

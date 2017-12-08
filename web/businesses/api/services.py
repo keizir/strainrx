@@ -6,6 +6,7 @@ from django.core.exceptions import ValidationError
 from django.db.models import Avg
 
 from web.businesses.models import BusinessLocation, Business, LocationReview
+from web.businesses.es_service import BusinessLocationESService
 from web.system.models import SystemProperty
 from web.users import validators
 from web.users.models import User, UserLocation
@@ -156,6 +157,8 @@ class BusinessLocationService:
         return l
 
     def remove_location(self, business_location_id, current_user_id):
+        es_service = BusinessLocationESService()
+
         l = BusinessLocation.objects.get(pk=business_location_id)
         l.removed_by = current_user_id
         l.removed_date = datetime.now()
@@ -167,6 +170,8 @@ class BusinessLocationService:
                 new_primary = locations[0]
                 new_primary.primary = True
                 new_primary.save()
+
+        es_service.delete_business_location(business_location_id)
 
 
 def get_location_rating(location_id):
