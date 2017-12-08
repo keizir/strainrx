@@ -26,7 +26,7 @@
 }
 
 .nav-container {
-    display: block;
+    display: flex;
     padding: 0 1.3em;
     line-height: 5em;
     height: 5em;
@@ -52,6 +52,7 @@
     .nav-list-wrapper {
         display: inline-block;
         float: right;
+        margin-left: auto;
     }
 
     .nav-list-wrapper:hover {
@@ -70,7 +71,8 @@
 .nav-tabs-wrapper {
     display: inline-block;
     position: relative;
-    width: 23em;
+    height: 100%;
+    overflow: hidden;
     margin-left: 2em;
 
     .action {
@@ -97,6 +99,7 @@
 
     .nav-menu-btn-wrapper {
         right: 1em;
+        white-space: nowrap;
 
         .business-image {
             display: inline-block;
