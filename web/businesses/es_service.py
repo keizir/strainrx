@@ -1,6 +1,7 @@
 import json
 from datetime import datetime
 
+from web.businesses.es_serializers import BusinessLocationESSerializer, MenuItemESSerializer
 from web.es_service import BaseElasticService
 from web.search import es_mappings
 
@@ -15,15 +16,14 @@ class BusinessLocationESService(BaseElasticService):
         es_response = self._request(self.METHODS.get('POST'), url, data=json.dumps(query))
         return es_response
 
-    def save_business_location(self, data, business_location_id):
-        es_response = self.get_business_location_by_db_id(business_location_id)
+    def save_business_location(self, business_location):
+        es_response = self.get_business_location_by_db_id(business_location.id)
         es_location = es_response.get('hits', {}).get('hits', [])
 
+        es_serializer = BusinessLocationESSerializer(business_location)
+        data = es_serializer.data
         # regardless of new or update, add auto complete info
-        data['location_name_suggest'] = self.generate_autocomplete_data(data.get('location_name'),
-                                                                        data.get('dispensary'),
-                                                                        data.get('delivery'),
-                                                                        data.get('grow_house'))
+        data['location_name_suggest'] = self.generate_autocomplete_data(business_location)
 
         if len(es_location) > 0:
             existing_source = es_location[0].get('_source')
@@ -43,18 +43,6 @@ class BusinessLocationESService(BaseElasticService):
                                                 type=es_mappings.TYPES.get('business_location'))
             es_response = self._request(self.METHODS.get('POST'), url, data=json.dumps(data))
 
-        return es_response
-
-    def delete_business_location(self, business_location_id):
-        es_response = self.get_business_location_by_db_id(business_location_id)
-        es_location = es_response.get('hits', {}).get('hits', [])
-
-        url = '{base}{index}/{type}/{es_id}'.format(base=self.BASE_ELASTIC_URL,
-                                                    index=self.URLS.get('BUSINESS_LOCATION'),
-                                                    type=es_mappings.TYPES.get('business_location'),
-                                                    es_id=es_location[0].get('_id'),
-                                                    )
-        es_response = self._request(self.METHODS.get('DELETE'), url)
         return es_response
 
     def update_business_location_data(self, existing_data, new_data):
@@ -98,10 +86,10 @@ class BusinessLocationESService(BaseElasticService):
         existing_data['url'] = new_data.get('url')
         existing_data['location_name_suggest'] = new_data.get('location_name_suggest')
 
-    def generate_autocomplete_data(self, location_name, dispensary, delivery, grow_house):
+    def generate_autocomplete_data(self, business_location):
         # generate variants of name for suggestion
-        input_variants = [location_name]
-        name_words = location_name.split(' ')
+        input_variants = [business_location.location_name]
+        name_words = business_location.location_name.split(' ')
         if len(name_words) > 1:
             for i, name_word in enumerate(name_words):
                 if i < len(name_words) - 1:
@@ -112,14 +100,17 @@ class BusinessLocationESService(BaseElasticService):
         # set business type for context suggestions
         bus_type = []
 
-        if dispensary:
+        if business_location.dispensary:
             bus_type.append('dispensary')
 
-        if delivery:
+        if business_location.delivery:
             bus_type.append('delivery')
 
-        if grow_house:
+        if business_location.grow_house:
             bus_type.append('grow_house')
+
+        if not business_location.is_searchable():
+            bus_type = ['non_searchable']
 
         return {
             "input": input_variants,
@@ -129,9 +120,12 @@ class BusinessLocationESService(BaseElasticService):
             }
         }
 
-    def save_menu_item(self, data, menu_item_id, business_location_id):
-        es_response = self.get_business_location_by_db_id(business_location_id)
+    def save_menu_item(self, menu_item):
+        es_response = self.get_business_location_by_db_id(menu_item.business_location_id)
         es_location = es_response.get('hits', {}).get('hits', [])
+
+        es_serializer = MenuItemESSerializer(menu_item)
+        data = es_serializer.data
 
         if len(es_location) > 0:
             existing_source = es_location[0].get('_source')
@@ -139,7 +133,7 @@ class BusinessLocationESService(BaseElasticService):
             exist = False
 
             for mi in menu_items:
-                if mi.get('id') == menu_item_id:
+                if mi.get('id') == menu_item.id:
                     mi['price_gram'] = data.get('price_gram')
                     mi['price_eighth'] = data.get('price_eighth')
                     mi['price_quarter'] = data.get('price_quarter')
@@ -163,8 +157,8 @@ class BusinessLocationESService(BaseElasticService):
 
         return None
 
-    def delete_menu_item(self, menu_item_id, business_location_id):
-        es_response = self.get_business_location_by_db_id(business_location_id)
+    def delete_menu_item(self, menu_item):
+        es_response = self.get_business_location_by_db_id(menu_item.business_location_id)
         es_location = es_response.get('hits', {}).get('hits', [])
 
         if len(es_location) > 0:
@@ -172,7 +166,7 @@ class BusinessLocationESService(BaseElasticService):
             menu_items = existing_source.get('menu_items')
 
             for mi in menu_items:
-                if mi.get('id') != menu_item_id:
+                if mi.get('id') != menu_item.id:
                     mi['removed_date'] = datetime.now().isoformat()
 
             existing_source['menu_items'] = menu_items

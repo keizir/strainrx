@@ -108,6 +108,8 @@ class Business(models.Model):
     last_payment_date = models.DateField(null=True)
     last_payment_amount = models.PositiveIntegerField(null=True)
 
+    is_searchable = models.BooleanField(default=True)
+
     def __str__(self):
         return self.name
 
@@ -208,6 +210,12 @@ class BusinessLocation(models.Model):
         else:
             return None
 
+    def is_searchable(self):
+        if self.removed_by or self.removed_date:
+            return False
+
+        return self.business.is_searchable
+
     def save(self, *args, **kwargs):
         if self.pk is None and not self.slug_name:
             # determine a category
@@ -261,15 +269,7 @@ def pre_save_business_location(sender, **kwargs):
 @receiver(post_save, sender=BusinessLocation)
 def post_save_business_location(sender, **kwargs):
     business_location = kwargs.get('instance')
-    es_serializer = BusinessLocationESSerializer(business_location)
-    data = es_serializer.data
-    data['business_id'] = business_location.business.pk
-    data['business_location_id'] = business_location.pk
-    data['removed_by_id'] = business_location.removed_by
-    data['slug_name'] = business_location.slug_name
-    data['url'] = business_location.get_absolute_url()
-    data['image'] = business_location.image_url()
-    BusinessLocationESService().save_business_location(data, business_location.pk)
+    BusinessLocationESService().save_business_location(business_location)
 
 
 def save_city_and_state(business_location):
@@ -310,14 +310,7 @@ class BusinessLocationMenuItem(models.Model):
 @receiver(post_save, sender=BusinessLocationMenuItem)
 def save_es_menu_item(sender, **kwargs):
     menu_item = kwargs.get('instance')
-    es_serializer = MenuItemESSerializer(menu_item)
-    d = es_serializer.data
-
-    strain = menu_item.strain
-    d['id'] = menu_item.pk
-    d['strain_id'] = strain.pk
-    d['strain_name'] = strain.name
-    BusinessLocationESService().save_menu_item(d, menu_item.pk, menu_item.business_location.pk)
+    BusinessLocationESService().save_menu_item(menu_item)
 
 
 @python_2_unicode_compatible

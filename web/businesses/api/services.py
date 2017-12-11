@@ -157,8 +157,6 @@ class BusinessLocationService:
         return l
 
     def remove_location(self, business_location_id, current_user_id):
-        es_service = BusinessLocationESService()
-
         l = BusinessLocation.objects.get(pk=business_location_id)
         l.removed_by = current_user_id
         l.removed_date = datetime.now()
@@ -170,8 +168,6 @@ class BusinessLocationService:
                 new_primary = locations[0]
                 new_primary.primary = True
                 new_primary.save()
-
-        es_service.delete_business_location(business_location_id)
 
 
 def get_location_rating(location_id):

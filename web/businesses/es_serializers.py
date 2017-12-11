@@ -2,7 +2,12 @@ from rest_framework import serializers
 
 
 class BusinessLocationESSerializer(serializers.Serializer):
+    business_id = serializers.IntegerField()
+    business_location_id = serializers.IntegerField(source='id')
+    url = serializers.SerializerMethodField()
+    image = serializers.SerializerMethodField()
     location_name = serializers.CharField()
+    slug_name = serializers.CharField()
     manager_name = serializers.CharField()
     location_email = serializers.CharField()
     dispensary = serializers.BooleanField()
@@ -19,6 +24,7 @@ class BusinessLocationESSerializer(serializers.Serializer):
     phone = serializers.CharField()
     ext = serializers.CharField()
     timezone = serializers.CharField()
+    removed_by_id = serializers.CharField(source='removed_by')
     removed_date = serializers.DateTimeField()
     created_date = serializers.DateTimeField()
     mon_open = serializers.TimeField(format='%H:%M:%S', input_formats=['%H:%M:%S'], allow_null=True)
@@ -42,8 +48,17 @@ class BusinessLocationESSerializer(serializers.Serializer):
     def create(self, validated_data):
         pass
 
+    def get_url(self, obj):
+        return obj.get_absolute_url()
+
+    def get_image(self, obj):
+        return obj.image_url()
+
 
 class MenuItemESSerializer(serializers.Serializer):
+    id = serializers.IntegerField()
+    strain_id = serializers.IntegerField(source='strain_id')
+    strain_name = serializers.SerializerMethodField()
     price_gram = serializers.FloatField()
     price_eighth = serializers.FloatField()
     price_quarter = serializers.FloatField()
@@ -56,3 +71,6 @@ class MenuItemESSerializer(serializers.Serializer):
 
     def create(self, validated_data):
         pass
+
+    def get_strain_name(self, obj):
+        return obj.strain.name

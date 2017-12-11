@@ -6,6 +6,7 @@ from django.contrib.admin.widgets import AdminTimeWidget
 from tinymce.widgets import TinyMCE
 
 from web.businesses.api.services import BusinessLocationService
+from web.businesses.es_service import BusinessLocationESService
 from web.businesses.models import Business, BusinessLocation, LocationReview, State, City, Payment
 
 
@@ -15,13 +16,40 @@ class PaymentAdmin(admin.TabularInline):
     ordering = ('-date',)
 
 
+def enable_business_search(modeladmin, request, queryset):
+    for business in queryset:
+        business.is_searchable = True
+        business.save()
+
+    es_service = BusinessLocationESService()
+    for location in BusinessLocation.objects.filter(business__in=queryset):
+        es_service.save_business_location(location)
+
+
+enable_business_search.short_description = 'Enable search'
+
+
+def disable_business_search(modeladmin, request, queryset):
+    for business in queryset:
+        business.is_searchable = False
+        business.save()
+
+    es_service = BusinessLocationESService()
+    for location in BusinessLocation.objects.filter(business__in=queryset):
+        es_service.save_business_location(location)
+
+
+disable_business_search.short_description = 'Disable search'
+
+
 @admin.register(Business)
 class BusinessAdmin(admin.ModelAdmin):
-    list_display = ('name', 'is_active', 'account_type', 'last_payment_date', 'last_payment_amount')
-    list_filter = ('account_type',)
+    list_display = ('name', 'is_active', 'is_searchable', 'account_type', 'last_payment_date', 'last_payment_amount')
+    list_filter = ('account_type', 'is_active', 'is_searchable')
     search_fields = ('name',)
     readonly_fields = ('last_payment_date', 'last_payment_amount')
     inlines = (PaymentAdmin,)
+    actions = [enable_business_search, disable_business_search]
 
     def has_delete_permission(self, request, obj=None):
         # Disable delete
@@ -104,6 +132,20 @@ class OwnerEmailVerifiedFilter(SimpleListFilter):
             return queryset.filter(business__created_by__is_email_verified=is_verified)
 
 
+class ActivityFilter(SimpleListFilter):
+    title = 'Activeness'
+    parameter_name = 'removed_date'
+
+    def lookups(self, request, model_admin):
+        return [('active', 'Active'), ('deactivated', 'Deactivated')]
+
+    def queryset(self, request, queryset):
+        if self.value() is None:
+            return queryset
+
+        return queryset.filter(removed_date__isnull=(self.value() == 'active'))
+
+
 @admin.register(BusinessLocation)
 class BusinessLocationAdmin(admin.ModelAdmin):
     change_form_template = 'admin/business/business_location_change_form.html'
@@ -140,7 +182,7 @@ class BusinessLocationAdmin(admin.ModelAdmin):
     list_display = ['business', 'location_name', 'dispensary', 'delivery', 'removed_date', 'owner_email_verified']
     readonly_fields = ['category', 'slug_name', 'primary', 'grow_house']
     search_fields = ['location_name']
-    list_filter = [OwnerEmailVerifiedFilter]
+    list_filter = [OwnerEmailVerifiedFilter, ActivityFilter]
     ordering = ['location_name']
     actions = [activate_selected_locations, deactivate_selected_locations, verify_email_for_selected_locations]
 

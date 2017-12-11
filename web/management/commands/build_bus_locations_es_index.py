@@ -77,7 +77,7 @@ class Command(BaseCommand):
     def load_business_locations(self):
         es = ElasticService()
         bes = BusinessLocationESService()
-        locations = BusinessLocation.objects.filter(removed_date__isnull=True)
+        locations = BusinessLocation.objects.all()
         locations_data = []
 
         for l in locations:
@@ -141,10 +141,7 @@ class Command(BaseCommand):
                 "menu_items": menu_items,
                 "image": l.image_url(),
                 "url": l.get_absolute_url(),
-                "location_name_suggest": bes.generate_autocomplete_data(l.location_name,
-                                                                        l.dispensary,
-                                                                        l.delivery,
-                                                                        l.grow_house)
+                "location_name_suggest": bes.generate_autocomplete_data(l)
             }
 
             if l.lat and l.lng:
