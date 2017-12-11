@@ -45,6 +45,18 @@ class BusinessLocationESService(BaseElasticService):
 
         return es_response
 
+    def delete_business_location(self, business_location_id):
+        es_response = self.get_business_location_by_db_id(business_location_id)
+        es_location = es_response.get('hits', {}).get('hits', [])
+
+        url = '{base}{index}/{type}/{es_id}'.format(base=self.BASE_ELASTIC_URL,
+                                                    index=self.URLS.get('BUSINESS_LOCATION'),
+                                                    type=es_mappings.TYPES.get('business_location'),
+                                                    es_id=es_location[0].get('_id'),
+                                                    )
+        es_response = self._request(self.METHODS.get('DELETE'), url)
+        return es_response
+
     def update_business_location_data(self, existing_data, new_data):
         existing_data['location_name'] = new_data.get('location_name')
         existing_data['manager_name'] = new_data.get('manager_name')
