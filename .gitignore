@@ -113,6 +113,7 @@ __pycache__
 sendgrid.env
 /config/settings/local.py
 /web/static
+/web/media
 
 ### Local stuff
 /strainrx-web
