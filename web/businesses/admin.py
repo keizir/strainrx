@@ -6,13 +6,22 @@ from django.contrib.admin.widgets import AdminTimeWidget
 from tinymce.widgets import TinyMCE
 
 from web.businesses.api.services import BusinessLocationService
-from web.businesses.models import Business, BusinessLocation, LocationReview, State, City
+from web.businesses.models import Business, BusinessLocation, LocationReview, State, City, Payment
+
+
+class PaymentAdmin(admin.TabularInline):
+    extra = 0
+    model = Payment
+    ordering = ('-date',)
 
 
 @admin.register(Business)
 class BusinessAdmin(admin.ModelAdmin):
-    list_display = ['name', 'is_active']
+    list_display = ('name', 'is_active', 'account_type', 'last_payment_date', 'last_payment_amount')
+    list_filter = ('account_type',)
     search_fields = ('name',)
+    readonly_fields = ('last_payment_date', 'last_payment_amount')
+    inlines = (PaymentAdmin,)
 
     def has_delete_permission(self, request, obj=None):
         # Disable delete

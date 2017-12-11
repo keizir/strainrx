@@ -4,12 +4,11 @@ import re
 from uuid import uuid4
 
 import pytz
-from django.conf import settings
 from django.contrib.postgres.fields import JSONField
 from django.core.exceptions import ValidationError
 from django.core.urlresolvers import reverse
 from django.db import models
-from django.db.models.signals import post_save, pre_save
+from django.db.models.signals import post_save, pre_save, post_delete
 from django.dispatch import receiver
 from django.template.defaultfilters import slugify
 from django.utils.encoding import python_2_unicode_compatible
@@ -21,6 +20,7 @@ from web.search.models import Strain
 from web.users.models import User
 from django.conf import settings
 from django_resized import ResizedImageField
+
 
 @python_2_unicode_compatible
 class State(models.Model):
@@ -84,6 +84,12 @@ def phone_number_validator(value):
 
 @python_2_unicode_compatible
 class Business(models.Model):
+    ACCOUNT_TYPE_CHOICES = (
+        ('house_account', 'House Account'),
+        ('claimed_account_free', 'Claimed Account Free'),
+        ('paid_account', 'Paid Account'),
+    )
+
     name = models.CharField(max_length=255)
     image = models.ImageField(max_length=255, upload_to=upload_business_image_to, blank=True,
                               help_text='Maximum file size allowed is 5Mb',
@@ -98,12 +104,18 @@ class Business(models.Model):
     trial_period_start_date = models.DateTimeField(blank=True, null=True)
     is_active = models.BooleanField(default=True)
 
+    account_type = models.CharField(max_length=255, choices=ACCOUNT_TYPE_CHOICES, default=ACCOUNT_TYPE_CHOICES[0][0])
+    last_payment_date = models.DateField(null=True)
+    last_payment_amount = models.PositiveIntegerField(null=True)
+
     def __str__(self):
         return self.name
+
 
 def upload_to(instance, filename):
     path = 'articles/{0}_{1}'.format(uuid4(), filename)
     return path
+
 
 @python_2_unicode_compatible
 class BusinessLocation(models.Model):
@@ -327,3 +339,36 @@ class LocationReview(models.Model):
     created_by = models.ForeignKey(User, on_delete=models.DO_NOTHING, related_name='+')
     last_modified_date = models.DateTimeField(auto_now=True)
     last_modified_by = models.ForeignKey(User, on_delete=models.DO_NOTHING, null=True, related_name='+')
+
+
+@python_2_unicode_compatible
+class Payment(models.Model):
+    amount = models.PositiveIntegerField()
+    business = models.ForeignKey(Business, on_delete=models.DO_NOTHING, related_name='payments')
+    date = models.DateField()
+    description = models.TextField(default='', blank=True)
+
+
+def update_business_payments(business_id):
+    amount, date = None, None
+
+    last_payment = Payment.objects.filter(business_id=business_id).order_by('date').last()
+
+    if last_payment is not None:
+        amount = last_payment.amount
+        date = last_payment.date
+
+    Business.objects.filter(id=business_id).update(last_payment_amount=amount,
+                                                   last_payment_date=date)
+
+
+@receiver(post_save, sender=Payment)
+def post_save_payment(sender, **kwargs):
+    payment = kwargs.get('instance')
+    update_business_payments(payment.business_id)
+
+
+@receiver(post_delete, sender=Payment)
+def post_delete_payment(sender, **kwargs):
+    payment = kwargs.get('instance')
+    update_business_payments(payment.business_id)
