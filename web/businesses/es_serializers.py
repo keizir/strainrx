@@ -57,7 +57,7 @@ class BusinessLocationESSerializer(serializers.Serializer):
 
 class MenuItemESSerializer(serializers.Serializer):
     id = serializers.IntegerField()
-    strain_id = serializers.IntegerField(source='strain_id')
+    strain_id = serializers.IntegerField()
     strain_name = serializers.SerializerMethodField()
     price_gram = serializers.FloatField()
     price_eighth = serializers.FloatField()
