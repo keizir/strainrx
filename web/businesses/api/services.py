@@ -6,6 +6,7 @@ from django.core.exceptions import ValidationError
 from django.db.models import Avg
 
 from web.businesses.models import BusinessLocation, Business, LocationReview
+from web.businesses.es_service import BusinessLocationESService
 from web.system.models import SystemProperty
 from web.users import validators
 from web.users.models import User, UserLocation
