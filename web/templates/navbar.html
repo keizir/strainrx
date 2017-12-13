@@ -15,10 +15,20 @@
                         <a class="nav-link strain-wizard-link" href="{% url 'search:strain_wizard' %}">
                             Strain Recommendation</a>
                     </div>
-                    <span class="separator"></span>
                     <div class="action blue-link">
+                        <span class="separator"></span>
                         <a class="nav-link" href="{% url 'home' %}">
                             Strain Lookup</a>
+                    </div>
+                    <div class="action blue-link">
+                        <span class="separator"></span>
+                        <a class="nav-link" href="{% url 'businesses:dispensaries_list' %}">
+                            Find a Dispensary</a>
+                    </div>
+                    <div class="action blue-link">
+                        <span class="separator"></span>
+                        <a class="nav-link" href="/cannabis-guide/">
+                            Cannabis Guide</a>
                     </div>
                 </div>
             {% endif %}
@@ -33,7 +43,7 @@
                         <div class="nav-menu-btn-wrapper">
                             {% if request.user.type == 'consumer' %}
                                 <a class="nav-menu-btn">
-                                    <i class="fa fa-user" aria-hidden="true"></i>Welcome
+                                    <i class="fa fa-user" aria-hidden="true"></i>
                                     <a href="#">
                                         <span class="user-name">{{ request.user.first_name }}</span>
                                     </a>
@@ -83,6 +93,14 @@
                                 <div class="action blue-link">
                                     <a class="nav-link" href="{% url 'home' %}">
                                         Strain Lookup</a>
+                                </div>
+                                <div class="action blue-link">
+                                    <a class="nav-link" href="{% url 'businesses:dispensaries_list' %}">
+                                        Find a Dispensary</a>
+                                </div>
+                                <div class="action blue-link">
+                                    <a class="nav-link" href="/cannabis-guide/">
+                                        Cannabis Guide</a>
                                 </div>
                                 <div class="action">
                                     <a class="nav-link" href="{% url 'account_logout' %}">Sign out</a>
