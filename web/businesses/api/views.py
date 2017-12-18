@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+import json
 import logging
 from datetime import datetime
 
@@ -6,7 +7,7 @@ from boto.s3.connection import S3Connection, Bucket, Key
 from django.conf import settings
 from django.contrib.auth import authenticate, login
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.core.exceptions import ValidationError
+from django.core.exceptions import ValidationError, ObjectDoesNotExist
 from rest_framework import permissions
 from rest_framework import status
 from rest_framework.response import Response
@@ -15,7 +16,7 @@ from rest_framework.views import APIView
 from web.businesses.api.permissions import BusinessAccountOwner, AllowAnyGetOperation
 from web.businesses.api.serializers import *
 from web.businesses.api.services import BusinessSignUpService, BusinessLocationService, get_open_closed, \
-    get_location_rating
+    get_location_rating, FeaturedBusinessLocationService
 from web.businesses.emails import EmailService
 from web.businesses.models import Business, BusinessLocation, BusinessLocationMenuItem, LocationReview, \
     UserFavoriteLocation, State, City
@@ -24,6 +25,7 @@ from web.businesses.utils import NamePaginator
 from web.search.api.services import StrainDetailsService
 from web.search.models import Strain
 from web.users.api.serializers import UserSerializer
+from web.users.models import UserLocation
 
 logger = logging.getLogger(__name__)
 
@@ -346,3 +348,37 @@ class BusinessLocationsPerCityView(APIView):
             data[page.start_letter] = current_page
 
         return Response(data, status=status.HTTP_200_OK)
+
+
+class FeaturedBusinessLocationsView(APIView):
+    permission_classes = (permissions.AllowAny,)
+
+    def get(self, request):
+        try:
+            loc_json = json.loads(request.GET.get('loc'))
+            location = {
+                'latitude': float(loc_json.get('lat')),
+                'longitude': float(loc_json.get('lon')),
+                'zip_code': loc_json.get('zip'),
+            }
+        except (TypeError, json.decoder.JSONDecodeError):
+            if request.user.is_authenticated():
+                try:
+                    location = {
+                        'latitude': request.user.geo_location.lat,
+                        'longitude': request.user.geo_location.lng,
+                        'zip_code': request.user.geo_location.zipcode,
+                    }
+                except ObjectDoesNotExist:
+                    location = {}
+            else:
+                location = {}
+        except ValueError:
+            return Response({'error': 'Invalid location value'}, status=status.HTTP_400_BAD_REQUEST)
+
+        featured_locations = FeaturedBusinessLocationService().get_list(**location)
+
+        return Response(
+            {'locations': [BusinessLocationSerializer(x).data for x in featured_locations]},
+            status=status.HTTP_200_OK
+        )

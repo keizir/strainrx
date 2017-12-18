@@ -116,7 +116,7 @@ class UserSetting(models.Model):
 
 @python_2_unicode_compatible
 class UserLocation(models.Model):
-    user = models.OneToOneField(User, on_delete=models.DO_NOTHING)
+    user = models.OneToOneField(User, on_delete=models.DO_NOTHING, related_name='geo_location')
 
     street1 = models.CharField(_('Street'), blank=True, null=True, max_length=100)
     city = models.CharField(_('City'), blank=True, null=True, max_length=100)

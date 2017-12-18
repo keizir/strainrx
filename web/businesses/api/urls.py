@@ -35,6 +35,11 @@ urlpatterns = [
         name='business_location'
     ),
     url(
+        regex=r'^locations/featured/$',
+        view=FeaturedBusinessLocationsView.as_view(),
+        name='business_locations_featured'
+    ),
+    url(
         regex=r'^(?P<state_abbreviation>.+)/(?P<city_slug>.+)',
         view=BusinessLocationsPerCityView.as_view(),
         name='business_locations_per_city'

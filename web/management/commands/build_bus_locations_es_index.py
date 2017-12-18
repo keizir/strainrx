@@ -139,8 +139,8 @@ class Command(BaseCommand):
                 "sun_open": l.sun_open.isoformat() if l.sun_open else None,
                 "sun_close": l.sun_close.isoformat() if l.sun_close else None,
                 "menu_items": menu_items,
-                "image": l.image_url(),
-                "url": l.get_absolute_url(),
+                "image": l.image_url,
+                "url": l.url,
                 "location_name_suggest": bes.generate_autocomplete_data(l)
             }
 

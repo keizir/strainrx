@@ -5,6 +5,8 @@ from uuid import uuid4
 
 import pytz
 from django.contrib.postgres.fields import JSONField
+from django.contrib.gis.db.models import PointField, GeoManager
+from django.contrib.gis.geos import Point
 from django.core.exceptions import ValidationError
 from django.core.urlresolvers import reverse
 from django.db import models
@@ -14,7 +16,6 @@ from django.template.defaultfilters import slugify
 from django.utils.encoding import python_2_unicode_compatible
 from django.utils.translation import ugettext_lazy as _
 
-from web.businesses.es_serializers import BusinessLocationESSerializer, MenuItemESSerializer
 from web.businesses.es_service import BusinessLocationESService
 from web.search.models import Strain
 from web.users.models import User
@@ -129,6 +130,8 @@ class BusinessLocation(models.Model):
         ('delivery', 'Delivery'),
     )
 
+    DEFAULT_IMAGE_URL = '{base}images/default-location-image.jpeg'.format(base=settings.STATIC_URL)
+
     business = models.ForeignKey(Business, on_delete=models.DO_NOTHING)
     location_name = models.CharField(max_length=255, blank=False, null=False)
     manager_name = models.CharField(max_length=255, blank=True, null=True)
@@ -153,7 +156,7 @@ class BusinessLocation(models.Model):
     street1 = models.CharField(max_length=100)
     city = models.CharField(max_length=100)
     state = models.CharField(max_length=50)
-    zip_code = models.CharField(max_length=10)
+    zip_code = models.CharField(max_length=10, db_index=True)
     timezone = models.CharField(max_length=100, null=True, choices=zip(pytz.common_timezones, pytz.common_timezones))
 
     city_slug = models.SlugField(max_length=611, null=True, blank=True,
@@ -167,6 +170,7 @@ class BusinessLocation(models.Model):
     lat = models.FloatField(_('Latitude'), blank=True, null=True, max_length=50)
     lng = models.FloatField(_('Longitude'), blank=True, null=True, max_length=50)
     location_raw = JSONField(_('Location Raw JSON'), default={}, blank=True, null=True, max_length=20000)
+    geo_location = PointField(geography=True, srid=4326, null=True, db_index=True)
 
     phone = models.CharField(max_length=15, blank=True, null=True, validators=[phone_number_validator])
     ext = models.CharField(max_length=5, blank=True, null=True)
@@ -195,6 +199,8 @@ class BusinessLocation(models.Model):
     meta_desc = models.CharField(max_length=3072, blank=True)
     meta_keywords = models.CharField(max_length=3072, blank=True)
 
+    objects = GeoManager()
+
     def validate_image(field_file_obj):
         file_size = field_file_obj.file.size
         megabyte_limit = settings.MAX_IMAGE_SIZE
@@ -203,12 +209,19 @@ class BusinessLocation(models.Model):
 
     social_image = ResizedImageField(max_length=255, blank=True, help_text='Maximum file size allowed is 10Mb', validators=[validate_image], quality=75, size=[1024, 1024], upload_to=upload_to)
 
+    @property
+    def url(self):
+        return reverse('businesses:dispensary_info',
+                       kwargs={'state': self.state_fk.abbreviation.lower(), 'city_slug': self.city_fk.full_name_slug,
+                               'slug_name': self.slug_name})
+
+    @property
     def image_url(self):
         # helper to get image url or return default
         if self.image and hasattr(self.image, 'url') and self.image.url:
             return self.image.url
         else:
-            return None
+            return self.DEFAULT_IMAGE_URL
 
     def is_searchable(self):
         if self.removed_by or self.removed_date:
@@ -238,6 +251,8 @@ class BusinessLocation(models.Model):
         if self.city:
             self.city_slug = slugify(self.city)
 
+        self.geo_location = Point(self.lng, self.lat)
+
         super(BusinessLocation, self).save(*args, **kwargs)
 
     def clean(self):
@@ -246,11 +261,6 @@ class BusinessLocation(models.Model):
 
         if not delivery and not dispensary:
             raise ValidationError('Either delivery or dispensary is required.')
-
-    def get_absolute_url(self):
-        return reverse('businesses:dispensary_info',
-                       kwargs={'state': self.state_fk.abbreviation.lower(), 'city_slug': self.city_fk.full_name_slug,
-                               'slug_name': self.slug_name})
 
     def __str__(self):
         return self.location_name
@@ -311,6 +321,16 @@ class BusinessLocationMenuItem(models.Model):
 def save_es_menu_item(sender, **kwargs):
     menu_item = kwargs.get('instance')
     BusinessLocationESService().save_menu_item(menu_item)
+
+
+@python_2_unicode_compatible
+class FeaturedBusinessLocation(models.Model):
+    class Meta:
+        unique_together = (('business_location', 'zip_code'),)
+
+    featured_datetime = models.DateTimeField(auto_now=True)
+    business_location = models.ForeignKey(BusinessLocation, related_name='featured')
+    zip_code = models.CharField(max_length=10, db_index=True)
 
 
 @python_2_unicode_compatible

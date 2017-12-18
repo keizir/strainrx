@@ -4,18 +4,22 @@ from __future__ import absolute_import, unicode_literals
 from datetime import datetime, timedelta
 
 import pytz
+
+from django.core.exceptions import ObjectDoesNotExist
 from django.core.urlresolvers import reverse
 from django.http import Http404
 from django.views.generic import RedirectView
 from django.views.generic import TemplateView
 from django.db.models import Count
 
+from web.businesses.api.services import FeaturedBusinessLocationService
 from web.businesses.models import Business, BusinessLocation, State, City
 from web.businesses.utils import NamePaginator
 from web.users.models import User
 from web.analytics.models import Event
 
 from web.analytics.service import Analytics
+
 
 class BusinessSignUpWizardView(TemplateView):
     template_name = 'pages/signup/b2b/wizard.html'
@@ -130,6 +134,21 @@ class DispensariesInfoView(TemplateView):
     def get_context_data(self, **kwargs):
         context = super(DispensariesInfoView, self).get_context_data(**kwargs)
         context['states'] = State.objects.filter(active=True).order_by('abbreviation')
+
+        if self.request.user.is_authenticated():
+            try:
+                location = {
+                    'latitude': self.request.user.geo_location.lat,
+                    'longitude': self.request.user.geo_location.lng,
+                    'zip_code': self.request.user.geo_location.zipcode,
+                }
+            except ObjectDoesNotExist:
+                location = {}
+        else:
+            location = {}
+
+        context['featured'] = FeaturedBusinessLocationService().get_list(**location)
+
         return context
 
 
