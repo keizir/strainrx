@@ -713,16 +713,6 @@
             .featured-header {
                 margin: 0.25em 0 0.5em;
             }
-
-            .featured-detail-list {
-                width: 70%;
-                max-width: 70%;
-            }
-
-            .featured-image {
-                width: 30%;
-                max-width: 30%;
-            }
         }
     }
 
@@ -755,6 +745,21 @@
 
 @media (min-width: $screen-xxl-min) {
     .dispensaries-list-container {
+        .featured-wrapper {
+            .featured-header {
+                margin: 0.25em 0 0.5em;
+            }
+
+            .featured-detail-list {
+                width: 70%;
+                max-width: 70%;
+            }
+
+            .featured-image {
+                width: 30%;
+                max-width: 30%;
+            }
+        }
     }
 
     .disp-row-01 {
