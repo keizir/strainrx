@@ -27,6 +27,7 @@
     - libwebp-dev
     # django extensions
     - graphviz-dev
+    - postgresql-9.5-postgis
   tags: packages
 
 - name: Upgrade pip3
