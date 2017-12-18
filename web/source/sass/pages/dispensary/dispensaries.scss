@@ -5,7 +5,8 @@
     -webkit-background-size: cover;
     background-size: cover;
     text-align: center;
-    height: 30em;
+    height: calc(100vh - 51em);
+    min-height: 30em;
     display: block;
     z-index: 1;
 
@@ -13,6 +14,7 @@
         margin: 1.5em 0.5em 0.5em;
         font-weight: normal;
         text-shadow: 0px 0px 10px #000000;
+        font-size: 3.5em;
     }
 
     p {
@@ -33,7 +35,8 @@
             text-shadow: 0px 0px 10px #000000;
             display: inline-block;
             margin: 0;
-            width: 20em;
+            width: 18em;
+            font-size: 1.5em;
         }
 
     }
@@ -205,7 +208,7 @@
     }
 
     h2 {
-        margin-top: 2em;
+        margin-top: 1em;
         margin-bottom: 0.2em;
     }
 
@@ -219,8 +222,8 @@
         display: block;
         position: absolute;
         width: 116px;
-        top: -2em;
-        left: 0.5em;
+        top: -1em;
+        right: -25px;
         float: left;
         margin: 0.67em auto;
         vertical-align: top;
@@ -236,6 +239,7 @@
     }
 
     .text {
+        text-align: justify;
         margin: 2em auto;
         line-height: 1.6em;
     }
@@ -307,6 +311,102 @@
         }
     }
 
+    .featured-wrapper {
+        margin-top: 1em;
+
+        a {
+            font-weight: normal;
+        }
+
+        h3 {
+            margin: 0 0 0.5em 0;
+            font-size: 2em;
+        }
+
+
+        .featured-list {
+            display: block;
+
+            .col-3 {
+                display: inline-block;
+                width: 100%;
+            }
+
+        }
+
+        .featured-header {
+            font-size: 1.5em;
+            padding-bottom: 0.5em;
+        }
+
+        .featured-item {
+            border: 1px $grey-light solid;
+            margin-bottom: 2em;
+            padding: 1em 3em;
+        }
+
+        .col-3:nth-of-type(3) {
+            .featured-item {
+                margin-bottom: 0;
+            }
+
+        }
+
+        .featured-content {
+            display: block;
+        }
+
+        .featured-detail-list {
+            margin-top: 1em;
+        }
+
+        .featured-detail {
+            padding-bottom: 0.3em;
+            white-space: nowrap;
+
+            i {
+                width: 1.3em;
+                text-align: center;
+                position: relative;
+                top: -0.5em;
+            }
+        }
+
+        .featured-detail-line-wrapper {
+            display: inline;
+        }
+
+        .featured-detail-line {
+            display: inline-block;
+            font-size: 0.8em;
+            line-height: 2em;
+            padding-right: 1em;
+
+            width: 100%;
+            overflow: hidden;
+            text-overflow: ellipsis;
+
+        }
+
+        .featured-detail-line:nth-of-type(2) {
+            padding-left: 1.9em;
+            display: block;
+        }
+
+        .featured-image {
+            width: 100%;
+            max-width: 100%;
+
+            margin:auto;
+
+            img {
+                max-width: 100%;
+                max-height: 100%;
+            }
+        }
+
+    }
+
     .dispensaries-wrapper {
         .page {
             margin: 1em auto;
@@ -368,23 +468,88 @@
         h1 {
             margin-top: 1em;
         }
-
-        .social-icons {
-            top: -0.8em;
-            right: 0;
-            left: initial;
-            float: right;
-            text-align: right;
-        }
     }
 }
 
 @media (min-width: $screen-sm-min) {
     .dispensaries-list-container {
+        .social-icons {
+            right: -16px;
+        }
+
+        .featured-detail-line {
+            padding-right: 2em;
+        }
+
+        .featured-wrapper {
+            h3 {
+                font-size: 1.5em;
+            }
+
+            .featured-list {
+                display: flex;
+
+                .col-3 {
+                    width: 33.33%;
+                }
+
+                .col-3:nth-of-type(1) {
+                    .featured-item {
+                        margin-right: 0.66em;
+                    }
+                }
+
+                .col-3:nth-of-type(2) {
+                    .featured-item {
+                        margin-left: 0.33em;
+                        margin-right: 0.33em;
+                    }
+                }
+
+                .col-3:nth-of-type(3) {
+                    .featured-item {
+                        margin-left: 0.66em;
+                        margin-right: 0;
+                    }
+                }
+
+            }
+
+            .featured-item {
+                padding: 0.5em 1em;
+                margin-right: 1em;
+                margin-bottom: 0;
+            }
+
+            .featured-content {
+                display: block;
+            }
+
+            .featured-header {
+                margin: 0.25em 0 0.5em 0;
+                font-size: initial;
+                padding-bottom: 0;
+            }
+
+            .featured-detail-list {
+                padding: 0;
+                width: 100%;
+                max-width: 100%;
+            }
+
+            .featured-detail-line {
+                padding-right: 2em;
+            }
+
+            .featured-image {
+                width: 100%;
+                max-width: 100%;
+            }
+        }
     }
 
     .disp-row-01 {
-        height: 34em;
+        height: calc(100vh - 45em);
 
         h1 {
             margin-top: 1em;
@@ -396,9 +561,15 @@
         }
 
         .subtitle-container {
+            margin-bottom: 1em;
+
             hr {
                 width: 10em;
                 top: -0.5em;
+            }
+
+            .subtitle {
+                width: 20em;
             }
         }
 
@@ -443,11 +614,12 @@
 
 @media (min-width: $screen-md-min) {
     .dispensaries-list-container {
+        .social-icons {
+            right: -12px;
+        }
     }
 
     .disp-row-01 {
-        height: 32em;
-
         h1 {
             font-size: 4em;
         }
@@ -495,11 +667,34 @@
 
 @media (min-width: $screen-lg-min) {
     .dispensaries-list-container {
+        .featured-wrapper {
+            .featured-header {
+                margin: 0.25em 0 0.25em 0;
+            }
+
+            .featured-content {
+                display: flex;
+            }
+
+            .featured-detail-list {
+                padding: 0 0.5em;
+                margin-top: 0;
+
+                width: 60%;
+                max-width: 60%;
+            }
+
+            .featured-image {
+                width: 40%;
+                max-width: 40%;
+            }
+            .featured-detail-line {
+                padding-right: 2em;
+            }
+        }
     }
 
     .disp-row-01 {
-        height: 34em;
-
         .disp-sub-row-02 {
             .search-box {
                 width: 80%;
@@ -510,11 +705,28 @@
 
 @media (min-width: $screen-xl-min) {
     .dispensaries-list-container {
+        .social-icons {
+            right: 17px;
+        }
+
+        .featured-wrapper {
+            .featured-header {
+                margin: 0.25em 0 0.5em;
+            }
+
+            .featured-detail-list {
+                width: 70%;
+                max-width: 70%;
+            }
+
+            .featured-image {
+                width: 30%;
+                max-width: 30%;
+            }
+        }
     }
 
     .disp-row-01 {
-        height: 38em;
-
         h1 {
             font-size: 5em;
         }
@@ -538,6 +750,7 @@
             }
         }
     }
+
 }
 
 @media (min-width: $screen-xxl-min) {
@@ -545,6 +758,8 @@
     }
 
     .disp-row-01 {
+        min-height: 28em;
+
         h1 {
             font-size: 5.6em;
         }

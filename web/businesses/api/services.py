@@ -1,12 +1,14 @@
 import uuid
 from datetime import datetime
+from random import shuffle
 
 import pytz
 from django.core.exceptions import ValidationError
+from django.contrib.gis.geos import Point
+from django.contrib.gis.measure import Distance
 from django.db.models import Avg
 
 from web.businesses.models import BusinessLocation, Business, LocationReview
-from web.businesses.es_service import BusinessLocationESService
 from web.system.models import SystemProperty
 from web.users import validators
 from web.users.models import User, UserLocation
@@ -207,3 +209,70 @@ def get_open_closed(location_json, time_format='%H:%M:%S'):
         return 'Opened' if int(loc_o.strftime('%H')) < current_hour < int(loc_c.strftime('%H')) else 'Closed Now'
 
     return ''
+
+
+class FeaturedBusinessLocationService:
+    def __get_featured_by_zip(self, qs, **kwargs):
+        zip_code = kwargs.get('zip_code')
+
+        if zip_code is not None:
+            return qs.filter(featured__zip_code=zip_code)
+
+        return []
+
+    def __get_featured_by_distance(self, qs, **kwargs):
+        longitude = kwargs.get('longitude')
+        latitude = kwargs.get('latitude')
+
+        if longitude is not None and latitude is not None:
+            qs = qs.filter(featured__isnull=False)
+            qs = qs.filter(geo_location__distance_lt=(Point(longitude, latitude), Distance(mi=20)))
+            return qs
+
+        return []
+
+    def __get_by_zip(self, qs, **kwargs):
+        zip_code = kwargs.get('zip_code')
+
+        if zip_code is not None:
+            return qs.filter(zip_code=zip_code)
+
+        return []
+
+    def __get_by_distance(self, qs, **kwargs):
+        longitude = kwargs.get('longitude')
+        latitude = kwargs.get('latitude')
+
+        if longitude is not None and latitude is not None:
+            return qs.distance(Point(longitude, latitude)).order_by('distance')[:100]
+
+        return []
+
+    def __get_random(self, qs, **kwargs):
+        # TODO: This is a full table scan & order which is unacceptable
+        # for anything more than a small table
+        return qs.order_by('?')[:kwargs.get('result_len')]
+
+    pipeline = (__get_featured_by_zip,
+                __get_featured_by_distance,
+                __get_by_zip,
+                __get_by_distance,
+                __get_random,
+                )
+
+    def get_list(self, zip_code=None, longitude=None, latitude=None, result_len=3):
+        base_qs = BusinessLocation.objects.filter(removed_date__isnull=True)
+        featured, new_featured = [], []
+
+        for fn in self.pipeline:
+            qs = base_qs.exclude(id__in=[x.id for x in featured])
+
+            new_featured = list(fn(self, qs, zip_code=zip_code, longitude=longitude,
+                                   latitude=latitude, result_len=result_len))
+            shuffle(new_featured)
+            featured.extend(new_featured[:result_len - len(featured)])
+
+            if len(featured) == result_len:
+                break
+
+        return featured

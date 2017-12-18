@@ -41,7 +41,6 @@
                             <input id="disp-location" type="text" class="disp-location-value"
                                    placeholder="Filter by Location"/>
                         </div>
-                        <div class="lookup-submit">Find Dispensary</div>
                     </div>
                 </div>
                 <!--<a class="find-delivery" href="#">or Find Delivery Service</a>-->
@@ -75,6 +74,51 @@
                 </li>
                 <li class="active">Dispensaries</li>
             </ol>
+        </div>
+        <div class="featured-wrapper">
+            <h3>Featured Dispensaries Near You</h3>
+            <div class="featured-list">
+            {% for f in  featured %}
+                <div class="col-3">
+                    <div class="featured-item">
+                        <h4 class="featured-header">
+                            <a href="{{ f.url }}">{{ f.location_name }}</a>
+                        </h4>
+                        <div class="featured-content">
+                            <div class="featured-image">
+                                <a href="{{ f.url }}">
+                                    <img src="{{ f.image_url }}" onerror="this.src = '{{ f.DEFAULT_IMAGE_URL }}';">
+                                </a>
+                            </div>
+                            <div class="featured-detail-list">
+                                <div class="featured-detail">
+                                    <i class="fa fa-map-marker"></i>
+                                    <div class="featured-detail-line-wrapper">
+                                        <div class="featured-detail-line">{{ f.street1 }}</div>
+                                        <div class="featured-detail-line">{{ f.city }}, {{ f.state }}, {{ f.zip_code }}</div>
+                                    </div>
+                                </div>
+
+                                <div class="featured-detail">
+                                    <i class="fa fa-phone"></i>
+                                    <div class="featured-detail-line-wrapper">
+                                        <div class="featured-detail-line">{{ f.phone }}</div>
+                                    </div>
+                                </div>
+
+                                <div class="featured-detail">
+                                    <i class="fa fa-envelope"></i>
+                                    <div class="featured-detail-line-wrapper">
+                                        <a class="featured-detail-line" href="mailto:{{ f.location_email }}">{{ f.location_email }}</a>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+            </div>
         </div>
         <div class="text">
             StrainRx is dedicated to helping cannabis users find the optimal strains to medicate with, depending on

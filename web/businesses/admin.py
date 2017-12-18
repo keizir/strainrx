@@ -7,7 +7,8 @@ from tinymce.widgets import TinyMCE
 
 from web.businesses.api.services import BusinessLocationService
 from web.businesses.es_service import BusinessLocationESService
-from web.businesses.models import Business, BusinessLocation, LocationReview, State, City, Payment
+from web.businesses.models import Business, BusinessLocation, FeaturedBusinessLocation, \
+    LocationReview, State, City, Payment
 
 
 class PaymentAdmin(admin.TabularInline):
@@ -146,6 +147,31 @@ class ActivityFilter(SimpleListFilter):
         return queryset.filter(removed_date__isnull=(self.value() == 'active'))
 
 
+def stop_featuring(modeladmin, request, queryset):
+    queryset.delete()
+
+
+stop_featuring.short_description = 'Stop Featuring'
+
+
+@admin.register(FeaturedBusinessLocation)
+class FeaturedBusinessLocationAdmin(admin.ModelAdmin):
+    list_display = ['business_location', 'zip_code', 'featured_datetime']
+    search_fields = ('business_location', 'zip_code')
+    actions = [stop_featuring]
+
+    def has_delete_permission(self, request, obj=None):
+        # Disable delete
+        return False
+
+
+class FeaturedBusinessLocationInline(admin.TabularInline):
+    extra = 0
+    fields = ['zip_code']
+    readonly_fields = ['featured_datetime']
+    model = FeaturedBusinessLocation
+
+
 @admin.register(BusinessLocation)
 class BusinessLocationAdmin(admin.ModelAdmin):
     change_form_template = 'admin/business/business_location_change_form.html'
@@ -185,6 +211,7 @@ class BusinessLocationAdmin(admin.ModelAdmin):
     list_filter = [OwnerEmailVerifiedFilter, ActivityFilter]
     ordering = ['location_name']
     actions = [activate_selected_locations, deactivate_selected_locations, verify_email_for_selected_locations]
+    inlines = (FeaturedBusinessLocationInline,)
 
     @staticmethod
     def owner_email_verified(obj):

@@ -4,8 +4,8 @@ from rest_framework import serializers
 class BusinessLocationESSerializer(serializers.Serializer):
     business_id = serializers.IntegerField()
     business_location_id = serializers.IntegerField(source='id')
-    url = serializers.SerializerMethodField()
-    image = serializers.SerializerMethodField()
+    url = serializers.CharField()
+    image = serializers.IntegerField(source='image_url')
     location_name = serializers.CharField()
     slug_name = serializers.CharField()
     manager_name = serializers.CharField()
@@ -47,12 +47,6 @@ class BusinessLocationESSerializer(serializers.Serializer):
 
     def create(self, validated_data):
         pass
-
-    def get_url(self, obj):
-        return obj.get_absolute_url()
-
-    def get_image(self, obj):
-        return obj.image_url()
 
 
 class MenuItemESSerializer(serializers.Serializer):
