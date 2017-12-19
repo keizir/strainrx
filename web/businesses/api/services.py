@@ -261,7 +261,7 @@ class FeaturedBusinessLocationService:
                 )
 
     def get_list(self, zip_code=None, longitude=None, latitude=None, result_len=3):
-        base_qs = BusinessLocation.objects.filter(removed_date__isnull=True)
+        base_qs = BusinessLocation.objects.filter(removed_date__isnull=True, dispensary=True)
         featured, new_featured = [], []
 
         for fn in self.pipeline:
