@@ -77,6 +77,9 @@
         </div>
         <div class="featured-wrapper">
             <h3>Featured Dispensaries Near You</h3>
+
+            {# There's a template used in ajax update which has to be modified together with #}
+            {# the featured-list contents below #}
             <div class="featured-list">
             {% for f in  featured %}
                 <div class="col-3">
@@ -119,6 +122,46 @@
                 </div>
             {% endfor %}
             </div>
+            <script type="x/srx-template" id="featured-locations-template">
+                <div class="col-3">
+                    <div class="featured-item">
+                        <h4 class="featured-header">
+                            <a href="<%= url %>"><%= location_name %></a>
+                        </h4>
+                        <div class="featured-content">
+                            <div class="featured-image">
+                                <a href="<%= url %>">
+                                    <img src="<%= image_url %>" onerror="this.src = '<%= default_image_url %>';">
+                                </a>
+                            </div>
+                            <div class="featured-detail-list">
+                                <div class="featured-detail">
+                                    <i class="fa fa-map-marker"></i>
+                                    <div class="featured-detail-line-wrapper">
+                                        <div class="featured-detail-line"><%= street1 %></div>
+                                        <div class="featured-detail-line"><%= city %>, <%= state %>, <%= zip_code %></div>
+                                    </div>
+                                </div>
+
+                                <div class="featured-detail">
+                                    <i class="fa fa-phone"></i>
+                                    <div class="featured-detail-line-wrapper">
+                                        <div class="featured-detail-line"><%= phone %></div>
+                                    </div>
+                                </div>
+
+                                <div class="featured-detail">
+                                    <i class="fa fa-envelope"></i>
+                                    <div class="featured-detail-line-wrapper">
+                                        <a class="featured-detail-line" href="mailto:<%= location_email %>"><%= location_email %></a>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </script>
         </div>
         <div class="text">
             StrainRx is dedicated to helping cannabis users find the optimal strains to medicate with, depending on
@@ -157,7 +200,22 @@
             location: {% if request.user.is_authenticated %}
                 {{ request.user.get_location_json | safe }} {% else %} null {% endif %},
             authenticated: '{{ request.user.is_authenticated }}' == 'True',
-            userId: {% if request.user.is_authenticated %} {{ request.user.id }} {% else %} null {% endif %}
+            userId: {% if request.user.is_authenticated %} {{ request.user.id }} {% else %} null {% endif %},
+            defaultImageUrl: "{{ default_image_url }}",
+            featured: [
+                {% for featured in featured %}
+                    { url: "{{ featured.url }}",
+                      locationName: "{{ featured.location_name }}",
+                      imageUrl: "{{ featured.imageUrl }}",
+                      street1: "{{ featured.street1 }}",
+                      city: "{{ featured.city }}",
+                      state: "{{ featured.state }}",
+                      zipCode: "{{ featured.zip_code }}",
+                      phone: "{{ featured.phone }}",
+                      locationEmail: "{{ featured.location_email }}"
+                    }{% if not forloop.last %},{% endif %}
+                {% endfor %}
+            ]
         });
     </script>
 

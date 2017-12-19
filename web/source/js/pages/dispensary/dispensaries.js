@@ -7,6 +7,7 @@ W.pages.dispensary.Dispensaries = Class.extend({
         this.location = options && options.location;
         this.authenticated = options && options.authenticated;
         this.userId = options && options.userId;
+        this.defaultImageUrl = options && options.defaultImageUrl;
         this.dispTimezone = null;
         this.dispLocation = null;
         this.browserInfo = W.detectBrowser();
@@ -83,20 +84,14 @@ W.pages.dispensary.Dispensaries = Class.extend({
                 var $el = $($input),
                     address = that.GoogleLocations.getAddressFromAutocomplete(autocomplete);
 
-                $el.val(W.common.Format.formatAddress(address));
-                $el.blur();
-
-                that.updateDispLocationTime(that.GoogleLocations, address);
+                that.onAddressChange($el, address);
             },
             function (results, status, $input) {
                 if (status === 'OK') {
                     var $el = $($input),
                         address = that.GoogleLocations.getAddressFromPlace(results[0]);
 
-                    $el.val(W.common.Format.formatAddress(address));
-                    $el.blur();
-
-                    that.updateDispLocationTime(that.GoogleLocations, address);
+                    that.onAddressChange($el, address);
                 }
             },
             function ($input) {
@@ -162,5 +157,56 @@ W.pages.dispensary.Dispensaries = Class.extend({
             location: this.dispLocation,
             timezone: this.dispTimezone
         };
+    },
+    onAddressChange: function onAddressChange($el, address) {
+        var that = this;
+        $el.val(W.common.Format.formatAddress(address));
+        $el.blur();
+
+        this.updateDispLocationTime(that.GoogleLocations, address);
+        this.fetchFeatured(address).success(function(data) {
+            that.renderFeatured(data.locations);
+        });
+    },
+    fetchFeatured: function fetchFeatured(address) {
+        var url = '/api/v1/businesses/locations/featured/?loc=';
+        var loc = {
+            lat: address.lat,
+            lon: address.lng
+        };
+
+        if (address.zipcode) {
+            loc.zip = address.zipcode;
+        }
+
+        url = url + encodeURIComponent(JSON.stringify(loc));
+
+        return $.ajax({
+            method: 'GET',
+            url: url
+        });
+    },
+    renderFeatured: function renderFeatured(locations) {
+        var defaultImageUrl = this.defaultImageUrl;
+        var templateFn = _.template($('#featured-locations-template').html());
+        var html = '';
+
+        locations.forEach(function(location) {
+            html += templateFn({
+                url: location.url,
+                location_name: location.location_name  || 'None',
+                image_url: location.image_url || 'None',
+                default_image_url: defaultImageUrl || 'None',
+                street1: location.street1 || 'None',
+                city: location.city || 'None',
+                state: location.state || 'None',
+                zip_code: location.zip_code || 'None',
+                phone: location.phone || 'None',
+                location_email: location.location_email || 'None'
+            });
+        });
+
+        $('.featured-list').html(html);
     }
+
 });
