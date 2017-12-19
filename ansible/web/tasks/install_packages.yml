@@ -27,7 +27,10 @@
     - libwebp-dev
     # django extensions
     - graphviz-dev
-    - postgresql-9.5-postgis
+    # GeoDjango dependencies
+    - binutils
+    - libproj-dev
+    - gdal-bin
   tags: packages
 
 - name: Upgrade pip3
