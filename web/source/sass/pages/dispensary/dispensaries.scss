@@ -667,6 +667,10 @@
 
 @media (min-width: $screen-lg-min) {
     .dispensaries-list-container {
+        .social-icons {
+            right: -4px;
+        }
+
         .featured-wrapper {
             .featured-header {
                 margin: 0.25em 0 0.25em 0;
@@ -706,7 +710,7 @@
 @media (min-width: $screen-xl-min) {
     .dispensaries-list-container {
         .social-icons {
-            right: 17px;
+            right: 6px;
         }
 
         .featured-wrapper {
@@ -745,6 +749,10 @@
 
 @media (min-width: $screen-xxl-min) {
     .dispensaries-list-container {
+        .social-icons {
+            right: 17px;
+        }
+
         .featured-wrapper {
             .featured-header {
                 margin: 0.25em 0 0.5em;

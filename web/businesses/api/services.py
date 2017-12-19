@@ -226,7 +226,7 @@ class FeaturedBusinessLocationService:
 
         if longitude is not None and latitude is not None:
             qs = qs.filter(featured__isnull=False)
-            qs = qs.filter(geo_location__distance_lt=(Point(longitude, latitude), Distance(mi=20)))
+            qs = qs.filter(geo_location__distance_lt=(Point(longitude, latitude), Distance(mi=8)))
             return qs
 
         return []
