@@ -8,6 +8,7 @@ W.pages.strain.StrainLookup = Class.extend({
         this.onArrowUp = options && options.onArrowUp;
         this.onArrowDown = options && options.onArrowDown;
         this.onReturn = options && options.onReturn;
+        this.onSelectCallback = options && options.onSelect;
 
         this.changeLookupInput();
         this.clickOutsidePayloadArea();
@@ -33,6 +34,7 @@ W.pages.strain.StrainLookup = Class.extend({
             }
 
             if (e.keyCode === 13) { // Enter Key
+                $payloadsRegion.css('display', 'none');
                 that.onEnterKeyPress(e, $activePayload, $firstPayload, $lastPayload);
                 return;
             }
@@ -44,22 +46,44 @@ W.pages.strain.StrainLookup = Class.extend({
                     success: function (data) {
                         $payloadsRegion.html('');
                         $payloadsRegion.append(that.buildPayloadLookupArea(data));
+                        $payloadsRegion.css('display', 'block');
 
                         $('.search-payload').on('click', function () {
-                            var $payloadSpan = $(this),
-                                $lookupInput = $('.lookup-input');
-                            $lookupInput.attr('payload-id', $payloadSpan.attr('id'));
-                            $lookupInput.attr('payload-slug', $payloadSpan.attr('slug'));
-                            $lookupInput.attr('payload-variety', $payloadSpan.attr('variety'));
-                            $lookupInput.val($payloadSpan.text());
-                            $payloadsRegion.html('');
+                            that.onSelect($(this));
                         });
                     }
                 });
             } else {
                 $payloadsRegion.html('');
+                $payloadsRegion.css('display', 'none');
             }
         });
+    },
+
+    onSelect: function onSelect($activePayload) {
+        if (!$activePayload || $activePayload.length === 0) {
+            return;
+        }
+
+        var $lookupInput = $('.lookup-input'),
+            $payloadsRegion = $('.payloads-region');
+
+        var selected = {
+            id: $activePayload.attr('id'),
+            slug: $activePayload.attr('slug'),
+            variety: $activePayload.attr('variety')
+        };
+
+        $lookupInput.attr('payload-id', selected.id);
+        $lookupInput.attr('payload-slug', selected.slug);
+        $lookupInput.attr('payload-variety', selected.variety);
+        $lookupInput.val($activePayload.text());
+
+        $payloadsRegion.html('');
+
+        if (this.onSelectCallback) {
+            this.onSelectCallback(selected);
+        }
     },
 
     onArrowUpKeyPress: function onArrowUpKeyPress(e, $activePayload, $firstPayload, $lastPayload) {
@@ -101,19 +125,11 @@ W.pages.strain.StrainLookup = Class.extend({
     onEnterKeyPress: function onEnterKeyPress(e, $activePayload, $firstPayload, $lastPayload) {
         e.preventDefault();
 
+        this.onSelect($activePayload);
+
         if (this.onReturn) {
             this.onReturn($activePayload, $firstPayload, $lastPayload);
             return;
-        }
-
-        if ($activePayload && $activePayload.length > 0) {
-            var $lookupInput = $('.lookup-input'),
-                $payloadsRegion = $('.payloads-region');
-            $lookupInput.attr('payload-id', $activePayload.attr('id'));
-            $lookupInput.attr('payload-slug', $activePayload.attr('slug'));
-            $lookupInput.attr('payload-variety', $activePayload.attr('variety'));
-            $lookupInput.val($activePayload.text());
-            $payloadsRegion.html('');
         }
     },
 
@@ -138,6 +154,7 @@ W.pages.strain.StrainLookup = Class.extend({
             var elem = $(e.target);
             if (!(elem.parents('.payloads-region').length)) {
                 $('.payloads-region').html('');
+                $('.payloads-region').css('display', 'none');
             }
         });
     }

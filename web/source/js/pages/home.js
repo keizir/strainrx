@@ -10,7 +10,6 @@ W.pages.HomePage = Class.extend({
         this.userId = options && options.userId;
 
         this.initStrainLookupField();
-        this.clickLookupSubmit();
         this.changeLocation();
         this.preFillUserLocation();
         this.enterSearchWizard();
@@ -21,32 +20,12 @@ W.pages.HomePage = Class.extend({
         $('.strain-name-field').html(lookupTemplate({
             'lookup_placeholder': 'Example: Blue Dream, Maiu Wowie, Pineapple express'
         }));
-        new W.pages.strain.StrainLookup();
+        new W.pages.strain.StrainLookup({ onSelect: this.navigateToStrainDetailPage });
     },
 
-    clickLookupSubmit: function clickLookupSubmit() {
-        var that = this;
-
-        $('.lookup-submit').on('click', function (e) {
-            e.preventDefault();
-            that.navigateToStrainDetailPage();
-        });
-
-        $(document).on('keyup', function (e) {
-            if (e.keyCode === 13) { // Enter Key
-                that.navigateToStrainDetailPage();
-            }
-        });
-    },
-
-    navigateToStrainDetailPage: function navigateToStrainDetailPage() {
-        var $input = $('.lookup-input'),
-            strainName = $input.val(),
-            strainVariety = $input.attr('payload-variety'),
-            strainSlug = $input.attr('payload-slug');
-
-        if (strainName && strainVariety && strainSlug) {
-            window.location.href = '/strains/{0}/{1}/'.format(strainVariety, strainSlug);
+    navigateToStrainDetailPage: function navigateToStrainDetailPage(selected) {
+        if (selected.variety && selected.slug) {
+            window.location.href = '/strains/{0}/{1}/'.format(selected.variety, selected.slug);
         }
     },
 
