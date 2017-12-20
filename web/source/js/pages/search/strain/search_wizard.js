@@ -21,7 +21,7 @@ W.pages.search.strain.SearchWizard = W.common.Wizard.extend({
         this.refreshSearchSettingAndRenderStep({step: 1});
 
         W.subscribe.apply(this);
-        W.common.Mixpanel.timeEvent(this.mixpanelEventName);
+        W.common.ActionRecorder.timeEvent(this.mixpanelEventName);
     },
 
     _on_show_step: function _on_show_step(ev, data) {
@@ -64,7 +64,7 @@ W.pages.search.strain.SearchWizard = W.common.Wizard.extend({
         });
 
         W.users.UserSettings.update(that.getCurrentUserId(), W.users.UserSettings.settingName_SearchFilter, {'searchFilter': 'all'});
-        W.common.Mixpanel.track(this.mixpanelEventName, that.getMixpanelData(data));
+        W.common.ActionRecorder.track(this.mixpanelEventName, that.getMixpanelData(data));
     },
 
     getMixpanelData: function getMixpanelData(data) {

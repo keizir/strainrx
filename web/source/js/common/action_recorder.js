@@ -2,7 +2,7 @@
 
 W.ns('W.common');
 
-W.common.Mixpanel = {
+W.common.ActionRecorder = {
 
     track: function track(eventName, eventData) {
         if (window.mixpanel) {

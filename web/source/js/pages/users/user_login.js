@@ -59,8 +59,8 @@ W.pages.UserLogin = W.views.BaseView.extend({
                 success: function (data) {
                     var user = data.user;
                     if (user) {
-                        W.common.Mixpanel.identify(user.id);
-                        W.common.Mixpanel.peopleSet({
+                        W.common.ActionRecorder.identify(user.id);
+                        W.common.ActionRecorder.peopleSet({
                             '$first_name': user.first_name,
                             '$last_name': user.last_name,
                             '$last_login': new Date(),
