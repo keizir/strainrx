@@ -29,9 +29,7 @@ W.Navbar = function () {
                 });
             }
 
-            if ($(document).outerWidth(true) <= 490) {
-                this.hamburgerMenuClickHandler();
-            }
+            this.hamburgerMenuClickHandler();
         },
 
         updateAddress: function (location) {
@@ -65,34 +63,27 @@ W.Navbar = function () {
         },
 
         hamburgerMenuClickHandler: function hamburgerMenuClickHandler() {
-            $('.nav-list-wrapper').on('click', function () {
-                var navList = $(this).find('.nav-list');
-                if (navList.css('display') === 'block') {
-                    navList.css('display', 'none');
+            var menuSelector = $('.nav-list-wrapper .mobile-menu');
+
+            $(document).click('click tap', function (e) {
+                if ($(window).width() > 480) {
+                    return;
+                }
+
+                var $target = $(e.target);
+                var navList = $('.nav-list');
+
+                if ($target.is(menuSelector) || $target.closest(menuSelector).length) {
+                    if (navList.css('display') === 'block') {
+                        navList.css('display', 'none');
+                    } else {
+                        navList.css('display', 'block');
+                    }
                 } else {
-                    navList.css('display', 'block');
+                    navList.css('display', 'none');
                 }
-            });
+            })
 
-            $(document).on('click', function (e) {
-                var elem = $(e.target);
-                if (!(elem.parents('.nav-list-wrapper').length)) {
-                    var navList = $('.nav-list');
-                    if (navList.css('display') === 'block') {
-                        navList.css('display', 'none');
-                    }
-                }
-            });
-
-            $(document).on('tap', function (e) {
-                var elem = $(e.target);
-                if (!(elem.parents('.nav-list-wrapper').length)) {
-                    var navList = $('.nav-list');
-                    if (navList.css('display') === 'block') {
-                        navList.css('display', 'none');
-                    }
-                }
-            });
         },
 
         clickUpdateLocation: function clickUpdateLocation() {

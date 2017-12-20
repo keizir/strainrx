@@ -8,31 +8,29 @@
                 <img src="{% static 'images/logo_hr.png' %}" alt="StrainRx">
             </a>
         </div>
-        {% if request.user.is_authenticated %}
-            {% if request.user.type == 'consumer' %}
-                <div class="nav-tabs-wrapper">
-                    <div class="action blue-link">
-                        <a class="nav-link strain-wizard-link" href="{% url 'search:strain_wizard' %}">
-                            Strain Recommendation</a>
-                    </div>
-                    <div class="action blue-link">
-                        <span class="separator"></span>
-                        <a class="nav-link" href="{% url 'home' %}">
-                            Strain Lookup</a>
-                    </div>
-                    <div class="action blue-link">
-                        <span class="separator"></span>
-                        <a class="nav-link" href="{% url 'businesses:dispensaries_list' %}">
-                            Find a Dispensary</a>
-                    </div>
-                    <div class="action blue-link">
-                        <span class="separator"></span>
-                        <a class="nav-link" href="/cannabis-guide/">
-                            Cannabis Guide</a>
-                    </div>
-                </div>
-            {% endif %}
-        {% endif %}
+
+        <div class="nav-tabs-wrapper">
+            <div class="action blue-link">
+                <a class="nav-link strain-wizard-link" href="{% url 'search:strain_wizard' %}">
+                    Strain Recommendation</a>
+            </div>
+            <div class="action blue-link">
+                <span class="separator"></span>
+                <a class="nav-link" href="{% url 'home' %}">
+                    Strain Lookup</a>
+            </div>
+            <div class="action blue-link">
+                <span class="separator"></span>
+                <a class="nav-link" href="{% url 'businesses:dispensaries_list' %}">
+                    Find a Dispensary</a>
+            </div>
+            <div class="action blue-link">
+                <span class="separator"></span>
+                <a class="nav-link" href="/cannabis-guide/">
+                    Cannabis Guide</a>
+            </div>
+        </div>
+
         <div class="nav-list-wrapper">
             <a href="#" class="mobile-menu hidden">
                 <i class="fa fa-align-justify fa-2x" aria-hidden="true"></i>
@@ -142,6 +140,18 @@
                         </li>
                         <li class="nav-list-item">
                             <a class="nav-link log-in-link" href="{% url 'account_login' %}">Sign In</a>
+                        </li>
+                        <li class="nav-list-item mobile">
+                            <a class="nav-link log-in-link" href="{% url 'search:strain_wizard' %}">Strain Recommendation</a>
+                        </li>
+                        <li class="nav-list-item mobile">
+                            <a class="nav-link log-in-link" href="{% url 'home' %}">Strain Lookup</a>
+                        </li>
+                        <li class="nav-list-item mobile">
+                            <a class="nav-link log-in-link" href="{% url 'businesses:dispensaries_list' %}">Find a Dispensary</a>
+                        </li>
+                        <li class="nav-list-item mobile">
+                            <a class="nav-link log-in-link" href="/cannabis-guide/">Cannabis Guide</a>
                         </li>
                     </ul>
                 {% endif %}
