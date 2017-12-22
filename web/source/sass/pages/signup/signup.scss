@@ -423,6 +423,13 @@
     .sign-up-form-wrapper .message-2 {
         width: 22em;
     }
+
+    .sign-up-form-wrapper {
+        .message-2.resend {
+            margin: auto;
+            height: 4em;
+        }
+    }
 }
 
 @media (max-width: $screen-xs-max) {
