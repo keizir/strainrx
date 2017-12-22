@@ -266,7 +266,7 @@ class CityAdminForm(forms.ModelForm):
         model = City
         fields = '__all__'
 
-    description = forms.CharField(widget=TinyMCE(attrs={'cols': 80, 'rows': 20}))
+    description = forms.CharField(widget=TinyMCE(attrs={'cols': 80, 'rows': 20}), required=False)
 
 
 @admin.register(City)

@@ -420,6 +420,7 @@ PROFILE = 'local'
 TINYMCE_DEFAULT_CONFIG = {
     'theme': "advanced",
     'custom_undo_redo_levels': 10,
+    "inline_styles": False
 }
 
 TINYMCE_JS_ROOT = '/tinymce-static'

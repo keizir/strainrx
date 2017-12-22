@@ -48,6 +48,24 @@ class City(models.Model):
                                       help_text='This will be automatically changed from a city full name when updated')
     description = models.TextField(blank=True, null=True)
 
+    SEO_FRIENDLY_DESCRIPTION_TEMPLATE = """
+        Find marijuana dispensaries in the city of {city}, {state}.
+        Get the strains ideally suited for your individual needs,
+        browse the best deals and the closest vendors to get the most convenience and value.
+        """
+
+    @property
+    def seo_friendly_description(self):
+        if self.description:
+            return self.description
+
+        try:
+            state = self.state.full_name or self.state.abbreviation
+        except Exception:
+            state = 'US'
+
+        return self.SEO_FRIENDLY_DESCRIPTION_TEMPLATE.format(city=self.full_name, state=state)
+
     def save(self, *args, **kwargs):
         self.full_name_slug = slugify(self.full_name)
         super(City, self).save(*args, **kwargs)

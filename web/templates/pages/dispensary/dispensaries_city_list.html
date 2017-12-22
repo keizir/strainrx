@@ -55,11 +55,7 @@
             </ol>
         </div>
         <div class="text">
-            {% if active_city.description %}
-                {{ active_city.description|safe }}
-            {% else %}
-                No data for this city
-            {% endif %}
+            {{ active_city.seo_friendly_description | safe }}
         </div>
         <div class="pager">
             <span class="page-letter active">A</span>
