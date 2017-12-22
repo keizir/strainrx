@@ -231,14 +231,6 @@ class FeaturedBusinessLocationService:
 
         return []
 
-    def __get_by_zip(self, qs, **kwargs):
-        zip_code = kwargs.get('zip_code')
-
-        if zip_code is not None:
-            return qs.filter(zip_code=zip_code)
-
-        return []
-
     def __get_by_distance(self, qs, **kwargs):
         longitude = kwargs.get('longitude')
         latitude = kwargs.get('latitude')
@@ -255,7 +247,6 @@ class FeaturedBusinessLocationService:
 
     pipeline = (__get_featured_by_zip,
                 __get_featured_by_distance,
-                __get_by_zip,
                 __get_by_distance,
                 __get_random,
                 )
