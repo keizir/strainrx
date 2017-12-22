@@ -9,6 +9,12 @@
                     <i class="fa fa-arrow-left" aria-hidden="true"></i>back to search results</a>
             </div>
             <% } %>
+            <% if (model.from_location) { %>
+            <div class="back-to-search-wrapper">
+                <a href="<%= model.from_location %>" class="search-link">
+                    <i class="fa fa-arrow-left" aria-hidden="true"></i>back to dispensary</a>
+            </div>
+            <% } %>
             <div class="row">
                 <div class="strain-data">
                     <h1 class="strain-name"><%= model.strain.name %></h1>

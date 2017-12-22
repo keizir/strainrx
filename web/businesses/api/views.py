@@ -313,7 +313,8 @@ class BusinessLocationMenuView(APIView):
             'price_eighth': menu_item.price_eighth,
             'price_quarter': menu_item.price_quarter,
             'price_half': menu_item.price_half,
-            'in_stock': menu_item.in_stock
+            'in_stock': menu_item.in_stock,
+            'url': menu_item.strain.get_absolute_url(),
         }
 
 

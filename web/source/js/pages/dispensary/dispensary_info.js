@@ -85,6 +85,10 @@ W.pages.dispensary.DispensaryInfo = Class.extend({
         this.clickGetDirectionsBtn();
     },
 
+    getStrainUrl: function getStrainUrl(mi, location) {
+        return mi.url + '?location=' + location.url;
+    },
+
     formatAddressLine: function formatAddressLine(location) {
         var parts = [];
 
@@ -309,6 +313,7 @@ W.pages.dispensary.DispensaryInfo = Class.extend({
                     selectedStrainMenuItem: that.selectedStrainMenuItem,
                     formatPrice: that.formatPrice,
                     formatScore: that.formatScore,
+                    getStrainUrl: that.getStrainUrl,
                     reviews: reviewToShow,
                     deals: []
                 }));
