@@ -464,6 +464,20 @@
     }
 }
 
+@media (max-width: $screen-xs-max) {
+    .disp-row-01 {
+        height: calc(100vh - 45em);
+
+        .subtitle-container {
+            margin-bottom: 1em;
+
+            hr {
+                display: none;
+            }
+        }
+    }
+}
+
 @media (min-width: $screen-xs-min) {
     .dispensaries-list-container {
         h1 {
