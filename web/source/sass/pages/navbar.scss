@@ -71,10 +71,12 @@
 }
 
 .nav-tabs-wrapper {
-    display: inline-block;
+    display: flex;
+    align-items: center;
     position: relative;
     height: 100%;
-    overflow: hidden;
+    line-height: 1em;
+    text-align: center;
     margin-left: 2em;
 
     .action {
