@@ -17,7 +17,7 @@
             <% } %>
             <div class="row">
                 <div class="strain-data">
-                    <img class="strain-variety" src="{% static 'images/variety-' %}<%= model.strain.variety %>.png"/>
+                    <img class="strain-variety" src="<%= model.strain.variety_image %>"/>
                     <div class="strain-variety-name"><%= model.strain.variety %></div>
                     <h1 class="strain-name"><%= model.strain.name %></h1>
                     <% if (is_authenticated) { %>

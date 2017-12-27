@@ -20,7 +20,7 @@ class StrainDetailSerializer(serializers.ModelSerializer):
     class Meta:
         model = Strain
         fields = ('name', 'strain_slug', 'variety', 'category',
-                  'effects', 'benefits', 'side_effects', 'flavor', 'about')
+                  'effects', 'benefits', 'side_effects', 'flavor', 'about', 'variety_image')
 
 
 class StrainRatingSerializer(serializers.ModelSerializer):

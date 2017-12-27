@@ -1,11 +1,11 @@
 from __future__ import unicode_literals, absolute_import
 from django.conf import settings
-import os
 from datetime import datetime
 from json import loads, dumps
 from uuid import uuid4
 
 from django.contrib.postgres.fields import JSONField
+from django.contrib.staticfiles.templatetags.staticfiles import static
 from django.core.exceptions import ValidationError
 from django.core.urlresolvers import reverse
 from django.db import models
@@ -20,9 +20,11 @@ from web.search.strain_es_service import StrainESService
 from web.users.models import User
 from django_resized import ResizedImageField
 
+
 def upload_to(instance, filename):
     path = 'articles/{0}_{1}'.format(uuid4(), filename)
     return path
+
 
 @python_2_unicode_compatible
 class Strain(models.Model):
@@ -84,6 +86,10 @@ class Strain(models.Model):
     # social fields
     meta_desc = models.CharField(max_length=3072, blank=True)
     meta_keywords = models.CharField(max_length=3072, blank=True)
+
+    @property
+    def variety_image(self):
+        return static('images/variety-{variety}.png'.format(variety=self.variety))
 
     def validate_image(field_file_obj):
         file_size = field_file_obj.file.size
