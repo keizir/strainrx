@@ -223,7 +223,25 @@
             display: inline-block;
             width: 100%;
 
+            .strain-variety {
+                position: relative;
+                height: 3em;
+                top: 0.4em;
+            }
+
+            .strain-variety-name {
+                position: absolute;
+                top: 0.3em;
+                left: 3.7em;
+                font-size: 0.8em;
+            }
+
+            .strain-variety-name:first-letter {
+                text-transform: capitalize;
+            }
+
             .strain-name {
+                color: $green-atlantis;
                 display: inline-block;
                 font-size: 2em;
                 margin: 0;
@@ -1129,6 +1147,10 @@
 
         .strain-data {
             margin-top: 3em;
+
+            .strain-variety-name {
+                top: 4.3em;
+            }
 
             .strain-like {
                 position: absolute;
