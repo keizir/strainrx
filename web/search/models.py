@@ -129,7 +129,7 @@ def upload_image_to(instance, filename):
 
 def validate_image(field_file_obj):
     file_size = field_file_obj.file.size
-    megabyte_limit = os.environ('MAX_STRAIN_IMAGE_SIZE')
+    megabyte_limit = settings.MAX_STRAIN_IMAGE_SIZE
     if file_size > megabyte_limit:
         raise ValidationError("Max file size is %sMB" % str(megabyte_limit))
 
@@ -158,6 +158,7 @@ class StrainImage(models.Model):
     created_by = models.ForeignKey(User, on_delete=models.DO_NOTHING)
 
     is_approved = models.BooleanField(default=False)
+    is_primary = models.BooleanField(default=False)
 
     def __str__(self):
         i = self.image

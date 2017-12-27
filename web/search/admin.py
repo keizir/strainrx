@@ -45,7 +45,7 @@ class StrainAdminForm(forms.ModelForm):
         fields = '__all__'
         exclude = ['internal_id', 'removed_by', 'removed_date']
 
-    about = forms.CharField(widget=TinyMCE(attrs={'cols': 80, 'rows': 20}))
+    about = forms.CharField(widget=TinyMCE(attrs={'cols': 80, 'rows': 20}), required=False)
 
 
 class StrainRemovedFilter(SimpleListFilter):
@@ -69,6 +69,11 @@ class StrainRemovedFilter(SimpleListFilter):
         return queryset.all()
 
 
+class StrainImageInline(admin.TabularInline):
+    extra = 0
+    model = StrainImage
+
+
 @admin.register(Strain)
 class StrainAdmin(admin.ModelAdmin):
     form = StrainAdminForm
@@ -80,6 +85,7 @@ class StrainAdmin(admin.ModelAdmin):
         ('Effects', {'fields': ('effects', 'benefits', 'side_effects', 'flavor'), }),
         ('Additional', {'fields': ('about', 'origins',), }),
     )
+    inlines = (StrainImageInline,)
 
     def get_actions(self, request):
         # Disable delete
@@ -165,7 +171,7 @@ approve_strain_image.short_description = 'Approve Image'
 
 @admin.register(StrainImage)
 class StrainImageAdmin(admin.ModelAdmin):
-    list_display = ['strain', 'created_by', 'is_approved', 'created_date', 'image']
+    list_display = ['strain', 'created_by', 'is_approved', 'is_primary', 'created_date', 'image']
     search_fields = ['strain__name', 'created_by__email', 'created_by__first_name', 'created_by__last_name',
                      'is_approved']
     list_filter = ['is_approved', 'created_date']

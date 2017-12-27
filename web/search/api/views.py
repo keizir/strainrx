@@ -194,7 +194,7 @@ class StrainImagesView(APIView):
     permission_classes = (permissions.AllowAny,)
 
     def get(self, request, strain_id):
-        images = StrainImage.objects.filter(is_approved=True, strain=strain_id)
+        images = StrainImage.objects.filter(is_approved=True, strain=strain_id).order_by('-is_primary')
         serializer = StrainImageSerializer(images, many=True)
         return Response({'images': serializer.data}, status=status.HTTP_200_OK)
 
