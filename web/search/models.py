@@ -253,8 +253,12 @@ class StrainReview(models.Model):
     review_approved = models.BooleanField(default=False)
 
     created_date = models.DateTimeField(auto_now_add=True)
+    created_date.editable = True
+
     created_by = models.ForeignKey(User, on_delete=models.DO_NOTHING, related_name='+')
     last_modified_date = models.DateTimeField(auto_now=True)
+    last_modified_date.editable = True
+
     last_modified_by = models.ForeignKey(User, on_delete=models.DO_NOTHING, null=True, related_name='+')
 
 

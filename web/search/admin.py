@@ -121,8 +121,6 @@ class StrainReviewAdmin(admin.ModelAdmin):
                      'created_by__email', 'created_by__first_name', 'created_by__last_name']
     list_filter = ['rating', 'review_approved', 'created_date', 'last_modified_date']
     ordering = ['-created_date']
-    readonly_fields = ['strain', 'rating', 'review', 'created_date', 'created_by',
-                       'last_modified_date', 'last_modified_by']
     actions = [approve_selected_ratings]
 
 
