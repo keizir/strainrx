@@ -207,6 +207,15 @@
         color: $grey-dark;
     }
 
+    .header-row {
+        display: flex;
+
+        h1 {
+            flex: 1;
+            margin-right: 10px;
+        }
+    }
+
     h2 {
         margin-top: 1em;
         margin-bottom: 0.2em;
@@ -219,15 +228,7 @@
 
     .social-icons {
         font-size: 2em;
-        display: block;
-        position: absolute;
-        width: 116px;
-        top: -1em;
-        right: -25px;
-        float: left;
         margin: 0.67em auto;
-        vertical-align: top;
-        text-align: left;
 
         a {
             color: $grey;
@@ -479,11 +480,6 @@
 }
 
 @media (min-width: $screen-xs-min) {
-    .dispensaries-list-container {
-        h1 {
-            margin-top: 1em;
-        }
-    }
 }
 
 @media (min-width: $screen-sm-min) {

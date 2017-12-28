@@ -10,7 +10,7 @@
 
     .mobile-menu {
         display: none;
-        text-align: center;
+        text-align: right;
         vertical-align: middle;
         float: right;
         width: 3em;
@@ -27,7 +27,6 @@
 
 .nav-container {
     display: flex;
-    padding: 0 1.3em;
     line-height: 5em;
     height: 5em;
 
@@ -212,7 +211,7 @@
         display: inline-block !important;
 
         i {
-            padding-top: 0.44em;
+            padding-top: 0.8em;
         }
     }
 

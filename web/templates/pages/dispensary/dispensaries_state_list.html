@@ -26,29 +26,31 @@
 
 {% block content %}
     <div class="dispensaries-list-container container">
-        <h1>
-            {% if active_state.full_name %}
-                {{ active_state.full_name }}
-            {% else %}
-                {{ active_state.abbreviation }}
-            {% endif %} Dispensaries
-        </h1>
-        <div class="social-icons">
-            <span class="social-fb">
-                <a href="#" class="facebook-share-link" target="_blank">
-                    <i class="fa fa-facebook-square" aria-hidden="true"></i>
-                </a>
-            </span>
-            <span class="social-google">
-                <a href="#" class="google-share-link" target="_blank">
-                    <i class="fa fa-google-plus-square" aria-hidden="true"></i>
-                </a>
-            </span>
-            <span class="social-twitter">
-                <a href="#" class="twitter-share-link" target="_blank">
-                    <i class="fa fa-twitter-square" aria-hidden="true"></i>
-                </a>
-            </span>
+        <div class="header-row">
+            <h1>
+                {% if active_state.full_name %}
+                    {{ active_state.full_name }}
+                {% else %}
+                    {{ active_state.abbreviation }}
+                {% endif %} Dispensaries
+            </h1>
+            <div class="social-icons">
+                <span class="social-fb">
+                    <a href="#" class="facebook-share-link" target="_blank">
+                        <i class="fa fa-facebook-square" aria-hidden="true"></i>
+                    </a>
+                </span>
+                <span class="social-google">
+                    <a href="#" class="google-share-link" target="_blank">
+                        <i class="fa fa-google-plus-square" aria-hidden="true"></i>
+                    </a>
+                </span>
+                <span class="social-twitter">
+                    <a href="#" class="twitter-share-link" target="_blank">
+                        <i class="fa fa-twitter-square" aria-hidden="true"></i>
+                    </a>
+                </span>
+            </div>
         </div>
         <div class="breadcrumbs">
             <ol>
