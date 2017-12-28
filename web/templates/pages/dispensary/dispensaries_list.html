@@ -193,6 +193,18 @@
 
 {% block javascript %}
     {{ block.super }}
+
+    <script src="{% static 'js/views/location_view.js' %}"></script>
+    <script src="{% static 'js/pages/location.js' %}"></script>
+    <script type="text/javascript">
+        W.Location.init({
+            location: {% if request.user.is_authenticated %}
+                {{ request.user.get_location_json | safe }} {% else %} null {% endif %},
+            authenticated: '{{ request.user.is_authenticated }}' == 'True',
+            userId: '{{ request.user.id }}'
+        });
+    </script>
+
     <script src="{% static 'js/pages/dispensary/dispensary_lookup.js' %}"></script>
     <script src="{% static 'js/pages/dispensary/dispensaries.js' %}"></script>
     <script type="text/javascript">

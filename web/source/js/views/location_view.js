@@ -7,7 +7,12 @@ W.views.LocationView = Class.extend({
     init: function (options) {
         this.authenticated = options && options.authenticated;
         this.userId = options && options.userId;
-        this.getUserLocation();
+        this.location = options && options.location;
+
+        if (!this.location) {
+            this.getUserLocation();
+        }
+
     },
 
     getUserLocation: function getUserLocation() {

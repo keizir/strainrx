@@ -43,7 +43,13 @@ h1 {
             line-height: 3em;
             width: 11em;
 
-            form > fieldset {
+            form {
+                float: left;
+            }
+
+            form > .fieldset {
+                display: flex;
+                width: 25em;
                 position: relative;
                 border: none;
                 padding: 0.35em 0.3em;
@@ -64,24 +70,28 @@ h1 {
             }
 
             .your-location {
-                padding: 0.75em;
-                border-radius: 0.5em;
+                padding: 0 0.75em;
+                border-radius: 0.5em 0 0 0.5em;
                 margin-right: 0;
-                border: none;
                 color: $white;
                 background: $grey;
                 opacity: 0.8;
+                border: 1px solid $grey-dark;
+            }
+
+            .your-location span {
+                display: none;
+                margin-left: 0.5em;
             }
 
             .your-location-value {
-                display: none;
                 border: 1px solid $grey-dark;
                 border-left: none;
                 border-radius: 0 0.5em 0.5em 0;
                 padding: 0.75em;
-                width: 30em;
                 opacity: 0.8;
                 color: $grey-dark;
+                margin-bottom: 0;
             }
         }
 
@@ -255,15 +265,24 @@ h1 {
             .location-holder {
                 width: 80%;
 
+                form > .fieldset {
+                    display: inline;
+                    width: 30em;
+                }
+
                 .your-location {
-                    border: 1px solid $grey-dark;
                     border-radius: 0.5em 0 0 0.5em;
-                    padding: 0.6em 0.75em 0.85em;
+                    padding: 0.75em 0.75em 0.75em;
                     margin-right: -5px;
+                }
+
+                .your-location span {
+                    display: initial;
                 }
 
                 .your-location-value {
                     display: inline-block;
+                    padding: 0.75em 2.5em 0.75em 0.75em;
                 }
 
                 .check {
@@ -299,6 +318,7 @@ h1 {
 
             .location-holder {
                 .your-location {
+                    display: initial;
                     padding: 0.72em 0.75em 0.8em;
                     margin-right: -6px;
                 }
@@ -350,7 +370,7 @@ h1 {
         .home-sub-row-01 {
             .location-holder {
                 .your-location {
-                    padding: 0.65em 0.75em 0.85em;
+                    padding: 0.7em 0.75em 0.8em;
                 }
             }
         }

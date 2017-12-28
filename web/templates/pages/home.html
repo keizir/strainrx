@@ -74,14 +74,14 @@
                 <div class="location-holder">
                     <form method="post">
                         {% csrf_token %}
-                        <fieldset>
+                        <div class="fieldset">
                             <label for="location" class="your-location">
-                                <i class="fa fa-dot-circle-o" aria-hidden="true"></i> Your Location:</label>
+                                <i class="fa fa-dot-circle-o" aria-hidden="true"></i><span>Your Location:</span></label>
                             <input id="location" type="text" class="your-location-value"
                                    placeholder="Enter your address"/>
                             <i class="fa fa-check check" aria-hidden="true"></i>
                             <span class="removable remove-location hidden" title="Clear value"></span>
-                        </fieldset>
+                        </div>
                     </form>
                 </div>
                 {% if request.user.is_authenticated %}
@@ -139,6 +139,18 @@
     {{ block.super }}
     <script src="{% static 'js/pages/home.js' %}"></script>
     <script src="{% static 'js/pages/strain/strain_lookup.js' %}"></script>
+
+    <script src="{% static 'js/views/location_view.js' %}"></script>
+    <script src="{% static 'js/pages/location.js' %}"></script>
+    <script type="text/javascript">
+        W.Location.init({
+            location: {% if request.user.is_authenticated %}
+                {{ request.user.get_location_json | safe }} {% else %} null {% endif %},
+            authenticated: '{{ request.user.is_authenticated }}' == 'True',
+            userId: '{{ request.user.id }}'
+        });
+    </script>
+
     <script type="text/javascript">
         new W.pages.HomePage({
             location: {% if request.user.is_authenticated %}

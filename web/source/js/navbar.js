@@ -10,18 +10,6 @@ W.Navbar = function () {
             this.location = options && options.location;
             this.userId = options && options.userId;
 
-            navigator.geolocation.getCurrentPosition(function () {
-                // Do nothing at this point. Just need a hide location link if geolocation disabled
-                $('.update-location-href').removeClass('hidden');
-            }, function () {
-                $('.update-location-href').addClass('hidden');
-            });
-
-            if (this.authenticated) {
-                this.updateAddress();
-                this.clickUpdateLocation();
-            }
-
             if (AUTHENTICATED && !EMAIL_VERIFIED) {
                 $('.strain-wizard-link').on('click', function (e) {
                     e.preventDefault();

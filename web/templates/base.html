@@ -139,27 +139,6 @@
         });
     </script>
 
-    {% if request.user.is_authenticated and request.user.get_location == None %}
-        <script src="{% static 'js/views/location_view.js' %}"></script>
-        <script src="{% static 'js/pages/location.js' %}"></script>
-        <script type="text/javascript">
-            W.Location.init({
-                authenticated: true,
-                userId: '{{ request.user.id }}'
-            });
-        </script>
-    {% endif %}
-
-    {% if not request.user.is_authenticated %}
-        <script src="{% static 'js/views/location_view.js' %}"></script>
-        <script src="{% static 'js/pages/location.js' %}"></script>
-        <script type="text/javascript">
-            W.Location.init({
-                authenticated: false,
-                userId: null
-            });
-        </script>
-    {% endif %}
 {% endblock javascript %}
 
 <script>
