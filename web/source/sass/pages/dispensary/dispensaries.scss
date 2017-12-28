@@ -264,7 +264,7 @@
 
     .pager {
         margin: 1em auto;
-        text-align: right;
+        text-align: justify;
 
         span {
             cursor: pointer;
@@ -288,12 +288,13 @@
 
     .cities-wrapper {
         .page {
-            margin: 1em auto;
+            margin: 1em 0 0 0;
 
             .city {
-                display: inline-block;
-                width: 30%;
+                display: inline-flex;
+                width: 32%;
                 height: 2em;
+                margin-bottom: 1em;
 
                 img {
                     height: 100%;
@@ -303,6 +304,9 @@
                     display: inline-block;
                     line-height: 2em;
                     vertical-align: top;
+                    overflow: hidden;
+                    white-space: nowrap;
+                    text-overflow: ellipsis;
                 }
             }
         }
