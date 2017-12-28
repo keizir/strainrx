@@ -14,6 +14,7 @@ from django.dispatch import receiver
 from django.template.defaultfilters import slugify
 from django.utils.encoding import python_2_unicode_compatible
 from django.utils.translation import ugettext_lazy as _
+from django.utils.timezone import now
 
 from web.search.serializers import StrainReviewESSerializer
 from web.search.strain_es_service import StrainESService
@@ -252,14 +253,28 @@ class StrainReview(models.Model):
     review = models.TextField(default='', blank=True)
     review_approved = models.BooleanField(default=False)
 
-    created_date = models.DateTimeField(auto_now_add=True)
-    created_date.editable = True
-
+    created_date = models.DateTimeField()
     created_by = models.ForeignKey(User, on_delete=models.DO_NOTHING, related_name='+')
-    last_modified_date = models.DateTimeField(auto_now=True)
-    last_modified_date.editable = True
-
+    last_modified_date = models.DateTimeField()
     last_modified_by = models.ForeignKey(User, on_delete=models.DO_NOTHING, null=True, related_name='+')
+
+    def __init__(self, *args, **kwargs):
+        #
+        super().__init__(*args, **kwargs)
+        self.__created_date = self.created_date
+        self.__last_modified_date = self.last_modified_date
+
+    def save(self, *args, **kwargs):
+        # We want to have auto_now_add and auto_add behaviour but
+        # also allow to edit the dates through admin
+
+        if self.created_date is None:
+            self.created_date = now()
+
+        if self.last_modified_date == self.__last_modified_date:
+            self.last_modified_date = now()
+
+        super().save(*args, **kwargs)
 
 
 @python_2_unicode_compatible
