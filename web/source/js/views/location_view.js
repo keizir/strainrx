@@ -13,6 +13,67 @@ W.views.LocationView = Class.extend({
             this.getUserLocation();
         }
 
+        this.preFillUserLocation();
+        this.onChangeLocation();
+    },
+
+    updateTimezone: function updateTimezone(GoogleLocations, address, success) {
+        var that = this;
+        GoogleLocations.getTimezone(address.lat, address.lng, function (json) {
+            that.timezone = json.timeZoneId;
+            success();
+        });
+    },
+
+    onChangeLocation: function onChangeLocation() {
+        var that = this,
+            GoogleLocations = new W.Common.GoogleLocations({$input: $('#location').get(0)});
+
+        GoogleLocations.initGoogleAutocomplete(
+            function (autocomplete, $input) {
+                var $el = $($input),
+                    address = GoogleLocations.getAddressFromAutocomplete(autocomplete);
+
+                $el.val(W.common.Format.formatAddress(address));
+                $el.blur();
+
+                that.updateTimezone(GoogleLocations, address, function () {
+                    that.saveUserLocation(address);
+                });
+            },
+            function (results, status, $input) {
+                if (status === 'OK') {
+                    var $el = $($input),
+                        address = GoogleLocations.getAddressFromPlace(results[0]);
+
+                    $el.val(W.common.Format.formatAddress(address));
+                    $el.blur();
+
+                    that.updateTimezone(GoogleLocations, address, function () {
+                        that.saveUserLocation(address);
+                    });
+                }
+            },
+            function ($input) {
+                var $removeBtn = $('.remove-location');
+                $('.check').hide();
+                $removeBtn.removeClass('hidden');
+                $removeBtn.on('click', function () {
+                    if (!that.authenticated) {
+                        Cookies.remove('user_geo_location');
+                    }
+
+                    $removeBtn.addClass('hidden');
+                    $('.check').show();
+                    $($input).val('');
+                });
+            });
+    },
+
+    preFillUserLocation: function preFillUserLocation() {
+        if (this.location) {
+            $('.your-location-value').val(W.common.Format.formatAddress(this.location)).trigger('change');
+        }
     },
 
     getUserLocation: function getUserLocation() {
