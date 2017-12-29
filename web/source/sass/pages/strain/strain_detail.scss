@@ -58,9 +58,13 @@
                     background: $white;
                     width: 35em;
                     border: 1px solid $grey-normal;
-                    padding: 8px;
                     color: $black;
                     z-index: 5;
+                    overflow-x: auto;
+
+                    .col-1, .col-2, .col-3, .col-4 {
+                        padding-right: 0.5em;
+                    }
 
                     .message {
                         margin: 1em;
@@ -69,45 +73,47 @@
                     }
 
                     .locations-area-header {
-                        display: block;
-                        line-height: 2.5em;
+                        display: flex;
+                        padding: 1em;
                         font-weight: bold;
                         text-align: center;
+                        min-width: 275px;
 
                         .column {
-                            display: inline-block;
+                            display: flex;
                             text-align: left;
                             font-weight: bold;
 
                             .col-name {
                                 display: inline-block;
+                                overflow: hidden;
+                                text-overflow: ellipsis;
                             }
 
                             i {
                                 display: inline-block;
                                 color: $iris-blue;
                                 cursor: pointer;
+                                margin-left: 0.5em;
                             }
                         }
 
                         .col-1 {
                             width: 38%;
-                            float: left;
                         }
 
                         .col-2 {
                             width: 22%;
-                            float: left;
-                        }
+                       }
 
                         .col-3 {
                             width: 18%;
-                            text-align: center;
+                            justify-content: end;
                         }
 
                         .col-4 {
                             width: 17%;
-                            text-align: center;
+                            justify-content: end;
                         }
 
                         .price-expander {
@@ -137,17 +143,17 @@
                         display: block;
                         line-height: 2.5em;
                         text-align: center;
+                        min-width: 275px;
 
                         .dispensary {
-                            margin-bottom: 1em;
+                            padding: 0 1em 1em 1em;
+                            display: flex;
 
                             .col-1 {
-                                display: inline-block;
                                 width: 38%;
                                 color: $iris-blue;
                                 text-align: left;
-                                vertical-align: top;
-                                float: left;
+                                display: flex;
 
                                 .name {
                                     display: inline-block;
@@ -165,23 +171,17 @@
                             }
 
                             .col-2 {
-                                display: inline-block;
                                 width: 22% !important;
                                 text-align: left;
-                                float: left;
-                                margin-left: -4px;
-                                margin-top: 2px;
                                 padding: 0;
                             }
 
                             .col-3 {
-                                display: inline-block;
                                 width: 17%;
                                 text-align: right;
                             }
 
                             .col-4 {
-                                display: inline-block;
                                 width: 17%;
                                 text-align: right;
                             }

@@ -756,7 +756,7 @@ W.pages.strain.StrainDetailPage = Class.extend({
     },
 
     initLocationRating: function initLocationRating($el, rating) {
-        W.common.Rating.readOnly($el, {rating: rating, starWidth: '12px'});
+        W.common.Rating.readOnly($el, {rating: rating, starWidth: '0.75em'});
     },
 
     renderLocation: function renderLocation(location) {
