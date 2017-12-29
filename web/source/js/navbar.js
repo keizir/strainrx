@@ -6,9 +6,26 @@ W.Navbar = function () {
 
     return {
         init: function init(options) {
-            this.authenticated = options && options.authenticated;
-            this.location = options && options.location;
-            this.userId = options && options.userId;
+            var that = this;
+            options = options || {};
+
+            that.authenticated = options.authenticated;
+            that.location = options.location;
+            that.userId = options.userId;
+
+            if (that.authenticated && options.locationUpdate) {
+                that.getLocation(
+                    function(location) {
+                        that.location = location;
+                        that.updateAddress(location.address);
+                        that.clickUpdateLocation();
+                        $('.update-location-href').removeClass('hidden');
+                    },
+                    function() {
+                        $('.action.location').addClass('hidden');
+                    }
+                );
+            }
 
             if (AUTHENTICATED && !EMAIL_VERIFIED) {
                 $('.strain-wizard-link').on('click', function (e) {
@@ -21,33 +38,25 @@ W.Navbar = function () {
         },
 
         updateAddress: function (location) {
-            var l = location || this.location, location_parts = [];
-            if (l) {
-                if (l.street1) {
-                    $('.nav-bar-user-street').text(l.street1);
-                }
-
-                if (l.city) {
-                    location_parts.push(l.city);
-                }
-
-                if (l.state) {
-                    location_parts.push(l.state);
-                }
-
-                if (l.zipcode) {
-                    location_parts.push(l.zipcode);
-                }
-
-                if (location_parts.length === 0 && l.location_raw && !_.isEmpty(l.location_raw)) {
-                    var parsed = JSON.parse(l.location_raw);
-                    if (parsed && parsed[0] && parsed[0].formatted_address) {
-                        location_parts.push(parsed[0].formatted_address);
-                    }
-                }
-
-                $('.nav-bar-user-location').text(location_parts.join(', '));
+            var location_parts = [];
+            if (!location) {
+                return;
             }
+
+            $('.nav-bar-user-street').text(location.street1 || '');
+
+            location_parts.push(location.city || '');
+            location_parts.push(location.state || '');
+            location_parts.push(location.zipcode || '');
+
+            if (location_parts.length === 0 && location.location_raw && !_.isEmpty(location.location_raw)) {
+                var parsed = JSON.parse(location.location_raw);
+                if (parsed && parsed[0] && parsed[0].formatted_address) {
+                    location_parts.push(parsed[0].formatted_address);
+                }
+            }
+
+            $('.nav-bar-user-location').text(location_parts.join(', '));
         },
 
         hamburgerMenuClickHandler: function hamburgerMenuClickHandler() {
@@ -74,22 +83,20 @@ W.Navbar = function () {
 
         },
 
-        clickUpdateLocation: function clickUpdateLocation() {
+        getLocation: function getLocationAddress(success, failure) {
             var that = this;
-            $('.update-location-href').on('click', function (e) {
-                e.preventDefault();
-                navigator.geolocation.getCurrentPosition(function (position) {
-                    var geoCoder = new google.maps.Geocoder(),
-                        pos = {lat: position.coords.latitude, lng: position.coords.longitude};
 
-                    geoCoder.geocode({'location': pos}, function (results, status) {
-                        if (status === 'OK') {
-                            if (results) {
-                                var address = that.buildAddress(results);
-                                that.getTimezone(position.coords.latitude, position.coords.longitude, function (json) {
-                                    that.timezone = json.timeZoneId;
+            navigator.geolocation.getCurrentPosition(function (position) {
+                var geoCoder = new google.maps.Geocoder(),
+                    pos = {lat: position.coords.latitude, lng: position.coords.longitude};
 
-                                    that.saveUserLocation({
+                geoCoder.geocode({'location': pos}, function (results, status) {
+                    if (status === 'OK') {
+                        if (results) {
+                            var address = that.buildAddress(results);
+                            that.getTimezone(position.coords.latitude, position.coords.longitude, function (json) {
+                                success({
+                                    address: {
                                         lat: position.coords.latitude,
                                         lng: position.coords.longitude,
                                         location_raw: JSON.stringify(results),
@@ -97,18 +104,22 @@ W.Navbar = function () {
                                         city: address.city,
                                         state: address.state,
                                         zipcode: address.zipcode
-                                    });
-
-                                    that.updateAddress(address);
+                                    },
+                                    timezone: json.timeZoneId || ''
                                 });
-                            }
-                        } else {
-                            console.log('Geocoder failed due to: ' + status);
+                            });
                         }
-                    });
-                }, function () {
-                    console.log('Cannot locate user');
+                    } else {
+                        failure();
+                    }
                 });
+            }, failure);
+        },
+
+        clickUpdateLocation: function clickUpdateLocation() {
+            var that = this;
+            $('.update-location-href').on('click', function (e) {
+                that.saveUserLocation(that.location);
             });
         },
 
@@ -155,9 +166,9 @@ W.Navbar = function () {
             return {city: city, state: state, zipcode: zipcode, street1: street1};
         },
 
-        saveUserLocation: function saveUserLocation(data) {
+        saveUserLocation: function saveUserLocation(location) {
             var that = this,
-                locationRaw = data.location_raw,
+                locationRaw = location.address.location_raw,
                 $locationInput = $('.your-location-value');
 
             if (locationRaw) {
@@ -171,11 +182,10 @@ W.Navbar = function () {
                 $.ajax({
                     method: 'POST',
                     url: '/api/v1/users/{0}/geo_locations'.format(that.userId),
-                    data: JSON.stringify({address: data, timezone: that.timezone || ''})
+                    data: JSON.stringify(location)
                 });
             } else {
-                delete data.location_raw;
-                Cookies.set('user_geo_location', JSON.stringify(data));
+                Cookies.set('user_geo_location', JSON.stringify(location.address));
             }
         },
 

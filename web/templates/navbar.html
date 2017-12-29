@@ -103,6 +103,16 @@
                                 <div class="action">
                                     <a class="nav-link" href="{% url 'account_logout' %}">Sign out</a>
                                 </div>
+                                {% if location_update %}
+                                    <div class="action location">
+                                        <span>
+                                            <i class="fa fa-dot-circle-o" aria-hidden="true"></i> CURRENT LOCATION
+                                        </span>
+                                            <span class="nav-bar-user-street">Looking up...</span>
+                                            <span class="nav-bar-user-location"></span>
+                                        <a class="update-location-href hidden" href="#">Update location</a>
+                                    </div>
+                                {% endif %}
                             {% elif request.user.type == 'business' %}
                                 <div class="action">
                                     {% if request.user.is_email_verified %}

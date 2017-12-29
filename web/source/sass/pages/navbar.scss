@@ -181,6 +181,22 @@
                 padding: 0.5em 1.5em;
             }
 
+            .location {
+                background: $black;
+
+                span {
+                    display: block;
+                }
+
+                .nav-bar-user-street, .nav-bar-user-location {
+                    white-space: normal;
+                }
+
+                .update-location-href {
+                    color: $iris-blue;
+                }
+            }
+
         }
     }
 

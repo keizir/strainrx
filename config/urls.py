@@ -25,7 +25,7 @@ sitemaps = {
 }
 
 urlpatterns = [
-    url(r'^$', TemplateView.as_view(template_name='pages/home.html'), name='home'),
+    url(r'^$', TemplateView.as_view(template_name='pages/home.html'), name='home', kwargs={'location_update': True}),
     url(r'^about$', TemplateView.as_view(template_name='pages/about.html'), name='about'),
     url(r'^privacy$', TemplateView.as_view(template_name='pages/privacy.html'), name='privacy'),
     url(r'^terms$', TemplateView.as_view(template_name='pages/terms.html'), name='terms'),

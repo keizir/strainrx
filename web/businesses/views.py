@@ -149,6 +149,7 @@ class DispensariesInfoView(TemplateView):
 
         context['default_image_url'] = BusinessLocation.DEFAULT_IMAGE_URL
         context['featured'] = FeaturedBusinessLocationService().get_list(**location)
+        context['location_update'] = True
 
         return context
 

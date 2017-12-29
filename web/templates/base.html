@@ -135,7 +135,8 @@
             location: {% if request.user.is_authenticated %}
                 {{ request.user.get_location_json | safe }} {% else %} null {% endif %},
             authenticated: '{{ request.user.is_authenticated }}' == 'True',
-            userId: '{{ request.user.id }}'
+            userId: '{{ request.user.id }}',
+            locationUpdate: '{{ location_update }}' == 'True',
         });
     </script>
 
