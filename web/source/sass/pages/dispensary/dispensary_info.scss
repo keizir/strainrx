@@ -56,6 +56,8 @@
             display: inline-block;
 
             .location-name-row {
+                display: flex;
+
                 .location-name {
                     display: inline-block;
                     position: absolute;
@@ -66,6 +68,9 @@
                     h1 {
                         width: auto;
                         margin: 0;
+                        white-space: nowrap;
+                        overflow: hidden;
+                        text-overflow: ellipsis;
                     }
                 }
 
@@ -73,9 +78,8 @@
                     display: inline-block;
                     position: absolute;
                     top: -6.5em;
-                    right: 1em;
+                    right: 0;
                     width: auto;
-                    margin-left: 1em;
                     cursor: pointer;
 
                     .fa-heart {
@@ -697,16 +701,23 @@
                 vertical-align: top;
 
                 .location-name-row {
+                    display: flex;
+
                     .location-name {
                         position: relative;
-                        width: auto;
+                        padding-right: 1em;
+
+                        h1 {
+                            white-space: nowrap;
+                            overflow: hidden;
+                            text-overflow: ellipsis;
+                        }
                     }
 
                     .favorite-wrapper {
                         position: relative;
-                        margin-left: 1em;
                         top: auto;
-                        right: auto;
+                        right: 1em;
 
                         .fa-heart, .fa-heart-o {
                             font-size: 2em;
@@ -778,6 +789,14 @@
                     width: 43%;
                     margin-right: 2%;
                     vertical-align: top;
+
+                    .reviews-wrapper {
+                        .review-wrapper {
+                            .user-info {
+                                width: 17%;
+                            }
+                        }
+                    }
                 }
 
                 .right-column {
@@ -861,10 +880,34 @@
                     width: 50%;
                     margin-top: 2em;
                 }
+
+                .location-name-row {
+                    .location-name {
+                        padding-right: 3em;
+                    }
+
+                    .favorite-wrapper {
+                        right: 2em;
+                    }
+                }
             }
 
             .socials-row {
                 left: 60.2%;
+            }
+        }
+
+        .content-region     {
+            .location-content {
+                .left-column {
+                    .reviews-wrapper {
+                        .review-wrapper {
+                            .user-info {
+                                width: 14%;
+                            }
+                        }
+                    }
+                }
             }
         }
     }
