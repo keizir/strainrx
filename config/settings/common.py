@@ -466,24 +466,12 @@ CMS_PLACEHOLDER_CONF = {}
 
 MAX_IMAGE_SIZE = 10 * 1024 * 1024 #10mb
 
-# CKEDITOR_SETTINGS = {
-#     'language': '{{ language }}',
-#     'toolbar': 'default',
-#     'toolbar_Custom': [
-#         ['FilerImage']
-#     ],    
-#     'skin': 'moono',
-#     'toolbarCanCollapse': False,
-#     'extraPlugins': 'filerimage',
-# }
-
 CKEDITOR_SETTINGS = {
     'language': '{{ language }}',
     'toolbar': [
         ['Undo', 'Redo'],
         ['Styles', 'Format', 'Font', 'FontSize'],
         ['TextColor', 'BGColor'],
-        #['cmsplugins', '-', 'ShowBlocks'],
         ['Bold', 'Italic', 'Underline', 'Strike', 'Subscript', 'Superscript', '-', 'RemoveFormat'],
         ['NumberedList', 'BulletedList', '-', 'Outdent', 'Indent', '-', 'Blockquote', 'JustifyLeft', 'JustifyCenter', 'JustifyRight', 'JustifyBlock'],
         ['Source'],
@@ -491,19 +479,10 @@ CKEDITOR_SETTINGS = {
         ['FilerImage']
     ],
     'skin': 'moono',
-    'extraPlugins': 'filerimage',    
+    'extraPlugins': 'filerimage',
+    'removePlugins': 'stylesheetparser',
+    'allowedContent': 'input[placeholder]'
 }
-
-# CKEDITOR_SETTINGS = {
-#     'language': '{{ language }}',
-#     'CMS': [
-#         ['Undo', 'Redo'],
-#         ['cmsplugins', '-', 'ShowBlocks'],
-#         ['Format', 'Styles'],
-#         ['FilerImage'],
-#     ],
-#     'skin': 'moono-lisa',
-# }
-
+TEXT_ADDITIONAL_ATTRIBUTES = ('placeholder',)
 
 # END CMS SETTINGS
