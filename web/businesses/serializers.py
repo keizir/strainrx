@@ -16,7 +16,7 @@ class BusinessLocationSerializer(serializers.ModelSerializer):
                   'street1', 'city', 'state', 'zip_code', 'phone', 'ext', 'timezone', 'about', 'delivery_radius',
                   'mon_open', 'mon_close', 'tue_open', 'tue_close', 'wed_open', 'wed_close', 'thu_open', 'thu_close',
                   'fri_open', 'fri_close', 'sat_open', 'sat_close', 'sun_open', 'sun_close',
-                  'lat', 'lng', 'location_raw', 'slug_name', 'city_slug', 'image', 'url', 'image_url')
+                  'lat', 'lng', 'location_raw', 'slug_name', 'city_slug', 'image', 'url', 'image_url', 'grow_house')
 
     mon_open = serializers.TimeField(format='%I:%M %p', input_formats=['%I:%M %p'], allow_null=True)
     mon_close = serializers.TimeField(format='%I:%M %p', input_formats=['%I:%M %p'], allow_null=True)

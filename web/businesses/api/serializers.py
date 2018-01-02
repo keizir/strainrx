@@ -7,6 +7,8 @@ class BusinessSignUpSerializer(serializers.Serializer):
     name = serializers.CharField()
     dispensary = serializers.BooleanField()
     delivery = serializers.BooleanField()
+    delivery_radius = serializers.FloatField(required=False)
+    grow_house = serializers.BooleanField()
     certified_legal_compliance = serializers.BooleanField()
     is_terms_accepted = serializers.BooleanField()
 
@@ -60,6 +62,7 @@ class BusinessLocationDetailSerializer(serializers.Serializer):
 
     dispensary = serializers.BooleanField()
     delivery = serializers.BooleanField()
+    grow_house = serializers.BooleanField()
 
     delivery_radius = serializers.FloatField(allow_null=True)
 
@@ -89,6 +92,7 @@ class BusinessLocationDetailSerializer(serializers.Serializer):
         inst.dispensary = data.get('dispensary')
         inst.delivery = data.get('delivery')
         inst.delivery_radius = data.get('delivery_radius')
+        inst.grow_house = data.get('grow_house')
         inst.phone = data.get('phone')
         inst.ext = data.get('ext')
         inst.timezone = data.get('timezone')

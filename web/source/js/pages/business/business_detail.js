@@ -144,6 +144,7 @@ W.pages.business.BusinessDetail = Class.extend({
             ext = $('input[name="ext"]').val(),
             dispensary = $('input[name="dispensary"]').is(':checked'),
             delivery = $('input[name="delivery"]').is(':checked'),
+            growHouse = $('input[name="grow_house"]').is(':checked'),
             timezone = $('select[name="timezone"]').val(),
             about = $('textarea[name="about"]').val(),
             isOpenBeforeClose = function isOpenBeforeClose(open, close) {
@@ -180,7 +181,7 @@ W.pages.business.BusinessDetail = Class.extend({
             return;
         }
 
-        if (!dispensary && !delivery) {
+        if (!dispensary && !delivery && !growHouse) {
             $errorMessage.text('Business Type is required');
             return;
         }
@@ -218,6 +219,7 @@ W.pages.business.BusinessDetail = Class.extend({
             ext: ext ? ext.trim() : null,
             dispensary: dispensary,
             delivery: delivery,
+            grow_house: growHouse,
             timezone: timezone,
             about: about,
             mon_open: this.getOpenTime('mon'), mon_close: this.getCloseTime('mon'),

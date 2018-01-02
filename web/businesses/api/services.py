@@ -54,7 +54,7 @@ class BusinessSignUpService:
         return user
 
     def validate_and_create_business(self, data, user):
-        if not data.get('delivery') and not data.get('dispensary'):
+        if not data.get('delivery') and not data.get('dispensary') and not data.get('grow_house'):
             raise ValidationError('Business type is required')
 
         if not data.get('certified_legal_compliance'):
@@ -84,6 +84,10 @@ class BusinessSignUpService:
             business=business,
             location_name=business.name,
             location_email=business.created_by.email,
+            dispensary=data.get('dispensary'),
+            delivery=data.get('delivery'),
+            delivery_radius=data.get('delivery_radius'),
+            grow_house=data.get('grow_house'),
             street1=data.get('street1'),
             city=data.get('city'),
             state=data.get('state'),

@@ -146,6 +146,7 @@ class BusinessLocation(models.Model):
     CATEGORY_CHOICES = (
         ('dispensary', 'Dispensary'),
         ('delivery', 'Delivery'),
+        ('grow_house', 'Grow House'),
     )
 
     DEFAULT_IMAGE_URL = '{base}images/default-location-image.jpeg'.format(base=settings.STATIC_URL)

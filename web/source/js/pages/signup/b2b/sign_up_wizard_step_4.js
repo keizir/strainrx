@@ -22,13 +22,8 @@ W.pages.b2b.SignUpWizardStep4 = W.common.WizardStep.extend({
             isDelivery = $('input[name="delivery"]').is(":checked"),
             isGrowHouse = $('input[name="grow_house"]').is(":checked");
 
-        if (!isDispensary && !isDelivery) {
+        if (!isDispensary && !isDelivery && !isGrowHouse) {
             $('.error-message').text('Business Type is required');
-            return false;
-        }
-
-        if (isGrowHouse) {
-            $('.error-message').text('Grow House is not an available type now');
             return false;
         }
 
@@ -38,7 +33,8 @@ W.pages.b2b.SignUpWizardStep4 = W.common.WizardStep.extend({
     submit: function submit() {
         var data = {
             dispensary: $('input[name="dispensary"]').is(":checked"),
-            delivery: $('input[name="delivery"]').is(":checked")
+            delivery: $('input[name="delivery"]').is(":checked"),
+            growHouse: $('input[name="grow_house"]').is(":checked")
         };
 
         if (data.delivery) {

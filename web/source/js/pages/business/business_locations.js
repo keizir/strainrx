@@ -232,9 +232,14 @@ W.pages.business.BusinessLocations = Class.extend({
                 if (index === locationId.toString()) {
                     that.cleanError(locationId, 'delivery__{0}'.format(locationId));
                     that.cleanError(locationId, 'dispensary__{0}'.format(locationId));
+                    that.cleanError(locationId, 'grow_house__{0}'.format(locationId));
 
                     if (fieldName === 'dispensary') {
                         that.locations[index].dispensary = $input.is(':checked');
+                    }
+
+                    if (fieldName === 'grow_house') {
+                        that.locations[index].grow_house = $input.is(':checked');
                     }
 
                     if (fieldName === 'delivery') {
@@ -242,7 +247,9 @@ W.pages.business.BusinessLocations = Class.extend({
                         that.prepareAndShowDeliveryDistanceSlider(locationId, that.locations[index].delivery);
                     }
 
-                    if (!that.locations[index].dispensary && !that.locations[index].delivery) {
+                    if (!that.locations[index].dispensary &&
+                        !that.locations[index].delivery &&
+                        !that.locations[index].grow_house) {
                         messageRegion.text('Business type is required');
                         that.addError(locationId, inputName, 'Business type is required');
                     }

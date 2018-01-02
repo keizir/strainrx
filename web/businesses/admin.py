@@ -181,9 +181,9 @@ class BusinessLocationAdmin(admin.ModelAdmin):
         ('Info',
          {'fields': ('business', 'removed_date', 'location_name', 'manager_name', 'location_email', 'phone', 'ext', 'about',), }),
         ('Social',
-         {'fields': ('meta_desc','meta_keywords', 'social_image'), }),
+         {'fields': ('meta_desc', 'meta_keywords', 'social_image'), }),
         ('Type',
-         {'fields': ('dispensary', 'delivery', 'delivery_radius',), }),
+         {'fields': ('dispensary', 'grow_house', 'delivery', 'delivery_radius'), }),
         ('Location',
          {'fields': ('location_field', 'street1', 'city', 'state', 'zip_code', 'lat', 'lng', 'location_raw',), }),
         ('Working Hours',
@@ -205,10 +205,11 @@ class BusinessLocationAdmin(admin.ModelAdmin):
         objects_all = BusinessLocation.objects.all()
         return objects_all
 
-    list_display = ['business', 'location_name', 'dispensary', 'delivery', 'removed_date', 'owner_email_verified']
-    readonly_fields = ['category', 'slug_name', 'primary', 'grow_house']
+    list_display = ['business', 'location_name', 'dispensary', 'delivery', 'grow_house',
+                    'removed_date', 'owner_email_verified']
+    readonly_fields = ['category', 'slug_name', 'primary']
     search_fields = ['location_name']
-    list_filter = [OwnerEmailVerifiedFilter, ActivityFilter]
+    list_filter = [OwnerEmailVerifiedFilter, ActivityFilter, 'dispensary', 'delivery', 'grow_house']
     ordering = ['location_name']
     actions = [activate_selected_locations, deactivate_selected_locations, verify_email_for_selected_locations]
     inlines = (FeaturedBusinessLocationInline,)
