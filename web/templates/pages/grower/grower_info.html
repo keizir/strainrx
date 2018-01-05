@@ -109,14 +109,14 @@
                 <hr class="spacer lg">
             </div>
             <div class="filters">
-                <div class="filter active"><u>All Strains</u></div>
-                <div class="filter"><u>Sativa</u></div>
-                <div class="filter"><u>Indica</u></div>
-                <div class="filter"><u>Hybrid</u></div>
+                <div class="filter active" data-filter="all"><u>All Strains</u></div>
+                <div class="filter" data-filter="sativa"><u>Sativa</u></div>
+                <div class="filter" data-filter="indica"><u>Indica</u></div>
+                <div class="filter" data-filter="hybrid"><u>Hybrid</u></div>
             </div>
             <div class="content">
             {% for strain, image_url in menu %}
-                <div class="strain">
+                <div class="strain" data-variety="{{ strain.variety }}">
                     <a class="image" href="{{ strain.url }}">
                         <img src="{{ image_url }}" />
                     </a>
@@ -128,6 +128,9 @@
                     </div>
                 </div>
             {% endfor %}
+                <div class="strain-placeholder" style="{% if menu %}display: none;{% endif %}">
+                    None found
+                </div>
             </div>
         </div>
         <div class="section contact">
@@ -192,15 +195,15 @@
             <div class="name-and-filters">
                 <h1>Our Strains</h1>
                 <div class="filters">
-                    <div class="filter active"><u>All Strains</u></div>
-                    <div class="filter"><u>Sativa</u></div>
-                    <div class="filter"><u>Indica</u></div>
-                    <div class="filter"><u>Hybrid</u></div>
+                    <div class="filter active" data-filter="all"><u>All Strains</u></div>
+                    <div class="filter" data-filter="sativa"><u>Sativa</u></div>
+                    <div class="filter" data-filter="indica"><u>Indica</u></div>
+                    <div class="filter" data-filter="hybrid"><u>Hybrid</u></div>
                 </div>
             </div>
             <div class="content">
             {% for strain, image_url in menu %}
-                <div class="strain {% if forloop.counter|divisibleby:4 %}rightmost{% endif %}">
+                <div class="strain {% if forloop.counter|divisibleby:4 %}rightmost{% endif %}" data-variety="{{ strain.variety }}">
                     <a class="image" href="{{ strain.url }}">
                         <img src="{{ image_url }}"/>
                     </a>
@@ -212,6 +215,9 @@
                     </div>
                 </div>
             {% endfor %}
+                <div class="strain-placeholder" style="{% if menu %}display: none;{% endif %}">
+                    None found
+                </div>
             </div>
         </div>
         <div class="details-row">
@@ -288,4 +294,9 @@
 
 {% block javascript %}
     {{ block.super }}
+    <script src="{% static 'js/pages/grower/grower_info.js' %}"></script>
+    <script src="{% static 'js/pages/grower/grower_info_view.js' %}"></script>
+    <script type="text/javascript">
+        W.pages.grower.GrowerInfoView.init();
+    </script>
 {% endblock %}

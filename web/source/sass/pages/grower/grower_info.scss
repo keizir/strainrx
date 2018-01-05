@@ -69,6 +69,13 @@
         }
     }
 
+    .strain-placeholder {
+        padding-top: 2em;
+        font-size: 2em;
+        text-align: center;
+        color: $grey-light;
+    }
+
     .how-we-grow {
         .content {
             display: flex;
@@ -181,6 +188,7 @@
         .strains {
             .content {
                 max-height: 50vh;
+                min-height: 25em;
                 overflow-y: auto;
             }
 
@@ -275,6 +283,10 @@
 
             .filter:last-of-type {
                 padding-right: 0;
+            }
+
+            .content {
+                min-height: 15.5em;
             }
 
             img {
