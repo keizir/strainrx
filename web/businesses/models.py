@@ -171,6 +171,10 @@ class BusinessLocation(models.Model):
     grow_house = models.BooleanField(default=False)
 
     delivery_radius = models.FloatField(max_length=10, blank=True, null=True)
+    grow_details = JSONField(default={'organic': False,
+                                      'pesticide_free': False,
+                                      'indoor': False},
+                             blank=True, null=True)
 
     street1 = models.CharField(max_length=100)
     city = models.CharField(max_length=100)
@@ -194,6 +198,7 @@ class BusinessLocation(models.Model):
     phone = models.CharField(max_length=15, blank=True, null=True, validators=[phone_number_validator])
     ext = models.CharField(max_length=5, blank=True, null=True)
 
+    verified = models.BooleanField(default=False)
     removed_by = models.CharField(max_length=20, blank=True, null=True)
     removed_date = models.DateTimeField(blank=True, null=True)
 
@@ -275,11 +280,9 @@ class BusinessLocation(models.Model):
         super(BusinessLocation, self).save(*args, **kwargs)
 
     def clean(self):
-        delivery = self.delivery
-        dispensary = self.dispensary
-
-        if not delivery and not dispensary:
-            raise ValidationError('Either delivery or dispensary is required.')
+        if not any((self.delivery, self.dispensary, self.grow_house)):
+            raise ValidationError('Business Location needs to be one of the '
+                                  'following: delivery, dispensary or grow house.')
 
     def __str__(self):
         return self.location_name

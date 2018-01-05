@@ -7,13 +7,14 @@ import pytz
 
 from django.core.exceptions import ObjectDoesNotExist
 from django.core.urlresolvers import reverse
+from django.contrib.staticfiles.templatetags.staticfiles import static
 from django.http import Http404
 from django.views.generic import RedirectView
 from django.views.generic import TemplateView
 from django.db.models import Count
 
 from web.businesses.api.services import FeaturedBusinessLocationService
-from web.businesses.models import Business, BusinessLocation, BusinessLocationMenuItem, State, City
+from web.businesses.models import Business, BusinessLocation, State, City
 from web.businesses.utils import NamePaginator
 from web.users.models import User
 from web.analytics.models import Event
@@ -211,6 +212,15 @@ class GrowerInfoView(TemplateView):
         context = super().get_context_data(**kwargs)
         context['grower'] = grower
         context['menu'] = get_strains_and_images_for_location(grower)
+
+        grow_details = (
+            ('organic', 'Organic', 'images/grow/organic.png'),
+            ('pesticide_free', 'Pesticide Free Method', 'images/grow/pesticide_free.png'),
+            ('indoor', 'Indoor', 'images/grow/indoor.png'),
+        )
+        context['grow_details'] = [(name, static(url)) for (key, name, url)
+                                   in grow_details
+                                   if grower.grow_details and grower.grow_details.get(key)]
 
         return context
 

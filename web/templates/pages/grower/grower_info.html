@@ -73,14 +73,17 @@
         </div>
         <div class="location-name">
             <h1>{{ grower.location_name }}</h1>
+            {% if grower.verified %}
             <div class="verified">
                 <img src="{% static 'images/verified.png' %}"/>
             </div>
+            {% endif %}
         </div>
         <hr class="spacer sm">
         <div class="about">
             {{ grower.about }}
         </div>
+        {% if grow_details %}
         <div class="section how-we-grow">
             <div class="title">
                 <hr class="spacer lg">
@@ -88,20 +91,15 @@
                 <hr class="spacer lg">
             </div>
             <div class="content">
+                {% for name, url in grow_details %}
                 <div class="method">
-                    <img src="{% static 'images/grow/organic.png' %}" />
-                    <div class="method-name">Organic</div>
+                    <img src="{{ url }}" />
+                    <div class="method-name">{{ name }}</div>
                 </div>
-                <div class="method">
-                    <img src="{% static 'images/grow/pesticide_free.png' %}" />
-                    <div class="method-name">Pesticide free method</div>
-                </div>
-                <div class="method">
-                    <img src="{% static 'images/grow/indoor.png' %}" />
-                    <div class="method-name">Indoor</div>
-                </div>
+                {% endfor %}
             </div>
         </div>
+        {% endif %}
         <div class="section strains">
             <div class="title">
                 <hr class="spacer lg">
@@ -181,9 +179,11 @@
                     <div class="name">
                         <h1>{{ grower.location_name }}</h1>
                     </div>
+                    {% if grower.verified %}
                     <div class="verified">
                         <img src="{% static 'images/verified.png' %}"/>
                     </div>
+                    {% endif %}
                 </div>
                 <div class="spacer"></div>
                 <div class="about-row">
@@ -221,6 +221,7 @@
             </div>
         </div>
         <div class="details-row">
+            {% if grow_details %}
             <div class="section how-we-grow">
                 <div class="title">
                     <hr class="spacer lg">
@@ -228,20 +229,15 @@
                     <hr class="spacer lg">
                 </div>
                 <div class="content">
+                    {% for name, url in grow_details %}
                     <div class="method">
-                        <img src="{% static 'images/grow/organic.png' %}" />
-                        <div class="method-name">Organic</div>
+                        <img src="{{ url }}" />
+                        <div class="method-name">{{ name }}</div>
                     </div>
-                    <div class="method">
-                        <img src="{% static 'images/grow/pesticide_free.png' %}" />
-                        <div class="method-name">Pesticide free method</div>
-                    </div>
-                    <div class="method">
-                        <img src="{% static 'images/grow/indoor.png' %}" />
-                        <div class="method-name">Indoor</div>
-                    </div>
+                    {% endfor %}
                 </div>
             </div>
+            {% endif %}
             <div class="section contact">
                 <div class="title">
                     <hr class="spacer lg">

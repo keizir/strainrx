@@ -94,7 +94,7 @@ class BusinessLocationAdminForm(forms.ModelForm):
         model = BusinessLocation
         fields = '__all__'
 
-    about = forms.CharField(widget=TinyMCE(attrs={'cols': 80, 'rows': 20}))
+    about = forms.Textarea()
     location_field = forms.CharField(max_length=255)
     
     mon_open = forms.TimeField(widget=AdminTimeWidget(format='%I:%M %p'), input_formats=('%I:%M %p',), required=False)
@@ -179,11 +179,11 @@ class BusinessLocationAdmin(admin.ModelAdmin):
 
     fieldsets = (
         ('Info',
-         {'fields': ('business', 'removed_date', 'location_name', 'manager_name', 'location_email', 'phone', 'ext', 'about',), }),
+         {'fields': ('business', 'verified', 'removed_date', 'location_name', 'manager_name', 'location_email', 'phone', 'ext', 'about',), }),
         ('Social',
          {'fields': ('meta_desc', 'meta_keywords', 'social_image'), }),
         ('Type',
-         {'fields': ('dispensary', 'grow_house', 'delivery', 'delivery_radius'), }),
+         {'fields': ('dispensary', 'grow_house', 'delivery', 'delivery_radius', 'grow_details'), }),
         ('Location',
          {'fields': ('location_field', 'street1', 'city', 'state', 'zip_code', 'lat', 'lng', 'location_raw',), }),
         ('Working Hours',
