@@ -324,7 +324,7 @@ def save_city_and_state(business_location):
 @python_2_unicode_compatible
 class BusinessLocationMenuItem(models.Model):
     business_location = models.ForeignKey(BusinessLocation, on_delete=models.DO_NOTHING)
-    strain = models.ForeignKey(Strain, on_delete=models.DO_NOTHING)
+    strain = models.ForeignKey(Strain, on_delete=models.DO_NOTHING, related_name='menu_items')
 
     price_gram = models.FloatField(max_length=50, blank=True, null=True)
     price_eighth = models.FloatField(max_length=50, blank=True, null=True)

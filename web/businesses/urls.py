@@ -63,6 +63,11 @@ urlpatterns = [
         name='dispensaries_list'
     ),
     url(
+        regex=r'^growers/(?P<state>.+)/(?P<city_slug>.+)/(?P<slug_name>.+)/$',
+        view=views.GrowerInfoView.as_view(),
+        name='grower_info'
+    ),
+    url(
         regex=r'^businesses/(?P<business_id>[0-9]{1,})/analytics/$',
         view=user_is_owner(views.BusinessAnalyticsView.as_view()),
         name='analytics'

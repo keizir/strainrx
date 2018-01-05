@@ -92,6 +92,10 @@ class Strain(models.Model):
     def variety_image(self):
         return static('images/variety-{variety}.png'.format(variety=self.variety))
 
+    @property
+    def url(self):
+        return self.get_absolute_url()
+
     def validate_image(field_file_obj):
         file_size = field_file_obj.file.size
         megabyte_limit = settings.MAX_IMAGE_SIZE
@@ -156,7 +160,7 @@ def create_es_strain(sender, **kwargs):
 
 @python_2_unicode_compatible
 class StrainImage(models.Model):
-    strain = models.ForeignKey(Strain, on_delete=models.DO_NOTHING)
+    strain = models.ForeignKey(Strain, on_delete=models.DO_NOTHING, related_name='images')
     image = models.ImageField(max_length=255, upload_to=upload_image_to, blank=True,
                               help_text='Maximum file size allowed is 10Mb',
                               validators=[validate_image])

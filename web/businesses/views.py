@@ -13,12 +13,12 @@ from django.views.generic import TemplateView
 from django.db.models import Count
 
 from web.businesses.api.services import FeaturedBusinessLocationService
-from web.businesses.models import Business, BusinessLocation, State, City
+from web.businesses.models import Business, BusinessLocation, BusinessLocationMenuItem, State, City
 from web.businesses.utils import NamePaginator
 from web.users.models import User
 from web.analytics.models import Event
-
 from web.analytics.service import Analytics
+from web.search.services import get_strains_and_images_for_location
 
 
 class BusinessSignUpWizardView(TemplateView):
@@ -190,6 +190,30 @@ class DispensariesCitiesView(TemplateView):
 class DispensaryRedirectView(RedirectView):
     def get_redirect_url(self, *args, **kwargs):
         return reverse('businesses:dispensaries_list')
+
+
+class GrowerInfoView(TemplateView):
+    template_name = 'pages/grower/grower_info.html'
+
+    def get_context_data(self, **kwargs):
+        query_kwargs = {
+            'grow_house': True,
+            'state_fk__abbreviation__iexact': kwargs['state'],
+            'city_fk__full_name_slug__iexact': kwargs['city_slug'],
+            'slug_name__iexact': kwargs['slug_name'],
+            'removed_date__isnull': True,
+        }
+        try:
+            grower = BusinessLocation.objects.select_related('city_fk', 'state_fk', 'business').get(**query_kwargs)
+        except BusinessLocation.DoesNotExist:
+            raise Http404
+
+        context = super().get_context_data(**kwargs)
+        context['grower'] = grower
+        context['menu'] = get_strains_and_images_for_location(grower)
+
+        return context
+
 
 class BusinessAnalyticsView(TemplateView):
     template_name = 'pages/business/business_analytics.html'
