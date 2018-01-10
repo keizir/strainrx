@@ -220,7 +220,6 @@
 
             img {
                 max-width: 100%;
-                max-height: 12em;
             }
 
             .image {
@@ -234,6 +233,7 @@
 
             .name-row {
                 display: flex;
+                min-height: 3em;
 
                 .name {
                     flex: 1;

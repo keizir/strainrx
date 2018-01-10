@@ -247,6 +247,38 @@ class BusinessLocation(models.Model):
         else:
             return self.DEFAULT_IMAGE_URL
 
+    @property
+    def about_or_default(self):
+        if self.about:
+            return self.about
+
+        types = []
+        if self.dispensary:
+            types.append('dispensary')
+        if self.grow_house:
+            types.append('grow house')
+        if self.delivery:
+            types.append('delivery')
+
+        if len(types) == 0:
+            combined_type = 'business'
+        elif len(types) == 1:
+            combined_type = types[0]
+        elif len(types) == 2:
+            combined_type = ' and '.join(types)
+        else:
+            combined_type = ', '.join(types[:-1]) + ' and ' + types[-1]
+
+        template = '{name} is a Marijuana {combined_type} located in {city}, {state}'
+        context = {
+            'name': self.location_name,
+            'combined_type': combined_type,
+            'city': self.city,
+            'state': self.state,
+        }
+
+        return template.format(**context)
+
     def is_searchable(self):
         if self.removed_by or self.removed_date:
             return False

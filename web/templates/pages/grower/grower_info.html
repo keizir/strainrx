@@ -81,7 +81,7 @@
         </div>
         <hr class="spacer sm">
         <div class="about">
-            {{ grower.about }}
+            {{ grower.about_or_default }}
         </div>
         {% if grow_details %}
         <div class="section how-we-grow">
@@ -187,7 +187,7 @@
                 </div>
                 <div class="spacer"></div>
                 <div class="about-row">
-                    {{ grower.about }}
+                    {{ grower.about_or_default }}
                 </div>
             </div>
         </div>

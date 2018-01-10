@@ -12,19 +12,27 @@ W.pages.grower.GrowerInfo = Class.extend({
     },
 
     onFilterClick: function onFilterClick(e) {
-        var $currentTarget = $(e.currentTarget);
+        var $currentTarget = $(e.currentTarget),
+            $strain = $('.strain'),
+            $strainPlaceholder = $('.strain-placeholder');
+
         var filter = $currentTarget.attr('data-filter');
 
         if (filter === 'all') {
-            $('.strain').css('display', '');
+            $strain.css('display', '');
+            if ($strain.length === 0) {
+                $strainPlaceholder.css('display', '');
+            } else {
+                $strainPlaceholder.css('display', 'none');
+            }
         } else {
-            $('.strain').css('display', 'none');
+            $strain.css('display', 'none');
             $('.strain[data-variety="{0}"]'.format(filter)).css('display', '');
 
             if ($('.strain[data-variety="{0}"]'.format(filter)).length === 0) {
-                $('.strain-placeholder').css('display', '');
+                $strainPlaceholder.css('display', '');
             } else {
-                $('.strain-placeholder').css('display', 'none');
+                $strainPlaceholder.css('display', 'none');
             }
         }
 
