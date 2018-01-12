@@ -66,6 +66,7 @@ class BusinessLocationDetailSerializer(serializers.Serializer):
     dispensary = serializers.BooleanField()
     delivery = serializers.BooleanField()
     grow_house = serializers.BooleanField()
+    grow_details = serializers.DictField()
 
     delivery_radius = serializers.FloatField(allow_null=True)
 
@@ -96,6 +97,7 @@ class BusinessLocationDetailSerializer(serializers.Serializer):
         inst.delivery = data.get('delivery')
         inst.delivery_radius = data.get('delivery_radius')
         inst.grow_house = data.get('grow_house')
+        inst.grow_details = data.get('grow_details', {})
         inst.phone = data.get('phone')
         inst.ext = data.get('ext')
         inst.timezone = data.get('timezone')

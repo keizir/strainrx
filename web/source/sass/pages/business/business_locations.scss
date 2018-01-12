@@ -10,6 +10,26 @@
                 font-weight: bold;
             }
 
+            .grow-methods {
+                display: flex;
+                flex-direction: column;
+
+                .form-field {
+                    display: flex;
+                    padding: 1em 0;
+                    margin-right: 2em;
+                }
+
+                input {
+                    width: auto;
+                    margin-left: 1em;
+                }
+
+                .field-row {
+                    display: flex;
+                }
+            }
+
             .business-info-group {
                 display: inline-block;
                 width: 55%;

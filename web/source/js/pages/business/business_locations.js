@@ -34,6 +34,7 @@ W.pages.business.BusinessLocations = Class.extend({
                     'l': location, 'buildDisplayName': that.buildLocationDisplayName
                 }));
                 that.prepareAndShowDeliveryDistanceSlider(location.id, location.delivery);
+                that.changeGrowthMethodsVisibility(location);
                 that.changeAddress(location, i);
             });
 
@@ -240,6 +241,19 @@ W.pages.business.BusinessLocations = Class.extend({
 
                     if (fieldName === 'grow_house') {
                         that.locations[index].grow_house = $input.is(':checked');
+                        that.changeGrowthMethodsVisibility(that.locations[index]);
+                    }
+
+                    if (fieldName === 'grow_methods_organic') {
+                        that.locations[index].grow_details.organic = $input.is(':checked');
+                    }
+
+                    if (fieldName === 'grow_methods_indoor') {
+                        that.locations[index].grow_details.indoor = $input.is(':checked');
+                    }
+
+                    if (fieldName === 'grow_methods_pesticide_free') {
+                        that.locations[index].grow_details.pesticide_free = $input.is(':checked');
                     }
 
                     if (fieldName === 'delivery') {
@@ -285,6 +299,16 @@ W.pages.business.BusinessLocations = Class.extend({
         $sliderValue.text('{0} Miles'.format($slider.slider('value')));
     },
 
+    changeGrowthMethodsVisibility: function changeGrowthMethodsVisibility(location) {
+        console.log('.location-' + location.id + ' .grow-methods')
+        var $growMethods = $('.location-' + location.id + ' .grow-methods');
+        if (location.grow_house) {
+            $growMethods.removeClass('hidden');
+        } else {
+            $growMethods.addClass('hidden');
+        }
+    },
+
     clickAddLocation: function clickAddLocation() {
         var that = this;
 
@@ -293,11 +317,13 @@ W.pages.business.BusinessLocations = Class.extend({
             that.ui.$btnUpdateLocations.removeAttr('disabled');
 
             var locationClientId = 'tmpId{0}'.format(new Date().getTime());
-            that.locations[locationClientId] = {
+            var newLocation = {
+                id: locationClientId,
                 tmp_id: locationClientId,
                 location_name: null, manager_name: null, location_email: null,
                 phone: null, ext: null, timezone: null,
-                dispensary: false, delivery: false, delivery_radius: null,
+                dispensary: false, delivery: false, delivery_radius: null, grow_house: false,
+                grow_details: {},
                 mon_open: null, mon_close: null,
                 tue_open: null, tue_close: null,
                 wed_open: null, wed_close: null,
@@ -306,8 +332,9 @@ W.pages.business.BusinessLocations = Class.extend({
                 sat_open: null, sat_close: null,
                 sun_open: null, sun_close: null
             };
+            that.locations[locationClientId] = newLocation;
             that.regions.$locations.append(that.templates.$location({
-                'l': {'id': locationClientId}, 'buildDisplayName': that.buildLocationDisplayName
+                'l': newLocation, 'buildDisplayName': that.buildLocationDisplayName
             }));
             that.registerAllInputEvents($('.location-{0}'.format(locationClientId)).find('input'));
             that.changeAddress({'id': locationClientId}, $('.pac-container').length);
@@ -370,6 +397,10 @@ W.pages.business.BusinessLocations = Class.extend({
 
             delete location.tmp_id;
             delete location.image;
+
+            if (location.id.startsWith && location.id.startsWith('tmp')) {
+                location.id = 0;
+            }
 
             deferreds.push(that.businessLocationDeferred(businessId, location, imageKey));
         });

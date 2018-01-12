@@ -23,8 +23,19 @@ class BusinessLocationAccountOwner(permissions.BasePermission):
         business_id = view.kwargs.get('business_id')
         business_location_id = view.kwargs.get('business_location_id')
 
+        permission_kwargs = {
+            'business_id': business_id,
+            'business__users__id': request.user.id,
+        }
+
+        # By convention PUT 0 means create, so check business only
+        try:
+            if int(business_location_id) != 0:
+                permission_kwargs['id'] = business_location_id
+        except ValueError:
+            permission_kwargs['id'] = business_location_id
+
         return BusinessLocation.objects.filter(
-            id=business_location_id,
             business_id=business_id,
             business__users__id=request.user.id,
         ).exists()

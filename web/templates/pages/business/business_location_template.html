@@ -79,7 +79,25 @@
             <% } %>
             <label class="btn btn-primary" for="file__<%= l.id %>">Edit Profile Image</label>
         </div>
-        <% if (!l.delivery) { %>
+
+        <div class="form-field-group grow-methods hidden">
+            <label>Growth methods</label>
+            <div class="field-row">
+                <div class="form-field">
+                    <label for="grow_methods__organic__<%= l.id %>">Organic</label>
+                    <input type="checkbox" name="grow_methods_organic__<%= l.id %>" id="grow_methods_organic__<%= l.id %>" <% if (l.grow_details.organic) { %>checked<% } %>>
+                </div>
+                <div class="form-field">
+                    <label for="grow_methods__pesticide_free__<%= l.id %>">Pesticide Free</label>
+                    <input type="checkbox" name="grow_methods_pesticide_free__<%= l.id %>" id="grow_methods_pesticide_free__<%= l.id %>" <% if (l.grow_details.pesticide_free) { %>checked<% } %>>
+                </div>
+                <div class="form-field">
+                    <label for="grow_methods__indoor__<%= l.id %>">Indoor</label>
+                    <input type="checkbox" name="grow_methods_indoor__<%= l.id %>" id="grow_methods_indoor__<%= l.id %>" <% if (l.grow_details.indoor) { %>checked<% } %>>
+                </div>
+            </div>
+        </div>
+
         <div class="form-field-group slider-area slider-area-<%= l.id %> hidden">
             <div class="slider-header">
                 <div class="sub-title">Delivery Radius</div>
@@ -91,19 +109,6 @@
                 <div class="max-mile">50 Miles</div>
             </div>
         </div>
-        <% } else { %>
-        <div class="form-field-group slider-area slider-area-<%= l.id %>">
-            <div class="slider-header">
-                <div class="sub-title">Delivery Radius</div>
-                <div class="slider-value"></div>
-            </div>
-            <div class="slider slider-<%= l.id %>"></div>
-            <div class="slider-footer">
-                <div class="min-mile">5 Miles</div>
-                <div class="max-mile">50 Miles</div>
-            </div>
-        </div>
-        <% } %>
         <span class="error-message location-error error-message-<%= l.id %>"></span>
         <hr>
     </div>
