@@ -167,6 +167,14 @@
                 </div>
             </div>
         </div>
+        <div class="section partners">
+            <div class="title">
+                <hr class="spacer lg">
+                <h2>WHERE TO BUY</h2>
+                <hr class="spacer lg">
+            </div>
+            <div class="content"></div>
+        </div>
     </div>
 
     <div class="content desktop">
@@ -274,17 +282,20 @@
                     </div>
                 </div>
             </div>
-            <div class="section">
+            <div class="section partners">
                 <div class="title">
                     <hr class="spacer lg">
                     <h2>WHERE TO BUY</h2>
                     <hr class="spacer lg">
                 </div>
+                <div class="content"></div>
             </div>
         </div>
     </div>
 
 </div>
+
+{% include "pages/grower/grower_partner_template.html" %}
 
 {% endblock %}
 
@@ -293,6 +304,9 @@
     <script src="{% static 'js/pages/grower/grower_info.js' %}"></script>
     <script src="{% static 'js/pages/grower/grower_info_view.js' %}"></script>
     <script type="text/javascript">
-        W.pages.grower.GrowerInfoView.init();
+        W.pages.grower.GrowerInfoView.init({
+            growerId: {{ grower.id }},
+            businessId: {{ grower.business_id }}
+        });
     </script>
 {% endblock %}

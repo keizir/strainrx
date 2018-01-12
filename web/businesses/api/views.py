@@ -390,8 +390,21 @@ class GrowerDispensaryPartnershipListView(APIView):
     permission_classes = (BusinessAccountOwner,)
 
     def get(self, request, business_id, business_location_id):
+        grower_filter = request.GET.get('grower_id')
+        dispensary_filter = request.GET.get('dispensary_id')
+
         partnerships = GrowerDispensaryPartnership.objects.select_related('dispensary', 'grower')
-        partnerships = partnerships.filter(Q(grower_id=business_location_id) | Q(dispensary_id=business_location_id))
+
+        if not grower_filter or not dispensary_filter:
+            f = Q(grower_id=business_location_id) | Q(dispensary_id=business_location_id)
+        elif grower_filter and dispensary_filter:
+            f = Q(grower_id=grower_filter) & Q(dispensary_id=dispensary_filter)
+        elif grower_filter:
+            f = Q(grower_id=grower_filter)
+        else:
+            f = Q(dispensary_id=dispensary_filter)
+
+        partnerships = partnerships.filter(f)
 
         return Response(
             {'partnerships': [GrowerDispensaryPartnershipSerializer(x).data for x in partnerships]},

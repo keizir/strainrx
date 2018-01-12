@@ -147,6 +147,48 @@
         }
     }
 
+    .partner {
+        border: $grey 1px solid;
+        padding: 1em;
+        margin-bottom: 1em;
+
+        .line {
+            display: flex;
+            margin-bottom: 0.5em;
+        }
+
+        .line:last-of-type {
+            margin-bottom: 0;
+        }
+
+        .icon i {
+            width: 2em;
+        }
+    }
+
+    .section.partners .content {
+        max-height: 21em;
+        font-size: 1.2em;
+        overflow-y: auto;
+    }
+
+    .section.partners .content::-webkit-scrollbar-track {
+        -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
+    }
+
+    .section.partners .content::-webkit-scrollbar {
+        width: 6px;
+    }
+
+    .section.partners .content::-webkit-scrollbar-thumb {
+        -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, .3);
+        background-color: $green-atlantis;
+    }
+
+    .partner:last-of-type {
+        margin-bottom: 0;
+    }
+
     .mobile {
         .location-image {
             margin-top: 1em;

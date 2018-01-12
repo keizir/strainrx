@@ -3,8 +3,13 @@
 W.ns('W.pages.grower');
 
 W.pages.grower.GrowerInfo = Class.extend({
-    init: function init() {
+    init: function init(options) {
+        this.growerId = options.growerId;
+        this.businessId = options.businessId;
+        this.template = _.template($('#grower_partner_template').html());
+
         this.attachEventHandlers();
+        this.fetchDispensaries();
     },
 
     attachEventHandlers: function attachHandlers() {
@@ -38,6 +43,32 @@ W.pages.grower.GrowerInfo = Class.extend({
 
         $('.filter.active').removeClass('active');
         $('.filter[data-filter="{0}"]'.format(filter)).addClass('active');
+    },
+
+    fetchDispensaries: function fetchDispensaries() {
+        var that = this,
+            urlTemplate = '/api/v1/businesses/{0}/locations/{1}/partnerships/?grower_id={3}',
+            url = urlTemplate.format(this.businessId, this.growerId, this.growerId);
+
+        $('.section.partners .content').html('Loading ...');
+        return $.ajax({
+            method: 'GET',
+            url: url,
+            success: function (data) {
+                if (data.partnerships.length > 0) {
+                    that.renderPartnerships(data.partnerships);
+                } else {
+                    $('.section.partners .content').html(
+                        'This grower does not have any ' +
+                        'partnerships with dispensaries.'
+                    );
+                }
+            }
+        });
+    },
+
+    renderPartnerships: function renderPartnerships(partnerships) {
+        $('.section.partners .content').html(this.template({ partnerships: partnerships }));
     }
 
 });
