@@ -8,7 +8,7 @@ from tinymce.widgets import TinyMCE
 from web.businesses.api.services import BusinessLocationService
 from web.businesses.es_service import BusinessLocationESService
 from web.businesses.models import Business, BusinessLocation, FeaturedBusinessLocation, \
-    LocationReview, State, City, Payment
+    LocationReview, State, City, Payment, GrowerDispensaryPartnership
 
 
 class PaymentAdmin(admin.TabularInline):
@@ -279,3 +279,23 @@ class CityAdmin(admin.ModelAdmin):
     list_filter = ['state__abbreviation', 'full_name']
     ordering = ['full_name']
     readonly_fields = ['full_name_slug']
+
+
+class GrowerDispensaryPartnershipForm(forms.ModelForm):
+    class Meta:
+        model = GrowerDispensaryPartnership
+        fields = ('grower', 'dispensary')
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+        self.fields['grower'].queryset = BusinessLocation.objects.filter(grow_house=True)
+        self.fields['dispensary'].queryset = BusinessLocation.objects.filter(dispensary=True)
+
+
+@admin.register(GrowerDispensaryPartnership)
+class GrowerDispensaryPartnershipAdmin(admin.ModelAdmin):
+    form = GrowerDispensaryPartnershipForm
+
+    list_display = ('grower', 'dispensary')
+    search_fields = ('grower', 'dispensary')

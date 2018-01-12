@@ -72,6 +72,21 @@ class BusinessMenuView(TemplateView):
         return context
 
 
+class BusinessPartnershipsView(TemplateView):
+    template_name = 'pages/business/business_partnerships.html'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        business = Business.objects.get(pk=kwargs.get('business_id'))
+        context['business'] = business
+        context['locations'] = BusinessLocation.objects.filter(business=business, removed_date=None).order_by('id')
+        context['grow_houses'] = BusinessLocation.objects.filter(business=business,
+                                                                 grow_house=True,
+                                                                 removed_date=None).order_by('id')
+        context['tab'] = 'partnerships'
+        return context
+
+
 class BusinessLocationsView(TemplateView):
     template_name = 'pages/business/business_locations.html'
 

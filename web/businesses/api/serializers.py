@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-from web.businesses.models import phone_number_validator, LocationReview
+from web.businesses.models import phone_number_validator, LocationReview, GrowerDispensaryPartnership
 
 
 class BusinessSignUpSerializer(serializers.Serializer):
@@ -51,9 +51,12 @@ class BusinessSignUpSerializer(serializers.Serializer):
 
 class BusinessLocationDetailSerializer(serializers.Serializer):
     location_name = serializers.CharField()
+    image_url = serializers.CharField(read_only=True)
     manager_name = serializers.CharField(allow_blank=True, allow_null=True)
     location_email = serializers.CharField()
+    url = serializers.CharField(read_only=True)
 
+    formatted_address = serializers.CharField(read_only=True)
     phone = serializers.CharField(validators=[phone_number_validator])
     ext = serializers.CharField(allow_blank=True, allow_null=True)
     timezone = serializers.CharField(allow_blank=True, allow_null=True)
@@ -141,3 +144,14 @@ class LocationReviewFormSerializer(serializers.ModelSerializer):
     class Meta:
         model = LocationReview
         fields = ('rating', 'review')
+
+
+class GrowerDispensaryPartnershipSerializer(serializers.ModelSerializer):
+    dispensary = BusinessLocationDetailSerializer(required=False)
+    dispensary_id = serializers.IntegerField(allow_null=False)
+    grower = BusinessLocationDetailSerializer(required=False)
+    grower_id = serializers.IntegerField(allow_null=False)
+
+    class Meta:
+        model = GrowerDispensaryPartnership
+        fields = ('id', 'dispensary', 'dispensary_id', 'grower', 'grower_id')

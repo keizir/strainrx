@@ -1,6 +1,6 @@
 from rest_framework import permissions
 
-from web.businesses.models import Business
+from web.businesses.models import Business, BusinessLocation
 
 
 class BusinessAccountOwner(permissions.BasePermission):

@@ -30,6 +30,16 @@ urlpatterns = [
         name='business_location_favorite'
     ),
     url(
+        regex=r'^(?P<business_id>[0-9]+)/locations/(?P<business_location_id>[0-9]+)/partnerships/(?P<partnership_id>[0-9]+)',
+        view=GrowerDispensaryPartnershipDetailView.as_view(),
+        name='grower_dispensary_partnerships_detail'
+    ),
+    url(
+        regex=r'^(?P<business_id>[0-9]+)/locations/(?P<business_location_id>[0-9]+)/partnerships',
+        view=GrowerDispensaryPartnershipListView.as_view(),
+        name='grower_dispensary_partnerships_list'
+    ),
+    url(
         regex=r'^(?P<business_id>[0-9]+)/locations/(?P<business_location_id>[0-9]+)',
         view=BusinessLocationView.as_view(),
         name='business_location'

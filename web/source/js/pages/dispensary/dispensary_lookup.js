@@ -5,9 +5,12 @@ W.ns('W.pages.dispensary');
 W.pages.dispensary.DispensaryLookup = Class.extend({
 
     init: function init(options) {
-        this.onArrowUp = options && options.onArrowUp;
-        this.onArrowDown = options && options.onArrowDown;
-        this.onReturn = options && options.onReturn;
+        options = options || {};
+        this.onArrowUp = options.onArrowUp;
+        this.onArrowDown = options.onArrowDown;
+        this.onReturn = options.onReturn;
+        this.onChange = options.onChange || function () {};
+        this.currentValue = undefined;
 
         this.changeLookupInput();
         this.initEventHandlers();
@@ -20,20 +23,23 @@ W.pages.dispensary.DispensaryLookup = Class.extend({
             var text = $('.lookup-input').val(),
                 selectedItem = $(e.currentTarget),
                 url = selectedItem.attr('url'),
-                business_id = selectedItem.attr('business_id');
+                business_location_id = selectedItem.attr('business_location_id');
 
-            that.onEnterKeyPress(e, url, text, business_id);
-
-            DispensaryPage.navigateToDispDetailPage();
+            that.onSelect(e, url, text, business_location_id);
         });
     },
+    setCurrentValue: function setCurrentValue(val) {
+        this.currentValue = val;
+    },
+
     changeLookupInput: function changeLookupInput() {
         var that = this;
+
         $('.lookup-input').on('keyup', function (e) {
             var text = $(this).val(),
                 $payloadsRegion = $('.payloads-region'),
                 url = $payloadsRegion.find('.search-payload.active').attr('url'),
-                business_id = $payloadsRegion.find('.search-payload.active').attr('business_id'),
+                business_location_id = $payloadsRegion.find('.search-payload.active').attr('business_location_id'),
                 $activePayload = $payloadsRegion.find('.search-payload.active'),
                 $firstPayload = $payloadsRegion.find('.search-payload:nth-child(1)'),
                 $lastPayload = $payloadsRegion.find('.search-payload:last-child');
@@ -49,20 +55,26 @@ W.pages.dispensary.DispensaryLookup = Class.extend({
             }
 
             if (e.keyCode === 13) { // Enter Key
-                that.onEnterKeyPress(e, url, text, business_id);
+                that.onSelect(e, url, text, business_location_id);
                 return;
             }
 
             if (text && text.length >= 1) {
-                var locTime = DispensaryPage.getDispLocationTime();
+                var context = { query: text };
+                var url;
+
+                if (window.DispensaryPage) {
+                    var locTime = DispensaryPage.getDispLocationTime();
+                    context.loc = encodeURIComponent(JSON.stringify(locTime.location));
+                    context.tz = encodeURIComponent(JSON.stringify(locTime.timezone));
+                    url = '/api/v1/search/dispensary/lookup/?q={query}&loc={loc}&tz={tz}'.format(context);
+                } else {
+                    url = '/api/v1/search/dispensary/lookup/?q={query}'.format(context);
+                }
 
                 $.ajax({
                     method: 'GET',
-                    url: '/api/v1/search/dispensary/lookup/?q={query}&loc={loc}&tz={tz}'.format({
-                        query: text,
-                        loc: encodeURIComponent(JSON.stringify(locTime.location)),
-                        tz: encodeURIComponent(JSON.stringify(locTime.timezone))
-                    }),
+                    url: url,
                     success: function (data) {
                         $payloadsRegion.html('');
                         $payloadsRegion.append(that.buildPayloadLookupArea(data));
@@ -72,6 +84,9 @@ W.pages.dispensary.DispensaryLookup = Class.extend({
                 $payloadsRegion.html('');
                 $payloadsRegion.hide();
             }
+
+            that.setCurrentValue();
+            that.onChange();
         });
     },
 
@@ -111,26 +126,32 @@ W.pages.dispensary.DispensaryLookup = Class.extend({
         }
     },
 
-    onEnterKeyPress: function onEnterKeyPress(e, url, text, business_id) {
+    onSelect: function onEnterKeyPress(e, url, text, business_location_id) {
         e.preventDefault();
 
         if (url && text) {
+            this.setCurrentValue({ url: url, id: business_location_id});
+
             var $lookupInput = $('.lookup-input'),
                 $payloadsRegion = $('.payloads-region');
 
             $lookupInput.attr('payload-url', url);
-            $lookupInput.attr('business_id', business_id);
+            $lookupInput.attr('business_location_id', business_location_id);
             $lookupInput.val(text);
             $payloadsRegion.html('');
             $payloadsRegion.hide();
+
+            this.onChange(this.currentValue);
+
         }
+
     },
 
     buildPayloadLookupArea: function buildPayloadLookupArea(data) {
         if (data) {
             var totalResults = data.total,
                 payloads = data.payloads,
-                itemHtml = '<span class="search-payload" id="{id}" url="{url}" business_id="{business_id}" name="{name}"><img width="20" height="20" src="{img_src}"/><span class="disp-name">{name}</span> ({loc}) {dist} {open}</span>',
+                itemHtml = '<span class="search-payload" id="{id}" url="{url}" business_location_id="{business_location_id}" name="{name}"><img width="20" height="20" src="{img_src}"/><span class="disp-name">{name}</span> ({loc}) {dist} {open}</span>',
                 payloadHtml = '';
 
             if (totalResults && totalResults > 0) {
@@ -143,7 +164,7 @@ W.pages.dispensary.DispensaryLookup = Class.extend({
                         'open': (payload.open) ? 'Open' : 'Closed',
                         'loc': '{0}, {1}'.format(payload.city, payload.state),
                         'dist': (payload.distance) ? '{0} Miles'.format(Math.round(payload.distance * 10) / 10) : '',
-                        'business_id': payload.business_id
+                        'business_location_id': payload.business_location_id
                     });
                 });
 
@@ -166,12 +187,18 @@ W.pages.dispensary.DispensaryLookup = Class.extend({
                 // click on autocomplete result
                 var url = elem.attr('url'),
                     text = elem.attr('name'),
-                    business_id = elem.attr('business_id');
+                    business_location_id = elem.attr('business_location_id');
 
-                that.onEnterKeyPress(e, url, text, business_id);
+                that.onSelect(e, url, text, business_location_id);
             } else if (!(elem.parents('.payloads-region').length)) {
                 $('.payloads-region').html('');
                 $('.payloads-region').hide();
+
+                if (!that.currentValue) {
+                    $('#disp-lookup').val(undefined);
+                    that.setCurrentValue();
+                    that.onChange();
+                }
             }
         });
     }

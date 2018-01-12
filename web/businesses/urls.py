@@ -6,6 +6,7 @@ from django.conf.urls import url
 from web.businesses.decorators import user_is_owner, authorized_for_signup
 from . import views
 
+
 urlpatterns = [
     url(
         regex=r'^businesses/signup/$',
@@ -31,6 +32,11 @@ urlpatterns = [
         regex=r'^businesses/(?P<business_id>[0-9]{1,})/menu/$',
         view=user_is_owner(views.BusinessMenuView.as_view()),
         name='menu'
+    ),
+    url(
+        regex=r'^businesses/(?P<business_id>[0-9]{1,})/partnerships/$',
+        view=user_is_owner(views.BusinessPartnershipsView.as_view()),
+        name='partnerships'
     ),
     url(
         regex=r'^businesses/(?P<business_id>[0-9]{1,})/locations/$',

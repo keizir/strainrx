@@ -133,6 +133,7 @@ class BusinessLocationService:
             delivery=location.get('delivery'),
             dispensary=location.get('dispensary'),
             delivery_radius=location.get('delivery_radius'),
+            grow_house=location.get('grow_house'),
             lat=location.get('lat'),
             lng=location.get('lng'),
             location_raw=location.get('location_raw') if location.get('location_raw') else {},
@@ -153,6 +154,7 @@ class BusinessLocationService:
         l.phone = location.get('phone')
         l.delivery = location.get('delivery')
         l.dispensary = location.get('dispensary')
+        l.grow_house = location.get('grow_house')
         l.delivery_radius = location.get('delivery_radius')
         l.lat = location.get('lat') if location.get('lat') else l.lat
         l.lng = location.get('lng') if location.get('lng') else l.lng

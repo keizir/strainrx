@@ -63,10 +63,13 @@
                     <a href="{% url 'businesses:locations' request.session.business.id %}">Locations</a>
                 </span>
                 <span class="account-menu-nav-link {% if tab == 'info' %}active{% endif %}">
-                    <a href="{% url 'businesses:detail' request.session.business.id %}">Business Details</a>
+                    <a href="{% url 'businesses:detail' request.session.business.id %}">Details</a>
                 </span>
                 <span class="account-menu-nav-link {% if tab == 'menu' %}active{% endif %}">
                     <a href="{% url 'businesses:menu' request.session.business.id %}">Menu</a>
+                </span>
+                <span class="account-menu-nav-link {% if tab == 'partnerships' %}active{% endif %}">
+                    <a href="{% url 'businesses:partnerships' request.session.business.id %}">Partners</a>
                 </span>
                 <span class="account-menu-nav-link {% if tab == 'analytics' %}active{% endif %}">
                     <a href="{% url 'businesses:analytics' request.session.business.id %}">Analytics</a>

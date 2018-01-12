@@ -8,6 +8,7 @@ from django.conf import settings
 from django.contrib.auth import authenticate, login
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.core.exceptions import ValidationError, ObjectDoesNotExist
+from django.db.models.query import Q
 from rest_framework import permissions
 from rest_framework import status
 from rest_framework.response import Response
@@ -25,7 +26,7 @@ from web.businesses.utils import NamePaginator
 from web.search.api.services import StrainDetailsService
 from web.search.models import Strain
 from web.users.api.serializers import UserSerializer
-from web.users.models import UserLocation
+
 
 logger = logging.getLogger(__name__)
 
@@ -383,3 +384,40 @@ class FeaturedBusinessLocationsView(APIView):
             {'locations': [BusinessLocationSerializer(x).data for x in featured_locations]},
             status=status.HTTP_200_OK
         )
+
+
+class GrowerDispensaryPartnershipListView(APIView):
+    permission_classes = (BusinessAccountOwner,)
+
+    def get(self, request, business_id, business_location_id):
+        partnerships = GrowerDispensaryPartnership.objects.select_related('dispensary', 'grower')
+        partnerships = partnerships.filter(Q(grower_id=business_location_id) | Q(dispensary_id=business_location_id))
+
+        return Response(
+            {'partnerships': [GrowerDispensaryPartnershipSerializer(x).data for x in partnerships]},
+            status=status.HTTP_200_OK
+        )
+
+    def post(self, request, business_id, business_location_id):
+        data = dict(grower_id=business_location_id, **request.data)
+        serializer = GrowerDispensaryPartnershipSerializer(data=data)
+        serializer.is_valid(raise_exception=True)
+        validated_data = serializer.validated_data
+
+        existing_kwargs = dict(
+            grower_id=validated_data['grower_id'],
+            dispensary_id=validated_data['dispensary_id'],
+        )
+
+        if not GrowerDispensaryPartnership.objects.filter(**existing_kwargs).exists():
+            serializer.create(validated_data)
+
+        return Response({}, status=status.HTTP_200_OK)
+
+
+class GrowerDispensaryPartnershipDetailView(APIView):
+    permission_classes = (BusinessAccountOwner,)
+
+    def delete(self, request, business_id, business_location_id, partnership_id):
+        GrowerDispensaryPartnership.objects.filter(id=partnership_id).delete()
+        return Response({}, status=status.HTTP_200_OK)

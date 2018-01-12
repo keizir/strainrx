@@ -132,10 +132,11 @@
             position: relative;
             width: 70%;
             margin: 1.9em auto 0;
+            display: flex;
 
             .account-menu-nav-link {
                 display: inline-block;
-                width: 12em;
+                flex: 1;
                 line-height: 3em;
                 margin-right: -0.4em;
                 border: 1px solid $grey-light;
@@ -145,7 +146,6 @@
 
                 a {
                     display: block;
-                    width: 12em;
                     line-height: 3em;
                     color: $white;
                 }

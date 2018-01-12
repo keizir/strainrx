@@ -26,23 +26,16 @@ W.pages.dispensary.Dispensaries = Class.extend({
         }
     },
     initDispensaryLookupField: function initDispensaryLookupField() {
-        new W.pages.dispensary.DispensaryLookup();
+        var that = this;
+        new W.pages.dispensary.DispensaryLookup({
+            onChange: function(dispensary) {
+                if (dispensary) {
+                    that.navigateToDispDetailPage(dispensary);
+                }
+            }});
     },
     initEventHandlers: function initEventHandlers() {
         var that = this;
-
-        $('.lookup-submit').on('click', function (e) {
-            e.preventDefault();
-            that.navigateToDispDetailPage();
-        });
-
-        $(document).on('keyup', function (e) {
-            if (e.keyCode === 13) { // Enter Key
-                that.navigateToDispDetailPage();
-            }
-        });
-
-
 
         $('.disp-location-label').on('click', function (e) {
             e.preventDefault();
@@ -102,20 +95,14 @@ W.pages.dispensary.Dispensaries = Class.extend({
         this.dispLocation = null;
         this.dispTimezone = null;
     },
-    navigateToDispDetailPage: function navigateToDispDetailPage() {
-        var $input = $('.lookup-input'),
-            dispUrl = $input.attr('payload-url'),
-            business_id = $input.attr('business_id');
-
+    navigateToDispDetailPage: function navigateToDispDetailPage(dispensary) {
         W.track({
             event: "DISP_LOOKUP",
-            entity_id: business_id
+            entity_id: dispensary.id
         });
 
-        if (dispUrl) {
-            setTimeout(function(){
-                window.location.href = dispUrl;
-            }, 1000)
+        if (dispensary.url) {
+            window.location.href = dispensary.url;
         }
     },
     updateDispLocationTime: function updateDispLocationTime(GoogleLocations, address) {

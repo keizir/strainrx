@@ -279,6 +279,10 @@ class BusinessLocation(models.Model):
 
         return template.format(**context)
 
+    @property
+    def formatted_address(self):
+        return ', '.join((self.street1, self.city, self.zip_code, self.state))
+
     def is_searchable(self):
         if self.removed_by or self.removed_date:
             return False
@@ -375,6 +379,12 @@ class BusinessLocationMenuItem(models.Model):
 def save_es_menu_item(sender, **kwargs):
     menu_item = kwargs.get('instance')
     BusinessLocationESService().save_menu_item(menu_item)
+
+
+@python_2_unicode_compatible
+class GrowerDispensaryPartnership(models.Model):
+    grower = models.ForeignKey(BusinessLocation, related_name='dispensary_partnerships')
+    dispensary = models.ForeignKey(BusinessLocation, related_name='grower_partnerships')
 
 
 @python_2_unicode_compatible
