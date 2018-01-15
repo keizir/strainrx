@@ -6,9 +6,9 @@
 
 {% block css %}
     {{ block.super }}
-    <link href="{% static 'css/pages/dispensary/dispensaries.css' %}" rel="stylesheet">
+    <link href="{% static 'css/pages/locations/locations.css' %}" rel="stylesheet">
     <link href="{% static 'css/common/location_plus_favourites.css' %}" rel="stylesheet">
-    <link href="{% static 'css/common/dispensary_lookup.css' %}" rel="stylesheet">
+    <link href="{% static 'css/common/location_lookup_widget.css' %}" rel="stylesheet">
 {% endblock %}
 
 {% block meta %}
@@ -18,10 +18,10 @@
 {% endblock %}
 
 {% block content %}
-    <div class="disp-row-01">
+    <div class="location-row-01">
         <div class="container">
             {% include 'pages/common/location_plus_favourites.html' %}
-            <div class="disp-sub-row-02">
+            <div class="location-sub-row-02">
                 <h1>Find a Dispensary</h1>
                 <div class="subtitle-container">
                     <hr/>
@@ -30,18 +30,18 @@
                 </div>
                 <div class="search-box">
                     <div class="search-form">
-                        <div class="form-field dispensary-name-field">
-                            <label for="disp-lookup" class="disp-lookup-label">
+                        <div class="form-field location-name-field">
+                            <label for="location-lookup" class="location-lookup-label">
                                 <i class="fa fa-search" aria-hidden="true"></i>
                             </label>
-                            <input id="disp-lookup" class="lookup-input" type="text" placeholder="Search Dispensaries by Name"/>
+                            <input id="location-lookup" class="lookup-input" type="text" placeholder="Search Dispensaries by Name"/>
                             <div class="payloads-region"></div>
                         </div>
-                        <div class="disp-location-container">
-                            <label for="disp-location" class="disp-location-label">
+                        <div class="location-location-container">
+                            <label for="location-location" class="location-location-label">
                                 <i class="fa fa-dot-circle-o" aria-hidden="true"></i>
                             </label>
-                            <input id="disp-location" type="text" class="disp-location-value"
+                            <input id="location-location" type="text" class="location-location-value"
                                    placeholder="Filter by Location"/>
                         </div>
                     </div>
@@ -50,7 +50,7 @@
             </div>
         </div>
     </div>
-    <div class="dispensaries-list-container container">
+    <div class="locations-list-container container">
         <h2>Dispensaries</h2>
         <div class="social-icons">
             <span class="social-fb">
@@ -191,7 +191,6 @@
         {% endfor %}
     </div>
 
-    {% include 'common/dispensary_lookup.html' %}
 {% endblock %}
 
 {% block javascript %}
@@ -208,10 +207,10 @@
         });
     </script>
 
-    <script src="{% static 'js/pages/dispensary/dispensary_lookup.js' %}"></script>
-    <script src="{% static 'js/pages/dispensary/dispensaries.js' %}"></script>
+    <script src="{% static 'js/pages/locations/location_lookup_widget.js' %}"></script>
+    <script src="{% static 'js/pages/locations/find_location.js' %}"></script>
     <script type="text/javascript">
-        var DispensaryPage = new W.pages.dispensary.Dispensaries({
+        var FindLocationPage = new W.pages.locations.FindLocation({
             location: {% if request.user.is_authenticated %}
                 {{ request.user.get_location_json | safe }} {% else %} null {% endif %},
             authenticated: '{{ request.user.is_authenticated }}' == 'True',

@@ -1,6 +1,6 @@
 @import '../../mixins/variables';
 
-.disp-row-01 {
+.location-row-01 {
     background: $grey-light url(../../../images/dispensary_image.jpg) no-repeat top center;
     -webkit-background-size: cover;
     background-size: cover;
@@ -39,16 +39,11 @@
 
     }
 
-    .disp-sub-row-02 {
+    .location-sub-row-02 {
         display: block;
         width: 100%;
         color: $white;
         line-height: 2.5em;
-
-        .btn-lets-go {
-            width: 20.5em;
-            height: 4em;
-        }
 
         .find-delivery {
             color: #ffffff;
@@ -78,14 +73,14 @@
                 margin: 0 auto;
                 height: 8em;
 
-                .dispensary-name-field {
+                .location-name-field {
                     display: inline-block;
                     width: 100%;
                     max-width: 30em;
                     text-align: left;
                 }
 
-                .disp-location-label {
+                .location-location-label {
                     display: inline-block;
                     position: relative;
                     left: 0.5em;
@@ -98,14 +93,14 @@
                     }
                 }
 
-                .disp-lookup-label {
+                .location-lookup-label {
                     position: relative;
                     top: 1em;
                     left: 0.5em;
                     color: $grey-normal;
                 }
 
-                .disp-location-container {
+                .location-location-container {
                     position: relative;
                     text-align: left;
                     display: inline-block;
@@ -154,7 +149,7 @@
 }
 
 
-.dispensaries-list-container {
+.locations-list-container {
     position: relative;
     color: $grey;
 
@@ -368,7 +363,7 @@
 
     }
 
-    .dispensaries-wrapper {
+    .locations-wrapper {
         .page {
             margin: 1em auto;
         }
@@ -377,7 +372,7 @@
             display: none;
         }
 
-        .dispensary-item {
+        .location-item {
             display: inline-block;
             width: 48%;
             margin-bottom: 2em;
@@ -425,7 +420,7 @@
 }
 
 @media (max-width: $screen-xs-max) {
-    .disp-row-01 {
+    .location-row-01 {
         height: calc(100vh - 50em);
 
         .subtitle-container {
@@ -442,7 +437,7 @@
 }
 
 @media (min-width: $screen-sm-min) {
-    .dispensaries-list-container {
+    .locations-list-container {
         .social-icons {
             right: -16px;
         }
@@ -518,7 +513,7 @@
         }
     }
 
-    .disp-row-01 {
+    .location-row-01 {
         height: calc(100vh - 45em);
 
         h1 {
@@ -543,7 +538,7 @@
             }
         }
 
-        .disp-sub-row-02 {
+        .location-sub-row-02 {
             .search-box {
                 .search-form {
                     .payloads-region {
@@ -558,19 +553,19 @@
 }
 
 @media (min-width: $screen-md-min) {
-    .dispensaries-list-container {
+    .locations-list-container {
         .social-icons {
             right: -12px;
         }
     }
 
-    .disp-row-01 {
+    .location-row-01 {
         h1 {
             font-size: 3em;
             margin-bottom: 0.5em;
         }
 
-        .disp-sub-row-02 {
+        .location-sub-row-02 {
             .subtitle-container {
                 margin-bottom: 2.5em;
             }
@@ -581,7 +576,7 @@
                 .search-form {
                     width: 100%;
 
-                    .disp-location-label {
+                    .location-location-label {
                         top: 1em;
                     }
 
@@ -589,7 +584,7 @@
                         margin: 1.5em auto 0;
                     }
 
-                    .disp-location-container {
+                    .location-container {
                         width: 18em;
                     }
 
@@ -605,7 +600,7 @@
 }
 
 @media (min-width: $screen-lg-min) {
-    .dispensaries-list-container {
+    .locations-list-container {
         .social-icons {
             right: -4px;
         }
@@ -637,8 +632,8 @@
         }
     }
 
-    .disp-row-01 {
-        .disp-sub-row-02 {
+    .location-row-01 {
+        .location-sub-row-02 {
             .search-box {
                 width: 80%;
             }
@@ -647,7 +642,7 @@
 }
 
 @media (min-width: $screen-xl-min) {
-    .dispensaries-list-container {
+    .locations-list-container {
         .social-icons {
             right: 6px;
         }
@@ -659,7 +654,7 @@
         }
     }
 
-    .disp-row-01 {
+    .location-row-01 {
         h1 {
             font-size: 4em;
         }
@@ -679,7 +674,7 @@
 }
 
 @media (min-width: $screen-xxl-min) {
-    .dispensaries-list-container {
+    .locations-list-container {
         .social-icons {
             right: 17px;
         }
@@ -701,7 +696,7 @@
         }
     }
 
-    .disp-row-01 {
+    .location-row-01 {
         min-height: 28em;
 
         h1 {

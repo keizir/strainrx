@@ -1,8 +1,8 @@
 'use strict';
 
-W.ns('W.pages.dispensary');
+W.ns('W.pages.locations');
 
-W.pages.dispensary.DispensaryLookup = Class.extend({
+W.pages.locations.LocationsLookupWidget = Class.extend({
 
     init: function init(options) {
         options = options || {};
@@ -64,7 +64,7 @@ W.pages.dispensary.DispensaryLookup = Class.extend({
                 var url;
 
                 if (window.DispensaryPage) {
-                    var locTime = DispensaryPage.getDispLocationTime();
+                    var locTime = DispensaryPage.getLocationTime();
                     context.loc = encodeURIComponent(JSON.stringify(locTime.location));
                     context.tz = encodeURIComponent(JSON.stringify(locTime.timezone));
                     url = '/api/v1/search/dispensary/lookup/?q={query}&loc={loc}&tz={tz}'.format(context);

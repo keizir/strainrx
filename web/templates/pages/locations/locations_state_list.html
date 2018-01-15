@@ -21,11 +21,11 @@
 
 {% block css %}
     {{ block.super }}
-    <link href="{% static 'css/pages/dispensary/dispensaries.css' %}" rel="stylesheet">
+    <link href="{% static 'css/pages/locations/locations.css' %}" rel="stylesheet">
 {% endblock %}
 
 {% block content %}
-    <div class="dispensaries-list-container container">
+    <div class="locations-list-container container">
         <div class="header-row">
             <h1>
                 {% if active_state.full_name %}
@@ -134,10 +134,10 @@
 
 {% block javascript %}
     {{ block.super }}
-    <script src="{% static 'js/pages/dispensary/dispensaries_list.js' %}"></script>
-    <script src="{% static 'js/pages/dispensary/dispensaries_list_view.js' %}"></script>
+    <script src="{% static 'js/pages/locations/locations_list.js' %}"></script>
+    <script src="{% static 'js/pages/locations/locations_list_view.js' %}"></script>
     <script type="text/javascript">
-        W.pages.dispensary.DispensariesListView.init({
+        W.pages.locations.LocationsListView.init({
             view: 'state',
             active_state: '{{ active_state.abbreviation|lower }}'
         });

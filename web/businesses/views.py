@@ -145,7 +145,7 @@ class DispensaryInfoView(TemplateView):
 
 
 class DispensariesInfoView(TemplateView):
-    template_name = 'pages/dispensary/dispensaries_list.html'
+    template_name = 'pages/locations/locations_list.html'
 
     def get_context_data(self, **kwargs):
         context = super(DispensariesInfoView, self).get_context_data(**kwargs)
@@ -171,7 +171,7 @@ class DispensariesInfoView(TemplateView):
 
 
 class DispensariesStatesView(TemplateView):
-    template_name = 'pages/dispensary/dispensaries_state_list.html'
+    template_name = 'pages/locations/locations_state_list.html'
 
     def get_context_data(self, **kwargs):
         context = super(DispensariesStatesView, self).get_context_data(**kwargs)
@@ -186,7 +186,7 @@ class DispensariesStatesView(TemplateView):
 
 
 class DispensariesCitiesView(TemplateView):
-    template_name = 'pages/dispensary/dispensaries_city_list.html'
+    template_name = 'pages/locations/locations_city_list.html'
 
     def get_context_data(self, **kwargs):
         context = super(DispensariesCitiesView, self).get_context_data(**kwargs)

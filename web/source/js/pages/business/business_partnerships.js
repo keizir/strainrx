@@ -73,7 +73,7 @@ W.pages.business.BusinessPartnerships = Class.extend({
 
     initDispensaryLookup: function initDispensaryLookup() {
         var that = this;
-        var DispensaryLookup = W.pages.dispensary.DispensaryLookup;
+        var DispensaryLookup = W.pages.locations.LocationsLookupWidget;
         new DispensaryLookup({
             onChange: function(dispensary) {
                 that.newPartner = dispensary;

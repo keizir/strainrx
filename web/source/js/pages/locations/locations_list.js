@@ -1,19 +1,19 @@
 'use strict';
 
-W.ns('W.pages.dispensary');
+W.ns('W.pages.locations');
 
-W.pages.dispensary.DispensariesList = Class.extend({
+W.pages.locations.LocationsList = Class.extend({
 
     ui: {
         $pageSelector: $('.page-letter')
     },
 
     regions: {
-        $dispensaries: $('.dispensaries-wrapper')
+        $locations: $('.locations-wrapper')
     },
 
     templates: {
-        dispensary: _.template($('#dispensary_template').html())
+        location: _.template($('#location_template').html())
     },
 
     init: function init(options) {
@@ -65,38 +65,38 @@ W.pages.dispensary.DispensariesList = Class.extend({
             var that = this,
                 pages = this.pagedDispensaries,
                 sorted = this.sortKeysBy(pages),
-                Dispensary = this.templates.dispensary;
+                Dispensary = this.templates.location;
 
             $.each(sorted, function (i, page) {
                 if (i && i !== 'null' && page) {
-                    that.regions.$dispensaries.append('<div class="page" id="letter-{0}"></div>'.format(i.toLowerCase()));
+                    that.regions.$locations.append('<div class="page" id="letter-{0}"></div>'.format(i.toLowerCase()));
 
                     var $pageWrapper = $('#letter-{0}'.format(i.toLowerCase()));
 
-                    $.each(page, function (j, dispensary) {
+                    $.each(page, function (j, location) {
                         $pageWrapper.append(Dispensary({
-                            d: dispensary,
+                            d: location,
                             state: that.activeState,
                             city: that.activeCity,
                             formatLocation: that.formatLocation
                         }));
                     });
 
-                    that.regions.$dispensaries.append('<hr/>');
+                    that.regions.$locations.append('<hr/>');
                 }
             });
         } else {
-            this.regions.$dispensaries.html('No dispensaries found in this city.');
+            this.regions.$locations.html('No dispensaries found in this city.');
         }
     },
 
-    formatLocation: function formatLocation(dispensary) {
+    formatLocation: function formatLocation(location) {
         return W.common.Format.formatAddress({
-            street1: dispensary.street1,
-            city: dispensary.city,
-            state: dispensary.state,
-            zipcode: dispensary.zip_code,
-            location_raw: dispensary.location_raw
+            street1: location.street1,
+            city: location.city,
+            state: location.state,
+            zipcode: location.zip_code,
+            location_raw: location.location_raw
         });
     },
 

@@ -1,8 +1,8 @@
 'use strict';
 
-W.ns('W.pages.dispensary');
+W.ns('W.pages.locations');
 
-W.pages.dispensary.Dispensaries = Class.extend({
+W.pages.locations.FindLocation = Class.extend({
     init: function init(options) {
         this.location = options && options.location;
         this.authenticated = options && options.authenticated;
@@ -12,8 +12,8 @@ W.pages.dispensary.Dispensaries = Class.extend({
         this.dispLocation = null;
         this.browserInfo = W.detectBrowser();
 
-        this.initDispensaryLookupField();
-        this.initDispLocation();
+        this.initLookupField();
+        this.initLocationWidget();
         this.initEventHandlers();
         this.ieHack();
     },
@@ -25,9 +25,9 @@ W.pages.dispensary.Dispensaries = Class.extend({
             });
         }
     },
-    initDispensaryLookupField: function initDispensaryLookupField() {
+    initLookupField: function initDispensaryLookupField() {
         var that = this;
-        new W.pages.dispensary.DispensaryLookup({
+        new W.pages.locations.LocationsLookupWidget({
             onChange: function(dispensary) {
                 if (dispensary) {
                     that.navigateToDispDetailPage(dispensary);
@@ -37,11 +37,11 @@ W.pages.dispensary.Dispensaries = Class.extend({
     initEventHandlers: function initEventHandlers() {
         var that = this;
 
-        $('.disp-location-label').on('click', function (e) {
+        $('.location-location-label').on('click', function (e) {
             e.preventDefault();
 
-            $('.disp-location-value').val('loading location...');
-            that.clearDispLocation();
+            $('.location-location-value').val('loading location...');
+            that.clearLocation();
 
             navigator.geolocation.getCurrentPosition(function (position) {
                 var geoCoder = new google.maps.Geocoder(),
@@ -50,27 +50,26 @@ W.pages.dispensary.Dispensaries = Class.extend({
                 geoCoder.geocode({'location': pos}, function (results, status) {
                     if (status === 'OK') {
                         if (results) {
-                            that.updateDispLocationTime(that.GoogleLocations, {
+                            that.updateLocationTime(that.GoogleLocations, {
                                 lat: position.coords.latitude,
                                 lng: position.coords.longitude
                             });
-                            $('.disp-location-value').val(results[0].formatted_address);
+                            $('.location-location-value').val(results[0].formatted_address);
                         }
                     } else {
                         console.log('Geocoder failed due to: ' + status);
-                        $('.disp-location-value').val('');
+                        $('.location-location-value').val('');
                     }
                 });
             }, function () {
                 console.log('Cannot locate user');
-                $('.disp-location-value').val('');
+                $('.location-location-value').val('');
             });
         });
     },
-    initDispLocation: function initDispLocation() {
-        // for dispensary lookup location
+    initLocationWidget: function initDispLocation() {
         var that = this;
-        this.GoogleLocations = new W.Common.GoogleLocations({$input: $('#disp-location').get(0)});
+        this.GoogleLocations = new W.Common.GoogleLocations({$input: $('#location-location').get(0)});
 
         this.GoogleLocations.initGoogleAutocomplete(
             function (autocomplete, $input) {
@@ -88,10 +87,10 @@ W.pages.dispensary.Dispensaries = Class.extend({
                 }
             },
             function ($input) {
-                that.clearDispLocation();
+                that.clearLocation();
             });
     },
-    clearDispLocation: function clearDispLocation() {
+    clearLocation: function clearDispLocation() {
         this.dispLocation = null;
         this.dispTimezone = null;
     },
@@ -105,7 +104,7 @@ W.pages.dispensary.Dispensaries = Class.extend({
             window.location.href = dispensary.url;
         }
     },
-    updateDispLocationTime: function updateDispLocationTime(GoogleLocations, address) {
+    updateLocationTime: function updateDispLocationTime(GoogleLocations, address) {
         var that = this;
 
         this.dispLocation = {
@@ -139,7 +138,7 @@ W.pages.dispensary.Dispensaries = Class.extend({
             }
         }
     },
-    getDispLocationTime: function getDispLocationTime() {
+    getLocationTime: function getDispLocationTime() {
         return {
             location: this.dispLocation,
             timezone: this.dispTimezone
@@ -150,7 +149,7 @@ W.pages.dispensary.Dispensaries = Class.extend({
         $el.val(W.common.Format.formatAddress(address));
         $el.blur();
 
-        this.updateDispLocationTime(that.GoogleLocations, address);
+        this.updateLocationTime(that.GoogleLocations, address);
         this.fetchFeatured(address).success(function(data) {
             that.renderFeatured(data.locations);
         });
