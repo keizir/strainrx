@@ -479,7 +479,10 @@ class SearchElasticService(BaseElasticService):
         results = self._transform_suggest_results(es_response)
         return results
 
-    def lookup_dispensary(self, query, bus_type=['dispensary'], location=None, timezone=None):
+    def lookup_business_location(self, query, bus_type=None, location=None, timezone=None):
+        if bus_type is None:
+            bus_type = []
+
         method = self.METHODS.get('POST')
         url = '{base}{index}/_search'.format(
             base=self.BASE_ELASTIC_URL,

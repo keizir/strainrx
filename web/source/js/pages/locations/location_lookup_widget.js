@@ -5,7 +5,7 @@ W.ns('W.pages.locations');
 W.pages.locations.LocationsLookupWidget = Class.extend({
 
     init: function init(options) {
-        options = options || {};
+        this.locationType = options.locationType;
         this.onArrowUp = options.onArrowUp;
         this.onArrowDown = options.onArrowDown;
         this.onReturn = options.onReturn;
@@ -63,13 +63,19 @@ W.pages.locations.LocationsLookupWidget = Class.extend({
                 var context = { query: text };
                 var url;
 
+                if (that.locationType === 'dispensary') {
+                    url = '/api/v1/search/dispensary/lookup/';
+                } else {
+                    url = '/api/v1/search/grow_house/lookup/';
+                }
+
                 if (window.DispensaryPage) {
                     var locTime = DispensaryPage.getLocationTime();
                     context.loc = encodeURIComponent(JSON.stringify(locTime.location));
                     context.tz = encodeURIComponent(JSON.stringify(locTime.timezone));
-                    url = '/api/v1/search/dispensary/lookup/?q={query}&loc={loc}&tz={tz}'.format(context);
+                    url = url + '?q={query}&loc={loc}&tz={tz}'.format(context);
                 } else {
-                    url = '/api/v1/search/dispensary/lookup/?q={query}'.format(context);
+                    url = url + '?q={query}'.format(context);
                 }
 
                 $.ajax({
@@ -148,18 +154,25 @@ W.pages.locations.LocationsLookupWidget = Class.extend({
     },
 
     buildPayloadLookupArea: function buildPayloadLookupArea(data) {
+        var that = this;
         if (data) {
             var totalResults = data.total,
                 payloads = data.payloads,
                 itemHtml = '<span class="search-payload" id="{id}" url="{url}" business_location_id="{business_location_id}" name="{name}"><img width="20" height="20" src="{img_src}"/><span class="disp-name">{name}</span> ({loc}) {dist} {open}</span>',
-                payloadHtml = '';
+                payloadHtml = '',
+                url;
 
             if (totalResults && totalResults > 0) {
                 $.each(payloads, function (index, payload) {
+                    if (that.locationType === 'dispensary') {
+                        url = payload.urls.dispensary;
+                    } else {
+                        url = payload.urls.grow_house;
+                    }
                     payloadHtml += itemHtml.format({
                         'id': payload.business_location_id,
                         'img_src': payload.image || '{0}images/default-location-image.jpeg'.format(STATIC_URL),
-                        'url': payload.url,
+                        'url': url,
                         'name': payload.location_name,
                         'open': (payload.open) ? 'Open' : 'Closed',
                         'loc': '{0}, {1}'.format(payload.city, payload.state),

@@ -75,6 +75,7 @@ W.pages.business.BusinessPartnerships = Class.extend({
         var that = this;
         var DispensaryLookup = W.pages.locations.LocationsLookupWidget;
         new DispensaryLookup({
+            locationType: 'dispensary',
             onChange: function(dispensary) {
                 that.newPartner = dispensary;
                 that.ui.$addBtn.prop('disabled', !Boolean(dispensary));

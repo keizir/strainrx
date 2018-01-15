@@ -167,6 +167,9 @@ class DispensariesInfoView(TemplateView):
         context['featured'] = FeaturedBusinessLocationService().get_list(**location)
         context['location_update'] = True
 
+        context['location_type'] = 'dispensary'
+        context['location_type_plural'] = 'dispensaries'
+
         return context
 
 
@@ -206,6 +209,37 @@ class DispensariesCitiesView(TemplateView):
 class DispensaryRedirectView(RedirectView):
     def get_redirect_url(self, *args, **kwargs):
         return reverse('businesses:dispensaries_list')
+
+
+class GrowersInfoView(TemplateView):
+    template_name = 'pages/locations/locations_list.html'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['states'] = State.objects.filter(active=True).order_by('abbreviation')
+
+        context['default_image_url'] = BusinessLocation.DEFAULT_IMAGE_URL
+        context['location_update'] = True
+
+        context['location_type'] = 'grower'
+        context['location_type_plural'] = 'growers'
+
+        return context
+
+
+class GrowersStatesView(TemplateView):
+    template_name = 'pages/locations/locations_state_list.html'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        if State.objects.filter(abbreviation__iexact=kwargs.get('state').lower()).exists():
+            active_state = State.objects.get(abbreviation__iexact=kwargs.get('state').lower())
+            context['active_state'] = active_state
+            cities = City.objects.filter(state=active_state).order_by('full_name')
+            context['cities_paged'] = NamePaginator(cities, on='full_name', per_page=10000)
+        else:
+            raise Http404
+        return context
 
 
 class GrowerInfoView(TemplateView):

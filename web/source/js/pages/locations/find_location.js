@@ -4,10 +4,11 @@ W.ns('W.pages.locations');
 
 W.pages.locations.FindLocation = Class.extend({
     init: function init(options) {
-        this.location = options && options.location;
-        this.authenticated = options && options.authenticated;
-        this.userId = options && options.userId;
-        this.defaultImageUrl = options && options.defaultImageUrl;
+        this.location = options.location;
+        this.locationType = options.locationType;
+        this.authenticated = options.authenticated;
+        this.userId = options.userId;
+        this.defaultImageUrl = options.defaultImageUrl;
         this.dispTimezone = null;
         this.dispLocation = null;
         this.browserInfo = W.detectBrowser();
@@ -28,6 +29,7 @@ W.pages.locations.FindLocation = Class.extend({
     initLookupField: function initDispensaryLookupField() {
         var that = this;
         new W.pages.locations.LocationsLookupWidget({
+            locationType: that.locationType,
             onChange: function(dispensary) {
                 if (dispensary) {
                     that.navigateToDispDetailPage(dispensary);

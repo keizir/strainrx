@@ -5,6 +5,7 @@ class BusinessLocationESSerializer(serializers.Serializer):
     business_id = serializers.IntegerField()
     business_location_id = serializers.IntegerField(source='id')
     url = serializers.CharField()
+    urls = serializers.DictField()
     image = serializers.CharField(source='image_url')
     location_name = serializers.CharField()
     slug_name = serializers.CharField()

@@ -79,8 +79,8 @@ urlpatterns = [
         name='strain_result'
     ),
     url(
-        regex=r'^dispensary/lookup/$',
-        view=DispensaryLookupView.as_view(),
+        regex=r'^(?P<bus_type>dispensary|grow_house)/lookup/$',
+        view=BusinessLocationLookupView.as_view(),
         name='dispensary_lookup'
     ),
 ]

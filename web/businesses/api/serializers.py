@@ -55,6 +55,7 @@ class BusinessLocationDetailSerializer(serializers.Serializer):
     manager_name = serializers.CharField(allow_blank=True, allow_null=True)
     location_email = serializers.CharField()
     url = serializers.CharField(read_only=True)
+    urls = serializers.DictField(read_only=True)
 
     formatted_address = serializers.CharField(read_only=True)
     phone = serializers.CharField(validators=[phone_number_validator])

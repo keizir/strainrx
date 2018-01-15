@@ -141,6 +141,7 @@ class Command(BaseCommand):
                 "menu_items": menu_items,
                 "image": l.image_url,
                 "url": l.url,
+                "urls": l.urls,
                 "location_name_suggest": bes.generate_autocomplete_data(l)
             }
 

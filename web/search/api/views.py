@@ -463,16 +463,15 @@ class StrainsListByVarietyView(APIView):
         return Response(strains, status=status.HTTP_200_OK)
 
 
-class DispensaryLookupView(APIView):
+class BusinessLocationLookupView(APIView):
     permission_classes = (permissions.AllowAny,)
 
-    def get(self, request):
+    def get(self, request, bus_type):
         query = request.GET.get('q')
-        # in future when we want to support autocomplete beyond dispensaries
-        #bus_type = request.GET.get('bus_type')
         location = json.loads(request.GET.get('loc')) if request.GET.get('loc') else None
         tz = request.GET.get('tz')
-        result = SearchElasticService().lookup_dispensary(query, bus_type=['dispensary'], location=location, timezone=tz)
+        result = SearchElasticService().lookup_business_location(query, bus_type=[bus_type],
+                                                                 location=location, timezone=tz)
 
         return Response({
             'total': result.get('total'),

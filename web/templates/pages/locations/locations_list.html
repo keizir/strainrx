@@ -2,7 +2,7 @@
 
 {% load staticfiles i18n %}
 
-{% block title %}Marijuana Dispensaries, Easily Find Cannabis Near You{% endblock %}
+{% block title %}Marijuana {{ location_type_plural|capfirst }}, Easily Find Cannabis Near You{% endblock %}
 
 {% block css %}
     {{ block.super }}
@@ -14,7 +14,7 @@
 {% block meta %}
     {{ block.super }}
     <meta name="Description"
-          content="Marijuana dispensaries near you. Find the best rated, compare prices, or find local deals.">
+          content="Marijuana {{ location_type_plural }} near you. Find the best rated, compare prices, or find local deals.">
 {% endblock %}
 
 {% block content %}
@@ -22,10 +22,10 @@
         <div class="container">
             {% include 'pages/common/location_plus_favourites.html' %}
             <div class="location-sub-row-02">
-                <h1>Find a Dispensary</h1>
+                <h1>Find a {{ location_type|capfirst }}</h1>
                 <div class="subtitle-container">
                     <hr/>
-                    <p class="subtitle">Search Local Dispensaries by Name</p>
+                    <p class="subtitle">Search Local {{ location_type_plural|capfirst }} by Name</p>
                     <hr/>
                 </div>
                 <div class="search-box">
@@ -34,7 +34,7 @@
                             <label for="location-lookup" class="location-lookup-label">
                                 <i class="fa fa-search" aria-hidden="true"></i>
                             </label>
-                            <input id="location-lookup" class="lookup-input" type="text" placeholder="Search Dispensaries by Name"/>
+                            <input id="location-lookup" class="lookup-input" type="text" placeholder="Search {{ location_type_plural|capfirst }} by Name"/>
                             <div class="payloads-region"></div>
                         </div>
                         <div class="location-location-container">
@@ -51,7 +51,7 @@
         </div>
     </div>
     <div class="locations-list-container container">
-        <h2>Dispensaries</h2>
+        <h2>{{ location_type_plural|capfirst }}</h2>
         <div class="social-icons">
             <span class="social-fb">
                 <a href="#" class="facebook-share-link" target="_blank">
@@ -75,11 +75,12 @@
                     <a href="{% url 'home' %}">Home</a>
                     <span class="arrow">></span>
                 </li>
-                <li class="active">Dispensaries</li>
+                <li class="active">{{ location_type_plural|capfirst }}</li>
             </ol>
         </div>
-        <div class="featured-wrapper">
-            <h3>Featured Dispensaries Near You</h3>
+        {% if featured %}
+            <div class="featured-wrapper">
+            <h3>Featured {{ location_type_plural|capfirst }} Near You</h3>
 
             {# There's a template used in ajax update which has to be modified together with #}
             {# the featured-list contents below #}
@@ -166,6 +167,8 @@
                 </div>
             </script>
         </div>
+        {% endif %}
+
         <div class="text">
             StrainRx is dedicated to helping cannabis users find the optimal strains to medicate with, depending on
             their unique needs and conditions. We’ll help you make sense of the thousands of strains and countless
@@ -177,12 +180,16 @@
             understand and adhere to the rules and regulations that govern their respective city and state.
         </div>
         <div class="text">
-            Users can find information on dispensaries in the following states:
+            Users can find information on {{ location_type_plural }} in the following states:
         </div>
-        <h3>Dispensaries by State</h3>
+        <h3>{{ location_type_plural|capfirst }} by State</h3>
         {% for s in states %}
             <div class="states-wrapper">
+                {% if location_type == 'dispensary' %}
                 <a href="{% url 'businesses:dispensaries_state_list' s.abbreviation|lower %}">
+                {% elif location_type == 'grower' %}
+                <a href="{% url 'businesses:growers_state_list' s.abbreviation|lower %}">
+                {% endif %}
                     {% if s.full_name %}{{ s.full_name }}{% else %}{{ s.abbreviation }}{% endif %}</a>
                 <div class="description">
                     {% if s.description %}{{ s.description|safe }}{% else %}No data about this state{% endif %}
@@ -216,6 +223,7 @@
             authenticated: '{{ request.user.is_authenticated }}' == 'True',
             userId: {% if request.user.is_authenticated %} {{ request.user.id }} {% else %} null {% endif %},
             defaultImageUrl: "{{ default_image_url }}",
+            locationType: '{{ location_type }}',
             featured: [
                 {% for featured in featured %}
                     { url: "{{ featured.url }}",

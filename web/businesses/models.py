@@ -240,6 +240,23 @@ class BusinessLocation(models.Model):
                                'slug_name': self.slug_name})
 
     @property
+    def urls(self):
+        urls = {}
+        kwargs = {
+            'state': self.state_fk.abbreviation.lower(),
+            'city_slug': self.city_fk.full_name_slug,
+            'slug_name': self.slug_name,
+        }
+
+        if self.dispensary:
+            urls['dispensary'] = reverse('businesses:dispensary_info', kwargs=kwargs)
+
+        if self.grow_house:
+            urls['grow_house'] = reverse('businesses:grower_info', kwargs=kwargs)
+
+        return urls
+
+    @property
     def image_url(self):
         # helper to get image url or return default
         if self.image and hasattr(self.image, 'url') and self.image.url:
