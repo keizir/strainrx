@@ -337,11 +337,25 @@ class BusinessLocationsPerCityView(APIView):
                 "error": "City {0} not found in the state {1}.".format(city_slug, state_abbreviation)
             }, status=status.HTTP_404_NOT_FOUND)
 
-        dispensaries = BusinessLocation.objects.filter(city_fk=city, removed_date=None).order_by('location_name')
-        dispensaries_paged = NamePaginator(dispensaries, on='location_name', per_page=10000)
+        filter_kwargs = {}
+        grow_house = request.GET.get('grow_house')
+        if grow_house == 'true':
+            filter_kwargs['grow_house'] = True
+        elif grow_house == 'false':
+            filter_kwargs['grow_house'] = False
+
+        dispensary = request.GET.get('dispensary')
+        if dispensary == 'true':
+            filter_kwargs['dispensary'] = True
+        elif dispensary == 'false':
+            filter_kwargs['dispensary'] = False
+
+        locations = BusinessLocation.objects.filter(city_fk=city, removed_date=None, **filter_kwargs)
+        locations = locations.order_by('location_name')
+        locations_paged = NamePaginator(locations, on='location_name', per_page=10000)
         data = {}
 
-        for page in dispensaries_paged.pages:
+        for page in locations_paged.pages:
             current_page = []
 
             for d in page.object_list:

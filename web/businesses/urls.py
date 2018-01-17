@@ -74,14 +74,19 @@ urlpatterns = [
         name='growers_list'
     ),
     url(
-        regex=r'^growers/(?P<state>.+)/$',
-        view=views.GrowersStatesView.as_view(),
-        name='growers_state_list'
-    ),
-    url(
         regex=r'^growers/(?P<state>.+)/(?P<city_slug>.+)/(?P<slug_name>.+)/$',
         view=views.GrowerInfoView.as_view(),
         name='grower_info'
+    ),
+    url(
+        regex=r'^growers/(?P<state>.+)/(?P<city_slug>.+)/$',
+        view=views.GrowersCitiesView.as_view(),
+        name='growers_city_list'
+    ),
+    url(
+        regex=r'^growers/(?P<state>.+)/$',
+        view=views.GrowersStatesView.as_view(),
+        name='growers_state_list'
     ),
     url(
         regex=r'^businesses/(?P<business_id>[0-9]{1,})/analytics/$',

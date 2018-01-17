@@ -3,7 +3,7 @@
 {% load staticfiles i18n %}
 
 {% block title %}
-    Marijuana Dispensaries in
+    Marijuana {{ location_type_plural|capfirst }} in
     {% if active_state.full_name %}
         {{ active_state.full_name }}
     {% else %}
@@ -14,7 +14,7 @@
 {% block meta %}
     {{ block.super }}
     <meta name="Description"
-          content="Discover marijuana dispensaries in
+          content="Discover marijuana {{ location_type_plural }} in
 
                   {% if active_state.full_name %}{{ active_state.full_name }}{% else %}{{ active_state.abbreviation }}{% endif %} - find the nearest, highest rated and recommended locations.">
 {% endblock %}
@@ -32,7 +32,7 @@
                     {{ active_state.full_name }}
                 {% else %}
                     {{ active_state.abbreviation }}
-                {% endif %} Dispensaries
+                {% endif %} {{ location_type_plural|capfirst }}
             </h1>
             <div class="social-icons">
                 <span class="social-fb">
@@ -59,7 +59,11 @@
                     <span class="arrow">></span>
                 </li>
                 <li>
-                    <a href="{% url 'businesses:dispensaries_list' %}">Dispensaries</a>
+                    {% if location_type == 'dispensary' %}
+                        <a href="{% url 'businesses:dispensaries_list' %}">Dispensaries</a>
+                    {% elif location_type == 'grower' %}
+                        <a href="{% url 'businesses:growers_list' %}">Growers</a>
+                    {% endif %}
                     <span class="arrow">></span>
                 </li>
                 <li class="active">{{ active_state.abbreviation|upper }}</li>
@@ -83,7 +87,7 @@
                 {{ active_state.full_name }}
             {% else %}
                 {{ active_state.abbreviation }}
-            {% endif %} where users can find a marijuana dispensary.</p>
+            {% endif %} where users can find a marijuana {{ location_type }}.</p>
         <div class="pager">
             <span class="page-letter active">A</span>
             <span class="page-letter">B</span>
@@ -119,7 +123,11 @@
                         {% for c in page.object_list %}
                             <div class="city">
                                 <img src="{% static 'images/dispensary-icon.png' %}"/>
-                                <a href="{% url 'businesses:dispensaries_city_list' active_state.abbreviation|lower c.full_name_slug %}">
+                                {% if location_type == 'dispensary' %}
+                                    <a href="{% url 'businesses:dispensaries_city_list' active_state.abbreviation|lower c.full_name_slug %}">
+                                {% elif location_type == 'grower' %}
+                                    <a href="{% url 'businesses:growers_city_list' active_state.abbreviation|lower c.full_name_slug %}">
+                                {% endif %}
                                     {{ c.full_name }}
                                 </a>
                             </div>
@@ -138,6 +146,7 @@
     <script src="{% static 'js/pages/locations/locations_list_view.js' %}"></script>
     <script type="text/javascript">
         W.pages.locations.LocationsListView.init({
+            location_type: '{{ location_type }}',
             view: 'state',
             active_state: '{{ active_state.abbreviation|lower }}'
         });

@@ -42,20 +42,19 @@ class State(models.Model):
 
 @python_2_unicode_compatible
 class City(models.Model):
-    state = models.ForeignKey(State, on_delete=models.DO_NOTHING)
+    state = models.ForeignKey(State, on_delete=models.DO_NOTHING, related_name='cities')
     full_name = models.CharField(max_length=100, blank=True, null=True)
     full_name_slug = models.SlugField(max_length=150, null=True, blank=True, db_index=True,
                                       help_text='This will be automatically changed from a city full name when updated')
     description = models.TextField(blank=True, null=True)
 
     SEO_FRIENDLY_DESCRIPTION_TEMPLATE = """
-        Find marijuana dispensaries in the city of {city}, {state}.
+        Find marijuana {location_type} in the city of {city}, {state}.
         Get the strains ideally suited for your individual needs,
         browse the best deals and the closest vendors to get the most convenience and value.
         """
 
-    @property
-    def seo_friendly_description(self):
+    def seo_friendly_description(self, location_type=''):
         if self.description:
             return self.description
 
@@ -64,7 +63,16 @@ class City(models.Model):
         except Exception:
             state = 'US'
 
-        return self.SEO_FRIENDLY_DESCRIPTION_TEMPLATE.format(city=self.full_name, state=state)
+        return self.SEO_FRIENDLY_DESCRIPTION_TEMPLATE.format(city=self.full_name, state=state,
+                                                             location_type=location_type)
+
+    @property
+    def seo_friendly_dispensaries_description(self):
+        return self.seo_friendly_description(location_type='dispensaries')
+
+    @property
+    def seo_friendly_growers_description(self):
+        return self.seo_friendly_description(location_type='growers')
 
     def save(self, *args, **kwargs):
         self.full_name_slug = slugify(self.full_name)
@@ -185,8 +193,8 @@ class BusinessLocation(models.Model):
     city_slug = models.SlugField(max_length=611, null=True, blank=True,
                                  help_text='This will be automatically generated from a city when updated')
 
-    state_fk = models.ForeignKey(State, on_delete=models.DO_NOTHING, null=True)
-    city_fk = models.ForeignKey(City, on_delete=models.DO_NOTHING, null=True)
+    state_fk = models.ForeignKey(State, on_delete=models.DO_NOTHING, null=True, related_name='business_locations')
+    city_fk = models.ForeignKey(City, on_delete=models.DO_NOTHING, null=True, related_name='business_locations')
 
     about = models.TextField(blank=True, null=True, default='')
 

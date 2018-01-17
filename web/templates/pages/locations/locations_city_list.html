@@ -3,13 +3,13 @@
 {% load staticfiles i18n %}
 
 {% block title %}
-    Marijuana Dispensaries in {{ active_city.full_name }} - Find Closest & Best Rated
+    Marijuana {{ location_type_plural|capfirst }} in {{ active_city.full_name }} - Find Closest & Best Rated
 {% endblock %}
 
 {% block meta %}
     {{ block.super }}
     <meta name="Description"
-          content="Find local marijuana dispensaries in {{ active_city.full_name }} - see the menus, ratings and reviews. We make it easy to find the medicine you need.">
+          content="Find local marijuana {{ location_type_plural }} in {{ active_city.full_name }} - see the menus, ratings and reviews. We make it easy to find the medicine you need.">
 {% endblock %}
 
 {% block css %}
@@ -19,7 +19,7 @@
 
 {% block content %}
     <div class="locations-list-container container">
-        <h1>Dispensaries in {{ active_city.full_name }}</h1>
+        <h1>{{ location_type_plural|capfirst }} in {{ active_city.full_name }}</h1>
         <div class="social-icons">
             <span class="social-fb">
                 <a href="#" class="facebook-share-link" target="_blank">
@@ -43,19 +43,34 @@
                     <a href="{% url 'home' %}">Home</a>
                     <span class="arrow">></span>
                 </li>
-                <li>
-                    <a href="{% url 'businesses:dispensaries_list' %}">Dispensaries</a>
-                    <span class="arrow">></span>
-                </li>
-                <li>
-                    <a href="{% url 'businesses:dispensaries_state_list' active_state.abbreviation|lower %}">{{ active_state.abbreviation|upper }}</a>
-                    <span class="arrow">></span>
-                </li>
+                {% if location_type == 'dispensary' %}
+                    <li>
+                        <a href="{% url 'businesses:dispensaries_list' %}">Dispensaries</a>
+                        <span class="arrow">></span>
+                    </li>
+                    <li>
+                        <a href="{% url 'businesses:dispensaries_state_list' active_state.abbreviation|lower %}">{{ active_state.abbreviation|upper }}</a>
+                        <span class="arrow">></span>
+                    </li>
+                {% else %}
+                    <li>
+                        <a href="{% url 'businesses:growers_list' %}">Growers</a>
+                        <span class="arrow">></span>
+                    </li>
+                    <li>
+                        <a href="{% url 'businesses:growers_state_list' active_state.abbreviation|lower %}">{{ active_state.abbreviation|upper }}</a>
+                        <span class="arrow">></span>
+                    </li>
+                {% endif %}
                 <li class="active">{{ active_city.full_name }}</li>
             </ol>
         </div>
         <div class="text">
-            {{ active_city.seo_friendly_description | safe }}
+            {% if location_type == 'dispensary' %}
+                {{ active_city.seo_friendly_dispensaries_description | safe }}
+            {% else %}
+                {{ active_city.seo_friendly_growers_description | safe }}
+            {% endif %}
         </div>
         <div class="pager">
             <span class="page-letter active">A</span>
@@ -99,6 +114,7 @@
     <script type="text/javascript">
         W.pages.locations.LocationsListView.init({
             view: 'city',
+            location_type: '{{ location_type }}',
             active_city: '{{ active_city.full_name_slug }}',
             active_state: '{{ active_state.abbreviation|lower }}'
         });

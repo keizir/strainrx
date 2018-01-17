@@ -48,17 +48,17 @@
                 <span class="arrow">></span>
             </li>
             <li>
-                <a href="{% url 'businesses:dispensaries_list' %}">Growers</a>
+                <a href="{% url 'businesses:growers_list' %}">Growers</a>
                 <span class="arrow">></span>
             </li>
             <li>
-                <a href="{% url 'businesses:dispensaries_state_list' grower.state_fk.abbreviation|lower %}">
+                <a href="{% url 'businesses:growers_state_list' grower.state_fk.abbreviation|lower %}">
                     {{ grower.state_fk.abbreviation }}
                 </a>
                 <span class="arrow">></span>
             </li>
             <li>
-                <a href="{% url 'businesses:dispensaries_city_list' grower.state_fk.abbreviation|lower grower.city_fk.full_name_slug %}">
+                <a href="{% url 'businesses:growers_city_list' grower.state_fk.abbreviation|lower grower.city_fk.full_name_slug %}">
                     {{ grower.city_fk.full_name }}
                 </a>
                 <span class="arrow">></span>

@@ -149,7 +149,10 @@ class DispensariesInfoView(TemplateView):
 
     def get_context_data(self, **kwargs):
         context = super(DispensariesInfoView, self).get_context_data(**kwargs)
-        context['states'] = State.objects.filter(active=True).order_by('abbreviation')
+        context['states'] = State.objects.filter(
+            business_locations__dispensary=True,
+            active=True
+        ).order_by('abbreviation').distinct('abbreviation')
 
         if self.request.user.is_authenticated():
             try:
@@ -181,8 +184,14 @@ class DispensariesStatesView(TemplateView):
         if State.objects.filter(abbreviation__iexact=kwargs.get('state').lower()).exists():
             active_state = State.objects.get(abbreviation__iexact=kwargs.get('state').lower())
             context['active_state'] = active_state
-            cities = City.objects.filter(state=active_state).order_by('full_name')
+            cities = City.objects.filter(
+                state=active_state,
+                business_locations__dispensary=True,
+            ).order_by('full_name').distinct('full_name')
             context['cities_paged'] = NamePaginator(cities, on='full_name', per_page=10000)
+
+            context['location_type'] = 'dispensary'
+            context['location_type_plural'] = 'dispensaries'
         else:
             raise Http404
         return context
@@ -200,6 +209,9 @@ class DispensariesCitiesView(TemplateView):
             active_city = City.objects.get(state=active_state, full_name_slug=kwargs.get('city_slug'))
             context['active_state'] = active_state
             context['active_city'] = active_city
+
+            context['location_type'] = 'dispensary'
+            context['location_type_plural'] = 'dispensaries'
         else:
             raise Http404
 
@@ -216,7 +228,10 @@ class GrowersInfoView(TemplateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['states'] = State.objects.filter(active=True).order_by('abbreviation')
+        context['states'] = State.objects.filter(
+            active=True,
+            business_locations__grow_house=True,
+        ).order_by('abbreviation').distinct('abbreviation')
 
         context['default_image_url'] = BusinessLocation.DEFAULT_IMAGE_URL
         context['location_update'] = True
@@ -233,12 +248,43 @@ class GrowersStatesView(TemplateView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         if State.objects.filter(abbreviation__iexact=kwargs.get('state').lower()).exists():
-            active_state = State.objects.get(abbreviation__iexact=kwargs.get('state').lower())
+            active_state = State.objects.get(
+                abbreviation__iexact=kwargs.get('state').lower(),
+            )
+
             context['active_state'] = active_state
-            cities = City.objects.filter(state=active_state).order_by('full_name')
+            cities = City.objects.filter(
+                state=active_state,
+                business_locations__grow_house=True,
+            ).order_by('full_name').distinct('full_name')
+
             context['cities_paged'] = NamePaginator(cities, on='full_name', per_page=10000)
+
+            context['location_type'] = 'grower'
+            context['location_type_plural'] = 'growers'
         else:
             raise Http404
+        return context
+
+
+class GrowersCitiesView(TemplateView):
+    template_name = 'pages/locations/locations_city_list.html'
+
+    def get_context_data(self, **kwargs):
+        context = super(GrowersCitiesView, self).get_context_data(**kwargs)
+        if City.objects.filter(state__abbreviation__iexact=kwargs.get('state').lower(),
+                               full_name_slug=kwargs.get('city_slug')).exists():
+
+            active_state = State.objects.get(abbreviation__iexact=kwargs.get('state').lower())
+            active_city = City.objects.get(state=active_state, full_name_slug=kwargs.get('city_slug'))
+            context['active_state'] = active_state
+            context['active_city'] = active_city
+
+            context['location_type'] = 'grower'
+            context['location_type_plural'] = 'growers'
+        else:
+            raise Http404
+
         return context
 
 
