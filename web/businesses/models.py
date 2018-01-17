@@ -1,5 +1,6 @@
 from __future__ import unicode_literals, absolute_import
 
+from datetime import datetime
 import re
 from uuid import uuid4
 
@@ -10,6 +11,7 @@ from django.contrib.gis.geos import Point
 from django.core.exceptions import ValidationError
 from django.core.urlresolvers import reverse
 from django.db import models
+from django.db.models.query import Q
 from django.db.models.signals import post_save, pre_save, post_delete
 from django.dispatch import receiver
 from django.template.defaultfilters import slugify
@@ -211,6 +213,7 @@ class BusinessLocation(models.Model):
     removed_date = models.DateTimeField(blank=True, null=True)
 
     created_date = models.DateTimeField(auto_now_add=True)
+    menu_updated_date = models.DateField(null=True)
 
     mon_open = models.TimeField(blank=True, null=True)
     mon_close = models.TimeField(blank=True, null=True)
@@ -400,10 +403,31 @@ class BusinessLocationMenuItem(models.Model):
     removed_date = models.DateTimeField(blank=True, null=True)
 
 
+@python_2_unicode_compatible
+class BusinessLocationMenuUpdate(models.Model):
+    business_location = models.ForeignKey(BusinessLocation, related_name='menu_updates')
+    date = models.DateField()
+
+    @classmethod
+    def record_business_location_menu_update(cls, business_location):
+        update_date = datetime.now(pytz.timezone(business_location.timezone)).date()
+
+        cls.objects.get_or_create(business_location=business_location, date=update_date)
+
+        to_update = BusinessLocation.objects.filter(id=business_location.id)
+        to_update = to_update.filter(
+            Q(menu_updated_date__lt=update_date) |
+            Q(menu_updated_date__isnull=True),
+        )
+        to_update.update(menu_updated_date=update_date)
+
+
 @receiver(post_save, sender=BusinessLocationMenuItem)
 def save_es_menu_item(sender, **kwargs):
     menu_item = kwargs.get('instance')
     BusinessLocationESService().save_menu_item(menu_item)
+
+    BusinessLocationMenuUpdate.record_business_location_menu_update(menu_item.business_location)
 
 
 @python_2_unicode_compatible

@@ -8,7 +8,7 @@ from tinymce.widgets import TinyMCE
 from web.businesses.api.services import BusinessLocationService
 from web.businesses.es_service import BusinessLocationESService
 from web.businesses.models import Business, BusinessLocation, FeaturedBusinessLocation, \
-    LocationReview, State, City, Payment, GrowerDispensaryPartnership
+    LocationReview, State, City, Payment, GrowerDispensaryPartnership, BusinessLocationMenuUpdate
 
 
 class PaymentAdmin(admin.TabularInline):
@@ -172,6 +172,14 @@ class FeaturedBusinessLocationInline(admin.TabularInline):
     model = FeaturedBusinessLocation
 
 
+class BusinessLocationMenuUpdateInline(admin.TabularInline):
+    extra = 0
+    fields = ['date']
+    readonly_fields = ['date']
+    model = BusinessLocationMenuUpdate
+    max_num = 0
+
+
 @admin.register(BusinessLocation)
 class BusinessLocationAdmin(admin.ModelAdmin):
     change_form_template = 'admin/business/business_location_change_form.html'
@@ -189,6 +197,8 @@ class BusinessLocationAdmin(admin.ModelAdmin):
         ('Working Hours',
          {'fields': ('mon_open', 'mon_close', 'tue_open', 'tue_close', 'wed_open', 'wed_close', 'thu_open', 'thu_close',
                      'fri_open', 'fri_close', 'sat_open', 'sat_close', 'sun_open', 'sun_close',), }),
+        ('Menu',
+         {'fields': ('menu_updated_date',)}),
     )
 
     def get_actions(self, request):
@@ -212,7 +222,7 @@ class BusinessLocationAdmin(admin.ModelAdmin):
     list_filter = [OwnerEmailVerifiedFilter, ActivityFilter, 'dispensary', 'delivery', 'grow_house']
     ordering = ['location_name']
     actions = [activate_selected_locations, deactivate_selected_locations, verify_email_for_selected_locations]
-    inlines = (FeaturedBusinessLocationInline,)
+    inlines = (BusinessLocationMenuUpdateInline, FeaturedBusinessLocationInline,)
 
     @staticmethod
     def owner_email_verified(obj):

@@ -781,6 +781,18 @@
         .content-region {
             position: relative;
 
+            .menu-updated {
+                display: flex;
+
+                .request-update {
+                    flex: 1;
+                }
+
+                .update-date {
+                    flex: 1;
+                }
+            }
+
             .location-content {
                 .left-column {
                     display: inline-block;
