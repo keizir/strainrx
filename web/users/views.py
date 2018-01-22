@@ -87,8 +87,7 @@ class UserRedirectView(LoginRequiredMixin, RedirectView):
     permanent = False
 
     def get_redirect_url(self):
-        return reverse('users:detail',
-                       kwargs={'id': self.request.user.username})
+        return '/'
 
 
 class UserUpdateView(LoginRequiredMixin, UpdateView):
