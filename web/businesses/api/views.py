@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 import json
 import logging
-from datetime import datetime
+from datetime import datetime, timedelta
 
 from boto.s3.connection import S3Connection, Bucket, Key
 from django.conf import settings
@@ -9,6 +9,7 @@ from django.contrib.auth import authenticate, login
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.core.exceptions import ValidationError, ObjectDoesNotExist
 from django.db.models.query import Q
+import pytz
 from rest_framework import permissions
 from rest_framework import status
 from rest_framework.response import Response
@@ -20,7 +21,7 @@ from web.businesses.api.services import BusinessSignUpService, BusinessLocationS
     get_location_rating, FeaturedBusinessLocationService
 from web.businesses.emails import EmailService
 from web.businesses.models import Business, BusinessLocation, BusinessLocationMenuItem, LocationReview, \
-    UserFavoriteLocation, State, City
+    UserFavoriteLocation, State, City, BusinessLocationMenuUpdateRequest
 from web.businesses.serializers import BusinessSerializer, BusinessLocationSerializer
 from web.businesses.utils import NamePaginator
 from web.search.api.services import StrainDetailsService
@@ -317,6 +318,38 @@ class BusinessLocationMenuView(APIView):
             'in_stock': menu_item.in_stock,
             'url': menu_item.strain.get_absolute_url(),
         }
+
+
+class BusinessLocationMenuUpdateRequestDetailView(APIView):
+    permission_classes = (permissions.IsAuthenticated,)
+
+    def post(self, request, business_id, business_location_id):
+        try:
+            business_location = BusinessLocation.objects.get(id=business_location_id,
+                                                             business_id=business_id)
+        except BusinessLocation.DoesNotExist:
+            return Response(status=status.HTTP_404_NOT_FOUND)
+
+        recent_requests = BusinessLocationMenuUpdateRequest.objects.filter(
+            business_location=business_location,
+            user=request.user,
+            date_time__gt=datetime.now(pytz.utc) - timedelta(days=3),
+        )
+
+        if recent_requests.exists():
+            print('Recent requests exist ' * 100)
+            return Response(status=status.HTTP_201_CREATED)
+
+        update_request = BusinessLocationMenuUpdateRequest.objects.create(
+            business_location=business_location,
+            user=request.user,
+            send_notification=request.data.get('send_notification', False),
+            message=request.data.get('message', '').strip() or None,
+        )
+
+        EmailService().send_menu_update_request_email(update_request)
+        print('Sent email ' * 100)
+        return Response(status=status.HTTP_201_CREATED)
 
 
 class BusinessLocationsPerCityView(APIView):

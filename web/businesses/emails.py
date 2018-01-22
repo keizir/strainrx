@@ -39,3 +39,28 @@ class EmailService:
 
         m = Mail(from_email, subject, to_email, html_content)
         return sg.client.mail.send.post(request_body=m.get())
+
+    def send_menu_update_request_email(self, update_request):
+        sg = sendgrid.SendGridAPIClient(apikey=settings.SENDGRID_API_KEY)
+
+        location = update_request.business_location
+        user = update_request.user
+        message = update_request.message
+
+        from_email = Email(settings.DEFAULT_FROM_EMAIL)
+        to_email = Email(location.location_email)
+
+        subject = 'Menu Update Request'
+
+        html_template = render_to_string('emails/business_menu_update_request.html', {
+            'business_location': location,
+            'user': user,
+            'header_logo_url': staticfiles_storage.url('images/logo_hr.png'),
+            'envelope_image_url': staticfiles_storage.url('images/email-envelope.png'),
+            'location_url': location.urls.get('dispensary'),
+            'message': message,
+        })
+        html_content = Content('text/html', html_template)
+
+        m = Mail(from_email, subject, to_email, html_content)
+        return sg.client.mail.send.post(request_body=m.get())

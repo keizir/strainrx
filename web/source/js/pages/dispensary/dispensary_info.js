@@ -5,6 +5,7 @@ W.ns('W.pages.dispensary');
 W.pages.dispensary.DispensaryInfo = Class.extend({
 
     location: null,
+    dialog: null,
 
     allReviewsPage: 1,
     allReviewsSize: 5,
@@ -13,7 +14,8 @@ W.pages.dispensary.DispensaryInfo = Class.extend({
         favorite: '/api/v1/businesses/{0}/locations/{1}/favorite',
         location: '/api/v1/businesses/{0}/locations/{1}?ddp=true',
         menu: '/api/v1/businesses/{0}/locations/{1}/menu?ddp=true',
-        review: '/api/v1/businesses/{0}/locations/{1}/reviews'
+        review: '/api/v1/businesses/{0}/locations/{1}/reviews',
+        menuUpdateRequest: '/api/v1/businesses/{0}/locations/{1}/menu-update-requests'
     },
 
     ui: {
@@ -33,8 +35,9 @@ W.pages.dispensary.DispensaryInfo = Class.extend({
         $allReviews: _.template($('#dispensary_all_reviews_template').html())
     },
 
-    init: function init() {
+    init: function init(options) {
         var that = this;
+        that.isAuthenticated = options.isAuthenticated;
 
         this.retrieveLocation(function (location) {
             if (location) {
@@ -335,6 +338,65 @@ W.pages.dispensary.DispensaryInfo = Class.extend({
 
         this.expandReviewText();
         this.showAllReviews();
+
+        $('.btn-request').on('click', this.onBtnRequestClick.bind(this));
+    },
+
+    postUpdateRequest: function postUpdateRequest(url) {
+        var message = $.trim($('#request-message').val()),
+            notify = $('#request-notify').is(':checked');
+
+        var payload = {};
+        if (message) {
+            payload.message = message;
+        }
+
+        if (notify) {
+            payload.send_notification = notify;
+        }
+
+        return $.ajax({
+            method: 'POST',
+            url: url,
+            dataType: 'json',
+            data: JSON.stringify(payload)
+        });
+    },
+
+    login: function login() {
+        var email = $('#login').val(),
+            password = $('#password').val(),
+            that = this;
+
+        return $.ajax({
+            method: 'POST',
+            url: '/api/v1/users/login',
+            dataType: 'json',
+            data: JSON.stringify({ email: email, password: password }),
+            success: function (data) {
+                var user = data.user;
+                if (user) {
+                    W.common.ActionRecorder.identify(user.id);
+                    W.common.ActionRecorder.peopleSet({
+                        '$first_name': user.first_name,
+                        '$last_name': user.last_name,
+                        '$last_login': new Date(),
+                        '$email': user.email,
+                        'account_type': user.type
+                    });
+                }
+                W.pages.Common.ajaxSetup();
+
+                that.isAuthorized = true;
+                that.showMenuUpdateRequestDialog();
+            },
+            error: function (error) {
+                if (error.status === 400) {
+                    $('#menu-update-request-login-dialog .error-message').text(JSON.parse(error.responseText).error);
+                }
+            }
+        });
+
     },
 
     changeReviewText: function changeReviewText($review) {
@@ -511,5 +573,106 @@ W.pages.dispensary.DispensaryInfo = Class.extend({
 
     formatScore: function formatScore(score) {
         return score ? '{0}%'.format(score) : '--';
+    },
+
+    closeDialog: function closeDialog() {
+        if (this.dialog) {
+            this.dialog.dialog('close');
+        }
+    },
+
+    onBtnRequestClick: function onBtnRequestClick() {
+        if (this.isAuthenticated) {
+            this.showMenuUpdateRequestDialog()
+        } else {
+            this.showMenuUpdateRequestLoginDialog();
+        }
+
+    },
+
+    showMenuUpdateRequestDialog: function showMenuUpdateRequestDialog() {
+        var url = this.urls.menuUpdateRequest.format(this.ui.$businessId.val(), this.ui.$location_id.val()),
+            that = this,
+            $btn = $('#menu-update-request-dialog .btn-request-update');
+
+        that.closeDialog();
+        $btn.text('Request an Update');
+
+        that.dialog = MenuUpdateRequestDialog(function() {
+            $btn.attr('disabled', true);
+            $btn.text('Sending Request ...');
+
+            that.postUpdateRequest(url).always(that.showMenuUpdateRequestOkDialog.bind(that));
+        });
+    },
+
+    showMenuUpdateRequestOkDialog: function showMenuUpdateRequestOkDialog() {
+        this.closeDialog();
+        this.dialog = MenuUpdateRequestOkDialog(this.closeDialog.bind(this));
+    },
+
+    showMenuUpdateRequestLoginDialog: function showMenuUpdateRequestLoginDialog() {
+        this.closeDialog();
+        this.dialog = MenuUpdateRequestLoginDialog(this.login.bind(this));
     }
+
 });
+
+
+var Dialog = function Dialog(dialogSelector, btnSelector, props, onConfirm) {
+    var $dialog = $(dialogSelector),
+        width = 'auto',
+        defaultProps;
+
+    if ($(window).width() > 450) {
+        width = '450px';
+    }
+
+    $dialog.removeClass('hidden');
+
+    defaultProps = {
+        classes: {
+            'ui-dialog': 'menu-update-request-dialog srx-dialog'
+        },
+        closeOnEscape: true,
+        height: 'auto',
+        width: width,
+        modal: true,
+        draggable: false,
+        resizable: false,
+        title: 'Menu update request',
+        position: {'my': 'center'},
+        create: function () {
+            $(this).css('max-width', '450px');
+            $(this).css('min-height', 'auto');
+            $('.srx-dialog').css('min-height', 'auto');
+        }
+    };
+
+    $dialog.dialog($.extend(defaultProps, props));
+
+    $(btnSelector).off('click');
+    $(btnSelector).on('click', onConfirm);
+
+    $dialog.focus();
+
+    return $dialog;
+};
+
+
+var MenuUpdateRequestDialog = function MenuUpdateRequestDialog(onConfirm) {
+    var dialog = Dialog('#menu-update-request-dialog', '#btn-request-update', {}, onConfirm);
+    $('#menu-update-request-dialog textarea').val('');
+
+    return dialog;
+};
+
+
+var MenuUpdateRequestOkDialog = function MenuUpdateRequestOkDialog(onConfirm) {
+    return Dialog('#menu-update-request-ok-dialog', '#btn-close', {}, onConfirm);
+};
+
+
+var MenuUpdateRequestLoginDialog = function MenuUpdateRequestOkDialog(onConfirm) {
+    return Dialog('#menu-update-request-login-dialog', '#btn-sign-in', {}, onConfirm);
+};

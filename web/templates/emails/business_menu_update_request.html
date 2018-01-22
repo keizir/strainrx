@@ -1,0 +1,29 @@
+{% extends "emails/base.html" %}
+{% load staticfiles i18n %}
+
+{% block content %}
+    <tr>
+        <td>
+            <p style="margin: 20px; text-align: left;">Hi <b>{{ business_location.location_name }},</b></p>
+            <p style="margin: 20px; text-align: left;">
+                <b>{{ user.first_name|default:'One of the users' }}</b>
+                {% if user.geo_location.city %}
+                    from <b>{{ user.geo_location.city }}, {{ user.geo_location.state }}</b>
+                {% endif %}
+                was reviewing <a href="{{ location_url }}">your page</a> on StrainRx and has requested
+                that you please update the menu. {{ user.first_name|default:'The user' }} will be notified to return and browse again.
+            </p>
+            {% if message %}
+                <p style="margin: 20px; text-align: left;">
+                Message from the user: <i>{{ message }}</i>
+                </p>
+            {% endif %}
+            <p style="margin: 20px; text-align: left;">
+                To make updates to your menu, <a href="{% url 'account_login' %}">log in</a> to your account or
+                <a>claim your business</a> if you haven't already.
+            </p>
+            <p style="margin: 20px; text-align: left;">Feel free to contact us if you have any issues: <a href="mailto:support@strainrx.co">support@strainrx.co</a>
+            <p style="margin: 20px; text-align: left;">Regards,<br>StrainRx Team</p>
+        </td>
+    </tr>
+{% endblock %}

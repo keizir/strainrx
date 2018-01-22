@@ -215,6 +215,25 @@ var W = {
 
 };
 
+W.ns('W.pages');
+
+W.pages.Common = {
+    ajaxSetup: function ajaxSetup() {
+        $.ajaxSetup({
+            // set csrf token globally so we never have to worry about it
+            headers: {
+                'X-CSRFToken': W.getCookie('csrftoken'),
+                'Authorization': 'Basic ' + btoa(HTTP_USERNAME + ":" + HTTP_PASSWORD)
+            },
+            // do not cache requests
+            cache: false,
+            dataType: 'json',
+            contentType: 'application/json' //; charset=utf-8'
+        });
+    }
+};
+
+
 /*
  Global AJAX setup
  This must exist outside of document.ready to catch all ajax calls
@@ -223,19 +242,7 @@ var W = {
 var AJAX_COUNT = 0;
 var AJAX_TIMEOUT = undefined;
 
-
-$.ajaxSetup({
-    // set csrf token globally so we never have to worry about it
-    headers: {
-        'X-CSRFToken': W.getCookie('csrftoken'),
-        'Authorization': 'Basic ' + btoa(HTTP_USERNAME + ":" + HTTP_PASSWORD)
-    },
-    // do not cache requests
-    cache: false,
-    dataType: 'json',
-    contentType: 'application/json' //; charset=utf-8'
-});
-
+W.pages.Common.ajaxSetup();
 
 $(document).on('ajaxSend', function () {
     AJAX_COUNT += 1;

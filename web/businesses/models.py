@@ -311,6 +311,21 @@ class BusinessLocation(models.Model):
     def formatted_address(self):
         return ', '.join((self.street1, self.city, self.zip_code, self.state))
 
+    @property
+    def days_since_menu_update(self):
+        if not self.menu_updated_date:
+            return -1
+
+        return (self.get_current_datetime().date() - self.menu_updated_date).days
+
+    def get_current_datetime(self):
+        if not self.timezone:
+            timezone = 'UTC'
+        else:
+            timezone = self.timezone
+
+        return datetime.now(pytz.timezone(timezone))
+
     def is_searchable(self):
         if self.removed_by or self.removed_date:
             return False
@@ -410,7 +425,7 @@ class BusinessLocationMenuUpdate(models.Model):
 
     @classmethod
     def record_business_location_menu_update(cls, business_location):
-        update_date = datetime.now(pytz.timezone(business_location.timezone)).date()
+        update_date = business_location.get_current_datetime().date()
 
         cls.objects.get_or_create(business_location=business_location, date=update_date)
 
@@ -428,6 +443,16 @@ def save_es_menu_item(sender, **kwargs):
     BusinessLocationESService().save_menu_item(menu_item)
 
     BusinessLocationMenuUpdate.record_business_location_menu_update(menu_item.business_location)
+
+
+@python_2_unicode_compatible
+class BusinessLocationMenuUpdateRequest(models.Model):
+    user = models.ForeignKey(User)
+    business_location = models.ForeignKey(BusinessLocation)
+    message = models.TextField(null=True)
+    date_time = models.DateTimeField(auto_now_add=True)
+    send_notification = models.BooleanField(default=False)
+    served = models.BooleanField(default=False)
 
 
 @python_2_unicode_compatible

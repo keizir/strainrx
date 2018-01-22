@@ -52,10 +52,13 @@
 
 {% block javascript %}
     {{ block.super }}
+    <script src="{% static 'js/pages/common/action_recorder.js' %}"></script>
     <script src="{% static 'js/pages/dispensary/dispensary_info.js' %}"></script>
     <script src="{% static 'js/pages/dispensary/dispensary_info_view.js' %}"></script>
     <script type="text/javascript">
-        W.pages.dispensary.DispensaryInfoView.init();
+        W.pages.dispensary.DispensaryInfoView.init({
+            isAuthenticated: '{{ request.user.is_authenticated }}' === 'True'
+        });
     </script>
 {% endblock %}
 
@@ -94,4 +97,64 @@
             </div>
         </form>
     </div>
+
+    <div id="menu-update-request-dialog" class="dialog hidden">
+        <div class="body">
+            <div class="content-body">
+                <textarea id="request-message" placeholder="Your message here ..." ></textarea>
+            </div>
+        </div>
+        <div class="footer">
+            <div class="btn-wrapper">
+                <div id="btn-request-update" class="btn-request-dialog">Request an Update</div>
+            </div>
+            <div class="notify-wrapper">
+                <input type="checkbox" name="request-notify" value="request-notify" id="request-notify" checked />
+                <div class="label">Notify me when menu updates</div>
+            </div>
+        </div>
+    </div>
+
+    <div id="menu-update-request-ok-dialog" class="dialog hidden">
+        <div class="body">
+            <div class="content-body">
+                The dispensary has been notified. <br>
+                Thank you!
+            </div>
+        </div>
+        <div class="footer">
+            <div class="btn-wrapper">
+                <div id="btn-close" class="btn-request-dialog">Close</div>
+            </div>
+        </div>
+    </div>
+
+    <div id="menu-update-request-login-dialog" class="dialog hidden">
+        <div class="body">
+            <div class="content-body">
+                You must log in to send this request.
+            </div>
+            <div class="text-input-wrapper">
+                <input autofocus="autofocus" id="login" maxlength="254" name="email"
+                       placeholder="Enter email address" type="text">
+            </div>
+            <div class="text-input-wrapper">
+                <input id="password" name="password" placeholder="Enter password" type="password">
+            </div>
+            <span class="error-message"></span>
+        </div>
+        <div class="footer">
+            <div class="btn-wrapper">
+                <button id="btn-sign-in" class="btn-primary send-login" type="submit">Sign In</button>
+            </div>
+            <div class="link-wrapper">
+                <a href="{% url 'account_reset_password' %}">Forgot Password?</a>
+            </div>
+            <div class="link-wrapper">
+                <span>or</span>
+                <a href="{% url 'account_signup' %}"> Sign Up</a>
+            </div>
+        </div>
+    </div>
+
 {% endblock %}

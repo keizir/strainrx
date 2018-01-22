@@ -7,8 +7,8 @@ W.pages.dispensary.DispensaryInfoView = function () {
     var DispensaryInfo = W.pages.dispensary.DispensaryInfo;
 
     return {
-        init: function () {
-            new DispensaryInfo();
+        init: function (options) {
+            new DispensaryInfo(options);
         }
     };
 }();

@@ -124,6 +124,7 @@ class DispensaryInfoView(TemplateView):
             context['location'] = location
             context['meta_desc'] = location.meta_desc
             context['social_image'] = location.social_image.url if location.social_image else "https://s3.amazonaws.com/srx-prod/static/images/logo_hr.b6cd6d08fabe.png"
+            context['allow_menu_update'] = location.days_since_menu_update == -1 or location.days_since_menu_update > 3
 
             # if this came from Available At on SDP, change event name
             event = "VIEW_DISP"
