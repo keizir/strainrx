@@ -57,8 +57,9 @@ class EmailService:
             'user': user,
             'header_logo_url': staticfiles_storage.url('images/logo_hr.png'),
             'envelope_image_url': staticfiles_storage.url('images/email-envelope.png'),
-            'location_url': location.urls.get('dispensary'),
             'message': message,
+            'location_url': settings.HOST + location.urls.get('dispensary'),
+            'login_url': settings.HOST + reverse('account_login')
         })
         html_content = Content('text/html', html_template)
 
