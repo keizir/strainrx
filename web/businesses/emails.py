@@ -62,9 +62,16 @@ class EmailService:
             'envelope_image_url': staticfiles_storage.url('images/email-envelope.png'),
             'message': message,
             'location_url': settings.HOST + location.urls.get('dispensary'),
-            'login_url': settings.HOST + reverse('account_login')
+            'login_url': settings.HOST + reverse('account_login'),
+            'claim_url': settings.HOST + '/claim/',
         })
         html_content = Content('text/html', html_template)
+
+        # This should probably be a bcc, but sendgrid has some weird problems
+        # with that.
+        if settings.PROFILE in ('stage', 'prod'):
+            m = Mail(from_email, subject, from_email, html_content)
+            sg.client.mail.send.post(request_body=m.get())
 
         m = Mail(from_email, subject, to_email, html_content)
         return sg.client.mail.send.post(request_body=m.get())

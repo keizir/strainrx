@@ -11,7 +11,7 @@
                     from <b>{{ user.geo_location.city }}, {{ user.geo_location.state }}</b>
                 {% endif %}
                 was reviewing <a href="{{ location_url }}">your page</a> on StrainRx and has requested
-                that you please update the menu. {{ user.first_name|default:'The user' }} will be notified to return and browse again.
+                that you please update the menu. {{ user.first_name|default:'The user' }} will be notified to return and browse again as soon as you update your menu.
             </p>
             {% if message %}
                 <p style="margin: 20px; text-align: left;">
@@ -20,7 +20,7 @@
             {% endif %}
             <p style="margin: 20px; text-align: left;">
                 To make updates to your menu, <a href="{{ login_url }}">log in</a> to your account or
-                <a>claim your business</a> if you haven't already.
+                <a href="{{ claim_url }}">claim your business</a> if you haven't already.
             </p>
             <p style="margin: 20px; text-align: left;">Feel free to contact us if you have any issues: <a href="mailto:support@strainrx.co">support@strainrx.co</a>
             <p style="margin: 20px; text-align: left;">Regards,<br>StrainRx Team</p>
