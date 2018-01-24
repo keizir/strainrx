@@ -1,0 +1,18 @@
+{% extends "emails/base.html" %}
+{% load staticfiles i18n %}
+
+{% block content %}
+    <tr>
+        <td>
+            <p style="margin: 20px; text-align: left;">Hi<b> {{ user.first_name }}</b>,</p>
+            <p style="margin: 20px; text-align: left;">
+                We would like to inform you that <a href="{{ location_url }}">{{ business_location.location_name }}</a>
+                in {{ business_location.city }} has updated their menu.
+            </p>
+            <p style="margin: 20px; text-align: left;">
+                Click <a href="{{ location_url }}">here</a> to visit them again.
+            </p>
+            <p style="margin: 20px; text-align: left;">Regards,<br>StrainRx Team</p>
+        </td>
+    </tr>
+{% endblock %}

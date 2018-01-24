@@ -348,7 +348,7 @@ class BusinessLocationMenuUpdateRequestDetailView(APIView):
         )
 
         EmailService().send_menu_update_request_email(update_request)
-        print('Sent email ' * 100)
+
         return Response(status=status.HTTP_201_CREATED)
 
 

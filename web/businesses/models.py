@@ -18,6 +18,7 @@ from django.template.defaultfilters import slugify
 from django.utils.encoding import python_2_unicode_compatible
 from django.utils.translation import ugettext_lazy as _
 
+from web.businesses.emails import EmailService
 from web.businesses.es_service import BusinessLocationESService
 from web.search.models import Strain
 from web.users.models import User
@@ -440,9 +441,23 @@ class BusinessLocationMenuUpdate(models.Model):
 @receiver(post_save, sender=BusinessLocationMenuItem)
 def save_es_menu_item(sender, **kwargs):
     menu_item = kwargs.get('instance')
-    BusinessLocationESService().save_menu_item(menu_item)
 
+    BusinessLocationESService().save_menu_item(menu_item)
     BusinessLocationMenuUpdate.record_business_location_menu_update(menu_item.business_location)
+
+    unserved_requests = BusinessLocationMenuUpdateRequest.objects.filter(
+        business_location=menu_item.business_location,
+        served=False,
+    )
+    unserved_requests = unserved_requests.select_related('user', 'business_location')
+
+    email_service = EmailService()
+    for request in unserved_requests:
+        if request.send_notification:
+            email_service.send_menu_update_request_served_email(request)
+
+        request.served = True
+        request.save()
 
 
 @python_2_unicode_compatible
