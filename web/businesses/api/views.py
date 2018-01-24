@@ -330,15 +330,10 @@ class BusinessLocationMenuUpdateRequestDetailView(APIView):
         except BusinessLocation.DoesNotExist:
             return Response(status=status.HTTP_404_NOT_FOUND)
 
-        recent_requests = BusinessLocationMenuUpdateRequest.objects.filter(
-            business_location=business_location,
-            user=request.user,
-            date_time__gt=datetime.now(pytz.utc) - timedelta(days=3),
-        )
+        can_request, reason = business_location.can_user_request_menu_update(request.user)
 
-        if recent_requests.exists():
-            print('Recent requests exist ' * 100)
-            return Response(status=status.HTTP_201_CREATED)
+        if not can_request:
+            return Response({'error': reason}, status=status.HTTP_400_BAD_REQUEST)
 
         update_request = BusinessLocationMenuUpdateRequest.objects.create(
             business_location=business_location,

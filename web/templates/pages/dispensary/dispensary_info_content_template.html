@@ -146,11 +146,13 @@
                 <% } %>
             </div>
                 <div class="menu-updated">
-                    {% if allow_menu_update %}
                         <div class="request-update">
-                            <div class="btn-request">Request an Update</div>
+                            {% if can_request_menu_update %}
+                                <button class="btn-request">Request an Update</button>
+                            {% else %}
+                                <button class="btn-request" title="{{ can_request_menu_update_reason }}" disabled>Request an Update</button>
+                            {% endif %}
                         </div>
-                    {% endif %}
                     {% if location.menu_updated_date %}
                         <div class="update-date">
                             Menu last updated on {{ location.menu_updated_date|date:"m/d/y" }}

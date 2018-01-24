@@ -593,16 +593,22 @@ W.pages.dispensary.DispensaryInfo = Class.extend({
     showMenuUpdateRequestDialog: function showMenuUpdateRequestDialog() {
         var url = this.urls.menuUpdateRequest.format(this.ui.$businessId.val(), this.ui.$location_id.val()),
             that = this,
-            $btn = $('#menu-update-request-dialog .btn-request-update');
+            $dialogBtn = $('#menu-update-request-dialog .btn-request-update'),
+            $requestBtn = $('.btn-request');
 
         that.closeDialog();
-        $btn.text('Request an Update');
+        $dialogBtn.text('Request an Update');
 
         that.dialog = MenuUpdateRequestDialog(function() {
-            $btn.attr('disabled', true);
-            $btn.text('Sending Request ...');
+            $dialogBtn.attr('disabled', true);
+            $dialogBtn.text('Sending Request ...');
 
-            that.postUpdateRequest(url).always(that.showMenuUpdateRequestOkDialog.bind(that));
+            that.postUpdateRequest(url).always(function() {
+                $requestBtn.attr('disabled', true);
+                $requestBtn.attr('title', 'You have recently requested a menu update');
+
+                that.showMenuUpdateRequestOkDialog();
+            });
         });
     },
 

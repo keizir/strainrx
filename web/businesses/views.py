@@ -104,43 +104,46 @@ class DispensaryInfoView(TemplateView):
     template_name = 'pages/dispensary/dispensary_info.html'
 
     def get_context_data(self, **kwargs):
-
-        context = super(DispensaryInfoView, self).get_context_data(**kwargs)
-        if BusinessLocation.objects.filter(state_fk__abbreviation__iexact=kwargs.get('state').lower(),
-                                           city_fk__full_name_slug__iexact=kwargs.get('city_slug').lower(),
-                                           slug_name__iexact=kwargs.get('slug_name').lower(),
-                                           removed_date=None).exists():
-
+        try:
             location = BusinessLocation.objects.get(state_fk__abbreviation__iexact=kwargs.get('state').lower(),
                                                     city_fk__full_name_slug__iexact=kwargs.get('city_slug').lower(),
                                                     slug_name__iexact=kwargs.get('slug_name').lower(),
                                                     removed_date=None)
-            context['business_id'] = location.business.id
-            context['business_name'] = location.business.name
-            context['location_id'] = location.id
-            context['strain_id'] = self.request.GET.get('strain_id')
-            context['active_state'] = location.state_fk
-            context['active_city'] = location.city_fk
-            context['location'] = location
-            context['meta_desc'] = location.meta_desc
-            context['social_image'] = location.social_image.url if location.social_image else "https://s3.amazonaws.com/srx-prod/static/images/logo_hr.b6cd6d08fabe.png"
-            context['allow_menu_update'] = location.days_since_menu_update == -1 or location.days_since_menu_update > 3
-
-            # if this came from Available At on SDP, change event name
-            event = "VIEW_DISP"
-
-            if self.request.GET.get('available_at'):
-                event = "VIEW_DISP_AVAIL_AT"
-
-            Analytics.track(
-                event = event, 
-                user = self.request.user,
-                entity_id = location.business.id
-            )
-
-
-        else:
+        except BusinessLocation.DoesNotExist:
             raise Http404
+
+        context = super(DispensaryInfoView, self).get_context_data(**kwargs)
+        context['business_id'] = location.business.id
+        context['business_name'] = location.business.name
+        context['location_id'] = location.id
+        context['strain_id'] = self.request.GET.get('strain_id')
+        context['active_state'] = location.state_fk
+        context['active_city'] = location.city_fk
+        context['location'] = location
+        context['meta_desc'] = location.meta_desc
+        context['social_image'] = location.social_image.url if location.social_image else "https://s3.amazonaws.com/srx-prod/static/images/logo_hr.b6cd6d08fabe.png"
+
+        if not self.request.user.is_authenticated():
+            can_request_menu_update = True
+            can_request_menu_update_reason = None
+        else:
+            (can_request_menu_update,
+             can_request_menu_update_reason) = location.can_user_request_menu_update(self.request.user)
+
+        (context['can_request_menu_update'],
+         context['can_request_menu_update_reason']) = can_request_menu_update, can_request_menu_update_reason
+
+        # if this came from Available At on SDP, change event name
+        event = "VIEW_DISP"
+
+        if self.request.GET.get('available_at'):
+            event = "VIEW_DISP_AVAIL_AT"
+
+        Analytics.track(
+            event=event,
+            user=self.request.user,
+            entity_id=location.business.id
+        )
 
         return context
 

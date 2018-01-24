@@ -1,6 +1,6 @@
 from __future__ import unicode_literals, absolute_import
 
-from datetime import datetime
+from datetime import datetime, timedelta
 import re
 from uuid import uuid4
 
@@ -318,6 +318,24 @@ class BusinessLocation(models.Model):
             return -1
 
         return (self.get_current_datetime().date() - self.menu_updated_date).days
+
+    def can_user_request_menu_update(self, user):
+        if not user.is_authenticated():
+            return False, 'User has to be logged in'
+
+        if 0 <= self.days_since_menu_update <= 3:
+            return False, 'Menu has been updated recently'
+
+        recent_requests = BusinessLocationMenuUpdateRequest.objects.filter(
+            business_location=self,
+            user=user,
+            date_time__gt=datetime.now(pytz.utc) - timedelta(days=1),
+        )
+
+        if recent_requests.exists():
+            return False, 'You have recently requested a menu update'
+
+        return True, None
 
     def get_current_datetime(self):
         if not self.timezone:
