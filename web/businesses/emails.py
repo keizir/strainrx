@@ -8,6 +8,8 @@ from django.core.urlresolvers import reverse
 from django.template.loader import render_to_string
 from sendgrid.helpers.mail import *
 
+from web.common import html
+
 
 class EmailService:
     host = settings.HOST
@@ -60,7 +62,7 @@ class EmailService:
             'user': user,
             'header_logo_url': staticfiles_storage.url('images/logo_hr.png'),
             'envelope_image_url': staticfiles_storage.url('images/email-envelope.png'),
-            'message': message,
+            'message': html.sanitize(message.replace('\n', '<br>')),
             'location_url': settings.HOST + location.urls.get('dispensary'),
             'login_url': settings.HOST + reverse('account_login'),
             'claim_url': settings.HOST + '/claim/',

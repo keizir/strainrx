@@ -8,7 +8,15 @@ from web.users.models import User, UserLocation
 logger = logging.getLogger(__name__)
 
 
+class UserLocationSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = UserLocation
+        fields = ('street1', 'city', 'state', 'zipcode', 'lat', 'lng', 'location_raw')
+
+
 class UserSerializer(serializers.ModelSerializer):
+    geo_location = UserLocationSerializer(read_only=True, allow_null=True)
+
     class Meta:
         model = User
         exclude = ('password',)
@@ -48,8 +56,3 @@ class UserSignUpSerializer(serializers.ModelSerializer):
     def update(self, instance, validated_data):
         pass
 
-
-class UserLocationSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = UserLocation
-        fields = ('street1', 'city', 'state', 'zipcode', 'lat', 'lng', 'location_raw')

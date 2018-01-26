@@ -38,6 +38,7 @@ W.pages.dispensary.DispensaryInfo = Class.extend({
     init: function init(options) {
         var that = this;
         that.isAuthenticated = options.isAuthenticated;
+        that.user = options.user;
 
         this.retrieveLocation(function (location) {
             if (location) {
@@ -384,6 +385,12 @@ W.pages.dispensary.DispensaryInfo = Class.extend({
                         '$email': user.email,
                         'account_type': user.type
                     });
+
+                    that.user.firstName = user.first_name;
+
+                    if (user.geo_location) {
+                        that.user.city = user.geo_location.city;
+                    }
                 }
                 W.pages.Common.ajaxSetup();
 
@@ -599,7 +606,7 @@ W.pages.dispensary.DispensaryInfo = Class.extend({
         that.closeDialog();
         $dialogBtn.text('Request an Update');
 
-        that.dialog = MenuUpdateRequestDialog(function() {
+        that.dialog = MenuUpdateRequestDialog(that.user, that.location, function() {
             $dialogBtn.attr('disabled', true);
             $dialogBtn.text('Sending Request ...');
 
@@ -666,9 +673,24 @@ var Dialog = function Dialog(dialogSelector, btnSelector, props, onConfirm) {
 };
 
 
-var MenuUpdateRequestDialog = function MenuUpdateRequestDialog(onConfirm) {
+var MenuUpdateRequestDialog = function MenuUpdateRequestDialog(user ,location, onConfirm) {
     var dialog = Dialog('#menu-update-request-dialog', '#btn-request-update', {}, onConfirm);
-    $('#menu-update-request-dialog textarea').val('');
+    var defaultMessage = [];
+    if (user.city) {
+        defaultMessage.push('From {0} in {1}:'.format(user.firstName, user.city));
+    } else {
+        defaultMessage.push('From {0}:'.format(user.firstName));
+    }
+
+    defaultMessage = defaultMessage.concat([
+        '',
+        location.location_name + ',',
+        'Please update your StrainRx menu.',
+        'Thank you!'
+
+    ]);
+
+    $('#menu-update-request-dialog textarea').val(defaultMessage.join('\n'));
 
     return dialog;
 };

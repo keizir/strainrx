@@ -56,7 +56,11 @@
     <script src="{% static 'js/pages/dispensary/dispensary_info_view.js' %}"></script>
     <script type="text/javascript">
         W.pages.dispensary.DispensaryInfoView.init({
-            isAuthenticated: '{{ request.user.is_authenticated }}' === 'True'
+            isAuthenticated: '{{ request.user.is_authenticated }}' === 'True',
+            user: {
+                firstName: '{{ request.user.first_name }}',
+                city: '{{ request.user.geo_location.city }}'
+            }
         });
     </script>
 {% endblock %}
