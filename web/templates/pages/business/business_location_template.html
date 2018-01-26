@@ -95,6 +95,10 @@
                     <label for="grow_methods__indoor__<%= l.id %>">Indoor</label>
                     <input type="checkbox" name="grow_methods_indoor__<%= l.id %>" id="grow_methods_indoor__<%= l.id %>" <% if (l.grow_details.indoor) { %>checked<% } %>>
                 </div>
+                <div class="form-field">
+                    <label for="grow_methods__outdoor__<%= l.id %>">Outdoor</label>
+                    <input type="checkbox" name="grow_methods_outdoor__<%= l.id %>" id="grow_methods_outdoor__<%= l.id %>" <% if (l.grow_details.outdoor) { %>checked<% } %>>
+                </div>
             </div>
         </div>
 

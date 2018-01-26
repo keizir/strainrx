@@ -252,6 +252,10 @@ W.pages.business.BusinessLocations = Class.extend({
                         that.locations[index].grow_details.indoor = $input.is(':checked');
                     }
 
+                    if (fieldName === 'grow_methods_outdoor') {
+                        that.locations[index].grow_details.outdoor = $input.is(':checked');
+                    }
+
                     if (fieldName === 'grow_methods_pesticide_free') {
                         that.locations[index].grow_details.pesticide_free = $input.is(':checked');
                     }

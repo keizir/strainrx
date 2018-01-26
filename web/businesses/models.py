@@ -184,7 +184,8 @@ class BusinessLocation(models.Model):
     delivery_radius = models.FloatField(max_length=10, blank=True, null=True)
     grow_details = JSONField(default={'organic': False,
                                       'pesticide_free': False,
-                                      'indoor': False},
+                                      'indoor': False,
+                                      'outdoor': False,},
                              blank=True, null=True)
 
     street1 = models.CharField(max_length=100)
