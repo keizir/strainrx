@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 import json
 import logging
-from datetime import datetime, timedelta
+from datetime import datetime
 
 from boto.s3.connection import S3Connection, Bucket, Key
 from django.conf import settings
@@ -9,7 +9,8 @@ from django.contrib.auth import authenticate, login
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.core.exceptions import ValidationError, ObjectDoesNotExist
 from django.db.models.query import Q
-import pytz
+from django.utils.crypto import get_random_string
+
 from rest_framework import permissions
 from rest_framework import status
 from rest_framework.response import Response
@@ -340,6 +341,7 @@ class BusinessLocationMenuUpdateRequestDetailView(APIView):
             user=request.user,
             send_notification=request.data.get('send_notification', False),
             message=request.data.get('message', '').strip() or None,
+            secret_key=get_random_string(length=64),
         )
 
         EmailService().send_menu_update_request_email(update_request)

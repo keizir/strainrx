@@ -9,6 +9,11 @@ from . import views
 
 urlpatterns = [
     url(
+        regex='^test/$',
+        view=views.EmailTestView.as_view(),
+        name='test',
+    ),
+    url(
         regex=r'^businesses/signup/$',
         view=authorized_for_signup(views.BusinessSignUpWizardView.as_view()),
         name='signup'
@@ -42,6 +47,11 @@ urlpatterns = [
         regex=r'^businesses/(?P<business_id>[0-9]{1,})/locations/$',
         view=user_is_owner(views.BusinessLocationsView.as_view()),
         name='locations'
+    ),
+    url(
+        regex=r'^businesses/confirm_menu/(?P<secret_key>\w{64})/$',
+        view=views.ConfirmMenuView.as_view(),
+        name='confirm_menu'
     ),
     url(
         regex=r'^dispensary/$',

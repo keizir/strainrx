@@ -9,12 +9,12 @@ from django.core.exceptions import ObjectDoesNotExist
 from django.core.urlresolvers import reverse
 from django.contrib.staticfiles.templatetags.staticfiles import static
 from django.http import Http404
-from django.views.generic import RedirectView
-from django.views.generic import TemplateView
+from django.views.generic import RedirectView, TemplateView
 from django.db.models import Count
 
 from web.businesses.api.services import FeaturedBusinessLocationService
-from web.businesses.models import Business, BusinessLocation, State, City
+from web.businesses.emails import EmailService
+from web.businesses.models import Business, BusinessLocation, State, City, BusinessLocationMenuUpdateRequest
 from web.businesses.utils import NamePaginator
 from web.users.models import User
 from web.analytics.models import Event
@@ -45,6 +45,39 @@ class ConfirmEmailView(TemplateView):
         context = super(ConfirmEmailView, self).get_context_data(**kwargs)
         context['business'] = business
         return context
+
+
+class ConfirmMenuView(TemplateView):
+    template_name = 'pages/business/menu_date_update.html'
+
+    def get(self, request, *args, **kwargs):
+        secret_key = kwargs.get('secret_key')
+        try:
+            update_request = BusinessLocationMenuUpdateRequest.objects.get(secret_key=secret_key)
+        except BusinessLocationMenuUpdateRequest.DoesNotExist:
+            raise Http404
+
+        location = update_request.business_location
+        current_datetime = location.get_current_datetime()
+
+        to_update = BusinessLocation.objects.filter(id=location.id, menu_updated_date__lt=current_datetime)
+        to_update.update(menu_updated_date=current_datetime.date())
+
+        unserved_requests = BusinessLocationMenuUpdateRequest.objects.filter(
+            business_location=location,
+            served=False,
+        )
+        unserved_requests = unserved_requests.select_related('user', 'business_location')
+
+        email_service = EmailService()
+        for request in unserved_requests:
+            if request.send_notification:
+                email_service.send_menu_update_request_served_email(request)
+
+            request.served = True
+            request.save()
+
+        return super().get(request, *args, **kwargs)
 
 
 class BusinessDetailView(TemplateView):
@@ -96,6 +129,28 @@ class BusinessLocationsView(TemplateView):
         context['business'] = business
         context['locations'] = BusinessLocation.objects.filter(business=business, removed_date=None).order_by('id')
         context['tab'] = 'locations'
+
+        return context
+
+
+class EmailTestView(TemplateView):
+    template_name = 'emails/business_menu_update_request.html'
+
+    def get_context_data(self, **kwargs):
+        from django.contrib.staticfiles.storage import staticfiles_storage
+        from django.conf import settings
+        from web.common import html
+
+        context = super().get_context_data(**kwargs)
+        location = BusinessLocation.objects.first()
+        context['business_location'] = location
+        context['user'] = User.objects.first()
+        context['header_logo_url'] = staticfiles_storage.url('images/logo_hr.png')
+        context['envelope_image_url'] = staticfiles_storage.url('images/email-envelope.png')
+        context['message'] = html.sanitize('Hi man! \n how are you?'.replace('\n', '<br>'))
+        context['location_url'] = settings.HOST + location.urls.get('dispensary')
+        context['login_url'] = settings.HOST + reverse('account_login')
+        context['claim_url'] = settings.HOST + '/claim/'
 
         return context
 
@@ -376,9 +431,4 @@ class BusinessAnalyticsView(TemplateView):
         context['business'] = business
         context['tab'] = 'analytics'
 
-
-
         return context
-
-def get_epoch_from_utc(dt):
-    return int(dt.timestamp() * 1000)

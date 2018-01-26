@@ -486,6 +486,7 @@ class BusinessLocationMenuUpdateRequest(models.Model):
     date_time = models.DateTimeField(auto_now_add=True)
     send_notification = models.BooleanField(default=False)
     served = models.BooleanField(default=False)
+    secret_key = models.TextField(null=True)
 
 
 @python_2_unicode_compatible
