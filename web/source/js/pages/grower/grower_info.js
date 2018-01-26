@@ -47,7 +47,7 @@ W.pages.grower.GrowerInfo = Class.extend({
 
     fetchDispensaries: function fetchDispensaries() {
         var that = this,
-            urlTemplate = '/api/v1/businesses/{0}/locations/{1}/partnerships/?grower_id={3}',
+            urlTemplate = '/api/v1/businesses/{0}/locations/{1}/partnerships?grower_id={2}',
             url = urlTemplate.format(this.businessId, this.growerId, this.growerId);
 
         $('.section.partners .content').html('Loading ...');

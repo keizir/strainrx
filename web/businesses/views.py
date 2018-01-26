@@ -133,28 +133,6 @@ class BusinessLocationsView(TemplateView):
         return context
 
 
-class EmailTestView(TemplateView):
-    template_name = 'emails/business_menu_update_request.html'
-
-    def get_context_data(self, **kwargs):
-        from django.contrib.staticfiles.storage import staticfiles_storage
-        from django.conf import settings
-        from web.common import html
-
-        context = super().get_context_data(**kwargs)
-        location = BusinessLocation.objects.first()
-        context['business_location'] = location
-        context['user'] = User.objects.first()
-        context['header_logo_url'] = staticfiles_storage.url('images/logo_hr.png')
-        context['envelope_image_url'] = staticfiles_storage.url('images/email-envelope.png')
-        context['message'] = html.sanitize('Hi man! \n how are you?'.replace('\n', '<br>'))
-        context['location_url'] = settings.HOST + location.urls.get('dispensary')
-        context['login_url'] = settings.HOST + reverse('account_login')
-        context['claim_url'] = settings.HOST + '/claim/'
-
-        return context
-
-
 class DispensaryInfoView(TemplateView):
     template_name = 'pages/dispensary/dispensary_info.html'
 

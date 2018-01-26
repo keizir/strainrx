@@ -9,11 +9,6 @@ from . import views
 
 urlpatterns = [
     url(
-        regex='^test/$',
-        view=views.EmailTestView.as_view(),
-        name='test',
-    ),
-    url(
         regex=r'^businesses/signup/$',
         view=authorized_for_signup(views.BusinessSignUpWizardView.as_view()),
         name='signup'
