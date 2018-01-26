@@ -9,7 +9,7 @@
     width: 100%;
     margin: 0 auto;
 
-    .separator {
+    .main-region .separator {
         width: 1px;
         height: 5em;
         margin: 0 0.5em;
@@ -17,7 +17,7 @@
         vertical-align: top;
     }
 
-    .separator:after {
+    .main-region .separator:after {
         content: '';
     }
 
