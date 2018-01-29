@@ -16,3 +16,24 @@
         </td>
     </tr>
 {% endblock %}
+
+{% block footer %}
+    <tfoot>
+    <tr>
+        <td>
+            <hr/>
+        </td>
+    </tr>
+    <tr>
+        <td style="padding: 10px">
+            This email was sent to you because you are a registered user of StrainRx and
+            have requested to be notified with a menu update to this business is made.
+        </td>
+    </tr>
+    <tr>
+        <td style="padding: 10px">
+            Copyright &copy; {% now "Y" %} StrainTech Inc. All rights reserved. We value you <a href="{% url 'privacy' %}">privacy</a>.
+        </td>
+    </tr>
+    </tfoot>
+{% endblock %}

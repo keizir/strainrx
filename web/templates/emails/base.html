@@ -23,7 +23,9 @@
     {% block content %}{% endblock %}
     </tbody>
 
-    {% include 'emails/footer.html' %}
+    {% block footer %}
+        {% include 'emails/footer.html' %}
+    {% endblock %}
 
 </table>
 
