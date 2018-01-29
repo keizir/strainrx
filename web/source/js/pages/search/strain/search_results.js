@@ -6,7 +6,7 @@ W.pages.StrainSearchResultsPage = Class.extend({
 
     scrollPage: 1,
     scrollSize: 20,
-    currentFilter: 'all', // local, delivery
+    currentFilter: 'local', // local, delivery
     currentSort: 'asc',
 
     locations: {},
