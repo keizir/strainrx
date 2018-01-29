@@ -187,36 +187,37 @@ def get_location_rating(location_id):
 
 
 def get_open_closed(location_json, time_format='%H:%M:%S'):
-    days = ['sun', 'mon', 'tue', 'wed', 'thu', 'fri', 'sat']
-    location_tz = pytz.timezone(location_json.get('timezone')) if location_json.get('timezone') else None
+    days = ['mon', 'tue', 'wed', 'thu', 'fri', 'sat', 'sun']
 
-    now = datetime.now(tz=location_tz) if location_tz else datetime.now()
-    current_day_index = int(now.strftime('%w'))  # 0 - Sunday, 6 - Saturday
-    current_hour = int(now.strftime('%H'))
-    current_minute = int(now.strftime('%M'))
+    timezone_str = location_json.get('timezone')
+    if timezone_str is None:
+        return ''
 
-    loc_o = location_json.get('{0}_open'.format(days[current_day_index]))
-    loc_c = location_json.get('{0}_close'.format(days[current_day_index]))
+    location_tz = pytz.timezone(timezone_str)
 
-    if loc_o and loc_c:
-        loc_o = datetime.strptime(loc_o, time_format)
-        loc_c = datetime.strptime(loc_c, time_format)
-        now = datetime.strptime('1900-01-01 {0}:{1}'.format(current_hour, current_minute), '%Y-%m-%d %H:%M')
+    now = datetime.now(tz=location_tz)
+    weekday = days[now.weekday()]
 
-        if location_tz:
-            loc_o = location_tz.localize(loc_o)
-            loc_c = location_tz.localize(loc_c)
-            now = location_tz.localize(now)
+    open_str = location_json.get('{0}_open'.format(weekday))
+    close_str = location_json.get('{0}_close'.format(weekday))
 
-        delta = (loc_c - now).total_seconds()
-        till_close_min = delta / 60
+    if open_str is None or close_str is None:
+        return ''
 
-        if 0 < till_close_min <= 30:
-            return 'Closing Soon'
+    def seconds(time):
+        return 3600*time.hour + 60*time.minute + time.second
 
-        return 'Opened' if int(loc_o.strftime('%H')) < current_hour < int(loc_c.strftime('%H')) else 'Closed Now'
+    time_now = seconds(now.time())
+    open_time = seconds(datetime.strptime(open_str, time_format).time())
+    close_time = seconds(datetime.strptime(close_str, time_format).time())
 
-    return ''
+    if time_now < open_time or time_now > close_time:
+        return 'Closed Now'
+
+    if time_now > (close_time - 1800):
+        return 'Closing Soon'
+
+    return 'Opened'
 
 
 class FeaturedBusinessLocationService:
