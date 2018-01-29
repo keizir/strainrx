@@ -268,6 +268,7 @@
             }
 
             .menu-updated {
+                margin-top: 2em;
                 display: flex;
 
                 .request-update {
@@ -529,6 +530,10 @@
                                 width: 19%;
                             }
                         }
+                    }
+
+                    .menu-wrapper:last-of-type {
+                        margin-bottom: 0;
                     }
 
                     .sativa {
