@@ -1,6 +1,9 @@
 # -*- coding: utf-8 -*-
 from __future__ import absolute_import, unicode_literals
 
+from urllib.parse import urlparse
+
+from django.core.urlresolvers import resolve, Resolver404
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.db.models import Q
 from django.http import Http404
@@ -26,17 +29,36 @@ class StrainDetailView(TemplateView):
         slug_name = kwargs.get('slug_name')
         strain_variety = kwargs.get('strain_variety')
 
-        if Strain.objects.filter(variety=strain_variety, strain_slug=slug_name).exists():
+        try:
             strain = Strain.objects.get(variety=strain_variety, strain_slug=slug_name)
-            context['strain_id'] = strain.id
-            context['strain_name'] = strain.name
-            context['strain_variety'] = strain.variety
-            context['social_desc'] = strain.meta_desc
-            context['social_image'] = strain.social_image.url if strain.social_image else "https://s3.amazonaws.com/srx-prod/static/images/logo_hr.b6cd6d08fabe.png"
-        else:
+        except Strain.DoesNotExist:
             raise Http404
 
+        context['strain_id'] = strain.id
+        context['strain_name'] = strain.name
+        context['strain_variety'] = strain.variety
+        context['social_desc'] = strain.meta_desc
+        context['social_image'] = strain.social_image.url if strain.social_image else "https://s3.amazonaws.com/srx-prod/static/images/logo_hr.b6cd6d08fabe.png"
+        context['from_location'] = self.get_previous_location_url()
+
         return context
+
+    def get_previous_location_url(self):
+        referrer = self.request.META.get('HTTP_REFERER')
+
+        if referrer is None:
+            return None
+
+        path = urlparse(referrer).path
+        try:
+            match = resolve(path)
+        except Resolver404:
+            return None
+
+        if match.url_name == 'dispensary_info':
+            return path
+
+        return None
 
 
 class StrainsRootView(TemplateView):

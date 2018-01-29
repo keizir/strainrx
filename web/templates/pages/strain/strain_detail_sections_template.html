@@ -9,12 +9,12 @@
                     <i class="fa fa-arrow-left" aria-hidden="true"></i>back to search results</a>
             </div>
             <% } %>
-            <% if (model.from_location) { %>
+            {% if from_location %}
             <div class="back-to-search-wrapper">
-                <a href="<%= model.from_location %>" class="search-link">
+                <a href="{{ from_location }}" class="search-link">
                     <i class="fa fa-arrow-left" aria-hidden="true"></i>back to dispensary</a>
             </div>
-            <% } %>
+            {% endif %}
             <div class="row">
                 <div class="strain-data">
                     <img class="strain-variety" src="<%= model.strain.variety_image %>"/>

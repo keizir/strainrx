@@ -36,13 +36,11 @@ W.pages.strain.StrainDetailPage = Class.extend({
                 if (strain_data) {
                     var qs = W.qs(),
                         search = qs['search'],
-                        from_location = qs['location'],
                         allowedLetters = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z'],
                         firstLetter;
 
                     that.model = new W.common.Model(strain_data);
                     that.model.set('from_search', search);
-                    that.model.set('from_location', from_location);
                     that.model.set('share_urls', W.common.Sharer.getSharerUrls(encodeURIComponent(window.location.href)));
 
                     firstLetter = that.model.get('strain').name.charAt(0).toLowerCase();

@@ -86,7 +86,7 @@
                     </div>
                     <% $.each(sativas, function(i, mi) { %>
                     <div class="menu-item">
-                        <span class="name"><a href="${ getStrainUrl(mi, l) }">${ mi.strain_name }</a></span>
+                        <span class="name"><a href="${ getStrainUrl(mi) }">${ mi.strain_name }</a></span>
                         <span class="gram">${ formatPrice(mi.price_gram) }</span>
                         <span class="eighth">${ formatPrice(mi.price_eighth) }</span>
                         <span class="quarter">${ formatPrice(mi.price_quarter) }</span>
@@ -110,7 +110,7 @@
                     </div>
                     <% $.each(hybrids, function(i, mi) { %>
                     <div class="menu-item">
-                        <span class="name"><a href="${ getStrainUrl(mi, l) }">${ mi.strain_name }</a></span>
+                        <span class="name"><a href="${ getStrainUrl(mi) }">${ mi.strain_name }</a></span>
                         <span class="gram">${ formatPrice(mi.price_gram) }</span>
                         <span class="eighth">${ formatPrice(mi.price_eighth) }</span>
                         <span class="quarter">${ formatPrice(mi.price_quarter) }</span>
@@ -134,7 +134,7 @@
                     </div>
                     <% $.each(indicas, function(i, mi) { %>
                     <div class="menu-item">
-                        <span class="name"><a href="${ getStrainUrl(mi, l) }">${ mi.strain_name }</a></span>
+                        <span class="name"><a href="${ getStrainUrl(mi) }">${ mi.strain_name }</a></span>
                         <span class="gram">${ formatPrice(mi.price_gram) }</span>
                         <span class="eighth">${ formatPrice(mi.price_eighth) }</span>
                         <span class="quarter">${ formatPrice(mi.price_quarter) }</span>

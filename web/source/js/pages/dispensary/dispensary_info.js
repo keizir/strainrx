@@ -89,8 +89,8 @@ W.pages.dispensary.DispensaryInfo = Class.extend({
         this.clickGetDirectionsBtn();
     },
 
-    getStrainUrl: function getStrainUrl(mi, location) {
-        return mi.url + '?location=' + location.url;
+    getStrainUrl: function getStrainUrl(mi) {
+        return mi.url;
     },
 
     formatAddressLine: function formatAddressLine(location) {
