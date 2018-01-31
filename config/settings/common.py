@@ -480,9 +480,9 @@ CKEDITOR_SETTINGS = {
     ],
     'skin': 'moono',
     'extraPlugins': 'filerimage',
-    'removePlugins': 'stylesheetparser',
-    'allowedContent': 'input[placeholder]'
 }
-TEXT_ADDITIONAL_ATTRIBUTES = ('placeholder',)
+
+# CKEditor is used only in admin, so we can be permissive
+TEXT_ADDITIONAL_ATTRIBUTES = ('*', 'placeholder')
 
 # END CMS SETTINGS
