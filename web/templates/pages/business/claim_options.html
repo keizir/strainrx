@@ -3,12 +3,6 @@
 
 {% block title %}Claim your business{% endblock %}
 
-{% block meta %}
-    {{ block.super }}
-    <meta name="Description"
-          content="StrainRx brings you the most up to date menu and the latest deals from {{ location.location_name }} in {{ active_city.full_name }}.">
-{% endblock %}
-
 {% block css %}
     {{ block.super }}
     <link href="{% static 'css/pages/business/claim_options.css' %}" rel="stylesheet">
@@ -32,7 +26,7 @@
                     <span class="prices__par">-Update your menu</span>
                     <span class="prices__par">-Update business details</span>
                     <span class="prices__par">-Verified badge</span>
-                    <a class="prices__link" href="https://strainrx.co/claim2/">Claim Now</a>
+                    <a class="prices__link" href="{% url 'businesses:claim_form' %}">Claim Now</a>
                 </li>
                 <li class="prices__item">
                     <div class="prices__caption">
@@ -45,7 +39,7 @@
                     <span class="prices__par">-Verified badge</span>
                     <span class="prices__par">-Laboratory testing discounts</span>
                     <span class="prices__par">-Month-to-month billing</span>
-                    <a class="prices__link" href="https://strainrx.co/claim2/">
+                    <a class="prices__link" href="{% url 'businesses:claim_form' %}">
                         Claim Now
                     </a>
                 </li>
@@ -64,7 +58,7 @@
                     <span class="prices__par">-Featured Listing inclusion</span>
                     <span class="prices__par">-Page analytics</span>
                     <span class="prices__par">-Dedicated support</span>
-                    <a class="prices__link" href="https://strainrx.co/claim2/">
+                    <a class="prices__link" href="{% url 'businesses:claim_form' %}">
                         Claim Now
                     </a>
                 </li>

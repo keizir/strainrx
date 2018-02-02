@@ -9,11 +9,12 @@ from django.core.exceptions import ObjectDoesNotExist
 from django.core.urlresolvers import reverse
 from django.contrib.staticfiles.templatetags.staticfiles import static
 from django.http import Http404
-from django.views.generic import RedirectView, TemplateView
+from django.views.generic import RedirectView, TemplateView, FormView
 from django.db.models import Count
 
 from web.businesses.api.services import FeaturedBusinessLocationService
 from web.businesses.emails import EmailService
+from web.businesses.forms import ClaimForm
 from web.businesses.models import Business, BusinessLocation, State, City, BusinessLocationMenuUpdateRequest
 from web.businesses.utils import NamePaginator
 from web.users.models import User
@@ -415,3 +416,17 @@ class BusinessAnalyticsView(TemplateView):
 
 class ClaimOptionsView(TemplateView):
     template_name = 'pages/business/claim_options.html'
+
+
+class ClaimFormView(FormView):
+    form_class = ClaimForm
+    template_name = 'pages/business/claim_form.html'
+    success_url = '/businesses/claim_success/'
+
+    def form_valid(self, form):
+        EmailService().send_business_claim_request_served_email(form.cleaned_data)
+        return super().form_valid(form)
+
+
+class ClaimSuccessView(TemplateView):
+    template_name = 'pages/business/claim_success.html'

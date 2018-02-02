@@ -103,4 +103,14 @@ urlpatterns = [
         view=views.ClaimOptionsView.as_view(),
         name='claim_options'
     ),
+    url(
+        regex=r'^businesses/claim_form/$',
+        view=views.ClaimFormView.as_view(),
+        name='claim_form'
+    ),
+    url(
+        regex=r'^businesses/claim_success/$',
+        view=views.ClaimSuccessView.as_view(),
+        name='claim_success'
+    ),
 ]
