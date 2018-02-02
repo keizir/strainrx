@@ -98,5 +98,9 @@ urlpatterns = [
         view=user_is_owner(views.BusinessAnalyticsView.as_view()),
         name='analytics'
     ),
-
+    url(
+        regex=r'^businesses/claim_options/$',
+        view=views.ClaimOptionsView.as_view(),
+        name='claim_options'
+    ),
 ]

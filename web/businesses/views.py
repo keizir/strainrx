@@ -411,3 +411,7 @@ class BusinessAnalyticsView(TemplateView):
         context['tab'] = 'analytics'
 
         return context
+
+
+class ClaimOptionsView(TemplateView):
+    template_name = 'pages/business/claim_options.html'
