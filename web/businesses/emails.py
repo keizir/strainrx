@@ -69,7 +69,7 @@ class EmailService:
             'message': html.sanitize(message.replace('\n', '<br>')),
             'location_url': settings.HOST + location.urls.get('dispensary'),
             'login_url': settings.HOST + reverse('account_login'),
-            'claim_url': settings.HOST + '/claim/',
+            'claim_url': settings.HOST + reverse('businesses:claim_options'),
             'update_date_url': settings.HOST + reverse('businesses:confirm_menu',
                                                        kwargs={'secret_key': update_request.secret_key}),
         })
