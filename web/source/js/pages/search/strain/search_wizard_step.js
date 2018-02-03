@@ -17,6 +17,8 @@ W.pages.search.strain.SearchWizardStep = W.common.WizardStep.extend({
         });
 
         this.currentUserId = options && options.currentUserId;
+        this.settings = new W.users.UserSettings({ userId: this.currentUserId });
+
         this.skip_el = options && options.skip_el;
         this.back_el = options && options.back_el;
     },
@@ -67,7 +69,7 @@ W.pages.search.strain.SearchWizardStep = W.common.WizardStep.extend({
 
     showDialogOrProceed: function showDialogOrProceed(container, proceedCallback) {
         var that = this;
-        W.users.UserSettings.get(that.currentUserId, that.settingName_NeverShowPopupAgain, function (/* setting */) {
+        this.settings.get(that.settingName_NeverShowPopupAgain, function (/* setting */) {
             // TODO do not show the dialog for now (changed under WEED-201)
             /*var doNotShowAgain = setting && setting.doNotShowAgain;
              if (container[container.length - 1].value === 1 && !that.popupDismissed && !doNotShowAgain) {
@@ -91,7 +93,7 @@ W.pages.search.strain.SearchWizardStep = W.common.WizardStep.extend({
 
         W.common.Dialog($justASecondDialog, function () {
             that.popupDismissed = false;
-            W.users.UserSettings.update(that.currentUserId, that.settingName_NeverShowPopupAgain, {
+            that.update(that.settingName_NeverShowPopupAgain, {
                 doNotShowAgain: $('#do-not-show-again').is(':checked')
             });
         });

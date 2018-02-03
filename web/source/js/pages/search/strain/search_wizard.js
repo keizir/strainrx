@@ -18,6 +18,7 @@ W.pages.search.strain.SearchWizard = W.common.Wizard.extend({
         });
 
         this.name = 'SearchWizard';
+        this.settings = new W.users.UserSettings({ userId: this.getCurrentUserId() });
         this.refreshSearchSettingAndRenderStep({step: 1});
 
         W.subscribe.apply(this);
@@ -39,14 +40,17 @@ W.pages.search.strain.SearchWizard = W.common.Wizard.extend({
     _on_submit_form: function _on_submit_form(ev, data) {
         var that = this,
             search_criteria_json = {search_criteria: {step1: data[1], step2: data[2], step3: data[3], step4: data[4]}},
-            search_criteria = JSON.stringify(search_criteria_json);
+            search_criteria = JSON.stringify(search_criteria_json),
+            userId = that.getCurrentUserId();
 
-        $.ajax({
-            method: 'POST',
-            url: '/api/v1/users/{0}/searches'.format(that.getCurrentUserId()),
-            dataType: 'json',
-            data: search_criteria
-        });
+        if (userId) {
+            $.ajax({
+                method: 'POST',
+                url: '/api/v1/users/{0}/searches'.format(userId),
+                dataType: 'json',
+                data: search_criteria
+            });
+        }
 
         $.ajax({
             method: 'POST',
@@ -63,7 +67,7 @@ W.pages.search.strain.SearchWizard = W.common.Wizard.extend({
             }
         });
 
-        W.users.UserSettings.update(that.getCurrentUserId(), W.users.UserSettings.settingName_SearchFilter, {'searchFilter': 'all'});
+        this.settings.update(this.settings.settingName_SearchFilter, {'searchFilter': 'all'});
         W.common.ActionRecorder.track(this.mixpanelEventName, that.getMixpanelData(data));
     },
 
@@ -98,7 +102,12 @@ W.pages.search.strain.SearchWizard = W.common.Wizard.extend({
     },
 
     getCurrentUserId: function getCurrentUserId() {
-        return this.ui.$currentUserId.val();
+        var userId = this.ui.$currentUserId.val();
+        if (userId === 'None') {
+            userId = undefined;
+        }
+
+        return userId;
     },
 
     initSteps: function initSteps() {
@@ -146,8 +155,8 @@ W.pages.search.strain.SearchWizard = W.common.Wizard.extend({
 
     refreshSearchSettingAndRenderStep: function refreshSearchSettingAndRenderStep(data) {
         var that = this;
-        W.users.UserSettings.get(this.getCurrentUserId(), W.users.UserSettings.settingName_WizardSearch, function (setting) {
-            that.model.setData(setting);
+        this.settings.get(this.settings.settingName_WizardSearch, function (setting) {
+            that.model.setData(setting || {});
             that.renderStepContent(data.step);
         });
     },
@@ -211,7 +220,7 @@ W.pages.search.strain.SearchWizard = W.common.Wizard.extend({
 
     updateData: function updateData(data) {
         this.model.set(data.step, data.data);
-        W.users.UserSettings.update(this.getCurrentUserId(), W.users.UserSettings.settingName_WizardSearch, this.model.getData());
+        this.settings.update(this.settings.settingName_WizardSearch, this.model.getData());
     }
 
 });

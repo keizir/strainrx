@@ -34,10 +34,12 @@ W.pages.StrainSearchResultsPage = Class.extend({
     },
 
     init: function () {
+        var currentUserId = this.getCurrentUserId();
         var that = this;
         this.name = 'StrainSearchResultsPage';
+        this.settings = new W.users.UserSettings({ userId: currentUserId });
 
-        W.users.UserSettings.get($('#currentUserId').val(), W.users.UserSettings.settingName_SearchFilter, function (setting) {
+        this.settings.get(this.settings.settingName_SearchFilter, function (setting) {
             if (setting && setting.searchFilter) {
                 that.currentFilter = setting.searchFilter;
             }
@@ -46,13 +48,30 @@ W.pages.StrainSearchResultsPage = Class.extend({
                 that.buildResultsFilterMenu();
                 that.initRatings();
 
-                W.users.UserSettings.update($('#currentUserId').val(), W.users.UserSettings.settingName_SearchFilter, {
+                that.settings.update(that.settings.settingName_SearchFilter, {
                     'searchFilter': that.currentFilter
                 });
+
+                if (!currentUserId) {
+                    that.showLoginDialog();
+                }
             });
         });
 
         W.subscribe.apply(this);
+    },
+
+    showLoginDialog: function showLoginDialog() {
+        $('#results-ready-dialog').css('display', 'initial');
+    },
+
+    getCurrentUserId: function getCurrentUserId() {
+        var userId = $('#currentUserId').val();
+        if (userId === 'None') {
+            return undefined;
+        }
+
+        return userId;
     },
 
     _on_close_popup: function _on_close_popup() {
@@ -172,8 +191,10 @@ W.pages.StrainSearchResultsPage = Class.extend({
         this.ui.$searchResult.html('');
         this.currentFilter = filter;
         this.ui.$searchResultFooterRegion.removeClass('hidden');
+        var that = this;
+
         this.getSearchResults(this.currentFilter, function () {
-            W.users.UserSettings.update($('#currentUserId').val(), W.users.UserSettings.settingName_SearchFilter, {
+            that.settings.update(that.settings.settingName_SearchFilter, {
                 'searchFilter': filter
             });
         });
@@ -193,7 +214,9 @@ W.pages.StrainSearchResultsPage = Class.extend({
     parseSearchResultItem: function (position, item) {
         var that = this,
             compiled = _.template($('#strain-item-template').html());
+
         return compiled({
+            'obfuscated': !Boolean(that.getCurrentUserId()),
             'position': position,
             'strain': item,
             'closestDistance': that.findClosestDistance,

@@ -103,7 +103,7 @@ class SearchElasticService(BaseElasticService):
         lon = None
         proximity = None
 
-        if current_user:
+        if current_user and current_user.is_authenticated():
             l = current_user.get_location()
             if l:
                 lat = l.lat

@@ -379,6 +379,37 @@
     }
 }
 
+a.blurred {
+    text-shadow: 0 0 8px #10b3dc;
+    color: transparent;
+}
+
+
+#results-ready-dialog {
+    display: none;
+    position: absolute;
+    top: calc(50vh - 6em);
+    left: calc(50vw - 13em);
+
+    width: 26em;
+    height: 11em;
+
+    border: 1px solid $grey;
+    background-color: $white;
+
+    text-align: center;
+
+    h1 {
+        font-size: 1em;
+        margin: 1.5em 0;
+    }
+
+    p {
+        font-size: 0.8em;
+        margin: 0 3em 1.5em;
+    }
+}
+
 @media (max-width: $screen-sm-min) {
     .search-result-container {
         .strains-wrapper .separator {

@@ -12,11 +12,11 @@ from django.views.generic import TemplateView
 from web.search.models import Strain, StrainImage
 
 
-class StrainSearchWizardView(LoginRequiredMixin, TemplateView):
+class StrainSearchWizardView(TemplateView):
     template_name = 'pages/search/strain/wizard.html'
 
 
-class StrainSearchResultView(LoginRequiredMixin, TemplateView):
+class StrainSearchResultView(TemplateView):
     template_name = 'pages/search/strain/search_results.html'
 
 

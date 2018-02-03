@@ -53,6 +53,19 @@
         </div>
     </div>
 
+    <div id="results-ready-dialog">
+        <h1>Your Results Are Ready!</h1>
+        <p>
+            Create an account and unlock your recommendations immediately. It's free, takes less
+            than a minute, and all you need is an email address.
+        </p>
+        <p>
+            <span><a href="{% url 'account_signup' %}">Sign Up</a></span>
+            <span>or</span>
+            <span><a href="{% url 'account_login' %}">Login</a></span>
+        </p>
+    </div>
+
     {% include 'pages/search/strain/search_results_expanded_locations_template.html' %}
     {% include 'pages/search/strain/search_results_expanded_location_template.html' %}
 
@@ -78,7 +91,11 @@
                     </div>
                     <div class="item-info inline-block">
                         <span class="strain-name">
-                            <a href="/strains/${ strain.variety }/${ strain.strain_slug }/?search=true">${ strain.name }</a>
+                            <% if (obfuscated) { %>
+                                <a class="blurred">${ strain.name }</a>
+                            <% } else { %>
+                                <a href="/strains/${ strain.variety }/${ strain.strain_slug }/?search=true">${ strain.name }</a>
+                            <% } %>
                         </span>
                         <span class="strain-type">${ strain.variety }</span>
                         <span class="strain-rating loaded-rating-<%= position %>">${ strain.rating }</span>

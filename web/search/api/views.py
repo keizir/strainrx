@@ -8,6 +8,7 @@ from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
+from web.common.text import obfuscate
 from web.search.api.serializers import SearchCriteriaSerializer, StrainReviewFormSerializer, StrainImageSerializer
 from web.search.api.services import StrainDetailsService
 from web.search.es_service import SearchElasticService
@@ -26,38 +27,36 @@ def bad_request(error_message):
     }, status=status.HTTP_400_BAD_REQUEST)
 
 
-class StrainSearchWizardView(LoginRequiredMixin, APIView):
+class StrainSearchWizardView(APIView):
+    permission_classes = (permissions.AllowAny,)
+
     def post(self, request):
-        if request.user.is_authenticated():
-            if not request.user.is_email_verified:
-                return Response({'message': 'User must verify the email'}, status=status.HTTP_400_BAD_REQUEST)
+        criteria = SearchCriteriaSerializer(data=request.data.get('search_criteria'))
+        criteria.is_valid()
 
-            criteria = SearchCriteriaSerializer(data=request.data.get('search_criteria'))
-            criteria.is_valid()
+        step_1_data = criteria.validated_data.get('step1')
+        step_2_data = criteria.validated_data.get('step2')
+        step_3_data = criteria.validated_data.get('step3')
+        step_4_data = criteria.validated_data.get('step4')
 
-            step_1_data = criteria.validated_data.get('step1')
-            step_2_data = criteria.validated_data.get('step2')
-            step_3_data = criteria.validated_data.get('step3')
-            step_4_data = criteria.validated_data.get('step4')
+        types = 'skipped' if step_1_data.get('skipped') else step_1_data
+        effects = 'skipped' if step_2_data.get('skipped') else step_2_data.get('effects')
+        benefits = 'skipped' if step_3_data.get('skipped') else step_3_data.get('effects')
+        side_effects = 'skipped' if step_4_data.get('skipped') else step_4_data.get('effects')
 
-            types = 'skipped' if step_1_data.get('skipped') else step_1_data
-            effects = 'skipped' if step_2_data.get('skipped') else step_2_data.get('effects')
-            benefits = 'skipped' if step_3_data.get('skipped') else step_3_data.get('effects')
-            side_effects = 'skipped' if step_4_data.get('skipped') else step_4_data.get('effects')
+        request.session['search_criteria'] = {
+            'strain_types': types,
+            'effects': effects,
+            'benefits': benefits,
+            'side_effects': side_effects
+        }
 
-            request.session['search_criteria'] = {
-                'strain_types': types,
-                'effects': effects,
-                'benefits': benefits,
-                'side_effects': side_effects
-            }
-
-            return Response({}, status=status.HTTP_200_OK)
-        else:
-            return Response({'message': 'User must be authenticated'}, status=status.HTTP_403_FORBIDDEN)
+        return Response({}, status=status.HTTP_200_OK)
 
 
-class StrainSearchResultsView(LoginRequiredMixin, APIView):
+class StrainSearchResultsView(APIView):
+    permission_classes = (permissions.AllowAny,)
+
     def get(self, request):
         result_filter = request.GET.get('filter')
         page = request.GET.get('page')
@@ -66,24 +65,28 @@ class StrainSearchResultsView(LoginRequiredMixin, APIView):
 
         search_criteria = request.session.get('search_criteria')
 
-        if search_criteria:
-            user_strain_ratings = StrainRating.objects.filter(created_by=request.user, removed_date=None)
-            data = SearchElasticService().query_strain_srx_score(search_criteria, size, start_from,
-                                                                 current_user=request.user,
-                                                                 result_filter=result_filter)
-            result_list = data.get('list')
+        if not search_criteria:
+            return Response({
+                "error": "Cannot determine a search criteria."
+            }, status=status.HTTP_400_BAD_REQUEST)
 
+        data = SearchElasticService().query_strain_srx_score(search_criteria, size, start_from,
+                                                             current_user=request.user,
+                                                             result_filter=result_filter)
+        result_list = data.get('list')
+
+        if request.user.is_authenticated():
+            user_strain_ratings = StrainRating.objects.filter(created_by=request.user, removed_date=None)
             if len(user_strain_ratings) > 0:
                 result_list = self.change_strain_scores(result_list, user_strain_ratings, request.user, page)
-
-            return Response({
-                'search_results': result_list,
-                'search_results_total': data.get('total')
-            }, status=status.HTTP_200_OK)
+        else:
+            result_list = [dict(x, name=obfuscate(x['name']), strain_slug=obfuscate(x['strain_slug']))
+                           for x in result_list]
 
         return Response({
-            "error": "Cannot determine a search criteria."
-        }, status=status.HTTP_400_BAD_REQUEST)
+            'search_results': result_list,
+            'search_results_total': data.get('total')
+        }, status=status.HTTP_200_OK)
 
     @staticmethod
     def change_strain_scores(result_list, user_strain_reviews, current_user, page):
@@ -409,7 +412,9 @@ def get_client_ip(request):
         return request.META.get('REMOTE_ADDR')
 
 
-class StrainEffectView(LoginRequiredMixin, APIView):
+class StrainEffectView(APIView):
+    permission_classes = (permissions.AllowAny,)
+
     def get(self, request, effect_type):
         effects_raw = Effect.objects.filter(effect_type=effect_type)
         effects = []
