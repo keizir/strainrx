@@ -30,6 +30,8 @@ urlpatterns = [
     url(r'^privacy$', TemplateView.as_view(template_name='pages/privacy.html'), name='privacy'),
     url(r'^terms$', TemplateView.as_view(template_name='pages/terms.html'), name='terms'),
 
+    url(r'^robots.txt$', TemplateView.as_view(template_name='robots.txt', content_type='text/plain'), name='robots.txt'),
+
     # Django Admin, use {% url 'admin:index' %}
     url(settings.ADMIN_URL, include(admin.site.urls)),
 
