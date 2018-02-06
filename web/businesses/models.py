@@ -320,6 +320,9 @@ class BusinessLocation(models.Model):
 
         return (self.get_current_datetime().date() - self.menu_updated_date).days
 
+    def get_absolute_url(self):
+        return self.url
+
     def can_user_request_menu_update(self, user):
         if not user.is_authenticated():
             return False, 'User has to be logged in'
