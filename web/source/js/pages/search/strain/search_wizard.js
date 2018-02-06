@@ -67,7 +67,7 @@ W.pages.search.strain.SearchWizard = W.common.Wizard.extend({
             }
         });
 
-        this.settings.update(this.settings.settingName_SearchFilter, {'searchFilter': 'all'});
+        this.settings.update(this.settings.settingName_SearchFilter, {'searchFilter': 'local'});
         W.common.ActionRecorder.track(this.mixpanelEventName, that.getMixpanelData(data));
     },
 

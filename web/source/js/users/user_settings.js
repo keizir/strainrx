@@ -64,7 +64,7 @@ W.users.UserSettingsLocal = function () {
                 if (setting) {
                     setting.setting_value = settingValue;
                 } else {
-                    settings.append({
+                    settings.push({
                         setting_name: settingName,
                         setting_value: settingValue
                     });

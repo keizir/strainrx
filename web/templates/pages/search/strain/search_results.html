@@ -20,18 +20,13 @@
             <div class="filter-menu-wrapper">
                 <div class="filter-menu">
                     <div class="active-link">
-                        <span class="menu-active-link"><a href="#" filter="all">Show All</a></span>
+                        <span class="menu-active-link" filter="local"><a href="#">Available Locally</a></span>
                         <span class="menu-expander"><i class="fa fa-caret-down" aria-hidden="true"></i></span>
                     </div>
                     <div class="hidden-links hidden">
-                        {% with l=request.user.get_location %}
-                            <span class="menu-link" filter="all"><a href="#">Show All</a></span>
-
-                            {% if l %}
-                                <span class="menu-link" filter="local"><a href="#">Available Locally</a></span>
-                                <span class="menu-link" filter="delivery"><a href="#">Deliveries Only</a></span>
-                            {% endif %}
-                        {% endwith %}
+                         <span class="menu-link" filter="all"><a href="#">Show All</a></span>
+                         <span class="menu-link" filter="local"><a href="#">Available Locally</a></span>
+                         <span class="menu-link" filter="delivery"><a href="#">Deliveries Only</a></span>
                     </div>
                 </div>
             </div>

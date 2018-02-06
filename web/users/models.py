@@ -1,11 +1,14 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals, absolute_import
 
+import json
+import urllib.parse
 from uuid import uuid4
 
 import pytz
 from django.conf import settings
 from django.contrib.auth.models import AbstractUser
+from django.contrib.auth.models import AnonymousUser
 from django.contrib.postgres.fields import JSONField
 from django.core.exceptions import ValidationError
 from django.core.urlresolvers import reverse
@@ -14,6 +17,8 @@ from django.utils.encoding import python_2_unicode_compatible
 from django.utils.translation import ugettext_lazy as _
 
 from web.users import validators
+from web.system.models import SystemProperty
+
 
 USER_TYPE = [
     ('admin', 'Admin'),
@@ -82,18 +87,34 @@ class User(AbstractUser):
 
         return None
 
-    def get_location_json(self):
-        if UserLocation.objects.filter(user__id=self.pk).exists():
-            location = UserLocation.objects.get(user__id=self.pk)
-            return {
-                "street1": location.street1 if location.street1 else "",
-                "city": location.city if location.city else "",
-                "state": location.state if location.state else "",
-                "zipcode": location.zipcode if location.zipcode else "",
-                "location_raw": location.location_raw if location.location_raw else {}
-            }
 
-        return {"street1": "", "city": "", "state": "", "zipcode": "", "location_raw": ""}
+@python_2_unicode_compatible
+class CustomAnonymousUser(AnonymousUser):
+    def __init__(self, request):
+        super().__init__()
+        self.request = request
+
+    @property
+    def proximity(self):
+        proximity = SystemProperty.objects.get(name='max_delivery_radius')
+        proximity = int(proximity.value)
+        return proximity
+
+    def get_location(self):
+        raw_location = self.request.COOKIES.get('user_geo_location')
+        if raw_location is None:
+            return None
+
+        deserialized = json.loads(urllib.parse.unquote(raw_location))
+        user_location = UserLocation()
+        user_location.street1 = deserialized['street1']
+        user_location.city = deserialized['city']
+        user_location.state = deserialized['state']
+        user_location.zipcode = deserialized['zipcode']
+        user_location.lat = deserialized['lat']
+        user_location.lng = deserialized['lng']
+
+        return user_location
 
 
 @python_2_unicode_compatible

@@ -103,7 +103,7 @@ class SearchElasticService(BaseElasticService):
         lon = None
         proximity = None
 
-        if current_user and current_user.is_authenticated():
+        if current_user:
             l = current_user.get_location()
             if l:
                 lat = l.lat
@@ -184,7 +184,7 @@ class SearchElasticService(BaseElasticService):
                     self.add_location(processed_results, s, strain_id, distance)
             elif result_filter == 'local' and current_user:
                 proximity = current_user.proximity if current_user.proximity else 10
-                if distance <= proximity:
+                if float(distance) <= proximity:
                     self.add_location(processed_results, s, strain_id, distance)
             else:
                 self.add_location(processed_results, s, strain_id, distance)
@@ -588,7 +588,6 @@ class SearchElasticService(BaseElasticService):
 
         if current_user:
             l = current_user.get_location()
-            p = deliver_max if deliver_max else current_user.proximity
 
             if l and l.lat and l.lng:
                 if not only_deliveries:
