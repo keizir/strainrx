@@ -39,23 +39,17 @@ W.pages.StrainSearchResultsPage = Class.extend({
         this.name = 'StrainSearchResultsPage';
         this.settings = new W.users.UserSettings({ userId: currentUserId });
 
-        this.settings.get(this.settings.settingName_SearchFilter, function (setting) {
-            if (setting && setting.searchFilter) {
-                that.currentFilter = setting.searchFilter;
-            }
+        that.getSearchResults(that.currentFilter, function () {
+            that.buildResultsFilterMenu();
+            that.initRatings();
 
-            that.getSearchResults(that.currentFilter, function () {
-                that.buildResultsFilterMenu();
-                that.initRatings();
-
-                that.settings.update(that.settings.settingName_SearchFilter, {
-                    'searchFilter': that.currentFilter
-                });
-
-                if (!currentUserId) {
-                    that.showLoginDialog();
-                }
+            that.settings.update(that.settings.settingName_SearchFilter, {
+                'searchFilter': that.currentFilter
             });
+
+            if (!currentUserId) {
+                that.showLoginDialog();
+            }
         });
 
         W.subscribe.apply(this);
