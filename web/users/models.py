@@ -87,6 +87,17 @@ class User(AbstractUser):
 
         return None
 
+    def get_location_json(self):
+        if UserLocation.objects.filter(user__id=self.pk).exists():
+            location = UserLocation.objects.get(user__id=self.pk)
+            return {
+                "street1": location.street1 if location.street1 else "",
+                "city": location.city if location.city else "",
+                "state": location.state if location.state else "",
+                "zipcode": location.zipcode if location.zipcode else "",
+                "location_raw": location.location_raw if location.location_raw else {}
+            }
+
 
 @python_2_unicode_compatible
 class CustomAnonymousUser(AnonymousUser):
