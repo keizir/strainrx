@@ -115,7 +115,7 @@ W.views.LocationView = Class.extend({
     },
 
     buildAddress: function buildAddress(results) {
-        var zipcode = '', city = '', state = '', street1 = '';
+        var zipcode = '', city = '', state = '', street1 = '', aal3 = '';
         $.each(results, function (i, res) {
             if (_.includes(res.types, 'postal_code') && zipcode === '') {
                 $.each(res.address_components, function (j, address_comp) {
@@ -152,9 +152,13 @@ W.views.LocationView = Class.extend({
                     }
                 });
             }
+
+            if (_.includes(address_comp.types, 'administrative_area_level_3') && aal3 === '') {
+                aal3 = address_comp.long_name;
+            }
         });
 
-        return {city: city, state: state, zipcode: zipcode, street1: street1};
+        return {city: city || aal3, state: state, zipcode: zipcode, street1: street1};
     },
 
     saveUserLocation: function saveUserLocation(data) {

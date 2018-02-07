@@ -108,7 +108,8 @@
         },
 
         getAddressFromPlace: function getAddressFromPlace(raw_place) {
-            var street1 = '', zipcode = '', state = '', city = '';
+            var street1 = '', zipcode = '', state = '', city = '', aal3 = '';
+
             $.each(raw_place.address_components, function (i, address_comp) {
                 if (_.includes(address_comp.types, 'street_number')) {
                     street1 += address_comp.long_name + ' ';
@@ -129,11 +130,15 @@
                 if (_.includes(address_comp.types, 'locality') && city === '') {
                     city = address_comp.long_name;
                 }
-            });
 
+                if (_.includes(address_comp.types, 'administrative_area_level_3') && aal3 === '') {
+                    aal3 = address_comp.long_name;
+                }
+            });
+            debugger;
             return {
                 street1: street1,
-                city: city,
+                city: city || aal3,
                 state: state,
                 zipcode: zipcode,
                 lat: raw_place.geometry && raw_place.geometry.location.lat(),
