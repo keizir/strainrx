@@ -346,11 +346,6 @@ class GrowerInfoView(TemplateView):
         context['grower'] = grower
         menu = get_strains_and_images_for_location(grower)
 
-        # Crude way of removing potential grower prefix from strain name
-        for strain, _ in menu:
-            if strain.name.startswith(grower.location_name):
-                strain.name = strain.name[len(grower.location_name):].strip()
-
         context['menu'] = menu
 
         grow_details = (

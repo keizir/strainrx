@@ -120,7 +120,13 @@
                     </a>
                     <div class="details">
                         <div>
-                            <a href="{{ strain.url }}">{{ strain.name }}</a>
+                            <a href="{{ strain.url }}">
+                            {% if strain.common_name %}
+                                {{ strain.common_name }}
+                            {% else %}
+                                {{ strain.name }}
+                            {% endif %}
+                            </a>
                             <div>{{ strain.variety }}</div>
                         </div>
                     </div>
@@ -217,7 +223,13 @@
                     </a>
                     <div class="details">
                         <div>
-                            <a href="{{ strain.url }}">{{ strain.name }}</a>
+                            <a href="{{ strain.url }}">
+                                {% if strain.common_name %}
+                                    {{ strain.common_name }}
+                                {% else %}
+                                    {{ strain.name }}
+                                {% endif %}
+                            </a>
                             <div>{{ strain.variety }}</div>
                         </div>
                     </div>

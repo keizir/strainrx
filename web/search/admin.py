@@ -79,7 +79,7 @@ class StrainAdmin(admin.ModelAdmin):
     form = StrainAdminForm
     readonly_fields = ('id',)
     fieldsets = (
-        ('Info', {'fields': ('id', 'name', 'strain_slug'), }),
+        ('Info', {'fields': ('id', 'name', 'common_name', 'strain_slug'), }),
         ('Social', {'fields': ('meta_desc', 'meta_keywords', 'social_image'), }),
         ('Type', {'fields': ('variety', 'category',), }),
         ('Effects', {'fields': ('effects', 'benefits', 'side_effects', 'flavor'), }),
