@@ -462,21 +462,35 @@ class SearchElasticService(BaseElasticService):
             type=es_mappings.TYPES.get('strain')
         )
 
-        query = {
-            "_source": ["id", "name", "variety", "strain_slug", "removed_date"],
-            "suggest": {
-                "name_suggestion": {
-                    "text": query,
-                    "completion": {
-                        "field": "name_suggest",
-                        "size": 25
+        if ' ' in query:
+            query = {
+                "_source": ["id", "name", "variety", "strain_slug", "removed_date"],
+                "query": {
+                    "match": {
+                        "name": query
                     }
                 }
             }
-        }
 
-        es_response = self._request(method, url, data=json.dumps(query))
-        results = self._transform_suggest_results(es_response)
+            es_response = self._request(method, url, data=json.dumps(query))
+            results = self._transform_query_results(es_response)
+        else:
+            query = {
+                "_source": ["id", "name", "variety", "strain_slug", "removed_date"],
+                "suggest": {
+                    "name_suggestion": {
+                        "text": query,
+                        "completion": {
+                            "field": "name_suggest",
+                            "size": 25
+                        }
+                    }
+                }
+            }
+
+            es_response = self._request(method, url, data=json.dumps(query))
+            results = self._transform_suggest_results(es_response)
+
         return results
 
     def lookup_business_location(self, query, bus_type=None, location=None, timezone=None):
@@ -559,6 +573,21 @@ class SearchElasticService(BaseElasticService):
             # see https://www.elastic.co/guide/en/elasticsearch/reference/5.6/suggester-context.html#_geo_location_query
             if has_location:
                 payloads.sort(key=lambda x: x.get('distance'))
+
+        return {
+            'total': total,
+            'payloads': payloads
+        }
+
+    def _transform_query_results(self, es_response):
+        hits = es_response.get('hits', {})
+        total = hits.get('total', 0)
+        payloads = []
+
+        for h in hits.get('hits', []):
+            strain = h.get('_source')
+            if not strain.get('removed_date'):
+                payloads.append(strain)
 
         return {
             'total': total,

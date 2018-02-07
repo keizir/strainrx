@@ -42,7 +42,7 @@ W.pages.strain.StrainLookup = Class.extend({
             if (text && text.length >= 1) {
                 $.ajax({
                     method: 'GET',
-                    url: '/api/v1/search/strain/lookup/?q={0}'.format(text),
+                    url: '/api/v1/search/strain/lookup/?q={0}'.format(encodeURIComponent(text)),
                     success: function (data) {
                         $payloadsRegion.html('');
                         $payloadsRegion.append(that.buildPayloadLookupArea(data));
