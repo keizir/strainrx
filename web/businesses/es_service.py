@@ -84,6 +84,7 @@ class BusinessLocationESService(BaseElasticService):
         existing_data['sun_close'] = new_data.get('sun_close')
         existing_data['image'] = new_data.get('image')
         existing_data['url'] = new_data.get('url')
+        existing_data['urls'] = new_data.get('urls')
         existing_data['location_name_suggest'] = new_data.get('location_name_suggest')
 
     def generate_autocomplete_data(self, business_location):
