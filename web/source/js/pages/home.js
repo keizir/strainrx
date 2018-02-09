@@ -16,7 +16,7 @@ W.pages.HomePage = Class.extend({
     initStrainLookupField: function initStrainLookupField() {
         var lookupTemplate = _.template($('#strain-lookup-field').html());
         $('.strain-name-field').html(lookupTemplate({
-            'lookup_placeholder': 'Blue Dream, Maiu Wowie, Pineapple express ...'
+            'lookup_placeholder': 'Blue Dream, Maui Wowie, Pineapple express ...'
         }));
         new W.pages.strain.StrainLookup({ onSelect: this.navigateToStrainDetailPage });
     },

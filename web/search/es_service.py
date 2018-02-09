@@ -467,7 +467,10 @@ class SearchElasticService(BaseElasticService):
                 "_source": ["id", "name", "variety", "strain_slug", "removed_date"],
                 "query": {
                     "match": {
-                        "name": query
+                        "name": {
+                            "query": query,
+                            "fuzziness": 1
+                        }
                     }
                 }
             }
@@ -482,7 +485,10 @@ class SearchElasticService(BaseElasticService):
                         "text": query,
                         "completion": {
                             "field": "name_suggest",
-                            "size": 25
+                            "size": 25,
+                            "fuzzy": {
+                                "fuzziness": 1
+                            }
                         }
                     }
                 }
