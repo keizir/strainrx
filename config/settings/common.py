@@ -53,6 +53,7 @@ THIRD_PARTY_APPS = (
     'raven.contrib.django.raven_compat',
     'tinymce',
     'corsheaders',
+    'rangefilter',
 )
 
 # Apps specific for this project go here.
