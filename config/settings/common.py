@@ -301,7 +301,7 @@ MAX_BUSINESS_IMAGE_SIZE = 5 * 1024 * 1024  # 5 MB
 SENDGRID_API_KEY = env('SENDGRID_API_KEY', default='')
 DEFAULT_FROM_EMAIL = 'support@strainrx.co'
 
-HOST = env('HOST_URL', default='localhost:8000')
+HOST = env('HOST_URL', default='http://localhost:8000')
 
 DEFAULT_FILE_STORAGE = 'storages.backends.s3boto.S3BotoStorage'
 
@@ -486,3 +486,5 @@ CKEDITOR_SETTINGS = {
 TEXT_ADDITIONAL_ATTRIBUTES = ('*', 'placeholder')
 
 # END CMS SETTINGS
+
+FB_PROFILE_URL = 'https://www.facebook.com/StrainRx/'

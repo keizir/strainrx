@@ -20,20 +20,24 @@ class EmailService:
     def send_confirmation_email(self, user):
         sg = sendgrid.SendGridAPIClient(apikey=settings.SENDGRID_API_KEY)
 
-        confirmation_url = '{host}{url}'.format(host=self.host,
+        confirmation_url = '{host}{url}'.format(host=settings.HOST,
                                                 url=reverse('users:confirm_email', kwargs={'uid': user.id}))
+        logo_url = '{host}{url}'.format(host=settings.HOST,
+                                        url=staticfiles_storage.url('images/logo_hr.png'))
+        fb_logo_url = '{host}{url}'.format(host=settings.HOST,
+                                           url=staticfiles_storage.url('images/fb_logo_email_footer.png'))
+
+        html_template = render_to_string('emails/user_consumer_confirmation_email.html', {
+            'user': user,
+            'confirmation_url': confirmation_url,
+            'logo_url': logo_url,
+            'fb_logo_url': fb_logo_url,
+            'fb_url': settings.FB_PROFILE_URL,
+        })
 
         from_email = Email(settings.DEFAULT_FROM_EMAIL)
         to_email = Email(user.email)
-        subject = self.basic_email_subject.format('Verify Your Email')
-
-        html_template = render_to_string('emails/user_consumer_confirmation_email.html', {
-            'confirmation_url': confirmation_url,
-            'sent_to': user.email,
-            'header_logo_url': self.header_logo_url,
-            'envelope_image_url': self.envelope_image_url,
-            'leaf_image_url': self.leaf_image_url
-        })
+        subject = self.basic_email_subject.format('Please verify your email address')
 
         html_content = Content('text/html', html_template)
 

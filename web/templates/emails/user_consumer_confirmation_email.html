@@ -1,27 +1,39 @@
-{% extends "emails/base.html" %}
+{% extends "emails/base2.html" %}
 {% load staticfiles i18n %}
-
 {% block content %}
+<tbody style="font-size: 16px; font-family: Geneva, Verdana, sans-serif; color: #5f5f5f;">
     <tr>
         <td>
-            <h1 style="font-size: 44px; margin: 16px auto;">Please Confirm Your Email Address</h1>
+            <p style="margin: 16px;">Hi {{ user.first_name|default:"there" }},</p>
         </td>
     </tr>
     <tr>
         <td>
-            <p style="font-size: 18px; margin: 20px auto;">
-                Your account has been created. To verify you email please click this <a href="{{ confirmation_url }}">link</a>.
+            <p style="margin: 16px;">Welcome to StrainRx! Please click the button below to verify your account.</p>
+        </td>
+    </tr>
+    <tr>
+        <td>
+            <p style="margin: 16px;">
+                <a href="{{ confirmation_url }}" style="background-color: #fbbf3d; padding: 10px 20px; border-radius: 5px; color: #ffffff; text-decoration: none; font-weight: bold;">verify account</a>
             </p>
         </td>
     </tr>
     <tr>
         <td>
-            <h2 style="font-size: 28px; margin: 32px auto;">Thank you for confirming!</h2>
+            <p style="margin: 16px;">
+                If you have any issues logging in, please feel free to contact us
+                <a href="mailto:support@strainrx.co" style="color: #40a4e0;">support@strainrx.co</a>.
+            </p>
         </td>
     </tr>
     <tr>
         <td>
-            <img src="{{ leaf_image_url }}" alt="Leaf" style="height: 60px;"/>
+            <p style="margin: 32px 16px 48px;">
+                Best Regards,<br>
+                StrainRx Team
+            </p>
         </td>
     </tr>
+</tbody>
 {% endblock %}
