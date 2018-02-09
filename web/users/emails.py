@@ -22,10 +22,8 @@ class EmailService:
 
         confirmation_url = '{host}{url}'.format(host=settings.HOST,
                                                 url=reverse('users:confirm_email', kwargs={'uid': user.id}))
-        logo_url = '{host}{url}'.format(host=settings.HOST,
-                                        url=staticfiles_storage.url('images/logo_hr.png'))
-        fb_logo_url = '{host}{url}'.format(host=settings.HOST,
-                                           url=staticfiles_storage.url('images/fb_logo_email_footer.png'))
+        logo_url = staticfiles_storage.url('images/logo_hr.png')
+        fb_logo_url = staticfiles_storage.url('images/fb_logo_email_footer.png')
 
         html_template = render_to_string('emails/user_consumer_confirmation_email.html', {
             'user': user,
