@@ -27,13 +27,6 @@ W.Navbar = function () {
                 );
             }
 
-            if (AUTHENTICATED && !EMAIL_VERIFIED) {
-                $('.strain-wizard-link').on('click', function (e) {
-                    e.preventDefault();
-                    W.common.VerifyEmailDialog();
-                });
-            }
-
             this.hamburgerMenuClickHandler();
         },
 

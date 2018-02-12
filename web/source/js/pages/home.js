@@ -10,7 +10,6 @@ W.pages.HomePage = Class.extend({
         this.userId = options && options.userId;
 
         this.initStrainLookupField();
-        this.enterSearchWizard();
     },
 
     initStrainLookupField: function initStrainLookupField() {
@@ -24,15 +23,6 @@ W.pages.HomePage = Class.extend({
     navigateToStrainDetailPage: function navigateToStrainDetailPage(selected) {
         if (selected.variety && selected.slug) {
             window.location.href = '/strains/{0}/{1}/'.format(selected.variety, selected.slug);
-        }
-    },
-
-    enterSearchWizard: function enterSearchWizard() {
-        if (AUTHENTICATED && !EMAIL_VERIFIED) {
-            $('.btn-lets-go').on('click', function (e) {
-                e.preventDefault();
-                W.common.VerifyEmailDialog();
-            });
         }
     }
 });
