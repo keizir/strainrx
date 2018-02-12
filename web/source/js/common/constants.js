@@ -84,7 +84,8 @@ W.common.Constants = {
         'dry_eyes': 'Dry Eyes',
         'spacey': 'Spacey',
         'lazy': 'Lazy',
-        'hungry': 'Hungry'
+        'hungry': 'Hungry',
+        'groggy': 'Groggy'
     },
 
     strainVarieties: {

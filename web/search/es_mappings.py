@@ -80,6 +80,7 @@ strain_mapping = {
                 "spacey": {"type": "short"},
                 "lazy": {"type": "short"},
                 "hungry": {"type": "short"},
+                "groggy": {"type": "short"},
             }
         },
         "flavor": {
@@ -308,6 +309,9 @@ strain_rating_mapping = {
                     "type": "short"
                 },
                 "hungry": {
+                    "type": "short"
+                },
+                "groggy": {
                     "type": "short"
                 }
             }

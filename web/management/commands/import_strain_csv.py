@@ -223,6 +223,7 @@ class Command(BaseCommand):
                 "spacey": self.get_side_effect_value(row.get('Spacey')),
                 "lazy": self.get_side_effect_value(row.get('Lazy')),
                 "hungry": hungry_negative,
+                "groggy": self.get_side_effect_value(row.get('Groggy')),
                 }
 
     def get_side_effect_value(self, value):
