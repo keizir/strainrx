@@ -299,6 +299,12 @@ strain_rating_mapping = {
                 },
                 "dry_eyes": {
                     "type": "short"
+                },
+                "spacey": {
+                    "type": "short"
+                },
+                "lazy": {
+                    "type": "short"
                 }
             }
         },
