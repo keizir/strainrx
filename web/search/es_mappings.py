@@ -78,7 +78,8 @@ strain_mapping = {
                 "dizziness": {"type": "short"},
                 "dry_eyes": {"type": "short"},
                 "spacey": {"type": "short"},
-                "lazy": {"type": "short"}
+                "lazy": {"type": "short"},
+                "hungry": {"type": "short"},
             }
         },
         "flavor": {
@@ -304,6 +305,9 @@ strain_rating_mapping = {
                     "type": "short"
                 },
                 "lazy": {
+                    "type": "short"
+                },
+                "hungry": {
                     "type": "short"
                 }
             }

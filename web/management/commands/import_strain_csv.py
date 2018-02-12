@@ -206,12 +206,24 @@ class Command(BaseCommand):
             return 0
 
     def build_side_effects(self, row):
+        hungry = self.get_side_effect_value(row.get('Hungry'))
+        restore_appetite = self.get_side_effect_value(row.get('Restore Appetite'))
+
+        try:
+            hungry_negative = int((hungry + restore_appetite)/len(tuple(filter(bool, (hungry, restore_appetite)))))
+        except ZeroDivisionError:
+            hungry_negative = 0
+
         return {"anxiety": self.get_side_effect_value(row.get('Anxiety')),
                 "dry_mouth": self.get_side_effect_value(row.get('Dry Mouth')),
                 "paranoia": self.get_side_effect_value(row.get('Paranoia')),
                 "headache": self.get_side_effect_value(row.get('Headache')),
                 "dizziness": self.get_side_effect_value(row.get('Dizziness')),
-                "dry_eyes": self.get_side_effect_value(row.get('Dry Eyes')), }
+                "dry_eyes": self.get_side_effect_value(row.get('Dry Eyes')),
+                "spacey": self.get_side_effect_value(row.get('Spacey')),
+                "lazy": self.get_side_effect_value(row.get('Lazy')),
+                "hungry": hungry_negative,
+                }
 
     def get_side_effect_value(self, value):
         if value is not None and value != '':

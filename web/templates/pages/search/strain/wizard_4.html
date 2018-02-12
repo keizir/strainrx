@@ -4,10 +4,11 @@
         <div class="form effects-form">
             <div class="fields effects">
                 <% _.each(side_effects, function(se) { %>
-                <div class="form-field">
-                    <span class="strain-effect" id="<%= _.escape(se.data_name) %>">
+                <div class="form-field" title="<%= isEnabled(se).reason %>">
+                    <span class="strain-effect <% if (!isEnabled(se).value) { %>disabled<% } %>" id="<%= _.escape(se.data_name) %>">
                         <%= _.escape(se.display_name) %>
                     </span>
+
                     <div class="effect-config-box <%= _.escape(se.data_name) %>-config-box hidden">
                         <div class="close-box" title="Close">x</div>
                         <div class="slider-wrapper hidden">

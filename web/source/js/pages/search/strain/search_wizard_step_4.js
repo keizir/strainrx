@@ -26,7 +26,10 @@ W.pages.search.strain.SearchWizardStep4 = W.pages.search.strain.SearchWizardStep
     },
 
     renderHTML: function renderHTML() {
-        return this.$template(this.renderData);
+        return this.$template({
+            side_effects: this.renderData.side_effects,
+            isEnabled: this.isEnabled.bind(this)
+        });
     },
 
     submit: function submit() {
@@ -51,6 +54,38 @@ W.pages.search.strain.SearchWizardStep4 = W.pages.search.strain.SearchWizardStep
         if (this.model.get(this.step)) {
             this.restoreEffectsState(this.step, this.selectedSideEffects);
         }
+    },
+
+    isEnabled: function isEnabled(sideEffect) {
+        if (sideEffect.data_name !== 'hungry') {
+            return { value: true };
+        }
+
+        var effects = this.model.data[2].effects;
+        var hasHungerEffect = _.find(effects, function(effect) {
+            return effect.name === 'hungry';
+        });
+
+        var medicalBenefits = this.model.data[3].effects;
+        var hasAppetiteBenefit = _.find(medicalBenefits, function(effect) {
+            return effect.name === 'restore_appetite';
+        });
+
+        debugger;
+        if (!hasHungerEffect && ! hasAppetiteBenefit) {
+            return { value: true };
+        } else if (hasHungerEffect && hasAppetiteBenefit) {
+            return { value: false, reason: 'You cannot minimize this side effect because ' +
+                    'you selected Hungry as a desired effect and Restore Appetite as medical benefit.' };
+        } else if (hasHungerEffect) {
+            return { value: false, reason: 'You cannot minimize this side effect because ' +
+                    'you selected Hungry as a desired effect.' };
+        } else if (hasAppetiteBenefit) {
+            return { value: false, reason: 'You cannot minimize this side effect because ' +
+                    'you selected Restore Appetite as medical benefit.' };
+        }
+
+        return { value: true };
     }
 
 });

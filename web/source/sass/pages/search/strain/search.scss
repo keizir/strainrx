@@ -91,13 +91,13 @@
         .form-field {
             position: relative;
             margin: 0 0.3em;
-            width: 12em;
+            width: 11.5em;
             height: 3em;
 
             .effect-config-box {
                 position: absolute;
                 border: 1px solid $green-apple;
-                width: 12em;
+                width: 11.5em;
                 height: 6.5em;
                 background-color: $green-apple;
                 z-index: 1;
@@ -251,7 +251,7 @@
 
     .form-field .strain-effect {
         display: table;
-        width: 12em;
+        width: 11.5em;
         padding: 0.4em;
         border: 1px solid $iris-blue;
         color: $iris-blue;
