@@ -216,7 +216,7 @@ class BusinessLocationAdmin(admin.ModelAdmin):
         return objects_all
 
     list_display = ['business', 'location_name', 'dispensary', 'delivery', 'grow_house',
-                    'removed_date', 'owner_email_verified']
+                    'created_date', 'removed_date', 'owner_email_verified']
     readonly_fields = ['category', 'slug_name', 'primary']
     search_fields = ['location_name']
     list_filter = [OwnerEmailVerifiedFilter, ActivityFilter, 'dispensary', 'delivery', 'grow_house']
