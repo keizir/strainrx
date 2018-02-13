@@ -109,7 +109,7 @@
     <script src="{% static 'js/pages/location.js' %}"></script>
     <script type="text/javascript">
         W.Location.init({
-            location: {% if request.user.is_authenticated %}
+            location: {% if request.user.is_authenticated and request.user.get_location_json %}
                 {{ request.user.get_location_json | safe }} {% else %} null {% endif %},
             authenticated: '{{ request.user.is_authenticated }}' == 'True',
             userId: '{{ request.user.id }}'
@@ -118,7 +118,7 @@
 
     <script type="text/javascript">
         new W.pages.HomePage({
-            location: {% if request.user.is_authenticated %}
+            location: {% if request.user.is_authenticated and request.user.get_location_json %}
                 {{ request.user.get_location_json | safe }} {% else %} null {% endif %},
             authenticated: '{{ request.user.is_authenticated }}' == 'True',
             userId: {% if request.user.is_authenticated %} {{ request.user.id }} {% else %} null {% endif %}
