@@ -71,7 +71,6 @@ W.pages.search.strain.SearchWizardStep4 = W.pages.search.strain.SearchWizardStep
             return effect.name === 'restore_appetite';
         });
 
-        debugger;
         if (!hasHungerEffect && ! hasAppetiteBenefit) {
             return { value: true };
         } else if (hasHungerEffect && hasAppetiteBenefit) {

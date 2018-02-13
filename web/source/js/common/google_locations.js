@@ -114,7 +114,6 @@ W.Common.GoogleLocations = Class.extend({
             }
         });
 
-        debugger;
         return {
             street1: street1,
             city: city || aal3,

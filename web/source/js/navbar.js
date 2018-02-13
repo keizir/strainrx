@@ -159,7 +159,7 @@ W.Navbar = function () {
                     aal3 = address_comp.long_name;
                 }
             });
-            debugger;
+
             return {city: city || aal3, state: state, zipcode: zipcode, street1: street1};
         },
 

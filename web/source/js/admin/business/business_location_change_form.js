@@ -135,7 +135,7 @@
                     aal3 = address_comp.long_name;
                 }
             });
-            debugger;
+
             return {
                 street1: street1,
                 city: city || aal3,
