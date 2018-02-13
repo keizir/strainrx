@@ -107,8 +107,9 @@ class Command(BaseCommand):
                     for name in origins_split:
                         name_cleared = name.strip()
                         strain_slug = slugify(name_cleared)
+
                         if Strain.objects.filter(strain_slug=strain_slug).exists():
-                            existing = Strain.objects.get(strain_slug=strain_slug)
+                            existing = Strain.objects.filter(strain_slug=strain_slug).first()
                             s.origins.add(existing.id)
                         else:
                             print('   ---> !!! Error: Origin [name="{0}"] does not exist. '
@@ -206,8 +207,8 @@ class Command(BaseCommand):
             return 0
 
     def build_side_effects(self, row):
-        hungry = self.get_side_effect_value(row.get('Hungry'))
-        restore_appetite = self.get_side_effect_value(row.get('Restore Appetite'))
+        hungry = self.value_or_zero(row.get('Hungry'))
+        restore_appetite = self.value_or_zero(row.get('Restore Appetite'))
 
         try:
             hungry_negative = int((hungry + restore_appetite)/len(tuple(filter(bool, (hungry, restore_appetite)))))

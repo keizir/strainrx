@@ -48,7 +48,7 @@ class Strain(models.Model):
 
     internal_id = models.CharField(max_length=10, null=True, blank=True)
     name = models.CharField(max_length=255)
-    common_name = models.CharField(max_length=255, null=True)
+    common_name = models.CharField(max_length=255, null=True, blank=True)
     strain_slug = models.SlugField(max_length=611, null=True, blank=True,
                                    help_text='Warning: changing the slug will change the URL of this strain')
 

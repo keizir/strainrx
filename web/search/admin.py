@@ -46,6 +46,7 @@ class StrainAdminForm(forms.ModelForm):
         exclude = ['internal_id', 'removed_by', 'removed_date']
 
     about = forms.CharField(widget=TinyMCE(attrs={'cols': 80, 'rows': 20}), required=False)
+    common_name = forms.CharField(required=False)
 
 
 class StrainRemovedFilter(SimpleListFilter):
