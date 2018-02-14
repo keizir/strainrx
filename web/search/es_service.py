@@ -83,6 +83,9 @@ class SearchElasticService(BaseElasticService):
                         'locations': dispensaries
                     })
 
+        if is_similar:
+            processed_results = [x for x in processed_results if not x.get('you_may_also_like_excluded')]
+
         response_data = {
             'list': processed_results,
             'total': total

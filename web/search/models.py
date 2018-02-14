@@ -85,6 +85,8 @@ class Strain(models.Model):
     removed_by = models.CharField(max_length=20, blank=True, null=True)
     removed_date = models.DateTimeField(blank=True, null=True)
 
+    you_may_also_like_exclude = models.BooleanField(default=False)
+
     # social fields
     meta_desc = models.CharField(max_length=3072, blank=True)
     meta_keywords = models.CharField(max_length=3072, blank=True)

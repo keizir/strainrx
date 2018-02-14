@@ -84,7 +84,7 @@ class StrainAdmin(admin.ModelAdmin):
         ('Social', {'fields': ('meta_desc', 'meta_keywords', 'social_image'), }),
         ('Type', {'fields': ('variety', 'category',), }),
         ('Effects', {'fields': ('effects', 'benefits', 'side_effects', 'flavor'), }),
-        ('Additional', {'fields': ('about', 'origins',), }),
+        ('Additional', {'fields': ('about', 'origins', 'you_may_also_like_exclude'), }),
     )
     inlines = (StrainImageInline,)
 
