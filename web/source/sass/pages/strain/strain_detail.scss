@@ -690,78 +690,49 @@
         }
 
         .lineage-region {
-            a:first-child {
-                display: inline-block;
-                width: 30%;
+            display: flex;
+
+            .lineage-column {
                 height: 10em;
-                vertical-align: top;
+                width: 10em;
+                display: flex;
+                flex-flow: column;
+                padding-right: 0.5em;
             }
 
-            a:first-child .abbreviation {
-                margin-top: 1.4em;
-                font-weight: bold;
-            }
-
-            a:first-child div.lineage-wrapper {
-                display: block;
-                width: 100%;
-                height: 10em;
-                border: 3px solid $medium-aquamarine;
-                text-align: center;
+            .lineage-column.tall a {
+                height: 100%;
             }
 
             a {
-                display: inline-block;
-                width: 30%;
-                height: 4.9em;
-                vertical-align: top;
+                height: 50%;
             }
 
-            a .abbreviation {
-                margin-top: 0.2em;
-                font-weight: bold;
+            .lineage-column:not(.tall) a:nth-of-type(1) {
+                padding-bottom: 0.25em;
             }
 
-            a:nth-child(3) {
-                display: inline-block;
-                position: relative;
-                bottom: -5.1em;
-                right: 31.1%;
-                width: 30%;
-                height: 5em;
-                vertical-align: top;
+            .lineage-column:not(.tall) a:nth-of-type(2) {
+                padding-top: 0.25em;
             }
 
-            a:nth-child(4) {
-                display: inline-block;
-                position: relative;
-                bottom: 10em;
-                left: 61.9%;
-                width: 30%;
-                height: 5em;
-                vertical-align: top;
-            }
-
-            a:nth-child(5) {
-                display: inline-block;
-                position: relative;
-                bottom: 4.9em;
-                left: 30.9%;
-                width: 30%;
-                height: 5em;
-            }
-
-            a div.lineage-wrapper {
-                display: block;
-                width: 100%;
-                height: 4.9em;
+            .lineage-wrapper {
                 border: 3px solid $medium-aquamarine;
-                text-align: center;
+                height: 100%;
+                display: flex;
+                flex-flow: column;
+                align-items: center;
+                justify-content: center;
+            }
+
+            .lineage-wrapper.tall {
+                height: 100%;
             }
 
             .lineage-wrapper .abbreviation {
                 display: block;
                 font-size: 2em;
+                font-weight: bold;
             }
 
             .lineage-wrapper .name {

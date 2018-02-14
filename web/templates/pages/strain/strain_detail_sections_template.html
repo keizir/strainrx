@@ -267,12 +267,18 @@
             </span>
             <div class="lineage-region">
                 <% $.each(model.strain_origins, function(i, origin) { %>
-                <a href="/strains/<%= origin.variety %>/<%= origin.strain_slug %>">
-                    <div class="lineage-wrapper">
-                        <span class="abbreviation"><%= abbreviateStrainName(origin.name)%></span>
-                        <span class="name"><%= origin.name %></span>
-                    </div>
-                </a>
+                    <% if (i === 0 || i % 2) { %>
+                        <div class="lineage-column <% if (i === 0) { %>tall<% } %>">
+                    <% } %>
+                        <a href="/strains/<%= origin.variety %>/<%= origin.strain_slug %>">
+                            <div class="lineage-wrapper">
+                                <span class="abbreviation"><%= abbreviateStrainName(origin.name)%></span>
+                                <span class="name"><%= origin.name %></span>
+                            </div>
+                        </a>
+                    <% if (i === 0 || i % 2 === 0 || i === model.strain_origins.length - 1) { %>
+                        </div>
+                    <% } %>
                 <% }); %>
             </div>
         </div>
