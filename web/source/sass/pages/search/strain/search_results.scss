@@ -385,14 +385,13 @@ a.blurred {
 }
 
 
-#results-ready-dialog {
+.results-dialog {
     display: none;
     position: absolute;
     top: calc(50vh - 6em);
     left: calc(50vw - 13em);
 
     width: 26em;
-    height: 11em;
 
     border: 1px solid $grey;
     background-color: $white;

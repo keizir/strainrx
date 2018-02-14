@@ -75,7 +75,7 @@ class StrainSearchResultsView(APIView):
                                                              result_filter=result_filter)
         result_list = data.get('list')
 
-        if request.user.is_authenticated():
+        if request.user.is_authenticated() and request.user.is_email_verified:
             user_strain_ratings = StrainRating.objects.filter(created_by=request.user, removed_date=None)
             if len(user_strain_ratings) > 0:
                 result_list = self.change_strain_scores(result_list, user_strain_ratings, request.user, page)
