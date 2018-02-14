@@ -3,8 +3,7 @@ from __future__ import absolute_import, unicode_literals
 
 from urllib.parse import urlparse
 
-from django.core.urlresolvers import resolve, Resolver404
-from django.contrib.auth.mixins import LoginRequiredMixin
+from django.core.urlresolvers import reverse, resolve, Resolver404
 from django.db.models import Q
 from django.http import Http404
 from django.views.generic import TemplateView
@@ -18,6 +17,14 @@ class StrainSearchWizardView(TemplateView):
 
 class StrainSearchResultView(TemplateView):
     template_name = 'pages/search/strain/search_results.html'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['sign_in_url'] = '{url}?next={next_url}'.format(
+            url=reverse('account_login'),
+            next_url=reverse('search:strain_results'),
+        )
+        return context
 
 
 class StrainDetailView(TemplateView):

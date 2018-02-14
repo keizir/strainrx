@@ -1,5 +1,7 @@
 import datetime
+import json
 import logging
+import urllib.parse
 import uuid
 
 from boto.s3.bucket import Bucket
@@ -212,6 +214,11 @@ class UserLoginView(APIView):
                 business_image = primary.image.url if len(
                     locations) > 0 and primary.image and primary.image.url else None
                 request.session['business_image'] = business_image
+
+        if not UserSetting.objects.filter(user=user).exists():
+            UserSetting.create_for_user(user,
+                                        json.loads(urllib.parse.unquote(request.COOKIES.get('user_settings', '[]')))
+                                        )
 
         login(request, authenticated)
         return Response({'user': UserSerializer(user).data}, status=status.HTTP_200_OK)

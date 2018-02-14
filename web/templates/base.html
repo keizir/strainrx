@@ -132,7 +132,7 @@
     <script type="text/javascript">
         W.Base.init();
         W.Navbar.init({
-            location: {% if request.user.is_authenticated %}
+            location: {% if request.user.is_authenticated and request.user.get_location_json %}
                 {{ request.user.get_location_json | safe }} {% else %} null {% endif %},
             authenticated: '{{ request.user.is_authenticated }}' == 'True',
             userId: '{{ request.user.id }}',
