@@ -9,14 +9,15 @@ You should have python 3.5.1 installed as well as Nodejs 4.4.7
 
 1. Fork and then clone your fork.  
 1. create a virtualenv and activate it
-2. From the cloned directory run:  
+1. From the cloned directory run:  
     `pip3 install -r requirements/local.txt`
     
     `npm install`  
-3. Run `gulp` (builds all static files and will watch for changes and rebuild while it is running)
-4. Create a local Postgre DB (`createdb`) then change your `local.py` settings to point to your DB.  
-5. Run `python manage.py migrate`.  
-6. To create a superuser: `python manage.py createsuperuser`
+1. Install gulp `npm install gulp`
+1. Run `gulp` (builds all static files and will watch for changes and rebuild while it is running)
+1. Create a local Postgre DB (`createdb`) then change your `local.py` settings to point to your DB.  
+1. Run `python manage.py migrate`.  
+1. To create a superuser: `python manage.py createsuperuser`
 1. To run server: `python manage.py runserver` and visit localhost:8000
 
 
