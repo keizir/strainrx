@@ -19,6 +19,10 @@ W.pages.search.strain.SearchWizardStep = W.common.WizardStep.extend({
         this.currentUserId = options && options.currentUserId;
         this.settings = new W.users.UserSettings({ userId: this.currentUserId });
 
+        if (!this.currentUserId) {
+            this.settings.remove(this.settings.settingName_WizardSearch);
+        }
+
         this.skip_el = options && options.skip_el;
         this.back_el = options && options.back_el;
     },
