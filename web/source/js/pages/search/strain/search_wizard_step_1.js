@@ -63,7 +63,7 @@ W.pages.search.strain.SearchWizardStep1 = W.pages.search.strain.SearchWizardStep
             $('input[type="checkbox"]').prop('checked', false);
             $(this).attr('disabled', 'disabled');
 
-            this.settings.update(W.users.UserSettings.settingName_WizardSearch, that.model.getData());
+            that.settings.update(W.users.UserSettings.settingName_WizardSearch, that.model.getData());
             $.ajax({method: 'DELETE', url: '/api/v1/users/{0}/searches'.format(userId)});
         });
     },
