@@ -97,6 +97,7 @@ class User(AbstractUser):
                 "zipcode": location.zipcode if location.zipcode else "",
                 "location_raw": location.location_raw if location.location_raw else {}
             }
+        return {}
 
 
 @python_2_unicode_compatible

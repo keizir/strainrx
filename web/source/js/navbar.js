@@ -155,8 +155,12 @@ W.Navbar = function () {
                     });
                 }
 
-                if (_.includes(address_comp.types, 'administrative_area_level_3') && aal3 === '') {
-                    aal3 = address_comp.long_name;
+                if (_.includes(res.types, 'administrative_area_level_3') && city === '') {
+                    $.each(res.address_components, function (j, address_comp) {
+                        if (_.includes(address_comp.types, 'administrative_area_level_3')) {
+                            aal3 = address_comp.long_name;
+                        }
+                    });
                 }
             });
 
