@@ -14,8 +14,11 @@ class BusinessAccountOwner(permissions.BasePermission):
         return Business.objects.filter(**filterargs).exists()
 
 
-class BusinessLocationAccountOwner(permissions.BasePermission):
+class BusinessLocationAccountOwnerOrStaff(permissions.BasePermission):
     def has_permission(self, request, view):
+        if request.user.is_staff:
+            return True
+
         if request.method == 'GET':
             # Allow any GET request but restrict all others (POST, PUT, DELETE)
             return True

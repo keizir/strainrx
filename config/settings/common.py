@@ -54,6 +54,7 @@ THIRD_PARTY_APPS = (
     'tinymce',
     'corsheaders',
     'rangefilter',
+    'impersonate',
 )
 
 # Apps specific for this project go here.
@@ -94,6 +95,7 @@ MIDDLEWARE_CLASSES = (
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'web.middleware.middleware.TimezoneMiddleware',
+    'impersonate.middleware.ImpersonateMiddleware',
 )
 
 CORS_ORIGIN_WHITELIST = (

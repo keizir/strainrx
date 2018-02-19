@@ -17,8 +17,7 @@ from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
-from web.businesses.models import Business, BusinessLocation
-from web.businesses.serializers import BusinessSerializer
+from web.users.login import pre_login
 from web.search.api.serializers import SearchCriteriaSerializer
 from web.search.models import UserSearch, StrainReview, StrainImage, UserFavoriteStrain
 from web.search.services import build_strain_rating
@@ -203,23 +202,12 @@ class UserLoginView(APIView):
         if authenticated is None:
             return bad_request('Email or password does not match')
 
-        # If user is a business user we need a business object to be available across the app
-        if user.type == 'business':
-            business = Business.objects.filter(users__in=[user])[:1]
-            request.session['business'] = BusinessSerializer(business[0]).data
-
-            locations = BusinessLocation.objects.filter(business__id=business[0].id, primary=True, removed_date=None)
-            if len(locations) > 0:
-                primary = locations[0]
-                business_image = primary.image.url if len(
-                    locations) > 0 and primary.image and primary.image.url else None
-                request.session['business_image'] = business_image
-
         if not UserSetting.objects.filter(user=user).exists():
             UserSetting.create_for_user(user,
                                         json.loads(urllib.parse.unquote(request.COOKIES.get('user_settings', '[]')))
                                         )
 
+        pre_login(user, request)
         login(request, authenticated)
         return Response({'user': UserSerializer(user).data}, status=status.HTTP_200_OK)
 

@@ -71,3 +71,5 @@ djangocms-text-ckeditor==3.3.1
 django-resized==0.3.5
 django-ckeditor-filebrowser-filer==0.2.3
 django-filer==1.2.8
+
+django-impersonate==1.3

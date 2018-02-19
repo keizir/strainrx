@@ -7,6 +7,7 @@ from django.contrib.auth.admin import UserAdmin as AuthUserAdmin
 from django.contrib.auth.forms import UserChangeForm, UserCreationForm
 
 from rangefilter.filter import DateRangeFilter
+from impersonate.admin import UserAdminImpersonateMixin
 
 from .models import User
 
@@ -34,7 +35,7 @@ class MyUserCreationForm(UserCreationForm):
 
 
 @admin.register(User)
-class MyUserAdmin(AuthUserAdmin):
+class MyUserAdmin(UserAdminImpersonateMixin, AuthUserAdmin):
     form = MyUserChangeForm
     add_form = MyUserCreationForm
     fieldsets = (
@@ -45,3 +46,4 @@ class MyUserAdmin(AuthUserAdmin):
     list_filter = (
         ('date_joined', DateRangeFilter),
     )
+    open_new_window = True
