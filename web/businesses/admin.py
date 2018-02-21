@@ -3,6 +3,7 @@ from django import forms
 from django.contrib import admin
 from django.contrib.admin import SimpleListFilter
 from django.contrib.admin.widgets import AdminTimeWidget
+from django.utils.safestring import mark_safe
 from tinymce.widgets import TinyMCE
 
 from web.businesses.api.services import BusinessLocationService
@@ -187,7 +188,7 @@ class BusinessLocationAdmin(admin.ModelAdmin):
 
     fieldsets = (
         ('Info',
-         {'fields': ('business', 'verified', 'removed_date', 'location_name', 'manager_name', 'location_email', 'phone', 'ext', 'about',), }),
+         {'fields': ('business', 'verified', 'form_url', 'removed_date', 'location_name', 'manager_name', 'location_email', 'phone', 'ext', 'about',), }),
         ('Social',
          {'fields': ('meta_desc', 'meta_keywords', 'social_image'), }),
         ('Type',
@@ -200,6 +201,9 @@ class BusinessLocationAdmin(admin.ModelAdmin):
         ('Menu',
          {'fields': ('menu_updated_date',)}),
     )
+
+    def form_url(self, instance):
+        return mark_safe('<a target="_blank" href="{url}">{url}</a>'.format(url=instance.url))
 
     def get_actions(self, request):
         # Disable delete
@@ -217,7 +221,7 @@ class BusinessLocationAdmin(admin.ModelAdmin):
 
     list_display = ['business', 'location_name', 'dispensary', 'delivery', 'grow_house',
                     'created_date', 'removed_date', 'owner_email_verified']
-    readonly_fields = ['category', 'slug_name', 'primary']
+    readonly_fields = ['category', 'slug_name', 'primary', 'form_url']
     search_fields = ['location_name']
     list_filter = [OwnerEmailVerifiedFilter, ActivityFilter, 'dispensary', 'delivery', 'grow_house']
     ordering = ['location_name']
