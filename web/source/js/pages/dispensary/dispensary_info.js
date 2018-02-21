@@ -341,6 +341,7 @@ W.pages.dispensary.DispensaryInfo = Class.extend({
         this.showAllReviews();
 
         $('.btn-request').on('click', this.onBtnRequestClick.bind(this));
+        $('.menu-item-header .match').on('click', this.showMatchInfoDialog.bind(this));
     },
 
     postUpdateRequest: function postUpdateRequest(url) {
@@ -627,6 +628,11 @@ W.pages.dispensary.DispensaryInfo = Class.extend({
     showMenuUpdateRequestLoginDialog: function showMenuUpdateRequestLoginDialog() {
         this.closeDialog();
         this.dialog = MenuUpdateRequestLoginDialog(this.login.bind(this));
+    },
+
+    showMatchInfoDialog: function showMatchInfoDialog() {
+        this.closeDialog();
+        this.dialog = MatchInfoDialog();
     }
 
 });
@@ -667,6 +673,7 @@ var Dialog = function Dialog(dialogSelector, btnSelector, props, onConfirm) {
     $(btnSelector).off('click');
     $(btnSelector).on('click', onConfirm);
 
+    $(':focus').blur();
     $dialog.focus();
 
     return $dialog;
@@ -703,4 +710,9 @@ var MenuUpdateRequestOkDialog = function MenuUpdateRequestOkDialog(onConfirm) {
 
 var MenuUpdateRequestLoginDialog = function MenuUpdateRequestOkDialog(onConfirm) {
     return Dialog('#menu-update-request-login-dialog', '#btn-sign-in', {}, onConfirm);
+};
+
+
+var MatchInfoDialog = function MatchInfoDialog() {
+    return Dialog('#match-info-dialog', '', { classes: {}, title: 'Match %' });
 };

@@ -471,7 +471,7 @@
 
                             span {
                                 display: inline-block;
-                                width: 13%;
+                                width: 8%;
                             }
 
                             .name {
@@ -496,15 +496,25 @@
 
                             span {
                                 display: inline-block;
-                                width: 13%;
+                                width: 9%;
                             }
 
                             .name {
                                 width: 20%;
                             }
 
+                            .gram {
+                                width: 15%;
+                            }
+
                             .match {
-                                width: 19%;
+                                width: 15%;
+                                white-space: nowrap;
+
+                                i {
+                                    color: $white;
+                                    cursor: help;
+                                }
                             }
                         }
 
@@ -513,7 +523,7 @@
 
                             span {
                                 display: inline-block;
-                                width: 13%;
+                                width: 9%;
                             }
 
                             .name {
@@ -524,6 +534,10 @@
                                     text-decoration: underline;
                                 }
 
+                            }
+
+                            .gram {
+                                width: 15%;
                             }
 
                             .match {
@@ -812,6 +826,10 @@
 
 }
 
+#match-info-dialog p {
+    margin-bottom: 2em;
+}
+
 @media (min-width: $screen-xs-min) {
     .business-location-holder {
 
@@ -975,7 +993,7 @@
                         .current-strain-menu-item {
                             .menu-item-header {
                                 span {
-                                    width: 13%;
+                                    width: 12%;
                                 }
 
                                 .name {
@@ -985,7 +1003,7 @@
 
                             .menu-item {
                                 span {
-                                    width: 13%;
+                                    width: 12%;
                                 }
 
                                 .name {
@@ -997,7 +1015,7 @@
                         .menu-wrapper {
                             .menu-item-header {
                                 span {
-                                    width: 13%;
+                                    width: 12%;
                                 }
 
                                 .name {
@@ -1007,7 +1025,7 @@
 
                             .menu-item {
                                 span {
-                                    width: 13%;
+                                    width: 12%;
                                 }
 
                                 .name {
