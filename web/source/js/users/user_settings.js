@@ -14,6 +14,7 @@ W.users.UserSettings = Class.extend({
 
         this.settingName_SearchFilter = 'search_results_filter';
         this.settingName_WizardSearch = 'search_strain_wizard';
+        this.settingName_Eligible = 'eligible';
 
     },
 

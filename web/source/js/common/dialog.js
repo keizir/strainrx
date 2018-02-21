@@ -131,3 +131,42 @@ W.common.ReviewDialog = function ($el, closeCallback, options) {
         });
     }
 };
+
+
+W.common.EligibleDialog = function (options) {
+    if (options.userId) {
+        return;
+    }
+
+    var settings = new W.users.UserSettings({ userId: options.userId });
+
+    settings.get(settings.settingName_Eligible, function(eligible) {
+        if (eligible) {
+            return;
+        }
+
+        var $dialog = $('#eligible-dialog'),
+            $backdrop = $('.dialog-backdrop'),
+            $checkbox = $dialog.find('input'),
+            $button = $dialog.find('button');
+
+        $dialog.css('display', 'initial');
+        $backdrop.css('display', 'initial');
+        $checkbox.prop('checked', false);
+        $button.prop('disabled', true);
+
+        $checkbox.change(function() {
+            $button.prop('disabled', !$checkbox.is(":checked"));
+        });
+
+        $button.on('click', function() {
+            settings.update(settings.settingName_Eligible, true);
+            $dialog.css('display', 'none');
+            $backdrop.css('display', 'none');
+        });
+    });
+
+
+
+
+};

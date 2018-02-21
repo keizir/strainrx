@@ -186,3 +186,72 @@
         }
     }
 }
+
+#eligible-dialog {
+    position: absolute;
+    top: calc(50vh - 300px);
+    left: calc(50vw - 300px);
+
+    max-width: 600px;
+    height: 320px;
+
+    background-color: $white;
+    border: 2px solid $grey;
+
+    padding: 2em;
+
+    text-align: center;
+    color: $grey;
+
+    z-index: $zindex-spinner;
+
+    h2 {
+        color: $green-atlantis;
+    }
+
+    input {
+        width: auto;
+        margin: 0 1em 0 0;
+        position: relative;
+        bottom: -0.25em;
+    }
+
+    form {
+        margin: 2em 0 1em;
+    }
+
+    button {
+        width: 20em;
+        height: 4em;
+        border: 0;
+        background-color: $iris-blue;
+        color: $white;
+        font-weight: bold;
+    }
+
+    button:disabled {
+        background-color: $grey-light;
+    }
+
+    p {
+        font-size: 0.75em;
+        margin: 2.5em 0 1em;
+    }
+}
+
+.dialog-backdrop {
+    position: fixed;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    z-index: $zindex-nav;
+    background-color: rgba(0, 0, 0, 0.9);
+}
+
+@media (max-width: $screen-xs-max) {
+    #eligible-dialog {
+        left: calc(50vw - 154px);
+        max-width: 300px;
+    }
+}
