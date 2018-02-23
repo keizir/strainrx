@@ -9,13 +9,19 @@ from tinymce.widgets import TinyMCE
 from web.businesses.api.services import BusinessService, BusinessLocationService
 from web.businesses.es_service import BusinessLocationESService
 from web.businesses.models import Business, BusinessLocation, FeaturedBusinessLocation, \
-    LocationReview, State, City, Payment, GrowerDispensaryPartnership, BusinessLocationMenuUpdate
+    LocationReview, State, City, Payment, GrowerDispensaryPartnership, BusinessLocationMenuUpdate, \
+    BusinessLocationMenuItem
 
 
 class PaymentAdmin(admin.TabularInline):
     extra = 0
     model = Payment
     ordering = ('-date',)
+
+
+class MenuAdmin(admin.TabularInline):
+    extra = 0
+    model = BusinessLocationMenuItem
 
 
 def enable_business_search(modeladmin, request, queryset):
@@ -234,7 +240,7 @@ class BusinessLocationAdmin(admin.ModelAdmin):
     list_filter = [OwnerEmailVerifiedFilter, ActivityFilter, 'dispensary', 'delivery', 'grow_house']
     ordering = ['location_name']
     actions = [activate_selected_locations, deactivate_selected_locations, verify_email_for_selected_locations]
-    inlines = (BusinessLocationMenuUpdateInline, FeaturedBusinessLocationInline,)
+    inlines = (BusinessLocationMenuUpdateInline, FeaturedBusinessLocationInline, MenuAdmin)
 
     @staticmethod
     def owner_email_verified(obj):

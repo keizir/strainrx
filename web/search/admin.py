@@ -83,7 +83,7 @@ class StrainAdmin(admin.ModelAdmin):
         ('Info', {'fields': ('id', 'name', 'common_name', 'strain_slug'), }),
         ('Social', {'fields': ('meta_desc', 'meta_keywords', 'social_image'), }),
         ('Type', {'fields': ('variety', 'category',), }),
-        ('Effects', {'fields': ('effects', 'benefits', 'side_effects', 'flavor'), }),
+        ('Effects', {'fields': ('effects', 'benefits', 'side_effects', 'flavor', 'terpenes', 'cannabinoids'), }),
         ('Additional', {'fields': ('about', 'origins', 'you_may_also_like_exclude'), }),
     )
     inlines = (StrainImageInline,)

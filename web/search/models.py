@@ -79,6 +79,12 @@ class Strain(models.Model):
                                 "tar": 0, "tea": 0, "tobacco": 0, "tree-fruit": 0, "tropical": 0,
                                 "vanilla": 0, "violet": 0, "woody": 0})
 
+    terpenes = JSONField(default={"humulene": 0, "pinene": 0, "linalool": 0, "caryophyllene": 0, "myrcene": 0,
+                                  "terpinolene": 0, "ocimene": 0, "limonene": 0, "camphene": 0, "terpineol": 0,
+                                  "phellandrene": 0, "carene": 0, "pulegone": 0, "sabinene": 0, "geraniol": 0})
+
+    cannabinoids = JSONField(default={"THC": 0, "THCA": 0, "THCV": 0, "CBD": 0, "CBG": 0, "CBN": 0, "CBC": 0})
+
     about = models.TextField(_('Description'), null=True, blank=True)
     origins = models.ManyToManyField('self', symmetrical=False, blank=True)
 
