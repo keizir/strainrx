@@ -6,7 +6,7 @@ from django.contrib.admin.widgets import AdminTimeWidget
 from django.utils.safestring import mark_safe
 from tinymce.widgets import TinyMCE
 
-from web.businesses.api.services import BusinessLocationService
+from web.businesses.api.services import BusinessService, BusinessLocationService
 from web.businesses.es_service import BusinessLocationESService
 from web.businesses.models import Business, BusinessLocation, FeaturedBusinessLocation, \
     LocationReview, State, City, Payment, GrowerDispensaryPartnership, BusinessLocationMenuUpdate
@@ -44,6 +44,14 @@ def disable_business_search(modeladmin, request, queryset):
 disable_business_search.short_description = 'Disable search'
 
 
+def remove_business_permanently(modeladmin, request, queryset):
+    for business in queryset:
+        BusinessService().remove_permanently(business_id=business.id)
+
+
+remove_business_permanently.short_description = 'Remove permanently'
+
+
 @admin.register(Business)
 class BusinessAdmin(admin.ModelAdmin):
     list_display = ('name', 'is_active', 'is_searchable', 'account_type', 'last_payment_date', 'last_payment_amount')
@@ -51,7 +59,7 @@ class BusinessAdmin(admin.ModelAdmin):
     search_fields = ('name',)
     readonly_fields = ('last_payment_date', 'last_payment_amount')
     inlines = (PaymentAdmin,)
-    actions = [enable_business_search, disable_business_search]
+    actions = [enable_business_search, disable_business_search, remove_business_permanently]
 
     def has_delete_permission(self, request, obj=None):
         # Disable delete
