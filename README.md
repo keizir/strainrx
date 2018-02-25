@@ -18,6 +18,7 @@ You should have python 3.5.1 installed as well as Nodejs 4.4.7
 1. Create a local Postgre DB (`createdb`) then change your `local.py` settings to point to your DB.  
 1. Run `python manage.py migrate`.  
 1. To create a superuser: `python manage.py createsuperuser`
+1. Setup static files: `pyton manage.py collectstatic -link`
 1. To run server: `python manage.py runserver` and visit localhost:8000
 
 
@@ -31,7 +32,6 @@ You should have python 3.5.1 installed as well as Nodejs 4.4.7
 1. In the ES directory under `/config/elasticsearch.yml` add these two lines to enable inline scripts:
     
         ```
-        
            script.engine.groovy.inline.aggs: on
            
            script.engine.groovy.inline.search: on

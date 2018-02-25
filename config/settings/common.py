@@ -75,8 +75,8 @@ LOCAL_APPS = (
     'djangocms_text_ckeditor',
     'filer',
     'ckeditor_filebrowser_filer',
-    'easy_thumbnails',    
-    
+    'easy_thumbnails',
+
 )
 
 # See: https://docs.djangoproject.com/en/dev/ref/settings/#installed-apps
