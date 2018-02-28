@@ -189,11 +189,11 @@
 
 #eligible-dialog {
     position: absolute;
-    top: calc(50vh - 300px);
-    left: calc(50vw - 300px);
+    top: calc(50vh - 18em);
+    left: calc(50vw - 18em);
 
-    max-width: 600px;
-    height: 320px;
+    max-width: 36em;
+    min-height: 21.5em;
 
     background-color: $white;
     border: 2px solid $grey;
