@@ -14,6 +14,7 @@ from django.core.exceptions import ValidationError
 from django.core.validators import EmailValidator
 from rest_framework import permissions
 from rest_framework import status
+from rest_framework.exceptions import ValidationError as RestFrameworkValidationError
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
@@ -226,23 +227,26 @@ class UserSignUpWizardView(APIView):
         try:
             user_serializer.is_valid(raise_exception=True)
             location_serializer.is_valid(raise_exception=True)
-        except ValidationError as e:
-            return bad_request(e.message)
+        except RestFrameworkValidationError as e:
+            return bad_request(e.detail)
 
         user_data = user_serializer.validated_data
         l_data = location_serializer.validated_data
         email = user_data.get('email').lower()
 
         if User.objects.filter(email__iexact=email).exists():
-            return bad_request('There is already an account associated with that email address')
+            return bad_request({'email': ['There is already an account associated with that email address']})
 
         try:
             validators.validate_pwd(user_data.get('pwd'), user_data.get('pwd2'))
         except ValidationError as e:
-            return bad_request(e.message)
+            return bad_request({'pwd': [e.message], 'pwd2': [e.message]})
 
         if not user_data.get('is_terms_accepted'):
-            return bad_request('Agreement is required')
+            return bad_request({'is_terms_accepted': ['Required']})
+
+        if not user_data.get('is_age_verified'):
+            return bad_request({'is_age_verified': ['Required']})
 
         try:
             user = user_serializer.save()
