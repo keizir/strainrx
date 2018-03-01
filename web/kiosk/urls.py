@@ -6,8 +6,8 @@ from . import views
 
 urlpatterns = [
     url(
-        regex=r'^login/$',
-        view=views.KioskLogin.as_view(),
+        regex=r'^(\d+)/login$',
+        view=views.KioskLogin.display_kiosk_business,
         name='login'
     ),
 ]
