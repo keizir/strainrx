@@ -99,3 +99,13 @@ button:disabled {
     display: none;
     height: 0;
 }
+
+@media (max-width: $screen-xs-max) {
+    input {
+        width: auto;
+    }
+
+    label {
+        width: auto;
+    }
+}
