@@ -37,7 +37,9 @@ class SearchElasticService(BaseElasticService):
                     start_index = index
                     continue
 
-                if start_index > -1 and len(to_transform) < 5 and not source.get('removed_date'):
+                if start_index > -1 and len(to_transform) < 5 and not source.get('removed_date') and not source.get('you_may_also_like_exclude'):
+                    from pprint import pprint
+                    pprint(source)
                     to_transform.append(s)
         else:
             to_transform = strains
@@ -82,9 +84,6 @@ class SearchElasticService(BaseElasticService):
                         'deliveries': deliveries,
                         'locations': dispensaries
                     })
-
-        if is_similar:
-            processed_results = [x for x in processed_results if not x.get('you_may_also_like_excluded')]
 
         response_data = {
             'list': processed_results,
