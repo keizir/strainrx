@@ -31,15 +31,13 @@ class SearchElasticService(BaseElasticService):
         to_transform = []
         if is_similar:
             start_index = -1
-            for index, s in enumerate(strains):
+            for index, s in enumerate(strains + strains[:5]):
                 source = s.get('_source', {})
                 if int(source.get('id')) == int(similar_strain_id):
                     start_index = index
                     continue
 
                 if start_index > -1 and len(to_transform) < 5 and not source.get('removed_date') and not source.get('you_may_also_like_exclude'):
-                    from pprint import pprint
-                    pprint(source)
                     to_transform.append(s)
         else:
             to_transform = strains

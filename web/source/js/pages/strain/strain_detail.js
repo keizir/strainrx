@@ -152,14 +152,15 @@ W.pages.strain.StrainDetailPage = Class.extend({
             method: 'GET',
             url: '/api/v1/search/strain/{0}/also_like'.format($('.strain-id').val()),
             success: function (data) {
-                if (data && data.also_like_strains) {
+                if (data.also_like_strains.length > 0) {
                     var template = _.template($('#strain_detail_also_like_template').html());
                     $alsoLikeWrapper.html('');
                     $.each(data.also_like_strains, function (i, s) {
                         $alsoLikeWrapper.append(template({s: s}));
                     });
                 } else {
-                    $('.strain-similar').addClass('hidden');
+                    $alsoLikeWrapper.text('None');
+                    $alsoLikeWrapper.css('margin-top', '1em');
                 }
 
                 setTimeout(function () {
