@@ -41,9 +41,10 @@ class MyUserAdmin(UserAdminImpersonateMixin, AuthUserAdmin):
     fieldsets = (
                     ('User Profile', {'fields': ('name', 'is_email_verified')}),
                 ) + AuthUserAdmin.fieldsets
-    list_display = ('email', 'first_name', 'last_name', 'type', 'date_joined', 'is_email_verified', 'is_superuser')
+    list_display = ('email', 'first_name', 'last_name', 'type', 'last_login', 'date_joined', 'is_email_verified', 'is_superuser')
     search_fields = ['email', 'first_name', 'last_name']
     list_filter = (
         ('date_joined', DateRangeFilter),
+        'type'
     )
     open_new_window = True
