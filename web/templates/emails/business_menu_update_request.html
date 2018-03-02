@@ -16,8 +16,8 @@
         <td>
             <p>Hi <b>{{ business_location.location_name }},</b></p>
             <p>
-                One of the users was reviewing <a href="{{ location_url }}">your page</a> on StrainRx and has requested
-                that you please update the menu. The user will be notified to return and browse again as soon as you update your menu.
+                A StrainRx user was reviewing <a href="{{ location_url }}">your menu</a> and has requested that you
+                please make an update. As soon as you do, this user will be notified to return and browse again.
             </p>
             {% if message %}
                 <p>
@@ -33,10 +33,13 @@
             </p>
             <p>
                 If your current menu is up to date, please click
-                <a href="{{ update_date_url }}">here</a>
+                <a href="{{ update_date_url }}">here</a>.
             </p>
-            <p>Feel free to contact us if you have any issues: <a href="mailto:support@strainrx.co">support@strainrx.co</a>
-            <p>Regards,<br>StrainRx Team</p>
+            <p>
+                Regards,<br>
+                StrainRx Team<br>
+                <a href="mailto:support@strainrx.co">support@strainrx.co</a>
+            </p>
         </td>
     </tr>
 {% endblock %}
