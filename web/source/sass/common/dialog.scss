@@ -211,9 +211,9 @@
 
     input {
         width: auto;
-        margin: 0 1em 0 0;
+        margin: 0 0.5em 0 0;
         position: relative;
-        bottom: -0.25em;
+        top: 0;
     }
 
     form {
@@ -236,6 +236,10 @@
     p {
         font-size: 0.75em;
         margin: 2.5em 0 1em;
+    }
+
+    .form-field {
+        display: flex;
     }
 }
 
