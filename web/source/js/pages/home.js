@@ -4,12 +4,17 @@ W.ns('W.pages');
 
 W.pages.HomePage = Class.extend({
 
+    ui: {
+        $userLocationBtn: $('.your-location')
+    },
+
     init: function init(options) {
         this.location = options && options.location;
         this.authenticated = options && options.authenticated;
         this.userId = options && options.userId;
 
         this.initStrainLookupField();
+        this.updateLocation();
     },
 
     initStrainLookupField: function initStrainLookupField() {
@@ -24,5 +29,15 @@ W.pages.HomePage = Class.extend({
         if (selected.variety && selected.slug) {
             window.location.href = '/strains/{0}/{1}/'.format(selected.variety, selected.slug);
         }
+    },
+
+    updateLocation: function updateLocation() {
+        this.ui.$userLocationBtn.on('click', function () {
+            W.Location.init({
+                location: null,
+                authenticated: this.authenticated,
+                userId: this.userId
+            });
+        });
     }
 });

@@ -19,10 +19,12 @@ W.views.LocationView = Class.extend({
 
     updateTimezone: function updateTimezone(GoogleLocations, address, success) {
         var that = this;
-        GoogleLocations.getTimezone(address.lat, address.lng, function (json) {
-            that.timezone = json.timeZoneId;
-            success();
-        });
+        if (typeof address !== 'undefined' && address.lat && address.lng) {
+            GoogleLocations.getTimezone(address.lat, address.lng, function (json) {
+                that.timezone = json.timeZoneId;
+                success();
+            });
+        }
     },
 
     onChangeLocation: function onChangeLocation() {
