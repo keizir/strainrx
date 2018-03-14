@@ -34,12 +34,16 @@
                     <% if (!is_authenticated) { %>
                         <span class="recommendation-btn">
                             <div class="recommendation-btn-icon">
+                              <a href="{% url 'search:strain_wizard' %}" class="recommendation-link">
                                 <i class="fa fa-search"></i>
+                              </a>
                             </div>
                             <div class="recommendation-btn-content">
                                 <div class="recommendation-btn-line">
+                                  <a href="{% url 'search:strain_wizard' %}" class="recommendation-link">
                                     Find out if <span class="recommendation-btn-strain-name"><%= model.strain.name %></span>
-                                    is right for you. <a href="{% url 'search:strain_wizard' %}">Click here.</a>
+                                    is right for you. <u>Click here.</u>
+                                  </a>
                                 </div>
                             </div>
                         </span>

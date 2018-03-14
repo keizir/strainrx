@@ -25,6 +25,7 @@
 
         .back-to-search-wrapper {
             margin-bottom: 1em;
+            padding-top: 2em;
 
             i {
                 margin-right: 0.5em;
@@ -277,11 +278,16 @@
                 padding: 1em;
                 color: $white;
                 position: absolute;
-                bottom: 3.5em;
+                top: 0;
                 max-width: 20em;
+
+                .recommendation-link {
+                    text-decoration: none;
+                    color: $white;
+                }
             }
 
-            .recommendation-btn a {
+            .recommendation-btn u {
                 color: $white;
                 text-decoration: underline;
             }
@@ -467,6 +473,8 @@
                 img {
                     max-width: 100%;
                     max-height: 100%;
+                    margin: 0 auto;
+                    display: block;
                 }
             }
 
@@ -491,15 +499,11 @@
                 .arrow-left, .arrow-right {
                     display: none;
                     position: absolute;
-                    z-index: 2;
-                    background-color: white;
-                    opacity: 0.77;
-                    padding: 17px 0;
-                    top: 4.85px
+                    top: 2em
                 }
 
                 .arrow-right {
-                    right: 0;
+                    right: -1px;
                 }
 
                 .carousel-images-wrapper {
@@ -1233,7 +1237,7 @@
                 height: 16em;
 
                 img {
-                    width: 100%;
+
                 }
             }
 
@@ -1253,10 +1257,12 @@
                 .carousel-images-wrapper {
                     overflow-x: scroll;
                     overflow-y: hidden;
-                    display: inline-block;
-                    width: 100%;
+                    display: block;
+                    width: auto;
                     white-space: nowrap;
                     height: 100%;
+                    margin-left: 15px;
+                    margin-right: 14px;
 
                     .img-wrapper {
                         display: inline-block;
