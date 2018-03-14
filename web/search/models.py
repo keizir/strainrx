@@ -16,6 +16,7 @@ from django.utils.encoding import python_2_unicode_compatible
 from django.utils.translation import ugettext_lazy as _
 from django.utils.timezone import now
 
+from web.search.managers import UserSearchQuerySet
 from web.search.serializers import StrainReviewESSerializer
 from web.search.strain_es_service import StrainESService
 from web.users.models import User
@@ -242,6 +243,8 @@ class UserSearch(models.Model):
     side_effects = JSONField(max_length=1000)
 
     last_modified_date = models.DateTimeField(auto_now=True)
+
+    objects = UserSearchQuerySet.as_manager()
 
     def to_search_criteria(self):
         return {

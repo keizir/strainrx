@@ -51,6 +51,7 @@ class User(AbstractUser):
 
     is_age_verified = models.BooleanField(default=False)
     is_email_verified = models.BooleanField(default=False)
+    display_search_history = models.BooleanField(default=True, editable=False)
     type = models.CharField(max_length=10, choices=USER_TYPE, default='consumer')
 
     birth_month = models.CharField(_('Birth Month'), blank=True, null=True, max_length=20)

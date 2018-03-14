@@ -17,8 +17,9 @@ class StrainDetailsService:
             strain_review = StrainRating.objects.filter(strain=strain, created_by=current_user, removed_date=None)
             favorite = UserFavoriteStrain.objects.filter(strain=strain, created_by=current_user).exists()
             is_rated = StrainReview.objects.filter(strain=strain, created_by=current_user).exists()
-            user_criteria = UserSearch.objects.get(user=current_user).to_search_criteria() if UserSearch.objects.filter(
-                user=current_user).exists() else None
+            user_criteria = UserSearch.objects.user_criteria(current_user)
+            if user_criteria:
+                user_criteria = user_criteria.to_search_criteria()
         else:
             strain_srx_score = 0
             strain_review = []
@@ -48,15 +49,12 @@ class StrainDetailsService:
 
     @staticmethod
     def get_also_like_strains(current_strain, current_user=None):
-        if current_user:
-            latest_user_search = UserSearch.objects.filter(user=current_user).order_by('-last_modified_date')[:1]
-        else:
-            latest_user_search = None
+        latest_user_search = UserSearch.objects.user_criteria(current_user)
 
         also_like_strains = []
 
-        if latest_user_search and len(latest_user_search) > 0:
-            data = SearchElasticService().query_strain_srx_score(latest_user_search[0].to_search_criteria(), 2000, 0,
+        if latest_user_search:
+            data = SearchElasticService().query_strain_srx_score(latest_user_search.to_search_criteria(), 2000, 0,
                                                                  include_locations=False, is_similar=True,
                                                                  similar_strain_id=current_strain.id)
             for index, s in enumerate(data.get('list')):
@@ -76,17 +74,17 @@ class StrainDetailsService:
 
     @staticmethod
     def calculate_srx_score(current_strain, current_user):
-        latest_user_search = UserSearch.objects.filter(user=current_user).order_by('-last_modified_date')[:1]
+        latest_user_search = UserSearch.objects.user_criteria(current_user)
 
-        if latest_user_search and len(latest_user_search) > 0:
+        if latest_user_search:
             if StrainRating.objects.filter(strain=current_strain, created_by=current_user,
                                            removed_date=None).exists():
-                score = SearchElasticService().query_user_review_srx_score(latest_user_search[0].to_search_criteria(),
+                score = SearchElasticService().query_user_review_srx_score(latest_user_search.to_search_criteria(),
                                                                            strain_id=current_strain.id,
                                                                            user_id=current_user.id)
                 return score
             else:
-                data = SearchElasticService().query_strain_srx_score(latest_user_search[0].to_search_criteria(),
+                data = SearchElasticService().query_strain_srx_score(latest_user_search.to_search_criteria(),
                                                                      strain_ids=[current_strain.id])
                 strain = data.get('list')[0] if len(data.get('list')) > 0 else {'match_percentage': 0}
                 return strain.get('match_percentage')
@@ -95,10 +93,10 @@ class StrainDetailsService:
 
     @staticmethod
     def calculate_srx_scores(strain_ids, current_user):
-        latest_user_search = UserSearch.objects.filter(user=current_user).order_by('-last_modified_date')[:1]
+        latest_user_search = UserSearch.objects.user_criteria(current_user)
 
-        if latest_user_search and len(latest_user_search) > 0:
-            data = SearchElasticService().query_strain_srx_score(latest_user_search[0].to_search_criteria(),
+        if latest_user_search:
+            data = SearchElasticService().query_strain_srx_score(latest_user_search.to_search_criteria(),
                                                                  strain_ids=strain_ids)
             scores = {}
             strains = data.get('list')
