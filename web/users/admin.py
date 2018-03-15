@@ -40,6 +40,7 @@ class MyUserAdmin(UserAdminImpersonateMixin, AuthUserAdmin):
     add_form = MyUserCreationForm
     fieldsets = (
                     ('User Profile', {'fields': ('name', 'is_email_verified')}),
+                    ('', {'fields': ('type',)}),
                 ) + AuthUserAdmin.fieldsets
     list_display = ('email', 'first_name', 'last_name', 'type', 'last_login', 'date_joined', 'is_email_verified', 'is_superuser')
     search_fields = ['email', 'first_name', 'last_name']

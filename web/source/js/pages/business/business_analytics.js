@@ -9,7 +9,7 @@ W.pages.business.Analytics = Class.extend({
     },
     configureDatePicker: function(){
         $("#update").on("click", function(){
-            window.location.href = window.location.pathname + "?from={1}&to={0}".format($("#to").val(), $("#from").val());
+            window.location.href = window.location.pathname + "?from_date={1}&to_date={0}".format($("#to").val(), $("#from").val());
         });
 
         Date.prototype.addDays = function(days) {
@@ -52,12 +52,21 @@ W.pages.business.Analytics = Class.extend({
             var qs = W.qs(window.location.href);
 
             if(qs.to){
-                $("#to").val(qs.to);
-                $("#from").val(qs.from);
+                $("#to").val(qs.to_date);
+                $("#from").val(qs.from_date);
             }
 
         }
     },
+
+    parseData: function (data) {
+        if (data && typeof data === 'object') {
+            return data.map(function (obj) {
+                return [obj.day, obj.count]
+            })
+        }
+    },
+
     drawBizLookupChart: function(data){
         Highcharts.chart('biz-lookup-chart', {
             title: {
@@ -69,7 +78,7 @@ W.pages.business.Analytics = Class.extend({
             xAxis: {
                 type:"category",
                 labels: {
-                   rotation: 20,
+                   rotation: 20
                 } 
             },
             yAxis: {
@@ -80,7 +89,7 @@ W.pages.business.Analytics = Class.extend({
             },
             series: [{
                 name: 'Views',
-                data: data
+                data: this.parseData(data || [])
             }],
             responsive: {
                 rules: [{
@@ -121,7 +130,7 @@ W.pages.business.Analytics = Class.extend({
             },
             series: [{
                 name: 'Views',
-                data: data
+                data: this.parseData(data || [])
             }],
             responsive: {
                 rules: [{
@@ -139,6 +148,48 @@ W.pages.business.Analytics = Class.extend({
             }
 
         });        
-    }    
+    },
+
+    drawUpdateRequestChart: function(data){
+        Highcharts.chart('update-request-chart', {
+            title: {
+                text: 'Update Requests'
+            },
+            subtitle: {
+                text: 'Shows update requests count'
+            },
+            xAxis: {
+                type:"category",
+                labels: {
+                   rotation: 20
+                }
+            },
+            yAxis: {
+                title: {
+                    text: 'Views'
+                },
+                tickInterval: 1
+            },
+            series: [{
+                name: 'Views',
+                data: this.parseData(data || [])
+            }],
+            responsive: {
+                rules: [{
+                    condition: {
+                        maxWidth: 500
+                    },
+                    chartOptions: {
+                        legend: {
+                            layout: 'horizontal',
+                            align: 'center',
+                            verticalAlign: 'bottom'
+                        }
+                    }
+                }]
+            }
+
+        });
+    }
 
 });

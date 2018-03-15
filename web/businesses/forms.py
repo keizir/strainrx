@@ -1,4 +1,5 @@
 from django import forms
+from django.utils import timezone
 
 
 class ClaimForm(forms.Form):
@@ -31,3 +32,22 @@ class ClaimForm(forms.Form):
         'class': 'form__input',
         'placeholder': 'Business Address',
     }))
+
+
+class AnalyticsFilterForm(forms.Form):
+    from_date = forms.DateField(required=False)
+    to_date = forms.DateField(required=False)
+
+    def clean(self):
+        cd = super().clean()
+        self.errors.pop('to_date',  None)
+        self.errors.pop('from_date',  None)
+
+        if cd.get('to_date'):
+            cd['to_date'] = cd['to_date'] + timezone.timedelta(days=1)
+
+        if not cd.get('to_date') and not cd.get('from_date'):
+            cd['to_date'] = timezone.now().date() + timezone.timedelta(days=1)
+            cd['from_date'] = cd['to_date'] - timezone.timedelta(days=8)
+
+        return cd
