@@ -1,28 +1,29 @@
 # -*- coding: utf-8 -*-
 from __future__ import absolute_import, unicode_literals
 
-from datetime import datetime, timedelta
+import json
+from datetime import datetime
 
 import pytz
-
+from django.contrib.staticfiles.templatetags.staticfiles import static
 from django.core.exceptions import ObjectDoesNotExist
 from django.core.urlresolvers import reverse
-from django.contrib.staticfiles.templatetags.staticfiles import static
-from django.http import Http404, HttpResponseGone, HttpResponseNotFound
-from django.views.generic import RedirectView, TemplateView, FormView
 from django.db.models import Count
+from django.http import Http404, HttpResponseNotFound
+from django.shortcuts import get_object_or_404
 from django.template.response import TemplateResponse
+from django.views.generic import RedirectView, TemplateView, FormView
 
+from web.analytics.models import Event
+from web.analytics.service import Analytics
 from web.businesses.api.services import FeaturedBusinessLocationService
 from web.businesses.emails import EmailService
-from web.businesses.forms import ClaimForm
+from web.businesses.forms import ClaimForm, AnalyticsFilterForm
 from web.businesses.models import Business, BusinessLocation, BusinessLocationPermanentlyRemoved
 from web.businesses.models import State, City, BusinessLocationMenuUpdateRequest
 from web.businesses.utils import NamePaginator
-from web.users.models import User
-from web.analytics.models import Event
-from web.analytics.service import Analytics
 from web.search.services import get_strains_and_images_for_location
+from web.users.models import User
 
 
 class BusinessSignUpWizardView(TemplateView):
@@ -185,10 +186,10 @@ class DispensaryInfoView(TemplateView):
          context['can_request_menu_update_reason']) = can_request_menu_update, can_request_menu_update_reason
 
         # if this came from Available At on SDP, change event name
-        event = "VIEW_DISP"
+        event = Event.VIEW_DISP
 
         if self.request.GET.get('available_at'):
-            event = "VIEW_DISP_AVAIL_AT"
+            event = Event.VIEW_DISP_AVAIL_AT
 
         Analytics.track(
             event=event,
@@ -393,47 +394,54 @@ class GrowerInfoView(TemplateView):
         return context
 
 
-class BusinessAnalyticsView(TemplateView):
+class BusinessAnalyticsView(FormView):
     template_name = 'pages/business/business_analytics.html'
+    form_class = AnalyticsFilterForm
+
+    def get(self, request, *args, **kwargs):
+        return super().post(request, *args, **kwargs)
+
+    def form_valid(self, form):
+        return self.render_to_response(self.get_context_data(form=form))
+
+    def get_object(self):
+        return get_object_or_404(Business, pk=self.kwargs.get('business_id'))
+
+    def get_form_kwargs(self):
+        kwargs = super().get_form_kwargs()
+        kwargs['data'] = self.request.GET
+        return kwargs
 
     def get_context_data(self, **kwargs):
-        from_date = self.request.GET.get("from")
-        to_date = self.request.GET.get("to")
-        
-        if to_date is None:
-            from_date = (datetime.today() - timedelta(days=7)).strftime("%Y-%m-%d") 
-            from_date = datetime.strptime(from_date + " 00:00:00", "%Y-%m-%d %H:%M:%S")
-            to_date = datetime.strptime(datetime.today().strftime("%Y-%m-%d") + " 23:59:59", "%Y-%m-%d %H:%M:%S")
-        else:
-            to_date = datetime.strptime(to_date + " 23:59:59", "%Y-%m-%d %H:%M:%S")
-        
-        print(from_date, to_date)
-
-        context = super(BusinessAnalyticsView, self).get_context_data(**kwargs)
-        business = Business.objects.get(pk=kwargs.get('business_id'))
+        context = super().get_context_data(**kwargs)
+        business = self.get_object()
         context['locations'] = BusinessLocation.objects.filter(business=business, removed_date=None).order_by('id')
 
         # analytics
+        form = context['form']
+        from_date = form.cleaned_data['from_date']
+        to_date = form.cleaned_data['to_date']
 
         # lookup event data
-        query = Event.objects.filter(event_date__gte=from_date, event_date__lte=to_date, entity_id=kwargs.get('business_id'), event="DISP_LOOKUP").extra(select={'day': 'date( event_date )'}).values('day').annotate(count=Count('event_date')).order_by("day")
-        business_lookups_data = []
-
-        for r in query.reverse():
-            business_lookups_data.append([r.get("day").strftime("%Y-%m-%d"), r.get("count")])        
+        business_lookups_data = Event.objects.events(
+            from_date, to_date, self.kwargs.get('business_id'), Event.DISP_LOOKUP)
 
         # search event data
-        query = Event.objects.filter(event_date__gte=from_date, event_date__lte=to_date, entity_id=kwargs.get('business_id'), event="VIEW_DISP_AVAIL_AT").extra(select={'day': 'date( event_date )'}).values('day').annotate(count=Count('event_date')).order_by("day")
-        search_data = []
+        search_data = Event.objects.events(
+            from_date, to_date, self.kwargs.get('business_id'), Event.VIEW_DISP_AVAIL_AT)
 
-        for r in query.reverse():
-            search_data.append([r.get("day").strftime("%Y-%m-%d"), r.get("count")])        
+        # update request data
+        update_request_data = BusinessLocationMenuUpdateRequest.objects.events(
+            from_date, to_date, self.kwargs.get('business_id'))
 
-        context["total_page_views"] = Event.objects.filter(entity_id=kwargs.get('business_id'), event__in=["VIEW_DISP", "VIEW_DISP_AVAIL_AT", "DISP_LOOKUP"]).count()
-        context["total_calls"] = Event.objects.filter(entity_id=kwargs.get('business_id'), event="DISP_CALL").count()
-        context["total_directions"] = Event.objects.filter(entity_id=kwargs.get('business_id'), event="DISP_GETDIR").count()
-        context["chart_biz_lookup"] = business_lookups_data[::-1]
-        context["chart_search"] = search_data[::-1]
+        context["total_page_views"] = Event.objects.filter(
+            entity_id=kwargs.get('business_id'),
+            event__in=[Event.VIEW_DISP, Event.VIEW_DISP_AVAIL_AT, Event.DISP_LOOKUP]).count()
+        context["total_calls"] = Event.objects.filter(entity_id=kwargs.get('business_id'), event=Event.DISP_CALL).count()
+        context["total_directions"] = Event.objects.filter(entity_id=kwargs.get('business_id'), event=Event.DISP_GETDIR).count()
+        context['chart_biz_lookup'] = business_lookups_data
+        context['chart_search'] = search_data
+        context['chart_update_request_data'] = update_request_data
 
         context['business'] = business
         context['tab'] = 'analytics'

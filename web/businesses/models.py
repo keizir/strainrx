@@ -18,6 +18,7 @@ from django.template.defaultfilters import slugify
 from django.utils.encoding import python_2_unicode_compatible
 from django.utils.translation import ugettext_lazy as _
 
+from web.analytics.managers import BusinessLocationMenuUpdateRequestQuerySet
 from web.businesses.emails import EmailService
 from web.businesses.es_service import BusinessLocationESService
 from web.search.models import Strain
@@ -238,8 +239,8 @@ class BusinessLocation(models.Model):
 
     objects = GeoManager()
 
-    def validate_image(field_file_obj):
-        file_size = field_file_obj.file.size
+    def validate_image(self):
+        file_size = self.file.size
         megabyte_limit = settings.MAX_IMAGE_SIZE
         if file_size > megabyte_limit:
             raise ValidationError("Max file size is %sMB" % str(megabyte_limit))
@@ -498,6 +499,8 @@ class BusinessLocationMenuUpdateRequest(models.Model):
     send_notification = models.BooleanField(default=False)
     served = models.BooleanField(default=False)
     secret_key = models.TextField(null=True)
+
+    objects = BusinessLocationMenuUpdateRequestQuerySet.as_manager()
 
 
 @python_2_unicode_compatible

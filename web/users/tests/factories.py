@@ -1,11 +1,36 @@
-import factory
+import factory.faker
+from allauth.account.models import EmailAddress
+from django.conf import settings
+from django.contrib.auth.hashers import make_password
+
+from web.users.models import GENDER
+
+TEST_USER_PASSWORD = 'P4ssw0rd'
 
 
 class UserFactory(factory.django.DjangoModelFactory):
-    username = factory.Sequence(lambda n: 'user-{0}'.format(n))
-    email = factory.Sequence(lambda n: 'user-{0}@example.com'.format(n))
-    password = factory.PostGenerationMethodCall('set_password', 'password')
-
     class Meta:
-        model = 'users.User'
-        django_get_or_create = ('username',)
+        model = settings.AUTH_USER_MODEL
+
+    first_name = factory.Faker('first_name')
+    last_name = factory.Faker('last_name')
+    email = factory.Sequence(lambda n: 'user_{0}@email.com'.format(n))
+    username = factory.LazyAttribute(lambda x: x.email)
+    password = make_password(TEST_USER_PASSWORD)
+    is_age_verified = True
+    is_email_verified = True
+    type = 'consumer'
+    gender = GENDER[1][0]
+
+    @factory.post_generation
+    def emailaddress(self, create, extracted, **kwargs):
+        if not create or extracted:
+            return
+        EmailAddress.objects.create(user=self, email=self.email, verified=True, primary=True)
+
+
+class BusinessUserFactory(UserFactory):
+    class Meta:
+        model = settings.AUTH_USER_MODEL
+
+    type = 'business'
