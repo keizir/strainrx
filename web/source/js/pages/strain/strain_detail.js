@@ -234,7 +234,7 @@ W.pages.strain.StrainDetailPage = Class.extend({
                 $carouselImageWrapper.append(imgWrapperTemplate.format(firstImage));
             }
 
-            $('.carousel-arrow').addClass('hidden');
+            $('.carousel-arrow.arrow-up, .carousel-arrow.arrow-down').addClass('hidden');
         }
 
         $cover = $('.cover');
