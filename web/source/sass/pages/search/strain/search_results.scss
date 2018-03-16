@@ -380,19 +380,25 @@
 }
 
 a.blurred {
-    text-shadow: 0 0 15px #10b3dc;
-    color: transparent;
+    //text-shadow: 0 0 15px #10b3dc;
+    //color: transparent;
+	//filter: DXImageTransform.Microsoft.Blur(pixelradius=2);
+	//zoom: 1;
+    -webkit-filter: blur(5px);
+    -moz-filter: blur(5px);
+    -ms-filter: blur(5px);
+    -o-filter: blur(5px);
+    filter: blur(5px);
 }
 
 
-#results-ready-dialog {
+.results-dialog {
     display: none;
     position: absolute;
     top: calc(50vh - 6em);
     left: calc(50vw - 13em);
 
     width: 26em;
-    height: 11em;
 
     border: 1px solid $grey;
     background-color: $white;

@@ -18,6 +18,8 @@ class StrainESSerializer(serializers.Serializer):
     removed_by = serializers.CharField(max_length=20)
     removed_date = serializers.DateTimeField()
 
+    you_may_also_like_exclude = serializers.BooleanField()
+
 
 class StrainReviewESSerializer(serializers.Serializer):
     id = serializers.IntegerField()

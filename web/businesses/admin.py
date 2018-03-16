@@ -3,18 +3,25 @@ from django import forms
 from django.contrib import admin
 from django.contrib.admin import SimpleListFilter
 from django.contrib.admin.widgets import AdminTimeWidget
+from django.utils.safestring import mark_safe
 from tinymce.widgets import TinyMCE
 
-from web.businesses.api.services import BusinessLocationService
+from web.businesses.api.services import BusinessService, BusinessLocationService
 from web.businesses.es_service import BusinessLocationESService
 from web.businesses.models import Business, BusinessLocation, FeaturedBusinessLocation, \
-    LocationReview, State, City, Payment, GrowerDispensaryPartnership, BusinessLocationMenuUpdate
+    LocationReview, State, City, Payment, GrowerDispensaryPartnership, BusinessLocationMenuUpdate, \
+    BusinessLocationMenuItem
 
 
 class PaymentAdmin(admin.TabularInline):
     extra = 0
     model = Payment
     ordering = ('-date',)
+
+
+class MenuAdmin(admin.TabularInline):
+    extra = 0
+    model = BusinessLocationMenuItem
 
 
 def enable_business_search(modeladmin, request, queryset):
@@ -43,6 +50,14 @@ def disable_business_search(modeladmin, request, queryset):
 disable_business_search.short_description = 'Disable search'
 
 
+def remove_business_permanently(modeladmin, request, queryset):
+    for business in queryset:
+        BusinessService().remove_permanently(business_id=business.id)
+
+
+remove_business_permanently.short_description = 'Remove permanently'
+
+
 @admin.register(Business)
 class BusinessAdmin(admin.ModelAdmin):
     list_display = ('name', 'is_active', 'is_searchable', 'account_type', 'last_payment_date', 'last_payment_amount')
@@ -50,7 +65,7 @@ class BusinessAdmin(admin.ModelAdmin):
     search_fields = ('name',)
     readonly_fields = ('last_payment_date', 'last_payment_amount')
     inlines = (PaymentAdmin,)
-    actions = [enable_business_search, disable_business_search]
+    actions = [enable_business_search, disable_business_search, remove_business_permanently]
 
     def has_delete_permission(self, request, obj=None):
         # Disable delete
@@ -187,7 +202,7 @@ class BusinessLocationAdmin(admin.ModelAdmin):
 
     fieldsets = (
         ('Info',
-         {'fields': ('business', 'verified', 'removed_date', 'location_name', 'manager_name', 'location_email', 'phone', 'ext', 'about',), }),
+         {'fields': ('business', 'verified', 'form_url', 'removed_date', 'location_name', 'manager_name', 'location_email', 'phone', 'ext', 'about',), }),
         ('Social',
          {'fields': ('meta_desc', 'meta_keywords', 'social_image'), }),
         ('Type',
@@ -200,6 +215,9 @@ class BusinessLocationAdmin(admin.ModelAdmin):
         ('Menu',
          {'fields': ('menu_updated_date',)}),
     )
+
+    def form_url(self, instance):
+        return mark_safe('<a target="_blank" href="{url}">{url}</a>'.format(url=instance.url))
 
     def get_actions(self, request):
         # Disable delete
@@ -217,12 +235,12 @@ class BusinessLocationAdmin(admin.ModelAdmin):
 
     list_display = ['business', 'location_name', 'dispensary', 'delivery', 'grow_house',
                     'created_date', 'removed_date', 'owner_email_verified']
-    readonly_fields = ['category', 'slug_name', 'primary']
+    readonly_fields = ['category', 'slug_name', 'primary', 'form_url']
     search_fields = ['location_name']
     list_filter = [OwnerEmailVerifiedFilter, ActivityFilter, 'dispensary', 'delivery', 'grow_house']
     ordering = ['location_name']
     actions = [activate_selected_locations, deactivate_selected_locations, verify_email_for_selected_locations]
-    inlines = (BusinessLocationMenuUpdateInline, FeaturedBusinessLocationInline,)
+    inlines = (BusinessLocationMenuUpdateInline, FeaturedBusinessLocationInline, MenuAdmin)
 
     @staticmethod
     def owner_email_verified(obj):

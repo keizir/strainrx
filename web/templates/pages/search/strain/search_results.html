@@ -48,16 +48,33 @@
         </div>
     </div>
 
-    <div id="results-ready-dialog">
+    <div id="results-ready-dialog" class="results-dialog">
         <h1>Your Results Are Ready!</h1>
         <p>
             Create an account and unlock your recommendations immediately. It's free, takes less
             than a minute, and all you need is an email address.
         </p>
         <p>
-            <span><a href="{% url 'account_signup' %}">Sign Up</a></span>
+            <span><a href="{% url 'users:signup' %}">Sign Up</a></span>
             <span>or</span>
-            <span><a href="{% url 'account_login' %}">Login</a></span>
+            <span><a href="{{ sign_in_url }}">Login</a></span>
+        </p>
+    </div>
+
+    <div id="email-verify-dialog" class="results-dialog">
+        <h1>Please verify your account</h1>
+        <p>
+            Please complete signing up by verifying your email.
+            Use the activation link we sent you or click
+            <a id="resend-email-link" >here</a>
+            to resend it.
+        </p>
+
+        <p>
+            Still having problems? Check that your email is correct
+            in your "My Account" section or contact
+            <a href="mailto:support@strainrx.co">support@strainrx.co</a>
+            .
         </p>
     </div>
 
@@ -70,7 +87,9 @@
     {{ block.super }}
     <script src="{% static 'js/pages/search/strain/search_results.js' %}"></script>
     <script type="text/javascript">
-        new W.pages.StrainSearchResultsPage();
+        new W.pages.StrainSearchResultsPage({
+            'isEmailVerified': '{{ request.user.is_email_verified }}' === 'True'
+        });
     </script>
     <script type="x/srx-template" id="strain-item-template">
         <div class="result-item">
@@ -87,7 +106,7 @@
                     <div class="item-info inline-block">
                         <span class="strain-name">
                             <% if (obfuscated) { %>
-                                <a class="blurred">${ strain.name }</a>
+                                <a class="blurred noselect">${ strain.name }</a>
                             <% } else { %>
                                 <a href="/strains/${ strain.variety }/${ strain.strain_slug }/?search=true">${ strain.name }</a>
                             <% } %>

@@ -33,11 +33,12 @@ W.pages.StrainSearchResultsPage = Class.extend({
         $loadingIcon: $('.scroll-icon i')
     },
 
-    init: function () {
+    init: function (options) {
         var currentUserId = this.getCurrentUserId();
         var that = this;
         this.name = 'StrainSearchResultsPage';
         this.settings = new W.users.UserSettings({ userId: currentUserId });
+        this.isEmailVerified = options.isEmailVerified;
 
         that.getSearchResults(that.currentFilter, function () {
             that.buildResultsFilterMenu();
@@ -49,6 +50,8 @@ W.pages.StrainSearchResultsPage = Class.extend({
 
             if (!currentUserId) {
                 that.showLoginDialog();
+            } else if (!that.isEmailVerified) {
+                that.showVerifyDialog();
             }
         });
 
@@ -57,6 +60,30 @@ W.pages.StrainSearchResultsPage = Class.extend({
 
     showLoginDialog: function showLoginDialog() {
         $('#results-ready-dialog').css('display', 'initial');
+    },
+
+    showVerifyDialog: function showVerifyDialog() {
+        $('#email-verify-dialog').css('display', 'initial');
+
+        var callApi = function() {
+            var firstParagraph = $('#email-verify-dialog p:first-of-type');
+            firstParagraph.text('Sending email..');
+
+            $.ajax({
+                method: 'GET',
+                url: '/api/v1/users/resend-email-confirmation'
+            }).success(function() {
+                firstParagraph.text('Email sent successfully.');
+            }).fail(function() {
+                firstParagraph.html(
+                    "There was a problem with sending your email.\n" +
+                    '<a id="resend-email-link" href="#">Click here</a> to resend it.'
+                );
+                $('#resend-email-link').on('click', callApi);
+            });
+        };
+
+        $('#resend-email-link').on('click', callApi);
     },
 
     getCurrentUserId: function getCurrentUserId() {
@@ -210,7 +237,7 @@ W.pages.StrainSearchResultsPage = Class.extend({
             compiled = _.template($('#strain-item-template').html());
 
         return compiled({
-            'obfuscated': !Boolean(that.getCurrentUserId()),
+            'obfuscated': !Boolean(that.getCurrentUserId()) || !that.isEmailVerified,
             'position': position,
             'strain': item,
             'closestDistance': that.findClosestDistance,

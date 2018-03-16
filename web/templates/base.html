@@ -132,7 +132,7 @@
     <script type="text/javascript">
         W.Base.init();
         W.Navbar.init({
-            location: {% if request.user.is_authenticated %}
+            location: {% if request.user.is_authenticated and request.user.get_location_json %}
                 {{ request.user.get_location_json | safe }} {% else %} null {% endif %},
             authenticated: '{{ request.user.is_authenticated }}' == 'True',
             userId: '{{ request.user.id }}',
@@ -141,18 +141,6 @@
     </script>
 
 {% endblock javascript %}
-
-<script>
-  if (PROFILE && PROFILE === 'prod') {
-      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-        (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-              m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-      })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
-      ga('create', 'UA-89574899-1', 'auto');
-      ga('send', 'pageview');
-  }
-</script>
-</body>
 
 {% block modal %}
     {% if not request.user.is_email_verified %}
@@ -171,5 +159,48 @@
         </div>
     {% endif %}
 {% endblock %}
+
+<div id="eligible-dialog" style="display: none;">
+    <h2>Are You Eligible to Visit StrainRx?</h2>
+    <form>
+        <fieldset>
+            <div class="form-field-group">
+                <div class="form-field">
+                    <div>
+                        <input type="checkbox" name="eligible" id="eligible"/>
+                    </div>
+                    <div class="dialog-text">
+                        I am at least 21 years old or a valid medical cannabis patient and agree to the
+                        Terms of Use
+                    </div>
+                </div>
+            </div>
+        </fieldset>
+    </form>
+    <button disabled>Proceed</button>
+    <p>
+        StrainRx operates in compliance with state laws regarding access to cannabis
+        and the information on this website has not been evaluated by the Food & Drug Administration.
+        Information is shared for educational purposes only.
+    </p>
+</div>
+<div class="dialog-backdrop" style="display: none;"></div>
+
+<script>
+  if (PROFILE && PROFILE === 'prod') {
+      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+        (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+              m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+      })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+      ga('create', 'UA-89574899-1', 'auto');
+      ga('send', 'pageview');
+  }
+
+    W.common.EligibleDialog({
+        userId: {% if request.user.is_authenticated %}{{ request.user.id }}{% else %}null{% endif %}
+    });
+
+</script>
+</body>
 
 </html>

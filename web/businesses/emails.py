@@ -77,9 +77,8 @@ class EmailService:
 
         # This should probably be a bcc, but sendgrid has some weird problems
         # with that.
-        if not settings.DEBUG:
-            m = Mail(from_email, subject, from_email, html_content)
-            sg.client.mail.send.post(request_body=m.get())
+        m = Mail(from_email, subject, from_email, html_content)
+        sg.client.mail.send.post(request_body=m.get())
 
         m = Mail(from_email, subject, to_email, html_content)
         return sg.client.mail.send.post(request_body=m.get())

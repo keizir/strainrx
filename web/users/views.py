@@ -5,9 +5,10 @@ import pytz
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.core.urlresolvers import reverse
 from django.views.generic import DetailView, ListView, RedirectView, UpdateView
-from django.views.generic import TemplateView
+from django.views.generic import TemplateView, FormView
 
 from .models import User
+from .forms import UserCreationForm
 
 
 class UserDetailView(LoginRequiredMixin, DetailView):
@@ -113,8 +114,11 @@ class UserListView(LoginRequiredMixin, ListView):
     slug_url_kwarg = 'username'
 
 
-class UserSignUpWizardView(TemplateView):
-    template_name = 'pages/signup/b2c/wizard.html'
+class UserSignUpWizardView(FormView):
+    # Old multi-step wizard
+    # template_name = 'pages/signup/b2c/wizard.html'
+    template_name = 'pages/signup/b2c/signup.html'
+    form_class = UserCreationForm
 
 
 class UserSignUpDoneView(TemplateView):

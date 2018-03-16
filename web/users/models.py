@@ -51,6 +51,7 @@ class User(AbstractUser):
 
     is_age_verified = models.BooleanField(default=False)
     is_email_verified = models.BooleanField(default=False)
+    display_search_history = models.BooleanField(default=True, editable=False)
     type = models.CharField(max_length=10, choices=USER_TYPE, default='consumer')
 
     birth_month = models.CharField(_('Birth Month'), blank=True, null=True, max_length=20)
@@ -97,6 +98,7 @@ class User(AbstractUser):
                 "zipcode": location.zipcode if location.zipcode else "",
                 "location_raw": location.location_raw if location.location_raw else {}
             }
+        return {}
 
 
 @python_2_unicode_compatible
@@ -144,6 +146,15 @@ class UserSetting(models.Model):
     setting_name = models.CharField(max_length=100)
     setting_value = JSONField(max_length=4096, default={})
     last_modified_date = models.DateTimeField(auto_now=True)
+
+    @staticmethod
+    def create_for_user(user, user_settings):
+        for s in user_settings:
+            UserSetting.objects.get_or_create(
+                user=user,
+                setting_name=s.get('setting_name'),
+                setting_value=s.get('setting_value'),
+            )
 
 
 @python_2_unicode_compatible

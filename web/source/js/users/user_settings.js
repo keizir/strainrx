@@ -14,6 +14,7 @@ W.users.UserSettings = Class.extend({
 
         this.settingName_SearchFilter = 'search_results_filter';
         this.settingName_WizardSearch = 'search_strain_wizard';
+        this.settingName_Eligible = 'eligible';
 
     },
 
@@ -36,6 +37,10 @@ W.users.UserSettings = Class.extend({
 
     update: function update(settingName, settingValue, successCallback, errorCallback) {
         this.engine.update(this.userId, settingName, settingValue, successCallback, errorCallback);
+    },
+
+    remove: function remove(settingName, successCallback, errorCallback) {
+        this.engine.remove(this.userId, settingName, successCallback, errorCallback);
     }
 
 });
@@ -71,6 +76,31 @@ W.users.UserSettingsLocal = function () {
                 }
 
                 Cookies.set(settingsCookie, JSON.stringify(settings));
+
+                if (successCallback) {
+                    successCallback();
+                }
+
+            }
+
+            this.getAll(userId, wrappedCallback);
+        },
+
+        remove: function(userId, settingName, successCallback, errorCallback) {
+            var settingsCookie = this.settingsCookie;
+
+            function wrappedCallback(settings) {
+                settings = settings || [];
+
+                settings = _.filter(settings, function(elem) {
+                    return elem.setting_name !== settingName;
+                });
+
+                Cookies.set(settingsCookie, JSON.stringify(settings));
+
+                if (successCallback) {
+                    successCallback();
+                }
             }
 
             this.getAll(userId, wrappedCallback);

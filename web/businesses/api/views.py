@@ -16,7 +16,7 @@ from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
-from web.businesses.api.permissions import BusinessAccountOwner, BusinessLocationAccountOwner, AllowAnyGetOperation
+from web.businesses.api.permissions import BusinessAccountOwner, BusinessLocationAccountOwnerOrStaff, AllowAnyGetOperation
 from web.businesses.api.serializers import *
 from web.businesses.api.services import BusinessSignUpService, BusinessLocationService, get_open_closed, \
     get_location_rating, FeaturedBusinessLocationService
@@ -94,7 +94,7 @@ class BusinessImageView(LoginRequiredMixin, APIView):
 
 
 class BusinessLocationImageView(LoginRequiredMixin, APIView):
-    permission_classes = (BusinessLocationAccountOwner,)
+    permission_classes = (BusinessLocationAccountOwnerOrStaff,)
 
     def post(self, request, business_id, business_location_id):
         location = BusinessLocation.objects.get(pk=business_location_id)
@@ -182,7 +182,7 @@ class ResendConfirmationEmailView(LoginRequiredMixin, APIView):
 
 
 class BusinessLocationView(APIView):
-    permission_classes = (BusinessLocationAccountOwner,)
+    permission_classes = (BusinessLocationAccountOwnerOrStaff,)
 
     def get(self, request, business_id, business_location_id):
         if business_location_id == '0':
@@ -242,7 +242,7 @@ class BusinessLocationView(APIView):
 
 
 class BusinessLocationMenuView(APIView):
-    permission_classes = (BusinessLocationAccountOwner,)
+    permission_classes = (BusinessLocationAccountOwnerOrStaff,)
 
     def get(self, request, business_id, business_location_id):
         menu_items_raw = BusinessLocationMenuItem.objects \
@@ -431,7 +431,7 @@ class FeaturedBusinessLocationsView(APIView):
 
 
 class GrowerDispensaryPartnershipListView(APIView):
-    permission_classes = (BusinessLocationAccountOwner,)
+    permission_classes = (BusinessLocationAccountOwnerOrStaff,)
 
     def get(self, request, business_id, business_location_id):
         grower_filter = request.GET.get('grower_id')
@@ -478,7 +478,7 @@ class GrowerDispensaryPartnershipListView(APIView):
 
 
 class GrowerDispensaryPartnershipDetailView(APIView):
-    permission_classes = (BusinessLocationAccountOwner,)
+    permission_classes = (BusinessLocationAccountOwnerOrStaff,)
 
     def delete(self, request, business_id, business_location_id, partnership_id):
         GrowerDispensaryPartnership.objects.filter(id=partnership_id).delete()

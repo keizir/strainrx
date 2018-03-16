@@ -16,18 +16,37 @@
             </div>
             {% endif %}
             <div class="row">
-                <div class="strain-data">
-                    <img class="strain-variety" src="<%= model.strain.variety_image %>"/>
-                    <div class="strain-variety-name"><%= model.strain.variety %></div>
-                    <h1 class="strain-name"><%= model.strain.name %></h1>
-                    <% if (is_authenticated) { %>
-                    <span class="strain-like-wrapper">
-                        <% if (model.favorite) { %>
-                            <i class="strain-like heart-active active fa fa-heart fa-2x" aria-hidden="true"></i>
-                        <% } else { %>
-                            <i class="strain-like fa fa-heart-o fa-2x" aria-hidden="true"></i>
+                <span class="strain-data <% if (is_authenticated) { %>with-recommendation<% } %>">
+                    <div class="strain-data-left">
+                        <img class="strain-variety" src="<%= model.strain.variety_image %>"/>
+                        <div class="strain-variety-name"><%= model.strain.variety %></div>
+                        <h1 class="strain-name"><%= model.strain.name %></h1>
+                        <% if (is_authenticated) { %>
+                            <span class="strain-like-wrapper">
+                                <% if (model.favorite) { %>
+                                    <i class="strain-like heart-active active fa fa-heart fa-2x" aria-hidden="true"></i>
+                                <% } else { %>
+                                    <i class="strain-like fa fa-heart-o fa-2x" aria-hidden="true"></i>
+                                <% } %>
+                            </span>
                         <% } %>
-                    </span>
+                    </div>
+                    <% if (!is_authenticated) { %>
+                        <span class="recommendation-btn">
+                            <div class="recommendation-btn-icon">
+                              <a href="{% url 'search:strain_wizard' %}" class="recommendation-link">
+                                <i class="fa fa-search"></i>
+                              </a>
+                            </div>
+                            <div class="recommendation-btn-content">
+                                <div class="recommendation-btn-line">
+                                  <a href="{% url 'search:strain_wizard' %}" class="recommendation-link">
+                                    Find out if <span class="recommendation-btn-strain-name"><%= model.strain.name %></span>
+                                    is right for you. <u>Click here.</u>
+                                  </a>
+                                </div>
+                            </div>
+                        </span>
                     <% } %>
                     <div class="rating-row">
                         <span class="strain-rating-stars"><%= model.strain_rating %></span>
@@ -81,11 +100,7 @@
             </div>
             <div class="row second-row">
                 <div class="photo-controls">
-                    <span class="view-photos">
-                        <a href="#">View Photos</a>
-                    </span>
                     <% if (is_authenticated) { %>
-                    <span class="separator"></span>
                     <span>
                         <a href="#" class="add-photo-link">+ Add Photo</a>
                     </span>
@@ -115,6 +130,13 @@
                 <div class="carousel-images-wrapper"></div>
                 <div class="carousel-arrow arrow-down">
                     <img class="down" src="{% static 'images/arrow-down.png' %}" alt="Down">
+                </div>
+
+                <div class="carousel-arrow arrow-left">
+                  <i class="fa fa-chevron-left" aria-hidden="true"></i>
+                </div>
+                <div class="carousel-arrow arrow-right">
+                  <i class="fa fa-chevron-right" aria-hidden="true"></i>
                 </div>
             </div>
             <div class="loader"></div>
@@ -267,12 +289,18 @@
             </span>
             <div class="lineage-region">
                 <% $.each(model.strain_origins, function(i, origin) { %>
-                <a href="/strains/<%= origin.variety %>/<%= origin.strain_slug %>">
-                    <div class="lineage-wrapper">
-                        <span class="abbreviation"><%= abbreviateStrainName(origin.name)%></span>
-                        <span class="name"><%= origin.name %></span>
-                    </div>
-                </a>
+                    <% if (i === 0 || i % 2) { %>
+                        <div class="lineage-column <% if (i === 0) { %>tall<% } %>">
+                    <% } %>
+                        <a href="/strains/<%= origin.variety %>/<%= origin.strain_slug %>">
+                            <div class="lineage-wrapper">
+                                <span class="abbreviation"><%= abbreviateStrainName(origin.name)%></span>
+                                <span class="name"><%= origin.name %></span>
+                            </div>
+                        </a>
+                    <% if (i === 0 || i % 2 === 0 || i === model.strain_origins.length - 1) { %>
+                        </div>
+                    <% } %>
                 <% }); %>
             </div>
         </div>

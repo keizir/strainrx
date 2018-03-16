@@ -90,6 +90,7 @@ class StrainESService(BaseElasticService):
             es_strain_source['removed_date'] = data.get('removed_date')
             es_strain_source['removed_by_id'] = data.get('removed_by')
             es_strain_source['name_suggest'] = data.get('name_suggest')
+            es_strain_source['you_may_also_like_exclude'] = data.get('you_may_also_like_exclude')
 
             url = '{base}{index}/{type}/{es_id}'.format(base=self.BASE_ELASTIC_URL, index=self.URLS.get('STRAIN'),
                                                         type=es_mappings.TYPES.get('strain'),

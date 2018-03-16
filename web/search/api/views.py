@@ -75,7 +75,7 @@ class StrainSearchResultsView(APIView):
                                                              result_filter=result_filter)
         result_list = data.get('list')
 
-        if request.user.is_authenticated():
+        if request.user.is_authenticated() and request.user.is_email_verified:
             user_strain_ratings = StrainRating.objects.filter(created_by=request.user, removed_date=None)
             if len(user_strain_ratings) > 0:
                 result_list = self.change_strain_scores(result_list, user_strain_ratings, request.user, page)
@@ -93,12 +93,12 @@ class StrainSearchResultsView(APIView):
         if len(result_list) == 0:
             return []
 
-        latest_user_search = UserSearch.objects.filter(user=current_user).order_by('-last_modified_date')[:1]
+        latest_user_search = UserSearch.objects.user_criteria(current_user)
 
         user_review_scores = {}
         user_review_strain_ids = []
         for r in user_strain_reviews:
-            new_score = SearchElasticService().query_user_review_srx_score(latest_user_search[0].to_search_criteria(),
+            new_score = SearchElasticService().query_user_review_srx_score(latest_user_search.to_search_criteria(),
                                                                            strain_id=r.strain.id,
                                                                            user_id=current_user.id)
             user_review_strain_ids.append(r.strain.id)

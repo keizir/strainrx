@@ -66,7 +66,9 @@
                                 <div class="business-nav-menu-btn">
                                     <span class="business-name">{{ request.session.business.name }}</span>
                                     <span class="business-active-since">
+                                      {% if request.session.business.created_date %}
                                         Active since {% to_active_since_date request.session.business.created_date %}
+                                      {% endif %}
                                     </span>
                                     {% if not request.user.is_email_verified %}
                                         <span class="business-verify-location">
@@ -115,7 +117,7 @@
                                 {% endif %}
                             {% elif request.user.type == 'business' %}
                                 <div class="action">
-                                    {% if request.user.is_email_verified %}
+                                    {% if request.user.is_email_verified and request.session.business.id %}
                                         <a href="{% url 'businesses:detail' request.session.business.id %}"
                                            class="nav-link">Business Account</a>
                                     {% else %}

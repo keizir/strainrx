@@ -1,5 +1,7 @@
 import datetime
+import json
 import logging
+import urllib.parse
 import uuid
 
 from boto.s3.bucket import Bucket
@@ -12,11 +14,11 @@ from django.core.exceptions import ValidationError
 from django.core.validators import EmailValidator
 from rest_framework import permissions
 from rest_framework import status
+from rest_framework.exceptions import ValidationError as RestFrameworkValidationError
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
-from web.businesses.models import Business, BusinessLocation
-from web.businesses.serializers import BusinessSerializer
+from web.users.login import pre_login
 from web.search.api.serializers import SearchCriteriaSerializer
 from web.search.models import UserSearch, StrainReview, StrainImage, UserFavoriteStrain
 from web.search.services import build_strain_rating
@@ -201,18 +203,12 @@ class UserLoginView(APIView):
         if authenticated is None:
             return bad_request('Email or password does not match')
 
-        # If user is a business user we need a business object to be available across the app
-        if user.type == 'business':
-            business = Business.objects.filter(users__in=[user])[:1]
-            request.session['business'] = BusinessSerializer(business[0]).data
+        if not UserSetting.objects.filter(user=user).exists():
+            UserSetting.create_for_user(user,
+                                        json.loads(urllib.parse.unquote(request.COOKIES.get('user_settings', '[]')))
+                                        )
 
-            locations = BusinessLocation.objects.filter(business__id=business[0].id, primary=True, removed_date=None)
-            if len(locations) > 0:
-                primary = locations[0]
-                business_image = primary.image.url if len(
-                    locations) > 0 and primary.image and primary.image.url else None
-                request.session['business_image'] = business_image
-
+        pre_login(user, request)
         login(request, authenticated)
         return Response({'user': UserSerializer(user).data}, status=status.HTTP_200_OK)
 
@@ -231,23 +227,26 @@ class UserSignUpWizardView(APIView):
         try:
             user_serializer.is_valid(raise_exception=True)
             location_serializer.is_valid(raise_exception=True)
-        except ValidationError as e:
-            return bad_request(e.message)
+        except RestFrameworkValidationError as e:
+            return bad_request(e.detail)
 
         user_data = user_serializer.validated_data
         l_data = location_serializer.validated_data
         email = user_data.get('email').lower()
 
         if User.objects.filter(email__iexact=email).exists():
-            return bad_request('There is already an account associated with that email address')
+            return bad_request({'email': ['There is already an account associated with that email address']})
 
         try:
             validators.validate_pwd(user_data.get('pwd'), user_data.get('pwd2'))
         except ValidationError as e:
-            return bad_request(e.message)
+            return bad_request({'pwd': [e.message], 'pwd2': [e.message]})
 
         if not user_data.get('is_terms_accepted'):
-            return bad_request('Agreement is required')
+            return bad_request({'is_terms_accepted': ['Required']})
+
+        if not user_data.get('is_age_verified'):
+            return bad_request({'is_age_verified': ['Required']})
 
         try:
             user = user_serializer.save()
@@ -409,11 +408,10 @@ class UserStrainSearchesView(LoginRequiredMixin, APIView):
     permission_classes = (UserAccountOwner,)
 
     def get(self, request, user_id):
-        try:
-            user_search = UserSearch.objects.get(user=request.user)
+        user_search = UserSearch.objects.user_criteria(request.user)
+        if user_search:
             return Response({'strain_search': user_search}, status=status.HTTP_200_OK)
-        except UserSearch.DoesNotExist:
-            return Response({}, status=status.HTTP_204_NO_CONTENT)
+        return Response({}, status=status.HTTP_204_NO_CONTENT)
 
     def post(self, request, user_id):
         criteria = SearchCriteriaSerializer(data=request.data.get('search_criteria'))
@@ -429,25 +427,17 @@ class UserStrainSearchesView(LoginRequiredMixin, APIView):
         benefits = 'skipped' if step_3_data.get('skipped') else step_3_data.get('effects')
         side_effects = 'skipped' if step_4_data.get('skipped') else step_4_data.get('effects')
 
-        try:
-            user_search = UserSearch.objects.get(user=request.user)
-        except UserSearch.DoesNotExist:
-            user_search = UserSearch(user=request.user)
-
-        user_search.varieties = types
-        user_search.effects = effects
-        user_search.benefits = benefits
-        user_search.side_effects = side_effects
-        user_search.save()
-
+        UserSearch.objects.create(
+            user=request.user, varieties=types, effects=effects, benefits=benefits, side_effects=side_effects
+        )
+        if not request.user.display_search_history:
+            request.user.display_search_history = True
+            request.user.save()
         return Response({}, status=status.HTTP_200_OK)
 
     def delete(self, request, user_id):
-        if UserSearch.objects.filter(user=request.user).exists():
-            search = UserSearch.objects.get(user=request.user)
-            search.delete()
-            print('------ deleted')
-
+        request.user.display_search_history = False
+        request.user.save()
         return Response({}, status=status.HTTP_200_OK)
 
 

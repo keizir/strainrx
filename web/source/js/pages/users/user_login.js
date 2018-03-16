@@ -68,7 +68,14 @@ W.pages.UserLogin = W.views.BaseView.extend({
                             'account_type': user.type
                         });
                     }
-                    window.location.href = '/';
+                    var url = new URL(document.location);
+                    var next = url.searchParams.get('next');
+
+                    if (next) {
+                        window.location.href = next;
+                    } else {
+                        window.location.href = '/';
+                    }
                 },
                 error: function (error) {
                     if (error.status === 400) {

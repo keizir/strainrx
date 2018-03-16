@@ -19,10 +19,12 @@ W.views.LocationView = Class.extend({
 
     updateTimezone: function updateTimezone(GoogleLocations, address, success) {
         var that = this;
-        GoogleLocations.getTimezone(address.lat, address.lng, function (json) {
-            that.timezone = json.timeZoneId;
-            success();
-        });
+        if (typeof address !== 'undefined' && address.lat && address.lng) {
+            GoogleLocations.getTimezone(address.lat, address.lng, function (json) {
+                that.timezone = json.timeZoneId;
+                success();
+            });
+        }
     },
 
     onChangeLocation: function onChangeLocation() {
@@ -153,8 +155,12 @@ W.views.LocationView = Class.extend({
                 });
             }
 
-            if (_.includes(address_comp.types, 'administrative_area_level_3') && aal3 === '') {
-                aal3 = address_comp.long_name;
+            if (_.includes(res.types, 'administrative_area_level_3') && city === '') {
+                $.each(res.address_components, function (j, address_comp) {
+                    if (_.includes(address_comp.types, 'administrative_area_level_3')) {
+                        aal3 = address_comp.long_name;
+                    }
+                });
             }
         });
 

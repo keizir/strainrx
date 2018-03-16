@@ -162,7 +162,7 @@ class BusinessLocation(models.Model):
 
     DEFAULT_IMAGE_URL = '{base}images/default-location-image.jpeg'.format(base=settings.STATIC_URL)
 
-    business = models.ForeignKey(Business, on_delete=models.DO_NOTHING)
+    business = models.ForeignKey(Business, on_delete=models.CASCADE)
     location_name = models.CharField(max_length=255, blank=False, null=False)
     manager_name = models.CharField(max_length=255, blank=True, null=True)
     location_email = models.CharField(max_length=255, blank=True, null=True)
@@ -394,6 +394,13 @@ def exist_by_slug_name(location_slug_name):
     return BusinessLocation.objects.filter(slug_name=location_slug_name).exists()
 
 
+@python_2_unicode_compatible
+class BusinessLocationPermanentlyRemoved(models.Model):
+    city_slug = models.TextField()
+    slug_name = models.TextField()
+    state = models.TextField()
+
+
 @receiver(pre_save, sender=BusinessLocation)
 def pre_save_business_location(sender, **kwargs):
     business_location = kwargs.get('instance')
@@ -428,7 +435,7 @@ def save_city_and_state(business_location):
 
 @python_2_unicode_compatible
 class BusinessLocationMenuItem(models.Model):
-    business_location = models.ForeignKey(BusinessLocation, on_delete=models.DO_NOTHING)
+    business_location = models.ForeignKey(BusinessLocation, on_delete=models.CASCADE)
     strain = models.ForeignKey(Strain, on_delete=models.DO_NOTHING, related_name='menu_items')
 
     price_gram = models.FloatField(max_length=50, blank=True, null=True)
@@ -443,7 +450,7 @@ class BusinessLocationMenuItem(models.Model):
 
 @python_2_unicode_compatible
 class BusinessLocationMenuUpdate(models.Model):
-    business_location = models.ForeignKey(BusinessLocation, related_name='menu_updates')
+    business_location = models.ForeignKey(BusinessLocation, related_name='menu_updates', on_delete=models.CASCADE)
     date = models.DateField()
 
     @classmethod
@@ -485,7 +492,7 @@ def save_es_menu_item(sender, **kwargs):
 @python_2_unicode_compatible
 class BusinessLocationMenuUpdateRequest(models.Model):
     user = models.ForeignKey(User)
-    business_location = models.ForeignKey(BusinessLocation)
+    business_location = models.ForeignKey(BusinessLocation, on_delete=models.CASCADE)
     message = models.TextField(null=True)
     date_time = models.DateTimeField(auto_now_add=True)
     send_notification = models.BooleanField(default=False)
@@ -495,8 +502,8 @@ class BusinessLocationMenuUpdateRequest(models.Model):
 
 @python_2_unicode_compatible
 class GrowerDispensaryPartnership(models.Model):
-    grower = models.ForeignKey(BusinessLocation, related_name='dispensary_partnerships')
-    dispensary = models.ForeignKey(BusinessLocation, related_name='grower_partnerships')
+    grower = models.ForeignKey(BusinessLocation, related_name='dispensary_partnerships', on_delete=models.CASCADE)
+    dispensary = models.ForeignKey(BusinessLocation, related_name='grower_partnerships', on_delete=models.CASCADE)
 
 
 @python_2_unicode_compatible
@@ -505,20 +512,20 @@ class FeaturedBusinessLocation(models.Model):
         unique_together = (('business_location', 'zip_code'),)
 
     featured_datetime = models.DateTimeField(auto_now=True)
-    business_location = models.ForeignKey(BusinessLocation, related_name='featured')
+    business_location = models.ForeignKey(BusinessLocation, related_name='featured', on_delete=models.CASCADE)
     zip_code = models.CharField(max_length=10, db_index=True)
 
 
 @python_2_unicode_compatible
 class UserFavoriteLocation(models.Model):
-    location = models.ForeignKey(BusinessLocation, on_delete=models.DO_NOTHING)
+    location = models.ForeignKey(BusinessLocation, on_delete=models.CASCADE)
     created_by = models.ForeignKey(User, on_delete=models.DO_NOTHING)
     created_date = models.DateTimeField(auto_now=True)
 
 
 @python_2_unicode_compatible
 class LocationReview(models.Model):
-    location = models.ForeignKey(BusinessLocation, on_delete=models.DO_NOTHING)
+    location = models.ForeignKey(BusinessLocation, on_delete=models.CASCADE)
 
     rating = models.FloatField()
     review = models.CharField(max_length=500, default='', blank=True)

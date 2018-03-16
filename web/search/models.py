@@ -16,6 +16,7 @@ from django.utils.encoding import python_2_unicode_compatible
 from django.utils.translation import ugettext_lazy as _
 from django.utils.timezone import now
 
+from web.search.managers import UserSearchQuerySet
 from web.search.serializers import StrainReviewESSerializer
 from web.search.strain_es_service import StrainESService
 from web.users.models import User
@@ -79,11 +80,19 @@ class Strain(models.Model):
                                 "tar": 0, "tea": 0, "tobacco": 0, "tree-fruit": 0, "tropical": 0,
                                 "vanilla": 0, "violet": 0, "woody": 0})
 
+    terpenes = JSONField(default={"humulene": 0, "pinene": 0, "linalool": 0, "caryophyllene": 0, "myrcene": 0,
+                                  "terpinolene": 0, "ocimene": 0, "limonene": 0, "camphene": 0, "terpineol": 0,
+                                  "phellandrene": 0, "carene": 0, "pulegone": 0, "sabinene": 0, "geraniol": 0})
+
+    cannabinoids = JSONField(default={"THC": 0, "THCA": 0, "THCV": 0, "CBD": 0, "CBG": 0, "CBN": 0, "CBC": 0})
+
     about = models.TextField(_('Description'), null=True, blank=True)
     origins = models.ManyToManyField('self', symmetrical=False, blank=True)
 
     removed_by = models.CharField(max_length=20, blank=True, null=True)
     removed_date = models.DateTimeField(blank=True, null=True)
+
+    you_may_also_like_exclude = models.BooleanField(default=False)
 
     # social fields
     meta_desc = models.CharField(max_length=3072, blank=True)
@@ -234,6 +243,8 @@ class UserSearch(models.Model):
     side_effects = JSONField(max_length=1000)
 
     last_modified_date = models.DateTimeField(auto_now=True)
+
+    objects = UserSearchQuerySet.as_manager()
 
     def to_search_criteria(self):
         return {

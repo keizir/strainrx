@@ -43,6 +43,7 @@ urlpatterns = [
     url(r'^', include('web.search.urls', namespace='search')),
     url(r'^', include('web.businesses.urls', namespace='businesses')),
     url(r'^accounts/', include('allauth.urls')),
+    url(r'^impersonate/', include('impersonate.urls')),
 
     # cms
     url(r'^filer/', include('filer.urls')),
