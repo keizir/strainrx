@@ -7,64 +7,67 @@ W.pages.business.Analytics = Class.extend({
     init: function init() {
         this.configureDatePicker();
     },
+
     configureDatePicker: function(){
-        $("#update").on("click", function(){
-            window.location.href = window.location.pathname + "?from_date={1}&to_date={0}".format($("#to").val(), $("#from").val());
+
+        $("#reportrange").on("apply.daterangepicker", function(ev, picker){
+
+            window.location.href = window.location.pathname + "?from_date={1}&to_date={0}".format(
+                picker.endDate.format('YYYY-MM-DD'),
+                picker.startDate.format('YYYY-MM-DD')
+            );
         });
 
-        Date.prototype.addDays = function(days) {
-          var dat = new Date(this.valueOf());
-          dat.setDate(dat.getDate() + days);
-          return dat;
-        }
+        var start = moment().subtract(7, 'days');
+        var end = moment();
 
-        var from_date = new Date(),
-            from = $( "#from" ).datepicker({
-                  dateFormat: 'yy-mm-dd',
-                  defaultDate: "+1w",
-                  changeMonth: true,
-                  numberOfMonths: 1
-                }).on( "change", function() {
-                    to.datepicker( "option", "minDate", getDate( this ) );
-                }).datepicker("setDate", from_date.addDays(-7)),
-
-            to = $( "#to" ).datepicker({
-                dateFormat: 'yy-mm-dd',
-                changeMonth: true,
-                numberOfMonths: 1
-                }).on( "change", function() {
-                    from.datepicker( "option", "maxDate", getDate( this ) );
-                }).datepicker("setDate", new Date());
-     
-        function getDate( element ) {
-            var date;
-
-            try {
-                date = $.datepicker.parseDate("yyyy-mm-dd", element.value );
-            } catch( error ) {
-                date = null;
-            }
-
-            return date;
-        }
-
-        if(window.location.href.indexOf("?") > -1){
+        if(window.location.href.indexOf("?") > -1) {
             var qs = W.qs(window.location.href);
-
-            if(qs.to){
-                $("#to").val(qs.to_date);
-                $("#from").val(qs.from_date);
-            }
-
+            start = moment(qs.from_date) || end;
+            end = moment(qs.to_date) || start;
         }
+
+        function cb(start, end) {
+            $('#reportrange span').html(start.format('MMMM D, YYYY') + ' - ' + end.format('MMMM D, YYYY'));
+        }
+
+        $('#reportrange').daterangepicker({
+            startDate: start,
+            endDate: end,
+            ranges: {
+               'Today': [moment(), moment()],
+               'Yesterday': [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
+               'Last 7 Days': [moment().subtract(6, 'days'), moment()],
+               'Last 14 Days': [moment().subtract(13, 'days'), moment()],
+               'Last 30 Days': [moment().subtract(29, 'days'), moment()],
+               'This Month': [moment().startOf('month'), moment().endOf('month')],
+               'Last Month': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')]
+            }
+        }, cb);
+
+        cb(start, end);
     },
 
     parseData: function (data) {
+        var len = data.length,
+            obj, end, start, range = [];
+
         if (data && typeof data === 'object') {
-            return data.map(function (obj) {
-                return [obj.day, obj.count]
-            })
+            for (var i = 0; i < len; i += 1) {
+                obj = data[i];
+                end = i + 1 < len && moment(data[i + 1].day);
+                start = moment(obj.day);
+                range.push([obj.day, obj.count]);
+
+                if (end && end.diff(start, 'days') > 1) {
+                    // if there are no data between two dates fill skipped dates with zero.
+                    for (var j = 1; j < end.diff(start, 'days') - 1; j += 1) {
+                        range.push([start.add(1, 'days').format('YYYY-MM-DD'), 0])
+                    }
+                }
+            }
         }
+        return range
     },
 
     drawBizLookupChart: function(data){

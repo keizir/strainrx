@@ -15,7 +15,7 @@ class EventQuerySet(models.QuerySet):
             .extra(select={'day': 'to_char( event_date,  \'YYYY-MM-DD\' )'}) \
             .values('day') \
             .annotate(count=models.Count('event_date')) \
-            .order_by('-day')
+            .order_by('day')
 
 
 class BusinessLocationMenuUpdateRequestQuerySet(models.QuerySet):
@@ -32,4 +32,4 @@ class BusinessLocationMenuUpdateRequestQuerySet(models.QuerySet):
             .extra(select={'day': 'to_char( date_time,  \'YYYY-MM-DD\' )'}) \
             .values('day') \
             .annotate(count=models.Count('date_time')) \
-            .order_by('-day')
+            .order_by('day')

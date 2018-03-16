@@ -55,11 +55,11 @@ class BusinessAnalyticsTestCase(TestCase):
 
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertContains(response, str([
-            {'day': self.lookup_event_this_week.event_date.strftime('%Y-%m-%d'), 'count': 1},
-            {'day': self.lookup_event_this_month.event_date.strftime('%Y-%m-%d'), 'count': 1}]))
+            {'day': self.lookup_event_this_month.event_date.strftime('%Y-%m-%d'), 'count': 1},
+            {'day': self.lookup_event_this_week.event_date.strftime('%Y-%m-%d'), 'count': 1}]))
         self.assertContains(response, str([
-            {'day': self.search_event_this_week.event_date.strftime('%Y-%m-%d'), 'count': 1},
-            {'day': self.search_event_this_month.event_date.strftime('%Y-%m-%d'), 'count': 1}]))
+            {'day': self.search_event_this_month.event_date.strftime('%Y-%m-%d'), 'count': 1},
+            {'day': self.search_event_this_week.event_date.strftime('%Y-%m-%d'), 'count': 1}]))
 
     def test_filter_by_from_date(self):
         """
@@ -71,11 +71,11 @@ class BusinessAnalyticsTestCase(TestCase):
 
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertContains(response, str([
-            {'day': self.lookup_event_this_week.event_date.strftime('%Y-%m-%d'), 'count': 1},
-            {'day': self.lookup_event_this_month.event_date.strftime('%Y-%m-%d'), 'count': 1}]))
+            {'day': self.lookup_event_this_month.event_date.strftime('%Y-%m-%d'), 'count': 1},
+            {'day': self.lookup_event_this_week.event_date.strftime('%Y-%m-%d'), 'count': 1}]))
         self.assertContains(response, str([
-            {'day': self.search_event_this_week.event_date.strftime('%Y-%m-%d'), 'count': 1},
-            {'day': self.search_event_this_month.event_date.strftime('%Y-%m-%d'), 'count': 1}]))
+            {'day': self.search_event_this_month.event_date.strftime('%Y-%m-%d'), 'count': 1},
+            {'day': self.search_event_this_week.event_date.strftime('%Y-%m-%d'), 'count': 1}]))
 
     def test_filter_by_to_date(self):
         """
