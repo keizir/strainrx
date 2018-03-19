@@ -279,6 +279,7 @@
                 color: $white;
                 position: absolute;
                 top: 0;
+                right: 0;
                 max-width: 20em;
 
                 .recommendation-link {
@@ -297,8 +298,8 @@
             }
 
             .recommendation-btn-content {
-                display: flex;
-                flex-flow: column;
+                //display: flex;
+                //flex-flow: column;
             }
 
             .recommendation-btn-line {
@@ -507,7 +508,8 @@
                 }
 
                 .carousel-images-wrapper {
-                    overflow: scroll;
+                    overflow-y: auto;
+                    overflow-x: hidden;
                     height: 22.4em;
 
                     .img-wrapper {

@@ -196,9 +196,11 @@
       ga('send', 'pageview');
   }
 
+  if (typeof W !== 'undefined') {
     W.common.EligibleDialog({
         userId: {% if request.user.is_authenticated %}{{ request.user.id }}{% else %}null{% endif %}
     });
+  }
 
 </script>
 </body>
