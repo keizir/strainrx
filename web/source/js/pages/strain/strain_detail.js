@@ -271,12 +271,15 @@ W.pages.strain.StrainDetailPage = Class.extend({
 
     addZoom: function addZoom($imgContainer) {
       if ($ && $.fn.zoom) {
-        $imgContainer.trigger('zoom.destroy');
-        $imgContainer.zoom({
-            callback: function(){
-              $(this).css('cursor', 'zoom-in');
-            }
-        });
+        setTimeout(function(){
+            $imgContainer.trigger('zoom.destroy');
+            $imgContainer.zoom({
+                magnify: 1.5,
+                callback: function(){
+                  $(this).css('cursor', 'zoom-in');
+                }
+            });
+        }, 0);
       }
     },
 
