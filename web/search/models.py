@@ -106,14 +106,13 @@ class Strain(models.Model):
     def url(self):
         return self.get_absolute_url()
 
-    def validate_image(field_file_obj):
-        file_size = field_file_obj.file.size
+    def validate_image(self):
+        file_size = self.file.size
         megabyte_limit = settings.MAX_IMAGE_SIZE
         if file_size > megabyte_limit:
             raise ValidationError("Max file size is %sMB" % str(megabyte_limit))
 
     social_image = ResizedImageField(max_length=255, blank=True, help_text='Maximum file size allowed is 10Mb', validators=[validate_image], quality=75, size=[1024, 1024], upload_to=upload_to)
-
 
     def save(self, *args, **kwargs):
         if self.pk is None and not self.strain_slug:
