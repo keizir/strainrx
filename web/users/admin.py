@@ -5,10 +5,12 @@ from django import forms
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin as AuthUserAdmin
 from django.contrib.auth.forms import UserChangeForm, UserCreationForm
-
-from rangefilter.filter import DateRangeFilter
 from impersonate.admin import UserAdminImpersonateMixin
+from import_export.admin import ExportActionModelAdmin
+from import_export.formats import base_formats
+from rangefilter.filter import DateRangeFilter
 
+from web.users.resources import UserResource
 from .models import User
 
 
@@ -35,14 +37,20 @@ class MyUserCreationForm(UserCreationForm):
 
 
 @admin.register(User)
-class MyUserAdmin(UserAdminImpersonateMixin, AuthUserAdmin):
+class MyUserAdmin(UserAdminImpersonateMixin, AuthUserAdmin, ExportActionModelAdmin):
+    resource_class = UserResource
+    formats = (
+        base_formats.CSV,
+        base_formats.XLS,
+    )
     form = MyUserChangeForm
     add_form = MyUserCreationForm
     fieldsets = (
-                    ('User Profile', {'fields': ('name', 'is_email_verified')}),
-                    ('', {'fields': ('type',)}),
-                ) + AuthUserAdmin.fieldsets
-    list_display = ('email', 'first_name', 'last_name', 'type', 'last_login', 'date_joined', 'is_email_verified', 'is_superuser')
+        ('User Profile', {'fields': ('name', 'is_email_verified')}),
+        ('', {'fields': ('type',)}),
+    ) + AuthUserAdmin.fieldsets
+    list_display = (
+        'email', 'first_name', 'last_name', 'type', 'last_login', 'date_joined', 'is_email_verified', 'is_superuser')
     search_fields = ['email', 'first_name', 'last_name']
     list_filter = (
         ('date_joined', DateRangeFilter),

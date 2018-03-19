@@ -123,6 +123,11 @@ W.pages.StrainSearchResultsPage = Class.extend({
             method: 'GET',
             url: '/api/v1/search/result/?filter={0}&page={1}&size={2}'.format(filterType, that.scrollPage, that.scrollSize),
             dataType: 'json',
+            error: function () {
+                that.ui.$searchResultFooterRegion.addClass('hidden');
+                that.ui.$searchResult.append(
+                    '<h2>There was an error processing your request please try again at a later</h2>');
+            },
             success: function (data) {
                 var searchResults = data.search_results,
                     searchResultsTotal = data.search_results_total;
