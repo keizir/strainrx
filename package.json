@@ -4,7 +4,10 @@
     "description": "The Strain RX project.",
     "author": "Kostiantyn Noha",
     "private": true,
-    "dependencies": {},
+    "dependencies": {
+        "bootstrap-daterangepicker": "^2.1.30",
+        "jquery-zoom": "^1.7.20"
+    },
     "devDependencies": {
         "browser-sync": "2.14.3",
         "del": "2.2.2",

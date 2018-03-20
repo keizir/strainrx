@@ -408,11 +408,10 @@ class UserStrainSearchesView(LoginRequiredMixin, APIView):
     permission_classes = (UserAccountOwner,)
 
     def get(self, request, user_id):
-        try:
-            user_search = UserSearch.objects.get(user=request.user)
+        user_search = UserSearch.objects.user_criteria(request.user)
+        if user_search:
             return Response({'strain_search': user_search}, status=status.HTTP_200_OK)
-        except UserSearch.DoesNotExist:
-            return Response({}, status=status.HTTP_204_NO_CONTENT)
+        return Response({}, status=status.HTTP_204_NO_CONTENT)
 
     def post(self, request, user_id):
         criteria = SearchCriteriaSerializer(data=request.data.get('search_criteria'))
@@ -428,25 +427,17 @@ class UserStrainSearchesView(LoginRequiredMixin, APIView):
         benefits = 'skipped' if step_3_data.get('skipped') else step_3_data.get('effects')
         side_effects = 'skipped' if step_4_data.get('skipped') else step_4_data.get('effects')
 
-        try:
-            user_search = UserSearch.objects.get(user=request.user)
-        except UserSearch.DoesNotExist:
-            user_search = UserSearch(user=request.user)
-
-        user_search.varieties = types
-        user_search.effects = effects
-        user_search.benefits = benefits
-        user_search.side_effects = side_effects
-        user_search.save()
-
+        UserSearch.objects.create(
+            user=request.user, varieties=types, effects=effects, benefits=benefits, side_effects=side_effects
+        )
+        if not request.user.display_search_history:
+            request.user.display_search_history = True
+            request.user.save()
         return Response({}, status=status.HTTP_200_OK)
 
     def delete(self, request, user_id):
-        if UserSearch.objects.filter(user=request.user).exists():
-            search = UserSearch.objects.get(user=request.user)
-            search.delete()
-            print('------ deleted')
-
+        request.user.display_search_history = False
+        request.user.save()
         return Response({}, status=status.HTTP_200_OK)
 
 

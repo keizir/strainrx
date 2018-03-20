@@ -31,7 +31,6 @@
         }
 
         .removable {
-            display: none;
             position: relative;
             right: 2.4em;
             top: 0.44em;
@@ -39,7 +38,7 @@
         }
 
         .your-location {
-            padding: 0.6em 0.75em;
+            padding: 0.695em 0.75em;
             border-radius: 0.5em 0 0 0.5em;
             margin-right: 0;
             color: $white;
@@ -86,6 +85,25 @@
     }
 }
 
+@media (max-width: $screen-sm-max) {
+    .location-plus-favourites {
+        .location-holder {
+            .your-location-value {
+                padding-right: 1.6em;
+            }
+
+            .removable {
+                display: inline-block;
+                height: 1em;
+                width: 1em;
+                background-size: 1em 1em;
+                right: 1.5em;
+                top: 0.75em;
+            }
+        }
+    }
+}
+
 @media (min-width: $screen-xs-min) {
     .location-plus-favourites {
         .location-holder {
@@ -125,9 +143,6 @@
                 display: inline-block;
             }
 
-            .removable {
-                display: inline-block;
-            }
         }
     }
 }

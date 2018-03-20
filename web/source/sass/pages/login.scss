@@ -20,6 +20,13 @@
             display: block;
             margin-top: 3em;
         }
+
+        @media (max-width: $screen-xs-max) {
+            input {
+                width: auto;
+            }
+        }
+
     }
 
     @media (max-width: $screen-xs-max) {

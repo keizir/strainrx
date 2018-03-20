@@ -210,7 +210,8 @@ W.pages.strain.StrainDetailPage = Class.extend({
             $carouselImageWrapper = $('.carousel-images-wrapper'),
             imgWrapperTemplate = '<div class="img-wrapper"><img src="{0}"/><div class="cover"></div></div>',
             firstImage = $mainImageImg.attr('src'),
-            $cover;
+            $cover,
+            that = this;
 
         $imageCarousel.removeClass('hidden');
 
@@ -233,7 +234,7 @@ W.pages.strain.StrainDetailPage = Class.extend({
                 $carouselImageWrapper.append(imgWrapperTemplate.format(firstImage));
             }
 
-            $('.carousel-arrow').addClass('hidden');
+            $('.carousel-arrow.arrow-up, .carousel-arrow.arrow-down').addClass('hidden');
         }
 
         $cover = $('.cover');
@@ -243,10 +244,12 @@ W.pages.strain.StrainDetailPage = Class.extend({
             $cover.removeClass('active');
             $mainImageImg.attr('src', $el.parent().find('img').attr('src'));
             $el.addClass('active');
+            that.addZoom($mainImage);
         });
 
         $mainImageImg.attr('src', firstImage);
         $mainImageImg.removeClass('hidden');
+        this.addZoom($mainImage);
 
         $('.arrow-up').on('click', function (e) {
             $carouselImageWrapper.scrollTop($carouselImageWrapper.scrollTop() - $('.img-wrapper').height());
@@ -255,6 +258,29 @@ W.pages.strain.StrainDetailPage = Class.extend({
         $('.arrow-down').on('click', function (e) {
             $carouselImageWrapper.scrollTop($carouselImageWrapper.scrollTop() + $('.img-wrapper').height());
         });
+
+        $('.arrow-left').on('click', function (e) {
+            $carouselImageWrapper.scrollLeft($carouselImageWrapper.scrollLeft() - $('.img-wrapper').width());
+
+        });
+
+        $('.arrow-right').on('click', function (e) {
+            $carouselImageWrapper.scrollLeft($carouselImageWrapper.scrollLeft() + $('.img-wrapper').width());
+        });
+    },
+
+    addZoom: function addZoom($imgContainer) {
+      if ($ && $.fn.zoom) {
+        setTimeout(function(){
+            $imgContainer.trigger('zoom.destroy');
+            $imgContainer.zoom({
+                magnify: 1.5,
+                callback: function(){
+                  $(this).css('cursor', 'zoom-in');
+                }
+            });
+        }, 0);
+      }
     },
 
     recalculateSimilarStrainsSectionWidth: function recalculateSimilarStrainsSectionWidth() {

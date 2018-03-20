@@ -9,7 +9,7 @@
     top: 0;
     left: 0;
     width: 100%;
-    height: 55em;
+    height: 60em;
     background-color: $grey-lighter;
     border-bottom: 1px solid $grey-light;
 }
@@ -22,7 +22,7 @@
         display: block;
         position: relative;
         color: $grey-normal;
-        margin-top: 9em;
+        margin-top: 14em;
         height: 40em;
 
         .back-to-search-wrapper {
@@ -37,7 +37,7 @@
 
         .breadcrumbs {
             position: absolute;
-            top: -5em;
+            top: -9em;
             margin: 2em auto;
         }
 
@@ -77,7 +77,7 @@
                 .favorite-wrapper {
                     display: inline-block;
                     position: absolute;
-                    top: -6.5em;
+                    top: -11.5em;
                     right: 0;
                     width: auto;
                     cursor: pointer;
@@ -245,9 +245,8 @@
         .socials-row {
             display: inline-block;
             position: absolute;
-            top: -6.2em;
+            top: -11.2em;
             left: 0;
-            width: 7em;
 
             span {
                 margin-right: 0.5em;
@@ -952,7 +951,7 @@
             .socials-row {
                 display: block;
                 position: relative;
-                bottom: 1.5em;
+                bottom: 2.5em;
                 top: auto;
                 left: 55.2%;
             }

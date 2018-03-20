@@ -76,8 +76,8 @@ LOCAL_APPS = (
     'djangocms_text_ckeditor',
     'filer',
     'ckeditor_filebrowser_filer',
-    'easy_thumbnails',    
-    
+    'easy_thumbnails',
+
 )
 
 # See: https://docs.djangoproject.com/en/dev/ref/settings/#installed-apps
@@ -146,7 +146,7 @@ DATABASES = {
         'USER': env('DB_USER', default=''),
         'PASSWORD': env('DB_PASSWORD', default=''),
         'HOST': env('DB_HOST', default=''),
-        'PORT': '5432',
+        'PORT': env('DB_PORT', default='5432'),
     }
 }
 DATABASES['default']['ATOMIC_REQUESTS'] = True
@@ -225,6 +225,7 @@ STATICSITEMAPS_ROOT_SITEMAP = 'config.urls.sitemaps'
 # See: https://docs.djangoproject.com/en/dev/ref/contrib/staticfiles/#std:setting-STATICFILES_DIRS
 STATICFILES_DIRS = (
     str(APPS_DIR.path('static')),
+    str(ROOT_DIR.path('node_modules')),
 )
 
 # See: https://docs.djangoproject.com/en/dev/ref/contrib/staticfiles/#staticfiles-finders

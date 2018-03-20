@@ -12,7 +12,8 @@ W.pages.search.strain.SearchWizardStep1 = W.pages.search.strain.SearchWizardStep
             model: options && options.model,
             submit_el: '.btn-step-1',
             skip_el: '.btn-skip-1',
-            template_el: '#search-wizard-step1'
+            template_el: '#search-wizard-step1',
+            currentUserId: options.currentUserId
         });
     },
 
@@ -63,7 +64,7 @@ W.pages.search.strain.SearchWizardStep1 = W.pages.search.strain.SearchWizardStep
             $('input[type="checkbox"]').prop('checked', false);
             $(this).attr('disabled', 'disabled');
 
-            that.settings.update(W.users.UserSettings.settingName_WizardSearch, that.model.getData());
+            that.settings.update(that.settings.settingName_WizardSearch, that.model.getData());
             $.ajax({method: 'DELETE', url: '/api/v1/users/{0}/searches'.format(userId)});
         });
     },

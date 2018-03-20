@@ -610,7 +610,7 @@ class SearchElasticService(BaseElasticService):
             total = len(suggestion.get('options'))
             for option in suggestion.get('options'):
                 strain = option.get('_source')
-                if not strain.get('removed_date'):
+                if strain and not strain.get('removed_date'):
                     payloads.append(strain)
 
         return {
