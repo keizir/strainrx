@@ -264,12 +264,17 @@
                 text-align: center;
             }
 
-            .strain-data-left {
+            .strain-data-detail {
+
+              display: flex;
+              align-items: center;
+
+              .strain-data-left {
                 display: inline-block;
                 max-width: calc(56% - 1em);
                 min-width: calc(56% - 1em);
                 margin-right: 1em;
-            }
+              }
 
             .recommendation-btn {
                 display: inline-flex;
@@ -277,38 +282,36 @@
                 background-color: $green-dirty;
                 padding: 1em;
                 color: $white;
-                position: absolute;
-                top: 0;
-                right: 0;
                 max-width: 20em;
+                margin-top: 3px;
 
                 .recommendation-link {
-                    text-decoration: none;
-                    color: $white;
+                  text-decoration: none;
+                  color: $white;
                 }
-            }
+              }
 
-            .recommendation-btn u {
+              .recommendation-btn u {
                 color: $white;
                 text-decoration: underline;
-            }
+              }
 
-            .recommendation-btn-strain-name {
+              .recommendation-btn-strain-name {
                 color: $black;
-            }
+              }
 
-            .recommendation-btn-content {
-                //display: flex;
-                //flex-flow: column;
-            }
+              .recommendation-btn-content {
+                display: inline;
+              }
 
-            .recommendation-btn-line {
+              .recommendation-btn-line {
                 display: inline-block;
-            }
+              }
 
-            .recommendation-btn-icon {
+              .recommendation-btn-icon {
                 font-size: 2em;
                 margin-right: 0.5em;
+              }
             }
 
             .strain-like {
@@ -508,8 +511,7 @@
                 }
 
                 .carousel-images-wrapper {
-                    overflow-y: auto;
-                    overflow-x: hidden;
+                    overflow: hidden;
                     height: 22.4em;
 
                     .img-wrapper {
@@ -1203,9 +1205,6 @@
         width: 95%;
 
         .strain-data {
-
-            margin-top: 4em;
-
             .strain-variety-name {
                 top: 1.3em;
             }
@@ -1240,10 +1239,6 @@
                 display: inline-block;
                 width: 100%;
                 height: 16em;
-
-                img {
-
-                }
             }
 
             .image-carousel {
@@ -1260,8 +1255,7 @@
                 }
 
                 .carousel-images-wrapper {
-                    overflow-x: scroll;
-                    overflow-y: hidden;
+                    overflow: hidden;
                     display: block;
                     width: auto;
                     white-space: nowrap;

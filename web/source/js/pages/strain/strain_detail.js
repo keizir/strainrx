@@ -215,26 +215,24 @@ W.pages.strain.StrainDetailPage = Class.extend({
 
         $imageCarousel.removeClass('hidden');
 
-        if (this.images.length > 0) {
-            $.each(this.images, function (index, img) {
-                $carouselImageWrapper.append(imgWrapperTemplate.format(img.image));
-            });
+        $.each(this.images, function (index, img) {
+            $carouselImageWrapper.append(imgWrapperTemplate.format(img.image));
+        });
 
-            if (this.images.length < 5) {
-                for (var j = 0; j < 5 - this.images.length; j++) {
-                    $carouselImageWrapper.append(imgWrapperTemplate.format(firstImage));
-                }
-
-                $('.carousel-arrow').addClass('hidden');
-            }
-
-            firstImage = this.images[0].image;
-        } else {
-            for (var i = 0; i <= 4; i++) {
+        if (this.images.length < 5) {
+            for (var j = 0; j < 5 - this.images.length; j++) {
                 $carouselImageWrapper.append(imgWrapperTemplate.format(firstImage));
             }
 
-            $('.carousel-arrow.arrow-up, .carousel-arrow.arrow-down').addClass('hidden');
+            $('.carousel-arrow').addClass('hidden');
+        }
+
+        if ($(document).width() < 440 || this.images.length <= 5) {
+            $('.carousel-arrow.arrow-left, .carousel-arrow.arrow-right').removeClass('hidden');
+        }
+
+        if (this.images.length > 0) {
+            firstImage = this.images[0].image;
         }
 
         $cover = $('.cover');
@@ -244,12 +242,10 @@ W.pages.strain.StrainDetailPage = Class.extend({
             $cover.removeClass('active');
             $mainImageImg.attr('src', $el.parent().find('img').attr('src'));
             $el.addClass('active');
-            that.addZoom($mainImage);
         });
 
         $mainImageImg.attr('src', firstImage);
         $mainImageImg.removeClass('hidden');
-        this.addZoom($mainImage);
 
         $('.arrow-up').on('click', function (e) {
             $carouselImageWrapper.scrollTop($carouselImageWrapper.scrollTop() - $('.img-wrapper').height());
@@ -267,20 +263,6 @@ W.pages.strain.StrainDetailPage = Class.extend({
         $('.arrow-right').on('click', function (e) {
             $carouselImageWrapper.scrollLeft($carouselImageWrapper.scrollLeft() + $('.img-wrapper').width());
         });
-    },
-
-    addZoom: function addZoom($imgContainer) {
-      if ($ && $.fn.zoom) {
-        setTimeout(function(){
-            $imgContainer.trigger('zoom.destroy');
-            $imgContainer.zoom({
-                magnify: 1.5,
-                callback: function(){
-                  $(this).css('cursor', 'zoom-in');
-                }
-            });
-        }, 0);
-      }
     },
 
     recalculateSimilarStrainsSectionWidth: function recalculateSimilarStrainsSectionWidth() {
