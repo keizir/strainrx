@@ -33,7 +33,9 @@
                         <% } %>
                         <div class="rating-row">
                             <span class="strain-rating-stars"><%= model.strain_rating %></span>
-                            <span class="strain-rating">(<%= model.strain_rating %>)</span>
+                            <% if (model.is_rated) { %>
+                              <span class="strain-rating">(<%= model.strain_rating %>)</span>
+                            <% } %>
                             <% if (is_authenticated && !model.is_rated) { %>
                             <span class="separator"></span>
                             <span class="rate-link"><a href="#">Rate</a></span>
