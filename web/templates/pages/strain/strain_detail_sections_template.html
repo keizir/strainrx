@@ -31,6 +31,14 @@
                                 <% } %>
                             </span>
                         <% } %>
+                        <div class="rating-row">
+                            <span class="strain-rating-stars"><%= model.strain_rating %></span>
+                            <span class="strain-rating">(<%= model.strain_rating %>)</span>
+                            <% if (is_authenticated && !model.is_rated) { %>
+                            <span class="separator"></span>
+                            <span class="rate-link"><a href="#">Rate</a></span>
+                            <% } %>
+                        </div>
                     </div>
                     <% if (!is_authenticated) { %>
                         <span class="recommendation-btn">
@@ -50,15 +58,7 @@
                         </span>
                     <% } %>
                   </div>
-                    <div class="rating-row">
-                        <span class="strain-rating-stars"><%= model.strain_rating %></span>
-                        <span class="strain-rating">(<%= model.strain_rating %>)</span>
-                        <% if (is_authenticated && !model.is_rated) { %>
-                        <span class="separator"></span>
-                        <span class="rate-link"><a href="#">Rate</a></span>
-                        <% } %>
-                    </div>
-                    <div class="breadcrumbs">
+                     <div class="breadcrumbs">
                         <ol>
                             <li>
                                 <a href="{% url 'home' %}">Home</a>
