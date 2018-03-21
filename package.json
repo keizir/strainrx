@@ -5,8 +5,7 @@
     "author": "Kostiantyn Noha",
     "private": true,
     "dependencies": {
-        "bootstrap-daterangepicker": "^2.1.30",
-        "jquery-zoom": "^1.7.20"
+        "bootstrap-daterangepicker": "^2.1.30"
     },
     "devDependencies": {
         "browser-sync": "2.14.3",

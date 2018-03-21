@@ -17,6 +17,7 @@
             {% endif %}
             <div class="row">
                 <span class="strain-data <% if (is_authenticated) { %>with-recommendation<% } %>">
+                  <div class="strain-data-detail">
                     <div class="strain-data-left">
                         <img class="strain-variety" src="<%= model.strain.variety_image %>"/>
                         <div class="strain-variety-name"><%= model.strain.variety %></div>
@@ -48,6 +49,7 @@
                             </div>
                         </span>
                     <% } %>
+                  </div>
                     <div class="rating-row">
                         <span class="strain-rating-stars"><%= model.strain_rating %></span>
                         <span class="strain-rating">(<%= model.strain_rating %>)</span>
