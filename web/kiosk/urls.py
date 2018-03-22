@@ -11,6 +11,11 @@ urlpatterns = [
         name='login'
     ),
     url(
+        regex=r'^(\d+)/start$',
+        view=views.Kiosk.handle_email_redirect,
+        name='login'
+    ),
+    url(
         regex=r'^(\d+)/dashboard',
         view=views.Kiosk.display_dashboard,
         name='dashboard'

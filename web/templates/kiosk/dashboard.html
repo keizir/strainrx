@@ -2,22 +2,86 @@
 
 {% load staticfiles i18n %}
 
-{% block title %}Dispensary Login{% endblock %}
+{% block title %}Dispensary Dashboard{% endblock %}
 
 {% block content %}
 <style>
-#kiosk-wrapper { width: 100%; text-align: center; }
-#kiosk-wrapper form label { display: none; }
-#kiosk-wrapper input { border: 1px solid #AAAAAA; font-size: 15px; }
-#kiosk-wrapper button { font-size: 15px; margin: 25px }
-.footer-region { background: none; }
+    ul {
+        width: 100%;
+        height: 50px;
+        clear: both;
+    }
+    ul li {
+        display: inline;
+        list-style: none;
+    }
+    table {
+        margin: 0 auto;
+    }
+    table td {
+        width: 150px;
+    }
+    #kiosk-strains {
+        width: 675px;
+        margin: 10px auto 50px auto;
+        align: center;
+    }
+    #kiosk-strains p {
+        margin-top: 10px;
+        font-size: 17px;
+        color: #666666;
+        letter-spacing: 1px;
+    }
+    #kiosk-quick-picks {
+        margin-top: 20px
+    }
+    #kiosk-quick-picks button {
+        width: 180px;
+        font-weight: normal;
+        padding: 15px;
+        margin: 10px;
+    }
+    #indicas,
+    #hybrids,
+    #sativas {
+        background: url('/static/images/kiosk/flower-leaves.jpg');
+        width: 120px;
+        height: 100px;
+        display: inline-block;
+    }
+    #sativas {
+        background-position: 450px top;
+    }
+    #hybrids {
+        background-position: 565px top;
+    }
 </style>
-<h2 style="margin:50px; font-weight: bold; font-size: 25px; color:#555555; letter-spacing: 2px;">WELCOME TO</h2>
-<img style="width:275px; margin-bottom: 25px;" src="{% static business.logo %}"/>
-<h3 style="margin: 25px; font-weight: normal; font-size: 19px; color:#777777; letter-spacing: 1px;">PLEASE ENTER YOUR EMAIL TO GET STARTED</h3>
-<form method="post" style="margin-bottom:100px;">
-    {% csrf_token %}
-    {{ form.as_p }}
-    <button class="btn btn-primary" type="submit">Next</button>
-</form>
+<h2 style="margin:10px 0 10px 0; font-weight: normal; font-size: 16px; color:#555555; letter-spacing: 2px;">WELCOME TO</h2>
+<img style="width:275px; margin-bottom: 0px;" src="{% static business.image %}"/>
+<h3 style="margin: 35px 0 0 0; font-weight: normal; font-size: 25px; color:#666666; letter-spacing: 2px;">WHAT'S THE RIGHT STRAIN FOR YOU?</h3>
+<p style="color:#888888; font-size:13px">Use our customized <strong>strain matching system</strong> to find the perfect strain for your needs:</p>
+<button style="margin: 45px 0 51px 0; padding: 20px 0px; font-weight: normal;" class="btn btn-primary">Discover</button>
+<h3 style="font-weight: normal; font-size: 22px; color:#666666; letter-spacing: 1px;">BROWSE OUR STRAINS</h3>
+<table id="kiosk-strains">
+    <tr>
+        <td><div id="indicas"></div><p>Indicas</p></td>
+        <td><div id="hybrids"></div><p>Hybrids</p></td>
+        <td><div id="sativas"></div><p>Sativas</p></td>
+    </tr>
+</table>
+<h3 style="font-weight: normal; font-size: 22px; color:#666666; letter-spacing: 1px;">QUICK PICKS</h3>
+<table id="kiosk-quick-picks">
+    <tr>
+        <td><button class="btn btn-primary" style="background-color: #cc0033">Pain Relief</button></td>
+        <td><button class="btn btn-primary" style="background-color: #0099cc">Relaxation</button></td>
+        <td><button class="btn btn-primary" style="background-color: #db8827">Euphoria</button></td>
+        <td><button class="btn btn-primary" style="background-color: #999999">Sleep</button></td>
+    </tr>
+    <tr>
+        <td><button class="btn btn-primary" style="background-color: #a54a9c">Good Vibes</button></td>
+        <td><button class="btn btn-primary" style="background-color: #2a542c">Focus</button></td>
+        <td><button class="btn btn-primary" style="background-color: #b8b433">Passion</button></td>
+        <td><button class="btn btn-primary" style="background-color: #18bdb3">CBD</button></td>
+    </tr>
+</table>
 {% endblock %}
