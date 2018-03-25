@@ -15,6 +15,14 @@ class StrainSearchWizardView(TemplateView):
     template_name = 'pages/search/strain/wizard.html'
 
 
+class StrainSearchView(TemplateView):
+    template_name = 'pages/search/strain/search.html'
+
+
+class StrainAdvancedSearchView(TemplateView):
+    template_name = 'pages/search/strain/advanced_search.html'
+
+
 class StrainSearchResultView(TemplateView):
     template_name = 'pages/search/strain/search_results.html'
 

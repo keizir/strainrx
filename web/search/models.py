@@ -98,6 +98,10 @@ class Strain(models.Model):
     meta_desc = models.CharField(max_length=3072, blank=True)
     meta_keywords = models.CharField(max_length=3072, blank=True)
 
+    cup_winner = models.BooleanField(default=False)
+    is_indoor = models.BooleanField(default=True)
+    is_clean = models.BooleanField(default=False)
+
     @property
     def variety_image(self):
         return static('images/variety-{variety}.png'.format(variety=self.variety))
