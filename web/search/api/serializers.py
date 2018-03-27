@@ -1,4 +1,5 @@
 from rest_framework import serializers
+from rest_framework.exceptions import ValidationError
 
 from web.search.models import Strain, StrainReview, StrainRating, StrainImage
 
@@ -41,7 +42,34 @@ class StrainImageSerializer(serializers.ModelSerializer):
         model = StrainImage
 
 
-class SearchSerializer(serializers.ModelSerializer):
+class StrainSearchSerializer(serializers.Serializer):
+    q = serializers.CharField()
+    page = serializers.IntegerField(required=False, default=1)
+    size = serializers.IntegerField(required=False, default=24, max_value=24)
+    start_from = serializers.IntegerField(required=False)
+
+    def to_internal_value(self, data):
+        try:
+            return super().to_internal_value(data)
+        except ValidationError as e:
+            errors = e.detail
+            data = data.copy()
+            if errors.pop('page', None):
+                data.pop('page')
+            if errors.pop('size', None):
+                data.pop('size')
+            if errors:
+                raise ValidationError(errors)
+            return super().to_internal_value(data)
+
+    def validate(self, attrs):
+        page = attrs.get('page') or self.fields['page'].default
+        size = attrs.get('size') or self.fields['size'].default
+        attrs['start_from'] = (int(page) - 1) * int(size)
+        return attrs
+
+
+class AdvancedStrainSearchSerializer(serializers.ModelSerializer):
     # cannabinoids
     thc_from = serializers.IntegerField(allow_null=True, min_value=0, max_value=100, required=False)
     thc_to = serializers.IntegerField(allow_null=True, min_value=0, max_value=100, required=False)
@@ -74,8 +102,6 @@ class SearchSerializer(serializers.ModelSerializer):
     pulegone = serializers.BooleanField(default=False, required=False)
     sabinene = serializers.BooleanField(default=False, required=False)
     geraniol = serializers.BooleanField(default=False, required=False)
-
-    style = {'template_pack': 'rest_framework/vertical/'}
 
     class Meta:
         model = Strain

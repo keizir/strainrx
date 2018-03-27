@@ -7,9 +7,11 @@ from rest_framework import permissions
 from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.views import APIView
+from rest_framework.generics import ListAPIView
 
 from web.common.text import obfuscate
-from web.search.api.serializers import SearchCriteriaSerializer, StrainReviewFormSerializer, StrainImageSerializer
+from web.search.api.serializers import SearchCriteriaSerializer, StrainReviewFormSerializer, StrainImageSerializer, \
+    StrainSearchSerializer
 from web.search.api.services import StrainDetailsService
 from web.search.es_service import SearchElasticService
 from web.search.models import Strain, StrainImage, Effect, StrainReview, StrainRating, UserFavoriteStrain, \
@@ -478,6 +480,22 @@ class BusinessLocationLookupView(APIView):
         result = SearchElasticService().lookup_business_location(query, bus_type=[bus_type],
                                                                  location=location, timezone=tz)
 
+        return Response({
+            'total': result.get('total'),
+            'payloads': result.get('payloads')
+        }, status=status.HTTP_200_OK)
+
+
+class StrainSearchListAPIView(ListAPIView):
+    permission_classes = (permissions.AllowAny,)
+    serializer_class = StrainSearchSerializer
+
+    def get(self, request, *args, **kwargs):
+        serializer = self.serializer_class(data=self.request.GET)
+        serializer.is_valid(raise_exception=True)
+        query = serializer.data
+        result = SearchElasticService().lookup_strain_by_name(
+            query['q'], size=query['size'], start_from=query['start_from'])
         return Response({
             'total': result.get('total'),
             'payloads': result.get('payloads')

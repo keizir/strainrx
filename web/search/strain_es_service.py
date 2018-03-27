@@ -61,36 +61,13 @@ class StrainESService(BaseElasticService):
     def save_strain(self, strain):
         es_response = self.get_strain_by_db_id(strain.id)
         es_strains = es_response.get('hits', {}).get('hits', [])
-        es_serializer = StrainESSerializer(strain)
+        es_serializer = StrainESSerializer(instance=strain)
         data = es_serializer.data
-
-        input_variants = [data.get('name')]
-        name_words = data.get('name').split(' ')
-        for i, name_word in enumerate(name_words):
-            if i < len(name_words) - 1:
-                input_variants.append('{0} {1}'.format(name_word, name_words[i + 1]))
-            else:
-                input_variants.append(name_word)
-
-        data['name_suggest'] = {'input': input_variants, 'weight': 100 - len(input_variants)}
 
         if len(es_strains) > 0:
             es_strain = es_strains[0]
             es_strain_source = es_strain.get('_source')
-
-            es_strain_source['name'] = data.get('name')
-            es_strain_source['strain_slug'] = data.get('strain_slug')
-            es_strain_source['variety'] = data.get('variety')
-            es_strain_source['category'] = data.get('category')
-            es_strain_source['effects'] = data.get('effects')
-            es_strain_source['benefits'] = data.get('benefits')
-            es_strain_source['side_effects'] = data.get('side_effects')
-            es_strain_source['flavor'] = data.get('flavor')
-            es_strain_source['about'] = data.get('about')
-            es_strain_source['removed_date'] = data.get('removed_date')
-            es_strain_source['removed_by_id'] = data.get('removed_by')
-            es_strain_source['name_suggest'] = data.get('name_suggest')
-            es_strain_source['you_may_also_like_exclude'] = data.get('you_may_also_like_exclude')
+            es_strain_source.update(data)
 
             url = '{base}{index}/{type}/{es_id}'.format(base=self.BASE_ELASTIC_URL, index=self.URLS.get('STRAIN'),
                                                         type=es_mappings.TYPES.get('strain'),

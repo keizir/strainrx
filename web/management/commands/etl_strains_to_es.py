@@ -9,6 +9,7 @@ from web.search import es_mappings
 from web.search.es_mappings import strain_mapping, strain_review_mapping
 from web.search.es_service import SearchElasticService as ElasticService
 from web.search.models import Strain, StrainReview
+from web.search.serializers import StrainESSerializer
 from web.search.strain_es_service import StrainESService
 
 logger = logging.getLogger(__name__)
@@ -91,35 +92,10 @@ class Command(BaseCommand):
                 'index': {}
             })
 
-            input_variants = [s.name]
-            name_words = s.name.split(' ')
-            if len(name_words) > 1:
-                for i, name_word in enumerate(name_words):
-                    if i < len(name_words) - 1:
-                        input_variants.append('{0} {1}'.format(name_word, name_words[i + 1]))
-                    else:
-                        input_variants.append(name_word)
-
             bulk_strain_data.append(action_data)
-            bulk_strain_data.append(json.dumps({
-                'id': s.id,
-                'name': s.name,
-                'strain_slug': s.strain_slug,
-                'variety': s.variety,
-                'category': s.category,
-                'effects': s.effects,
-                'benefits': s.benefits,
-                'side_effects': s.side_effects,
-                'flavor': s.flavor,
-                'about': s.about,
-                'origins': '',
-                'removed_date': s.removed_date.isoformat() if s.removed_date else None,
-                'removed_by_id': s.removed_by,
-                'name_suggest': {
-                    'input': input_variants,
-                    'weight': 100 - len(input_variants)
-                }
-            }))
+
+            es_serializer = StrainESSerializer(instance=s)
+            bulk_strain_data.append(json.dumps(es_serializer.data))
 
         if len(bulk_strain_data) == 0:
             self.stdout.write('   ---> Nothing to update')
@@ -197,4 +173,3 @@ class Command(BaseCommand):
         self.stdout.write(
             'Updated [{0}] index with {1} strain reviews'.format(self.INDEX, len(reviews))
         )
-

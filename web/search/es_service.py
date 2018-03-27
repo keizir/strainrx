@@ -503,6 +503,50 @@ class SearchElasticService(BaseElasticService):
 
         return results
 
+    def lookup_strain_by_name(self, lookup_query, size=50, start_from=0):
+        """
+        Get stains by name in a 'name contains' manner
+
+        :param lookup_query: part of the word to search for
+        :param size: size of returned data
+        :param start_from: number of entity to start search from
+        :return: { 'payloads': [], 'total': 0 }
+        """
+
+        if start_from is None:
+            start_from = 0
+
+        method = self.METHODS.get('GET')
+        url = '{base}{index}/{type}/_search?size={size}&from={start_from}'.format(
+            base=self.BASE_ELASTIC_URL,
+            index=self.URLS.get('STRAIN'),
+            type=es_mappings.TYPES.get('strain'),
+            size=size,
+            start_from=start_from
+        )
+
+        # build query dict
+        query = {
+            "suggest": {
+                "name_suggestion": {
+                    "text": lookup_query,
+                    "completion": {
+                        "field": "name_suggest",
+                        'size': size,
+                        "fuzzy": {
+                            "fuzziness": 1
+                        }
+                    }
+                }
+            }
+        }
+
+        q = self._request(method, url, data=json.dumps(query))
+        # remove extra info returned by ES and do any other necessary transforms
+        results = self._transform_suggest_results(q)
+
+        return results
+
     def lookup_business_location(self, query, bus_type=None, location=None, timezone=None):
         if bus_type is None:
             bus_type = []
