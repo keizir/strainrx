@@ -367,13 +367,17 @@ class SearchElasticService(BaseElasticService):
         benefits_data = self.parse_criteria_data(criteria.get('benefits'))
         side_effects_data = self.parse_criteria_data(criteria.get('side_effects'))
 
-        strain_variety_filter = {"bool": {"must": [{"terms": {"variety": criteria_strain_types}}]}}
-        strain_id_filter = {"bool": {"must": [{"terms": {"id": strain_ids}}]}}
-        match_all_varieties = {"match_all": {}}
+        query_filter = []
+        if strain_ids:
+            query_filter.append({"terms": {"id": strain_ids}})
+        if criteria_strain_types:
+            query_filter.append({"terms": {"variety": criteria_strain_types}})
 
-        # if user skipped picking variety match all strains
-        strain_filter = strain_variety_filter if criteria_strain_types else match_all_varieties
-        strain_filter = strain_id_filter if len(strain_ids) > 0 else strain_filter
+        if query_filter:
+            strain_filter = {"bool": {"must": [query_filter]}}
+        else:
+            # if user skipped picking variety match all strains
+            strain_filter = {"match_all": {}}
 
         strain_aggs = {
             "strain_rating": {
