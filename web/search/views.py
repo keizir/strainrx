@@ -23,6 +23,10 @@ class StrainAdvancedSearchView(TemplateView):
     template_name = 'pages/search/strain/advanced_search.html'
 
 
+class StrainAdvancedSearchResultView(TemplateView):
+    template_name = 'pages/search/strain/advanced_search_results.html'
+
+
 class StrainSearchResultView(TemplateView):
     template_name = 'pages/search/strain/search_results.html'
 

@@ -85,7 +85,7 @@ urlpatterns = [
     ),
     url(
         regex=r'^search/$',
-        view=StrainSearchListAPIView.as_view(),
+        view=StrainSearchAPIView.as_view(),
         name='search'
     ),
 ]

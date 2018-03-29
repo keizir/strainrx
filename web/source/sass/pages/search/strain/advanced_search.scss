@@ -83,13 +83,16 @@ $geraniol: #95b2c3;
   background: $geraniol;
 }
 
+body:not(.search-result-page) {
+  background: url('../../../../images/search/background.png') no-repeat top center;
+  background-size: cover;
+}
+
 body {
   position: relative;
   margin: 0;
   padding-bottom: 11em;
   min-height: 100%;
-  background: url('../../../../images/search/background.png') no-repeat top center;
-  background-size: cover;
 
   .nav-region {
     background-color: $grey-dark;
@@ -117,6 +120,32 @@ body {
   }
 }
 
+.results-dialog {
+  display: none;
+  position: absolute;
+  top: calc(50vh - 6em);
+  left: calc(50vw - 13em);
+
+  width: 26em;
+
+  border: 1px solid $grey;
+  background-color: $white;
+
+  text-align: center;
+
+  z-index: $zindex-nav;
+
+  h1 {
+    font-size: 1em;
+    margin: 1.5em 0;
+  }
+
+  p {
+    font-size: 0.8em;
+    margin: 0 3em 1.5em;
+  }
+}
+
 .strain-search-wrapper {
   display: flex;
   justify-content: center;
@@ -130,6 +159,14 @@ body {
     font-weight: normal;
     padding: 0.2em 0.2em 0.5em;
     text-align: center;
+  }
+
+  .search-result-subtitle {
+    color: $grey-blue;
+    font-size: $font-subtitle + 5;
+    line-height: $font-subtitle + 5;
+    font-weight: normal;
+    margin: 3em 0;
   }
 
   .subtitle-container {
@@ -343,6 +380,75 @@ body {
 
   }
 
+}
+
+.search-result-container {
+
+  .search-result {
+    display: flex;
+    align-items: flex-start;
+    flex-direction: row;
+    flex-wrap: wrap;
+    width: 90%;
+    margin: auto;
+
+    .result-item {
+      display: flex;
+      align-items: flex-start;
+      justify-content: flex-start;
+      flex-direction: row;
+      flex-grow: 0;
+      flex-basis: 350px;
+      margin: 1.5em;
+      color: $grey-blue;
+
+      .item-image {
+        margin-right: 2em;
+        width: 9em;
+        position: relative;
+
+        .strain-logo{
+          width: 9em;
+          height: auto;
+          max-height: 9em;
+        }
+
+        .clean-logo {
+          position: absolute;
+          bottom: 0;
+          right: 0;
+          width: 3em;
+        }
+
+      }
+
+      .item-info {
+        color: inherit;
+        font-size: 14px;
+
+        a {
+          color: inherit;
+        }
+
+        .cup-logo{
+          width: 2.5em;
+          padding-top: 0.5em;
+        }
+      }
+
+      .item-variety-logo {
+        margin-left: 1em;
+        position: relative;
+
+        img {
+          margin-top: -0.7em;
+        }
+      }
+
+
+    }
+
+  }
 }
 
 @media (max-width: $screen-sm-max) {

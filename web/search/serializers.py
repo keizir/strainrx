@@ -6,13 +6,15 @@ from web.search.models import Strain
 class StrainESSerializer(serializers.ModelSerializer):
     removed_by_id = serializers.ReadOnlyField(source='removed_by')
     name_suggest = serializers.SerializerMethodField()
+    terpenes = serializers.SerializerMethodField()
+    cannabinoids = serializers.SerializerMethodField()
 
     class Meta:
         model = Strain
         fields = ('id', 'name', 'strain_slug', 'variety', 'category',
                   'effects', 'benefits', 'side_effects', 'flavor', 'about',
                   'removed_date', 'removed_by_id', 'you_may_also_like_exclude',
-                  'name_suggest', 'terpenes', 'cannabinoids')
+                  'name_suggest', 'terpenes', 'cannabinoids', 'cup_winner', 'is_indoor', 'is_clean')
 
     def get_name_suggest(self, instance):
         input_variants = [instance.name]
@@ -23,6 +25,12 @@ class StrainESSerializer(serializers.ModelSerializer):
             else:
                 input_variants.append(name_word)
         return {'input': input_variants, 'weight': 100 - len(input_variants)}
+
+    def get_terpenes(self, instance):
+        return instance.terpenes and {key.lower(): value for key, value in instance.terpenes.items()}
+
+    def get_cannabinoids(self, instance):
+        return instance.cannabinoids and {key.lower(): value for key, value in instance.cannabinoids.items()}
 
 
 class StrainReviewESSerializer(serializers.Serializer):

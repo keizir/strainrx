@@ -1,4 +1,5 @@
-import logging, json
+import json
+import logging
 from datetime import datetime
 from operator import itemgetter
 
@@ -7,7 +8,6 @@ from rest_framework import permissions
 from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.views import APIView
-from rest_framework.generics import ListAPIView
 
 from web.common.text import obfuscate
 from web.search.api.serializers import SearchCriteriaSerializer, StrainReviewFormSerializer, StrainImageSerializer, \
@@ -61,8 +61,8 @@ class StrainSearchResultsView(APIView):
 
     def get(self, request):
         result_filter = request.GET.get('filter')
-        page = request.GET.get('page')
-        size = request.GET.get('size')
+        page = request.GET.get('page', 1)
+        size = request.GET.get('size', 25)
         start_from = (int(page) - 1) * int(size)
 
         search_criteria = request.session.get('search_criteria')
@@ -486,7 +486,7 @@ class BusinessLocationLookupView(APIView):
         }, status=status.HTTP_200_OK)
 
 
-class StrainSearchListAPIView(ListAPIView):
+class StrainSearchAPIView(APIView):
     permission_classes = (permissions.AllowAny,)
     serializer_class = StrainSearchSerializer
 
@@ -494,9 +494,15 @@ class StrainSearchListAPIView(ListAPIView):
         serializer = self.serializer_class(data=self.request.GET)
         serializer.is_valid(raise_exception=True)
         query = serializer.data
-        result = SearchElasticService().lookup_strain_by_name(
-            query['q'], size=query['size'], start_from=query['start_from'])
+        q = query.get('q')
+        if q:
+            result = SearchElasticService().lookup_strain_by_name(q, size=query['size'],
+                                                                  start_from=query['start_from'])
+        else:
+            current_user = request.user.pk if request.user.is_authenticated() else None
+            result = SearchElasticService().advanced_search(
+                query, current_user, size=query['size'], start_from=query.get('start_from', 0))
         return Response({
             'total': result.get('total'),
-            'payloads': result.get('payloads')
+            'payloads': result.get('list')
         }, status=status.HTTP_200_OK)
