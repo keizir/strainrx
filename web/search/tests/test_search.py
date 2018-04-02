@@ -25,10 +25,11 @@ class SearchTestCase(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(response.json()['total'], 1)
 
-    def test_search_without_params(self):
+    @patch.object(BaseElasticService, '_request', return_value={})
+    def test_search_without_params(self, _):
         response = self.client.get(self.url)
-        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
-        self.assertEqual(response.json(), {'q': ['This field is required.']})
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.json(), {'total': 0, 'payloads': []})
 
     @patch.object(BaseElasticService, '_request', return_value={})
     def test_search_with_invalid_params(self, _):

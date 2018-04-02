@@ -88,7 +88,7 @@ W.pages.AdvancedSearchResultsPage = Class.extend({
                     '<div class="search-result-subtitle">There was an error processing your request please try again at a later</div>');
             },
             success: function (data) {
-                var searchResults = data.payloads;
+                var searchResults = data.list;
 
                 that.searchResultsTotal = data.total;
                 that.ui.$searchResultFooterRegion.addClass('hidden');
@@ -162,6 +162,7 @@ W.pages.AdvancedSearchResultsPage = Class.extend({
         this.scrollPage = 1;
         this.ui.$searchResult.empty();
         this.ui.$searchResultFooterRegion.removeClass('hidden');
+        this.ui.$window.off('scroll');
         this.getSearchResults();
     },
 
@@ -171,7 +172,6 @@ W.pages.AdvancedSearchResultsPage = Class.extend({
         this.ui.$window.on('scroll', function () {
             if (that.ui.$window.scrollTop() >= (that.ui.$document.height() - that.ui.$window.height()) * 0.6 &&
                 that.searchResultsTotal > that.totalResultCount) {
-
                 that.ui.$window.off('scroll');
                 that.getSearchResults();
             }
@@ -186,7 +186,8 @@ W.pages.AdvancedSearchResultsPage = Class.extend({
             'obfuscated': !Boolean(that.currentUserId) || !that.isEmailVerified,
             'position': position,
             'strain': item,
-            'closestDistance': that.findClosestDistance
+            'closestDistance': that.findClosestDistance,
+            'prices': that.findPriceRange(item.locations)
         });
     },
 
@@ -197,12 +198,30 @@ W.pages.AdvancedSearchResultsPage = Class.extend({
                 distances.push(locations[i].distance);
             }
             min = Math.min.apply(Math, distances);
-            return 'Nearest {0}mi'.format(Math.round(min * 100) / 100);
+            return '{0}'.format(Math.round(min * 100) / 100);
         }
     },
 
-    formatDistance: function formatDistance(d) {
-        return '({0}mi)'.format(Math.round(d * 100) / 100);
+    findPriceRange: function findClosestDistance(locations) {
+        var prices = {'price_eighth': [], 'price_gram': [], 'price_quarter': []},
+            result = {},
+            weight = Object.keys(prices);
+
+        if (locations && locations.length > 0) {
+            for (var i = 0; i < locations.length; i++) {
+                for (var j = 0; j < weight.length; j++) {
+                    prices[weight[j]].push(locations[i][weight[j]]);
+                }
+            }
+
+            for (j = 0; j < weight.length; j++) {
+                result[weight[j]] = {
+                    min: this.formatPrice(Math.min.apply(Math, prices[weight[j]])),
+                    max: this.formatPrice(Math.max.apply(Math, prices[weight[j]]))
+                }
+            }
+            return result;
+        }
     },
 
     formatPrice: function formatPrice(p) {

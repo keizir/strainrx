@@ -77,7 +77,9 @@
         <% if (strain.is_clean) { %>
           <img class="clean-logo" src="{% static 'images/search/clean.png' %}">
         <% } %>
-        <span>${ closestDistance(strain.locations) }</span>
+        <% if (strain.locations && strain.locations.length) { %>
+          <span class="item-location"><i class="fa fa-map-marker"></i> ${ closestDistance(strain.locations) } Miles away</span>
+        <% } %>
       </div>
 
       <div class="item-info">
@@ -101,8 +103,26 @@
             <% }); %>
           </b></div>
         <% } %>
-        <% if (strain.price) { %>
-          <div class="strain-price">${ strain.price }</div>
+        <% if ( strain.locations.length && prices ) { %>
+          <div class="strain-price">
+            <% if ( prices.price_gram.min != prices.price_gram.max ) { %>
+              ${ prices.price_gram.min } - ${ prices.price_gram.max }/G
+            <% } else { %>
+              ${ prices.price_gram.min }/G
+            <% } %>
+
+            <% if ( prices.price_eighth.min != prices.price_eighth.max ) { %>
+              ${ prices.price_eighth.min } - ${ prices.price_eighth.max }/8th
+            <% } else { %>
+              ${ prices.price_eighth.min }/8th
+            <% } %>
+
+            <% if ( prices.price_quarter.min != prices.price_quarter.max ) { %>
+              ${ prices.price_quarter.min } - ${ prices.price_quarter.max }/Q
+            <% } else { %>
+              ${ prices.price_quarter.min }/Q
+            <% } %>
+          </div>
         <% } %>
         <div>
         <% if (strain.cup_winner) { %>

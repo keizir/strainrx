@@ -404,6 +404,7 @@ body {
       flex-basis: 350px;
       margin: 1.5em;
       color: $grey-blue;
+      position: relative;
 
       .item-image {
         margin-right: 2em;
@@ -421,13 +422,23 @@ body {
           bottom: 0;
           right: 0;
           width: 3em;
+          background: rgba(255, 255, 255, 0.3);
         }
 
       }
 
-      .item-info {
+      .item-location {
+        position: absolute;
+      }
+
+      .item-info, .item-location {
         color: inherit;
         font-size: 14px;
+        line-height: 18px;
+
+        .strain-name {
+          margin-right: 30px;
+        }
 
         a {
           color: inherit;
@@ -441,10 +452,11 @@ body {
 
       .item-variety-logo {
         margin-left: 1em;
-        position: relative;
 
         img {
           margin-top: -0.7em;
+          position: absolute;
+          right: 0;
         }
       }
 

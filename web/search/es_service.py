@@ -510,7 +510,7 @@ class SearchElasticService(BaseElasticService):
 
         return results
 
-    def lookup_strain_by_name(self, lookup_query, size=24, start_from=0):
+    def lookup_strain_by_name(self, lookup_query, current_user, size=24, start_from=0):
         """
         Get stains by name in a 'name contains' manner
 
@@ -550,9 +550,9 @@ class SearchElasticService(BaseElasticService):
 
         q = self._request(method, url, data=json.dumps(query))
         # remove extra info returned by ES and do any other necessary transforms
-        results = self._transform_suggest_results(q)
+        results = self._transform_suggest_results(q, include_locations=True, current_user=current_user)
 
-        return results
+        return {'total': results.get('total'), 'list': results.get('payloads'), 'q': q}
 
     def advanced_search(self, lookup_query, current_user, size=24, start_from=0):
         """
@@ -762,7 +762,7 @@ class SearchElasticService(BaseElasticService):
             'payloads': payloads
         }
 
-    def _transform_suggest_results(self, es_response):
+    def _transform_suggest_results(self, es_response, include_locations=False, current_user=None):
         suggests = es_response.get('suggest', {}).get('name_suggestion', [])
         total = 0
         payloads = []
@@ -773,8 +773,24 @@ class SearchElasticService(BaseElasticService):
             for option in suggestion.get('options'):
                 strain = option.get('_source')
                 if strain and not strain.get('removed_date'):
-                    payloads.append(strain)
 
+                    if include_locations and current_user:
+                        dispensaries = self.get_locations(strain.get('id'), "dispensary", current_user, 'local',
+                                                          only_active=True)
+                        dispensaries = self.transform_location_results(dispensaries, strain.get('id'), 'local',
+                                                                       current_user)
+
+                        deliveries = self.get_locations(strain.get('id'), "delivery", current_user,
+                                                        only_active=True)
+                        deliveries = self.transform_location_results(deliveries, strain.get('id'), 'delivery',
+                                                                     current_user)
+                    else:
+                        dispensaries = []
+                        deliveries = []
+
+                    strain['deliveries'] = deliveries
+                    strain['locations'] = dispensaries
+                    payloads.append(strain)
         return {
             'total': total,
             'payloads': payloads

@@ -167,7 +167,7 @@ button {
     opacity: 0.4;
 }
 
-input:not(input[type="checkbox"]), select {
+input:not([type=checkbox]), select {
     border: 1px solid $grey-normal;
     border-radius: 0.5em;
     padding: 1.2em 2em;
@@ -412,7 +412,7 @@ fieldset {
         max-width: $screen-sm-min - 10;
     }
 
-    input:not(input[type="checkbox"]) {
+    input:not([type=checkbox]) {
         padding: 1em 1.5em;
         width: 24em
     }

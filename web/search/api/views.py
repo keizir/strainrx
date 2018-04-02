@@ -494,15 +494,12 @@ class StrainSearchAPIView(APIView):
         serializer = self.serializer_class(data=self.request.GET)
         serializer.is_valid(raise_exception=True)
         query = serializer.data
+        current_user = request.user if request.user.is_authenticated() else None
         q = query.get('q')
         if q:
-            result = SearchElasticService().lookup_strain_by_name(q, size=query['size'],
-                                                                  start_from=query.get('start_from', 0))
+            result = SearchElasticService().lookup_strain_by_name(
+                q, current_user, size=query['size'], start_from=query.get('start_from', 0))
         else:
-            current_user = request.user if request.user.is_authenticated() else None
             result = SearchElasticService().advanced_search(
                 query, current_user, size=query['size'], start_from=query.get('start_from', 0))
-        return Response({
-            'total': result.get('total'),
-            'payloads': result.get('list', result.get('payloads'))
-        }, status=status.HTTP_200_OK)
+        return Response(result, status=status.HTTP_200_OK)
