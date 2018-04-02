@@ -497,12 +497,12 @@ class StrainSearchAPIView(APIView):
         q = query.get('q')
         if q:
             result = SearchElasticService().lookup_strain_by_name(q, size=query['size'],
-                                                                  start_from=query['start_from'])
+                                                                  start_from=query.get('start_from', 0))
         else:
-            current_user = request.user.pk if request.user.is_authenticated() else None
+            current_user = request.user if request.user.is_authenticated() else None
             result = SearchElasticService().advanced_search(
                 query, current_user, size=query['size'], start_from=query.get('start_from', 0))
         return Response({
             'total': result.get('total'),
-            'payloads': result.get('list')
+            'payloads': result.get('list', result.get('payloads'))
         }, status=status.HTTP_200_OK)

@@ -6,6 +6,7 @@ from web.businesses.api.services import get_open_closed, get_location_rating
 from web.common.utils import PythonJSONEncoder
 from web.es_service import BaseElasticService
 from web.search import es_mappings
+from web.search.api.serializers import StrainSearchSerializer
 from web.search.es_script_score import ADVANCED_SEARCH
 from web.search.models import StrainImage, Strain
 from web.system.models import SystemProperty
@@ -49,7 +50,7 @@ class SearchElasticService(BaseElasticService):
             db_strain = Strain.objects.get(pk=source.get('id'))
             rating = strain_ratings.get(source.get('id'))
             strain_image = StrainImage.objects.filter(strain=db_strain, is_approved=True)[:1]
-            srx_score = int(round(s.get('_score')))
+            srx_score = int(round(s.get('_score') or 0))
 
             if include_locations:
                 dispensaries = self.get_locations(source.get('id'), "dispensary", current_user, result_filter, only_active=True)
@@ -590,9 +591,6 @@ class SearchElasticService(BaseElasticService):
         if start_from is None:
             start_from = 0
 
-        proximity = SystemProperty.objects.get(name='max_delivery_radius')
-        proximity = int(proximity.value)
-
         method = self.METHODS.get('GET')
         url = '{base}{index}/{type}/_search?size={size}&from={start_from}'.format(
             base=self.BASE_ELASTIC_URL,
@@ -610,7 +608,7 @@ class SearchElasticService(BaseElasticService):
         if lookup_query.get('variety'):
             query_filters.append({"terms": {'variety': lookup_query['variety']}})
 
-        for terpene in lookup_query.get('terpenes', []):
+        for terpene in StrainSearchSerializer.TERPENES:
             if lookup_query.get(terpene):
                 query_filters.append({
                     "range": {
@@ -620,7 +618,7 @@ class SearchElasticService(BaseElasticService):
                     }
                 })
 
-        for cannabinoid in lookup_query.get('cannabinoids', []):
+        for cannabinoid in StrainSearchSerializer.CANNABINOIDS:
             if '{}_from'.format(cannabinoid) in lookup_query or '{}_to'.format(cannabinoid) in lookup_query:
                 query_filters.append({
                     "range": {
@@ -632,11 +630,13 @@ class SearchElasticService(BaseElasticService):
                 })
 
         query = {
+            'sort': {StrainSearchSerializer.SORT_FIELDS[item]: {'order': 'asc'}
+                     for item in lookup_query.get('sort', [])},
             "query": {
                 "function_score": {
                     "query": {
                         "bool": {
-                            "should": query_filters,
+                            "must": query_filters,
                             "must_not": {
                                 "exists": {"field": "removed_date"}
                             }
@@ -671,7 +671,7 @@ class SearchElasticService(BaseElasticService):
             index=self.URLS.get('BUSINESS_LOCATION'),
         )
 
-        # context suggestor: https://www.elastic.co/guide/en/elasticsearch/reference/current/suggester-context.html
+        # context suggester: https://www.elastic.co/guide/en/elasticsearch/reference/current/suggester-context.html
         contexts = {
             "bus_type": bus_type
         }

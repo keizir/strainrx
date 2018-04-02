@@ -6,16 +6,8 @@ W.pages.AdvancedSearchResultsPage = Class.extend({
 
     scrollPage: 1,
     scrollSize: 20,
-    // currentFilter: 'local', // local, delivery
-    // currentSort: 'asc',
-    //
-    // locations: {},
-    // deliveries: {},
-
-    // templates: {
-    //     expandedLocations: _.template($('#expanded-locations-template').html()),
-    //     expandedLocation: _.template($('#expanded-location-template').html())
-    // },
+    sortKey: 'sort',
+    searchResultsTotal: 0,
 
     ui: {
         $document: $(document),
@@ -23,16 +15,12 @@ W.pages.AdvancedSearchResultsPage = Class.extend({
 
         $searchHeader: $('.search-result-header-wrapper'),
         $searchResultFooterRegion: $('.search-result-footer-wrapper'),
+        $menuLinkWrapper: $('.filter-menu-wrapper'),
+        $menuLink: $('.filter-menu-wrapper input[type="checkbox"]'),
 
-        // $menuExpander: $('.menu-expander'),
-        // $menuHiddenLinks: $('.hidden-links'),
-        // $menuFilter: $('.filter-menu'),
-        // $menuLink: $('.menu-link'),
-        // $menuActiveLink: $('.menu-active-link a'),
-        //
-        // $strainRating: $('.strain-rating'),
         $searchResult: $('.search-result'),
-        $loadingIcon: $('.scroll-icon i')
+        $loadingIcon: $('.scroll-icon i'),
+        resultItem: '.result-item'
     },
 
     init: function (options) {
@@ -40,10 +28,10 @@ W.pages.AdvancedSearchResultsPage = Class.extend({
         this.name = 'AdvancedSearchResultsPage';
         this.isEmailVerified = options.isEmailVerified;
         this.currentUserId = options.currentUserId;
+        this.search = new URLSearchParams(window.location.search);
 
         this.getSearchResults(function () {
-            // that.buildResultsFilterMenu();
-            // that.initRatings();
+            that.buildResultsFilterMenu();
 
             that.ui.$searchHeader.removeClass('hidden');
             if (!that.currentUserId) {
@@ -84,30 +72,10 @@ W.pages.AdvancedSearchResultsPage = Class.extend({
         $('#resend-email-link').on('click', callApi);
     },
 
-    // _on_close_popup: function _on_close_popup() {
-    //     this.closeOpenedLocationDropdowns();
-    // },
-
-    // closeOpenedLocationDropdowns: function closeOpenedLocationDropdowns() {
-    //     var $menuExpanderButtons = $('.item-locations, .item-deliveries'),
-    //         $expandedAreas = $('.locations-expanded');
-    //
-    //     $.each($menuExpanderButtons, function (i, el) {
-    //         var $this = $(el);
-    //         $this.removeClass('expanded');
-    //         $this.css('z-index', 0);
-    //     });
-    //
-    //     $.each($expandedAreas, function (i, el) {
-    //         var $this = $(el);
-    //         $this.addClass('hidden');
-    //         $this.html('');
-    //     });
-    // },
-
     getSearchResults: function getSearchResults(success) {
         var that = this;
         this.ui.$loadingIcon.addClass('rotating');
+
         $.ajax({
             method: 'GET',
             url: '/api/v1/search/search/?{0}&page={1}&size={2}'
@@ -115,41 +83,35 @@ W.pages.AdvancedSearchResultsPage = Class.extend({
             dataType: 'json',
             error: function () {
                 that.ui.$searchHeader.addClass('hidden');
+                that.ui.$searchResultFooterRegion.addClass('hidden');
                 that.ui.$searchResult.append(
-                    '<h2>There was an error processing your request please try again at a later</h2>');
+                    '<div class="search-result-subtitle">There was an error processing your request please try again at a later</div>');
             },
             success: function (data) {
-                var searchResults = data.payloads,
-                    searchResultsTotal = data.total;
+                var searchResults = data.payloads;
 
-                if (that.scrollPage * that.scrollSize >= searchResultsTotal) {
-                    $('.search-result-footer-wrapper').addClass('hidden');
-                }
+                that.searchResultsTotal = data.total;
+                that.ui.$searchResultFooterRegion.addClass('hidden');
 
-                if (searchResults.length === 0 && searchResultsTotal === 0) {
-                    that.ui.$searchResult.append('<h2>No Results Found</h2>');
+                if (searchResults.length === 0 && that.searchResultsTotal === 0) {
+                    that.ui.$searchResult.append('<div class="search-result-subtitle">No Results Found</div>');
                 } else {
+
                     for (var i = 0; i < searchResults.length; i++) {
                         var position = '{0}{1}'.format(that.scrollPage, i);
 
                         that.ui.$searchResult.append(that.parseSearchResultItem(position, searchResults[i]));
-
-                        // that.locations[position] = searchResults[i].locations;
-                        // that.deliveries[position] = searchResults[i].deliveries;
-
-                        // that.initRating($('.loaded-rating-{0}'.format(position)));
-                        // that.clickLocations($('.locations-{0}'.format(position)), position, true);
-                        // that.clickLocations($('.deliveries-{0}'.format(position)), position, false);
                     }
 
                     that.ui.$loadingIcon.removeClass('rotating');
                     that.scrollPage += 1;
+
+                    if (success) {
+                        success();
+                    }
                 }
 
-                if (success) {
-                    success();
-                }
-
+                that.totalResultCount = $(that.ui.resultItem).length;
                 that.handleScrollPage();
             }
         });
@@ -159,70 +121,59 @@ W.pages.AdvancedSearchResultsPage = Class.extend({
         }, 500);
     },
 
-    // buildResultsFilterMenu: function buildResultsFilterMenu() {
-    //     var that = this;
-    //
-    //     that.ui.$menuActiveLink.attr('filter', that.currentFilter);
-    //     $.each(that.ui.$menuLink, function () {
-    //         var $menuLink = $(this);
-    //         if ($menuLink.attr('filter') === that.currentFilter) {
-    //             that.ui.$menuActiveLink.text($menuLink.text());
-    //         }
-    //     });
-    //
-    //
-    //     that.ui.$menuExpander.on('click', function () {
-    //         that.ui.$menuHiddenLinks.toggleClass('hidden');
-    //         that.ui.$menuFilter.toggleClass('expanded');
-    //     });
-    //
-    //     that.ui.$menuFilter.mouseleave(function () {
-    //         that.ui.$menuHiddenLinks.addClass('hidden');
-    //         that.ui.$menuFilter.removeClass('expanded');
-    //     });
-    //
-    //     that.ui.$menuLink.on('click', function (e) {
-    //         e.preventDefault();
-    //         var $el = $(this),
-    //             filter = $el.attr('filter');
-    //
-    //         that.ui.$menuActiveLink.text($el.find('a').text());
-    //         that.ui.$menuActiveLink.attr('filter', filter);
-    //         that.ui.$menuFilter.removeClass('expanded');
-    //         that.ui.$menuHiddenLinks.addClass('hidden');
-    //         that.applyNewFilter(filter);
-    //     });
-    //
-    //     that.ui.$menuActiveLink.on('click', function (e) {
-    //         e.preventDefault();
-    //         that.ui.$menuHiddenLinks.toggleClass('hidden');
-    //         that.ui.$menuFilter.toggleClass('expanded');
-    //     });
-    // },
-    //
-    // applyNewFilter: function applyNewFilter(filter) {
-    //     this.scrollPage = 1;
-    //     this.locations = {};
-    //     this.deliveries = {};
-    //     this.ui.$searchResult.html('');
-    //     this.currentFilter = filter;
-    //     this.ui.$searchResultFooterRegion.removeClass('hidden');
-    //     var that = this;
-    //
-    //     this.getSearchResults(this.currentFilter, function () {
-    //         that.settings.update(that.settings.settingName_SearchFilter, {
-    //             'searchFilter': filter
-    //         });
-    //     });
-    // },
+    buildResultsFilterMenu: function buildResultsFilterMenu() {
+        var that = this,
+            currentFilter = that.search.getAll(that.sortKey);
+        currentFilter = currentFilter.length ? currentFilter : [''];
+
+        $.each(that.ui.$menuLink, function () {
+            var $el = $(this);
+
+            if (currentFilter.indexOf($el.val()) !== -1) {
+                $el.prop("checked", true);
+                $el.parents('.form-field').addClass('active');
+            } else {
+                $el.prop("checked", false);
+                $el.parents('.form-field').removeClass('active');
+            }
+        });
+
+        that.ui.$menuLinkWrapper.on('change', 'input[type="checkbox"]', function (e) {
+            e.preventDefault();
+            that.search.delete(that.sortKey);
+
+            $.each(that.ui.$menuLink, function () {
+                var $el = $(this);
+
+                if ($el.is(':checked')){
+                    $el.parents('.form-field').addClass('active');
+                    that.search.append(that.sortKey, $el.val());
+                } else {
+                    $el.parents('.form-field').removeClass('active');
+                }
+            });
+
+            window.history.pushState({}, '', '?' + that.search.toString());
+            that.applyNewFilter();
+        });
+    },
+
+    applyNewFilter: function applyNewFilter() {
+        this.scrollPage = 1;
+        this.ui.$searchResult.empty();
+        this.ui.$searchResultFooterRegion.removeClass('hidden');
+        this.getSearchResults();
+    },
 
     handleScrollPage: function () {
         var that = this;
+
         this.ui.$window.on('scroll', function () {
-            var hasMoreResultToShow = !that.ui.$searchResultFooterRegion.hasClass('hidden');
-            if (that.ui.$window.scrollTop() >= (that.ui.$document.height() - that.ui.$window.height()) * 0.6 && hasMoreResultToShow) {
+            if (that.ui.$window.scrollTop() >= (that.ui.$document.height() - that.ui.$window.height()) * 0.6 &&
+                that.searchResultsTotal > that.totalResultCount) {
+
                 that.ui.$window.off('scroll');
-                that.getSearchResults(that.currentFilter);
+                that.getSearchResults();
             }
         });
     },
@@ -235,172 +186,20 @@ W.pages.AdvancedSearchResultsPage = Class.extend({
             'obfuscated': !Boolean(that.currentUserId) || !that.isEmailVerified,
             'position': position,
             'strain': item,
-            'closestDistance': that.findClosestDistance,
-            'openClosedCount': that.countOpenClosed
+            'closestDistance': that.findClosestDistance
         });
     },
 
-    // findClosestDistance: function findClosestDistance(locations) {
-    //     var distances = [], min;
-    //     if (locations && locations.length > 0) {
-    //         for (var i = 0; i < locations.length; i++) {
-    //             distances.push(locations[i].distance);
-    //         }
-    //         min = Math.min.apply(Math, distances);
-    //         return 'Nearest {0}mi'.format(Math.round(min * 100) / 100);
-    //     }
-    // },
-    //
-    // countOpenClosed: function countOpenClosed(locations) {
-    //     var opened = [], closed = [];
-    //     if (locations && locations.length > 0) {
-    //         for (var i = 0; i < locations.length; i++) {
-    //             if (locations[i].open) {
-    //                 opened.push(i);
-    //             } else {
-    //                 closed.push(i);
-    //             }
-    //         }
-    //
-    //         if (opened.length > 0 && closed.length > 0) {
-    //             return '{0} Open, {1} Closed'.format(opened.length, closed.length);
-    //         }
-    //
-    //         if (opened.length > 0 && closed.length == 0) {
-    //             return '{0} Open'.format(opened.length);
-    //         }
-    //
-    //         if (opened.length == 0 && closed.length > 0) {
-    //             return '{0} Closed'.format(closed.length);
-    //         }
-    //     }
-    // },
-    //
-    // initRatings: function () {
-    //     var that = this;
-    //     that.ui.$strainRating.each(function (position, el) {
-    //         that.initRating($(el));
-    //     });
-    // },
-    //
-    // initRating: function ($el) {
-    //     var rating = $el.text();
-    //     if (rating && rating.indexOf('Not Rated') === -1) {
-    //         W.common.Rating.readOnly($el, {rating: rating});
-    //     }
-    // },
-    //
-    // clickLocations: function clickLocations($el, position, isLocations) {
-    //     var that = this;
-    //     $el.on('click', function () {
-    //         var $this = $(this),
-    //             position = $this.attr('position'),
-    //             locations = isLocations ? that.locations[position] : that.deliveries[position],
-    //             $exp = isLocations ? $('.locations-expanded-{0}'.format(position)) : $('.deliveries-expanded-{0}'.format(position));
-    //
-    //         if (locations.length > 0) {
-    //             if ($this.hasClass('expanded')) {
-    //                 $this.removeClass('expanded');
-    //                 $this.css('z-index', 0);
-    //                 $exp.addClass('hidden');
-    //                 $exp.html('');
-    //             } else {
-    //                 that.closeOpenedLocationDropdowns();
-    //                 that.showLocations($this, $exp, isLocations, locations, position);
-    //             }
-    //         } else {
-    //             that.closeOpenedLocationDropdowns();
-    //         }
-    //     });
-    // },
-    //
-    // showLocations: function showLocations($this, $exp, isLocations, locations, position) {
-    //     var that = this, $priceExpander, $priceSort;
-    //
-    //     $this.addClass('expanded');
-    //     $this.css('z-index', 11);
-    //     $exp.removeClass('hidden');
-    //     $exp.html(that.templates.expandedLocations({
-    //         'locations': locations,
-    //         'strain_id': $('#strain-id-{0}'.format(position)).val(),
-    //         'formatDistance': that.formatDistance,
-    //         'formatPrice': that.formatPrice,
-    //         'renderLocation': that.templates.expandedLocation
-    //     }));
-    //
-    //     $.each($exp.find('.location-rating-exp'), function (i, el) {
-    //         that.initRating($(el));
-    //     });
-    //
-    //     $priceExpander = $('.price-sort');
-    //     $priceExpander.on('click', function () {
-    //         $('.prices-wrapper').toggleClass('hidden');
-    //     });
-    //
-    //     $('.prices-wrapper').mouseleave(function () {
-    //         $(this).addClass('hidden');
-    //     });
-    //
-    //     $('.price').on('click', function () {
-    //         $('.prices-wrapper').addClass('hidden');
-    //         var priceType = $(this).attr('id');
-    //         that.sortByPrice(priceType, isLocations, position, false);
-    //     });
-    //
-    //     $priceSort = $('.price-expander');
-    //     $priceSort.on('click', function () {
-    //         that.sortByPrice($('.price-value.active').attr('id'), isLocations, position, true);
-    //     });
-    // },
-    //
-    // renderLocation: function renderLocation(location) {
-    //     return this.templates.expandedLocation({
-    //         'l': location,
-    //         'strain_id': this.strain_id,
-    //         'formatDistance': this.formatDistance,
-    //         'formatPrice': this.formatPrice
-    //     });
-    // },
-    //
-    // sortByPrice: function sortByPrice(sortFieldName, isLocations, position, changeSortOrder) {
-    //     var that = this, url;
-    //
-    //     if (changeSortOrder) {
-    //         this.currentSort = this.currentSort === 'asc' ? 'desc' : 'asc';
-    //     }
-    //
-    //     url = '/api/v1/search/strain/{0}/deliveries?filter={1}&order_field={2}&order_dir={3}&location_type={4}'
-    //         .format($('#strain-id-{0}'.format(position)).val(), this.ui.$menuActiveLink.attr('filter'),
-    //             sortFieldName, this.currentSort, isLocations ? 'dispensary' : 'delivery');
-    //
-    //     $.ajax({
-    //         method: 'GET',
-    //         url: url,
-    //         success: function (data) {
-    //             if (data && data.locations) {
-    //                 var $expandedHolder = $('.expanded-locations-holder');
-    //                 $expandedHolder.html('');
-    //
-    //                 $.each(data.locations, function (i, l) {
-    //                     $expandedHolder.append(that.renderLocation(l));
-    //                 });
-    //
-    //                 $.each($expandedHolder.find('.location-rating-exp'), function (i, el) {
-    //                     that.initRating($(el));
-    //                 });
-    //
-    //                 $('.price-value').each(function (index, $el) {
-    //                     var $price = $($el);
-    //                     if ($price.attr('id') === sortFieldName) {
-    //                         $price.addClass('active');
-    //                     } else {
-    //                         $price.removeClass('active');
-    //                     }
-    //                 });
-    //             }
-    //         }
-    //     });
-    // },
+    findClosestDistance: function findClosestDistance(locations) {
+        var distances = [], min;
+        if (locations && locations.length > 0) {
+            for (var i = 0; i < locations.length; i++) {
+                distances.push(locations[i].distance);
+            }
+            min = Math.min.apply(Math, distances);
+            return 'Nearest {0}mi'.format(Math.round(min * 100) / 100);
+        }
+    },
 
     formatDistance: function formatDistance(d) {
         return '({0}mi)'.format(Math.round(d * 100) / 100);

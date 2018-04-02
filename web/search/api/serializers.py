@@ -43,14 +43,32 @@ class StrainImageSerializer(serializers.ModelSerializer):
 
 
 class StrainSearchSerializer(serializers.ModelSerializer):
-    cannabinoids = ['thc', 'thca', 'thcv', 'cbd', 'cbg', 'cbn', 'cbc']
-    terpenes = ['humulene', 'pinene', 'linalool', 'caryophyllene', 'myrcene', 'terpinolene', 'ocimene',
+
+    ALL, LOCATION, NAME, PRICE = '', 'location', 'name', 'price'
+
+    SORT_CHOICES = (
+        (ALL, 'all'),
+        (LOCATION, 'location'),
+        (NAME, 'name'),
+        (PRICE, 'price'),
+    )
+    SORT_OPTIONS = [key for key, value in SORT_CHOICES]
+    SORT_FIELDS = {
+        ALL: '_score',
+        PRICE: '_score',  # todo change it
+        LOCATION: '_score',  # todo change it
+        NAME: 'name.raw'
+    }
+
+    CANNABINOIDS = ['thc', 'thca', 'thcv', 'cbd', 'cbg', 'cbn', 'cbc']
+    TERPENES = ['humulene', 'pinene', 'linalool', 'caryophyllene', 'myrcene', 'terpinolene', 'ocimene',
                 'limonene', 'camphene', 'terpineol', 'phellandrene', 'carene', 'pulegone', 'sabinene', 'geraniol']
 
     q = serializers.CharField(required=False)
     page = serializers.IntegerField(required=False, default=1)
     size = serializers.IntegerField(required=False, default=24, max_value=24)
     start_from = serializers.IntegerField(required=False)
+    sort = serializers.MultipleChoiceField(required=False, choices=SORT_CHOICES)
 
     variety = serializers.MultipleChoiceField(required=False, choices=Strain.VARIETY_CHOICES)
     # cannabinoids
@@ -92,7 +110,7 @@ class StrainSearchSerializer(serializers.ModelSerializer):
                   'thcv_from', 'thcv_to', 'cbd_from', 'cbd_to', 'cbg_from', 'cbg_to', 'cbn_from', 'cbn_to', 'cbc_from',
                   'cbc_to', 'humulene', 'pinene', 'linalool', 'caryophyllene', 'myrcene', 'terpinolene', 'ocimene',
                   'limonene', 'camphene', 'terpineol', 'phellandrene', 'carene', 'pulegone', 'sabinene', 'geraniol',
-                  'q', 'page', 'size', 'start_from')
+                  'q', 'page', 'size', 'start_from', 'sort')
 
     def to_internal_value(self, data):
         try:
@@ -104,6 +122,9 @@ class StrainSearchSerializer(serializers.ModelSerializer):
                 data.pop('page')
             if errors.pop('size', None):
                 data.pop('size')
+            if errors.pop('sort', None):
+                sort = data.pop('sort', [])
+                data.setlist('sort', [item for item in sort if item in self.SORT_OPTIONS])
             if errors:
                 raise ValidationError(errors)
             return super().to_internal_value(data)
@@ -116,6 +137,4 @@ class StrainSearchSerializer(serializers.ModelSerializer):
 
     def to_representation(self, instance):
         ret = super().to_representation(instance)
-        ret['terpenes'] = self.terpenes
-        ret['cannabinoids'] = self.cannabinoids
         return {key: value for key, value in ret.items() if value}

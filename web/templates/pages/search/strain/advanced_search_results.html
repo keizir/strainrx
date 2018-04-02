@@ -18,23 +18,23 @@
     <div class="search-result-subtitle">{% trans 'Here Are Your Top Recommendations' %}</div>
     <div class="filter-menu-wrapper">
       <div class="form-field-group">
-      {% trans 'Sort' %}:
-      <span class="form-field">
-        <input type="checkbox" name="sort-1" id="sort-1">
-        <label for="sort-1">{% trans 'Best Match' %}</label>
-      </span>
-      <span class="form-field">
-        <input type="checkbox" name="sort-2" id="sort-2">
-        <label for="sort-2">{% trans 'Nearest' %}</label>
-      </span>
-      <span class="form-field">
-        <input type="checkbox" name="sort-3" id="sort-3">
-        <label for="sort-3">{% trans 'Name' %}</label>
-      </span>
-      <span class="form-field">
-        <input type="checkbox" name="sort-4" id="sort-4">
-        <label for="sort-4">{% trans 'Price' %}</label>
-      </span>
+        <span class="filter-title">{% trans 'Sort' %}:</span>
+        <span class="form-field">
+          <input type="checkbox" name="sort" id="sort-1" value="">
+          <label for="sort-1">{% trans 'Best Match' %}</label>
+        </span>
+        <span class="form-field">
+          <input type="checkbox" name="sort" id="sort-2" value="location">
+          <label for="sort-2">{% trans 'Nearest' %}</label>
+        </span>
+        <span class="form-field">
+          <input type="checkbox" name="sort" id="sort-3" value="name">
+          <label for="sort-3">{% trans 'Name' %}</label>
+        </span>
+        <span class="form-field">
+          <input type="checkbox" name="sort" id="sort-4" value="price">
+          <label for="sort-4">{% trans 'Price' %}</label>
+        </span>
       </div>
     </div>
   </div>
@@ -58,6 +58,7 @@
 
 {% block javascript %}
   {{ block.super }}
+  <script src="{% static 'url-search-params-polyfill/index.js' %}"></script>
   <script src="{% static 'js/pages/search/strain/advanced_search_results.js' %}"></script>
   <script type="text/javascript">
       new W.pages.AdvancedSearchResultsPage({
@@ -76,6 +77,7 @@
         <% if (strain.is_clean) { %>
           <img class="clean-logo" src="{% static 'images/search/clean.png' %}">
         <% } %>
+        <span>${ closestDistance(strain.locations) }</span>
       </div>
 
       <div class="item-info">

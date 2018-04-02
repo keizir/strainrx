@@ -153,6 +153,19 @@ body {
   flex-direction: column;
   padding: 1em 0;
 
+  input[type="checkbox"] {
+    width: 1em;
+    height: 1em;
+    margin-bottom: 0;
+    font-size: 16px;
+  }
+
+  input[type="number"] {
+    padding: 8px 10px;
+    width: 48px;
+    margin: 0;
+  }
+
   .title {
     color: $green-apple;
     font-size: $font-title;
@@ -166,7 +179,8 @@ body {
     font-size: $font-subtitle + 5;
     line-height: $font-subtitle + 5;
     font-weight: normal;
-    margin: 3em 0;
+    margin: 2em 0;
+    align-self: flex-start;
   }
 
   .subtitle-container {
@@ -209,19 +223,6 @@ body {
     width: 70%;
     margin: 0 auto;
     text-align: center;
-
-    input[type="checkbox"] {
-      width: 1em;
-      height: 1em;
-      margin-bottom: 0;
-      font-size: 16px;
-    }
-
-    input[type="number"] {
-      padding: 8px 10px;
-      width: 48px;
-      margin: 0;
-    }
 
     img {
       margin: 0 0.5em 0 0.5em;
@@ -384,6 +385,8 @@ body {
 
 .search-result-container {
 
+  width: 100%;
+
   .search-result {
     display: flex;
     align-items: flex-start;
@@ -448,6 +451,35 @@ body {
 
     }
 
+  }
+
+  .filter-menu-wrapper {
+    display: flex;
+    flex-direction: row;
+    justify-items: center;
+    align-items: center;
+    margin-bottom: 2em;
+
+    .form-field-group {
+      margin: 0 auto;
+      font-size: 20px;
+      color: $grey-blue;
+
+      .filter-title {
+        padding-right: 1em;
+      }
+
+      .form-field{
+        padding-right: 2em;
+      }
+      .form-field.active {
+        font-weight: bold;
+      }
+    }
+  }
+
+  .search-result-footer-wrapper {
+    text-align: center;
   }
 }
 
