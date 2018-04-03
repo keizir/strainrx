@@ -387,7 +387,12 @@ body {
 
   width: 100%;
 
-  .search-result {
+  .search-result.basic-search {
+    border-bottom: 2px solid $grey-blue;
+    padding-bottom: 2em;
+  }
+
+  .search-result, .similar-result {
     display: flex;
     align-items: flex-start;
     flex-direction: row;
@@ -422,19 +427,20 @@ body {
           bottom: 0;
           right: 0;
           width: 3em;
-          background: rgba(255, 255, 255, 0.3);
         }
 
       }
 
       .item-location {
         position: absolute;
+        bottom: -1.1em;
+        left: 0;
       }
 
       .item-info, .item-location {
         color: inherit;
-        font-size: 14px;
-        line-height: 18px;
+        font-size: 13px;
+        line-height: 21px;
 
         .strain-name {
           margin-right: 30px;
@@ -459,10 +465,52 @@ body {
           right: 0;
         }
       }
-
-
     }
 
+    .result-item.basic-search {
+      flex-basis: 600px;
+
+      .item-image {
+        width: 16em;
+
+        .strain-logo {
+          width: 16em;
+          height: auto;
+          max-height: 16em;
+        }
+      }
+
+      .item-info, .item-location {
+
+        .strain-name{
+          display: inline;
+        }
+
+        .cup-logo{
+          width: 3.5em;
+          padding-top: 2em;
+        }
+
+        .strain-price, .strain-about, .strain-cannabinoids {
+          clear: both;
+        }
+
+      }
+
+      .item-variety-logo {
+        margin-right: 8px;
+        margin-left: 0;
+        float: left;
+
+        img {
+          margin-top: 0;
+          position: relative;
+          right: auto;
+          width: 3.5em;
+        }
+      }
+
+    }
   }
 
   .filter-menu-wrapper {
@@ -504,9 +552,33 @@ body {
       }
     }
   }
+
+  .search-result-container {
+    .search-result, .similar-result {
+      .result-item.basic-search {
+        flex-basis: 100%;
+
+        .item-image {
+          width: 9em;
+
+          .strain-logo {
+            width: 9em;
+            height: auto;
+            max-height: 9em;
+          }
+        }
+      }
+    }
+  }
 }
 
 @media (max-width: $screen-xs-max) {
+  body {
+    .footer-region {
+        height: 16em;
+    }
+  }
+
   .strain-search-wrapper {
     .subtitle-container {
       .subtitle:before,
@@ -514,7 +586,6 @@ body {
         width: 0;
       }
     }
-
     .search-form {
 
       .cannabinoids,
@@ -547,6 +618,33 @@ body {
       }
     }
   }
+
+}
+
+@media (max-width: $screen-sm-min) {
+  .search-result-container {
+    .search-result, .similar-result {
+      .result-item.basic-search {
+        .item-variety-logo {
+          img {
+            position: absolute;
+            right: -2em;
+          }
+        }
+        .item-location{
+          position: relative;
+          bottom: auto;
+        }
+
+        .item-info, .item-location {
+          .cup-logo{
+            padding-top: 0;
+          }
+        }
+      }
+    }
+  }
+
 }
 
 @media (min-width: $screen-sm-min) {
@@ -565,6 +663,14 @@ body {
     .search-form {
       width: 100%;
 
+    }
+  }
+
+  .search-result-container {
+    .search-result, .similar-result {
+      .result-item {
+        flex-basis: 290px;
+      }
     }
   }
 

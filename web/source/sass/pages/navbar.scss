@@ -333,6 +333,16 @@
     }
 }
 
+@media (max-width: $screen-md-max) {
+    .nav-list {
+        .nav-menu-btn-wrapper {
+            .business-nav-menu-btn{
+                display: none;
+            }
+        }
+    }
+}
+
 @media (max-width: $screen-sm-max) {
     .nav-tabs-wrapper {
         display: none;

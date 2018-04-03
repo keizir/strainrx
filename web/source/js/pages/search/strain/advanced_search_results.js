@@ -8,17 +8,20 @@ W.pages.AdvancedSearchResultsPage = Class.extend({
     scrollSize: 20,
     sortKey: 'sort',
     searchResultsTotal: 0,
+    firstRender: false,
 
     ui: {
         $document: $(document),
         $window: $(window),
 
-        $searchHeader: $('.search-result-header-wrapper'),
+        searchHeader: '.search-result-header-wrapper',
         $searchResultFooterRegion: $('.search-result-footer-wrapper'),
-        $menuLinkWrapper: $('.filter-menu-wrapper'),
-        $menuLink: $('.filter-menu-wrapper input[type="checkbox"]'),
+        $menuLinkWrapper: '.filter-menu-wrapper',
+        $menuLink: '.filter-menu-wrapper input[type="checkbox"]',
 
-        $searchResult: $('.search-result'),
+        searchResult: '.search-result',
+        similarResult: '.similar-result',
+        $searchContainer: $('.search-container'),
         $loadingIcon: $('.scroll-icon i'),
         resultItem: '.result-item'
     },
@@ -31,9 +34,6 @@ W.pages.AdvancedSearchResultsPage = Class.extend({
         this.search = new URLSearchParams(window.location.search);
 
         this.getSearchResults(function () {
-            that.buildResultsFilterMenu();
-
-            that.ui.$searchHeader.removeClass('hidden');
             if (!that.currentUserId) {
                 that.showLoginDialog();
             } else if (!that.isEmailVerified) {
@@ -82,31 +82,43 @@ W.pages.AdvancedSearchResultsPage = Class.extend({
                 .format(window.location.search.slice(1), that.scrollPage, that.scrollSize),
             dataType: 'json',
             error: function () {
-                that.ui.$searchHeader.addClass('hidden');
                 that.ui.$searchResultFooterRegion.addClass('hidden');
-                that.ui.$searchResult.append(
+                that.ui.$searchContainer.append(
                     '<div class="search-result-subtitle">There was an error processing your request please try again at a later</div>');
             },
             success: function (data) {
-                var searchResults = data.list;
+                var searchResults = data.list || [];
+                var similarResults = (data.similar_strains && (data.similar_strains.list || data.similar_strains.payloads)) || [],
+                    i, position, $searchResult, $similarResult,
+                    isBasicSearch = data.hasOwnProperty('similar_strains');
 
                 that.searchResultsTotal = data.total;
                 that.ui.$searchResultFooterRegion.addClass('hidden');
 
-                if (searchResults.length === 0 && that.searchResultsTotal === 0) {
-                    that.ui.$searchResult.append('<div class="search-result-subtitle">No Results Found</div>');
-                } else {
+                if (!that.firstRender) {
+                    that.ui.$searchContainer.html(that.parseSearchResultList(
+                        isBasicSearch, similarResults, searchResults, data.q));
+                    that.firstRender = true;
+                }
 
-                    for (var i = 0; i < searchResults.length; i++) {
-                        var position = '{0}{1}'.format(that.scrollPage, i);
+                $searchResult = $(that.ui.searchResult);
+                $similarResult = $(that.ui.similarResult);
 
-                        that.ui.$searchResult.append(that.parseSearchResultItem(position, searchResults[i]));
-                    }
+                for (i = 0; i < searchResults.length; i++) {
+                    position = '{0}{1}'.format(that.scrollPage, i);
+                    $searchResult.append(that.parseSearchResultItem(position, searchResults[i], isBasicSearch));
+                }
+                for (i = 0; i < similarResults.length; i++) {
+                    position = '{0}{1}'.format(that.scrollPage, i);
+                    $similarResult.append(that.parseSearchResultItem(position, similarResults[i]));
+                }
 
-                    that.ui.$loadingIcon.removeClass('rotating');
-                    that.scrollPage += 1;
+                that.ui.$loadingIcon.removeClass('rotating');
+                that.scrollPage += 1;
 
-                    if (success) {
+                if (searchResults.length){
+                    that.buildResultsFilterMenu();
+                    if(success) {
                         success();
                     }
                 }
@@ -123,10 +135,11 @@ W.pages.AdvancedSearchResultsPage = Class.extend({
 
     buildResultsFilterMenu: function buildResultsFilterMenu() {
         var that = this,
-            currentFilter = that.search.getAll(that.sortKey);
+            currentFilter = that.search.getAll(that.sortKey),
+            $menuLink = $(that.ui.$menuLink);
         currentFilter = currentFilter.length ? currentFilter : [''];
 
-        $.each(that.ui.$menuLink, function () {
+        $.each($menuLink, function () {
             var $el = $(this);
 
             if (currentFilter.indexOf($el.val()) !== -1) {
@@ -138,11 +151,11 @@ W.pages.AdvancedSearchResultsPage = Class.extend({
             }
         });
 
-        that.ui.$menuLinkWrapper.on('change', 'input[type="checkbox"]', function (e) {
+        $(that.ui.$menuLinkWrapper).on('change', 'input[type="checkbox"]', function (e) {
             e.preventDefault();
             that.search.delete(that.sortKey);
 
-            $.each(that.ui.$menuLink, function () {
+            $.each($menuLink, function () {
                 var $el = $(this);
 
                 if ($el.is(':checked')){
@@ -160,7 +173,8 @@ W.pages.AdvancedSearchResultsPage = Class.extend({
 
     applyNewFilter: function applyNewFilter() {
         this.scrollPage = 1;
-        this.ui.$searchResult.empty();
+        $(this.ui.searchResult).empty();
+        this.firstRender = false;
         this.ui.$searchResultFooterRegion.removeClass('hidden');
         this.ui.$window.off('scroll');
         this.getSearchResults();
@@ -178,7 +192,18 @@ W.pages.AdvancedSearchResultsPage = Class.extend({
         });
     },
 
-    parseSearchResultItem: function (position, item) {
+    parseSearchResultList: function (isBasicSearch, similar_strains, searchResults, q) {
+        var compiled = _.template($('#strain-result-template').html());
+
+        return compiled({
+            'isBasicSearch': isBasicSearch,
+            'similarResult': similar_strains,
+            'searchResults': searchResults,
+            'q': q
+        });
+    },
+
+    parseSearchResultItem: function (position, item, isBasicSearch) {
         var that = this,
             compiled = _.template($('#strain-item-template').html());
 
@@ -187,7 +212,8 @@ W.pages.AdvancedSearchResultsPage = Class.extend({
             'position': position,
             'strain': item,
             'closestDistance': that.findClosestDistance,
-            'prices': that.findPriceRange(item.locations)
+            'prices': that.findPriceRange(item.locations),
+            'isBasicSearch': isBasicSearch
         });
     },
 
