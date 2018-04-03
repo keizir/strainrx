@@ -96,10 +96,5 @@ if settings.DEBUG:
         url(r'^500/$', default_views.server_error, kwargs={'template_name': '500.html'}),
     ]
 
-    import debug_toolbar
-    urlpatterns = [
-        url(r'^__debug__/', include(debug_toolbar.urls)),
-    ] + urlpatterns
-
 
 handler404 = 'web.system.views.page_404_handler'

@@ -29,18 +29,21 @@ class SearchTestCase(APITestCase):
     def test_search_without_params(self, _):
         response = self.client.get(self.url)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertEqual(response.json(), {'total': 0, 'payloads': []})
+        self.assertEqual(response.json(), {'total': 0, 'list': []})
 
     @patch.object(BaseElasticService, '_request', return_value={})
     def test_search_with_invalid_params(self, _):
         response = self.client.get('{}?q={}&page=test&size=2000'.format(self.url, 'test'))
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertEqual(response.json(), {'total': 0, 'payloads': []})
+        self.assertEqual(response.json(), {'list': [], 'q': 'test',
+                                           'similar_strains': {'payloads': [], 'total': 0}, 'total': 0})
 
         response = self.client.get('{}?q={}&page=10&size=test'.format(self.url, 'test'))
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertEqual(response.json(), {'total': 0, 'payloads': []})
+        self.assertEqual(response.json(), {'list': [], 'q': 'test',
+                                           'similar_strains': {'payloads': [], 'total': 0}, 'total': 0})
 
         response = self.client.get('{}?q={}&page=10&size='.format(self.url, 'test'))
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertEqual(response.json(), {'total': 0, 'payloads': []})
+        self.assertEqual(response.json(), {'list': [], 'q': 'test',
+                                           'similar_strains': {'payloads': [], 'total': 0}, 'total': 0})
