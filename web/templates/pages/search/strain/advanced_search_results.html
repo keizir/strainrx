@@ -166,18 +166,13 @@
             <% } %>
           </div>
         <% } %>
-        <div>
 
-        <% if (isBasicSearch) { %><span class="item-location"><i class="fa fa-map-marker"></i> 20 Miles away</span>
-
-
-
-
+        <% if (isBasicSearch) { %>
           <% if (strain.locations && strain.locations.length) { %>
             <span class="item-location"><i class="fa fa-map-marker"></i> ${ closestDistance(strain.locations) } Miles away</span>
           <% } %>
         <% } %>
-
+        <div>
         <% if (strain.cup_winner) { %>
           <img class="cup-logo" src="{% static 'images/search/cup.png' %}">
         <% } %>
