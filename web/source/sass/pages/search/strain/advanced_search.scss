@@ -83,6 +83,13 @@ $geraniol: #95b2c3;
   background: $geraniol;
 }
 
+a.blurred {
+  -moz-filter: blur(5px);
+  -ms-filter: blur(5px);
+  -o-filter: blur(5px);
+  filter: blur(5px);
+}
+
 body:not(.search-result-page) {
   background: url('../../../../images/search/background.png') no-repeat top center;
   background-size: cover;

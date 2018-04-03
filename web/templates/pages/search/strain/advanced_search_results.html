@@ -26,6 +26,7 @@
       </div>
     </div>
   </div>
+  {% url 'account_login' as sign_in_url %}
   {% include 'pages/search/strain/inlines/dialog.html' %}
 {% endblock %}
 
@@ -35,7 +36,7 @@
   <script src="{% static 'js/pages/search/strain/advanced_search_results.js' %}"></script>
   <script type="text/javascript">
       new W.pages.AdvancedSearchResultsPage({
-          'currentUserId': '{{ request.user.id }}',
+          {% if request.user.is_authenticated %}'currentUserId': '{{ request.user.id }}',{% endif %}
           'isEmailVerified': '{{ request.user.is_email_verified }}' === 'True'
       });
   </script>
