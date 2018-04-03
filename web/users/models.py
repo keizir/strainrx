@@ -170,3 +170,6 @@ class UserLocation(models.Model):
     lng = models.FloatField(_('Longitude'), blank=True, null=True, max_length=50)
     location_raw = JSONField(_('Location Raw JSON'), default={}, max_length=20000)
     last_modified_date = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return '{} {}, {} {}'.format(self.street1, self.city, self.state, self.zipcode)

@@ -1,4 +1,5 @@
-import logging, json
+import json
+import logging
 from datetime import datetime
 from operator import itemgetter
 
@@ -9,7 +10,8 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 
 from web.common.text import obfuscate
-from web.search.api.serializers import SearchCriteriaSerializer, StrainReviewFormSerializer, StrainImageSerializer
+from web.search.api.serializers import SearchCriteriaSerializer, StrainReviewFormSerializer, StrainImageSerializer, \
+    StrainSearchSerializer
 from web.search.api.services import StrainDetailsService
 from web.search.es_service import SearchElasticService
 from web.search.models import Strain, StrainImage, Effect, StrainReview, StrainRating, UserFavoriteStrain, \
@@ -59,8 +61,8 @@ class StrainSearchResultsView(APIView):
 
     def get(self, request):
         result_filter = request.GET.get('filter')
-        page = request.GET.get('page')
-        size = request.GET.get('size')
+        page = request.GET.get('page', 1)
+        size = request.GET.get('size', 25)
         start_from = (int(page) - 1) * int(size)
 
         search_criteria = request.session.get('search_criteria')
@@ -482,3 +484,22 @@ class BusinessLocationLookupView(APIView):
             'total': result.get('total'),
             'payloads': result.get('payloads')
         }, status=status.HTTP_200_OK)
+
+
+class StrainSearchAPIView(APIView):
+    permission_classes = (permissions.AllowAny,)
+    serializer_class = StrainSearchSerializer
+
+    def get(self, request, *args, **kwargs):
+        serializer = self.serializer_class(data=self.request.GET)
+        serializer.is_valid(raise_exception=True)
+        query = serializer.data
+        current_user = request.user if request.user.is_authenticated() else None
+        q = query.get('q')
+        if q:
+            result = SearchElasticService().lookup_strain_by_name(
+                q, current_user, size=query['size'], start_from=query.get('start_from', 0))
+        else:
+            result = SearchElasticService().advanced_search(
+                query, current_user, size=query['size'], start_from=query.get('start_from', 0))
+        return Response(result, status=status.HTTP_200_OK)

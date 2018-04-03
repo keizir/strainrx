@@ -1,26 +1,23 @@
 from __future__ import unicode_literals, absolute_import
-from django.conf import settings
+
 from datetime import datetime
 from json import loads, dumps
 from uuid import uuid4
 
+from django.conf import settings
 from django.contrib.postgres.fields import JSONField
 from django.contrib.staticfiles.templatetags.staticfiles import static
 from django.core.exceptions import ValidationError
 from django.core.urlresolvers import reverse
 from django.db import models
-from django.db.models.signals import post_save
-from django.dispatch import receiver
 from django.template.defaultfilters import slugify
 from django.utils.encoding import python_2_unicode_compatible
-from django.utils.translation import ugettext_lazy as _
 from django.utils.timezone import now
+from django.utils.translation import ugettext_lazy as _
+from django_resized import ResizedImageField
 
 from web.search.managers import UserSearchQuerySet
-from web.search.serializers import StrainReviewESSerializer
-from web.search.strain_es_service import StrainESService
 from web.users.models import User
-from django_resized import ResizedImageField
 
 
 def upload_to(instance, filename):
@@ -30,8 +27,6 @@ def upload_to(instance, filename):
 
 @python_2_unicode_compatible
 class Strain(models.Model):
-    class Meta:
-        unique_together = (("name", "category"),)
 
     VARIETY_CHOICES = (
         ('sativa', 'Sativa'),
@@ -46,6 +41,12 @@ class Strain(models.Model):
         ('oil', 'Oil'),
         ('wax', 'Wax'),
     )
+
+    def validate_image(self):
+        file_size = self.file.size
+        megabyte_limit = settings.MAX_IMAGE_SIZE
+        if file_size > megabyte_limit:
+            raise ValidationError("Max file size is %sMB" % str(megabyte_limit))
 
     internal_id = models.CharField(max_length=10, null=True, blank=True)
     name = models.CharField(max_length=255)
@@ -95,8 +96,23 @@ class Strain(models.Model):
     you_may_also_like_exclude = models.BooleanField(default=False)
 
     # social fields
+    social_image = ResizedImageField(max_length=255, blank=True,
+                                     help_text='Maximum file size allowed is 10Mb', validators=[validate_image],
+                                     quality=75, size=[1024, 1024], upload_to=upload_to)
     meta_desc = models.CharField(max_length=3072, blank=True)
     meta_keywords = models.CharField(max_length=3072, blank=True)
+
+    cup_winner = models.BooleanField(default=False)
+    is_indoor = models.BooleanField(default=True)
+    is_clean = models.BooleanField(default=False)
+
+    class Meta:
+        unique_together = (("name", "category"),)
+
+    def save(self, *args, **kwargs):
+        if self.pk is None and not self.strain_slug:
+            self.strain_slug = slugify(self.name)
+        super(Strain, self).save(*args, **kwargs)
 
     @property
     def variety_image(self):
@@ -105,19 +121,6 @@ class Strain(models.Model):
     @property
     def url(self):
         return self.get_absolute_url()
-
-    def validate_image(self):
-        file_size = self.file.size
-        megabyte_limit = settings.MAX_IMAGE_SIZE
-        if file_size > megabyte_limit:
-            raise ValidationError("Max file size is %sMB" % str(megabyte_limit))
-
-    social_image = ResizedImageField(max_length=255, blank=True, help_text='Maximum file size allowed is 10Mb', validators=[validate_image], quality=75, size=[1024, 1024], upload_to=upload_to)
-
-    def save(self, *args, **kwargs):
-        if self.pk is None and not self.strain_slug:
-            self.strain_slug = slugify(self.name)
-        super(Strain, self).save(*args, **kwargs)
 
     def to_search_criteria(self):
         return {
@@ -152,19 +155,6 @@ def validate_image(field_file_obj):
     megabyte_limit = settings.MAX_STRAIN_IMAGE_SIZE
     if file_size > megabyte_limit:
         raise ValidationError("Max file size is %sMB" % str(megabyte_limit))
-
-
-@receiver(post_save, sender=Strain)
-def create_es_strain(sender, **kwargs):
-    strain = kwargs.get('instance')
-    StrainESService().save_strain(strain)
-
-    if User.objects.filter(email='tech+rate_bot@strainrx.co').exists():
-        rate_bot = User.objects.get(email='tech+rate_bot@strainrx.co')
-        if not StrainRating.objects.filter(strain=strain, created_by=rate_bot, removed_date=None).exists():
-            r = StrainRating(strain=strain, created_by=rate_bot, effects=strain.effects, benefits=strain.benefits,
-                             side_effects=strain.side_effects, status='pending')
-            r.save()
 
 
 @python_2_unicode_compatible
@@ -322,16 +312,6 @@ class StrainRating(models.Model):
     last_modified_date = models.DateTimeField(auto_now=True)
     last_modified_by = models.ForeignKey(User, on_delete=models.DO_NOTHING, null=True, related_name='+')
     last_modified_by_ip = models.CharField(max_length=30, blank=True, null=True)
-
-
-@receiver(post_save, sender=StrainReview)
-def create_es_review(sender, **kwargs):
-    strain_review = kwargs.get('instance')
-    es_serializer = StrainReviewESSerializer(strain_review)
-    data = es_serializer.data
-    data['created_by'] = strain_review.created_by.id
-    data['last_modified_by'] = strain_review.last_modified_by.id if strain_review.last_modified_by else None
-    StrainESService().save_strain_review(data, strain_review.id, strain_review.strain.id)
 
 
 @python_2_unicode_compatible

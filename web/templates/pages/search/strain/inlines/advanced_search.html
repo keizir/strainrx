@@ -1,0 +1,291 @@
+{% load staticfiles i18n %}
+
+<form class="search-form" method="get" action="{% url 'search:advanced_search_result' %}">
+  <div class="row">
+    <div class="form-field-group variety">
+      <div class="form-field">
+        <input type="checkbox" value="sativa" name="variety" id="variety">
+        <span class="variety-wrapper">
+          <label for="variety"><img src="{% static 'images/search/sativa-leaf.png' %}"></label>
+          <span class="variety-title">Sativa</span>
+        </span>
+      </div>
+      <div class="form-field">
+        <input type="checkbox" value="indica" name="variety" id="indica">
+        <span class="variety-wrapper">
+          <label for="indica"><img src="{% static 'images/search/indica-leaf.png' %}"></label>
+          <span class="variety-title">Indica</span>
+        </span>
+      </div>
+      <div class="form-field">
+        <input type="checkbox" value="hybrid" name="variety" id="hybrid">
+        <span class="variety-wrapper">
+          <label for="hybrid"><img src="{% static 'images/search/hybrid-leaf.png' %}"></label>
+          <span class="variety-title">Hybrid</span>
+        </span>
+      </div>
+    </div>
+    <div class="form-field-group variety">
+      <div class="form-field">
+        <input type="checkbox" value="1" name="is_clean" id="is_clean">
+        <label for="is_clean"><img class="height-70" src="{% static 'images/search/clean.png' %}"></label>
+      </div>
+      <div class="form-field">
+        <input type="checkbox" value="1" name="is_indoor" id="is_indoor">
+        <label for="is_indoor"><img class="height-70" src="{% static 'images/search/indoor.png' %}"></label>
+      </div>
+      <div class="form-field">
+        <input type="checkbox" value="1" name="cup_winner" id="cup_winner">
+        <label for="cup_winner"><img class="height-70" src="{% static 'images/search/cup.png' %}"></label>
+      </div>
+    </div>
+  </div>
+
+  <div class="cannabinoids row">
+    <span class="cannabinoids-title">{% trans 'Cannabinoids' %}</span>
+    <div class="cannabinoids-group">
+      <div class="form-field-group">
+        <span class="group-label">{% trans 'THC' %}</span>
+        <div class="form-field-wrapper">
+          <div class="form-field">
+            <label for="thc_from">{% trans 'From' %}</label>
+            <input type="number" name="thc_from" id="thc_from">&nbsp;%
+          </div>
+          <div class="form-field">
+            <label for="thc_to">{% trans 'To' %}</label>
+            <input type="number" name="thc_to" id="thc_to">&nbsp;%
+          </div>
+        </div>
+      </div>
+      <div class="form-field-group">
+        <span class="group-label">{% trans 'CBD' %}</span>
+        <div class="form-field-wrapper">
+          <div class="form-field">
+            <label for="cbd_from">{% trans 'From' %}</label>
+            <input type="number" name="cbd_from" id="cbd_from">&nbsp;%
+          </div>
+          <div class="form-field">
+            <label for="cbd_to">{% trans 'To' %}</label>
+            <input type="number" name="cbd_to" id="cbd_to">&nbsp;%
+          </div>
+        </div>
+      </div>
+      <div class="form-field-group">
+        <span class="group-label">{% trans 'THCA' %}</span>
+        <div class="form-field-wrapper">
+          <div class="form-field">
+            <label for="thca_from">{% trans 'From' %}</label>
+            <input type="number" name="thca_from" id="thca_from">&nbsp;%
+          </div>
+          <div class="form-field">
+            <label for="thca_to">{% trans 'To' %}</label>
+            <input type="number" name="thca_to" id="thca_to">&nbsp;%
+          </div>
+        </div>
+      </div>
+      <div class="form-field-group">
+        <span class="group-label">{% trans 'THCV' %}</span>
+        <div class="form-field-wrapper">
+          <div class="form-field">
+            <label for="thcv_from">{% trans 'From' %}</label>
+            <input type="number" name="thcv_from" id="thcv_from">&nbsp;%
+          </div>
+          <div class="form-field">
+            <label for="thcv_to">{% trans 'To' %}</label>
+            <input type="number" name="thcv_to" id="thcv_to">&nbsp;%
+          </div>
+        </div>
+      </div>
+
+      <div class="form-field-group">
+        <span class="group-label">{% trans 'CBG' %}</span>
+        <div class="form-field-wrapper">
+          <div class="form-field">
+            <label for="cbg_from">{% trans 'From' %}</label>
+            <input type="number" name="cbg_from" id="cbg_from">&nbsp;%
+          </div>
+          <div class="form-field">
+            <label for="cbg_to">{% trans 'To' %}</label>
+            <input type="number" name="cbg_to" id="cbg_to">&nbsp;%
+          </div>
+        </div>
+      </div>
+      <div class="form-field-group">
+        <span class="group-label">{% trans 'CBN' %}</span>
+        <div class="form-field-wrapper">
+          <div class="form-field">
+            <label for="cbn_from">{% trans 'From' %}</label>
+            <input type="number" name="cbn_from" id="cbn_from">&nbsp;%
+          </div>
+          <div class="form-field">
+            <label for="cbn_to">{% trans 'To' %}</label>
+            <input type="number" name="cbn_to" id="cbn_to">&nbsp;%
+          </div>
+        </div>
+      </div>
+      <div class="form-field-group">
+        <span class="group-label">{% trans 'CBC' %}</span>
+        <div class="form-field-wrapper">
+          <div class="form-field">
+            <label for="cbc_from">{% trans 'From' %}</label>
+            <input type="number" name="cbc_from" id="cbc_from">&nbsp;%
+          </div>
+          <div class="form-field">
+            <label for="cbc_to">{% trans 'To' %}</label>
+            <input type="number" name="cbc_to" id="cbc_to">&nbsp;%
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="terpenes row">
+    <span class="terpenes-title">{% trans 'Terpenes' %}</span>
+    <div class="terpenes-group">
+      <div class="form-field-group variety">
+        <div class="form-field">
+                      <span class="variety-wrapper">
+                        <input type="checkbox" value="1" name="humulene" id="humulene">
+                        <label for="humulene" class="circle humulene">{% trans 'H' %}</label>
+                      </span>
+          <b>{% trans 'HUMULENE' %}</b>
+        </div>
+      </div>
+      <div class="form-field-group variety">
+        <div class="form-field">
+                      <span class="variety-wrapper">
+                        <input type="checkbox" value="1" name="pinene" id="pinene">
+                        <label for="pinene" class="circle pinene">{% trans 'P' %}</label>
+                      </span>
+          <b>{% trans 'PINENE' %}</b>
+        </div>
+      </div>
+      <div class="form-field-group variety">
+        <div class="form-field">
+                      <span class="variety-wrapper">
+                        <input type="checkbox" value="1" name="linalool" id="linalool">
+                        <label for="linalool" class="circle linalool">{% trans 'L' %}</label>
+                      </span>
+          <b>{% trans 'LINALOOL' %}</b>
+        </div>
+      </div>
+      <div class="form-field-group variety">
+        <div class="form-field">
+                      <span class="variety-wrapper">
+                        <input type="checkbox" value="1" name="caryophyllene" id="caryophyllene">
+                        <label for="caryophyllene" class="circle caryophyllene">{% trans 'Cr' %}</label>
+                      </span>
+          <b>{% trans 'CARYOPHYLLENE' %}</b>
+        </div>
+      </div>
+      <div class="form-field-group variety">
+        <div class="form-field">
+                      <span class="variety-wrapper">
+                        <input type="checkbox" value="1" name="myrcene" id="myrcene">
+                        <label for="myrcene" class="circle myrcene">{% trans 'M' %}</label>
+                      </span>
+          <b>{% trans 'MYRCENE' %}</b>
+        </div>
+      </div>
+      <div class="form-field-group variety">
+        <div class="form-field">
+                      <span class="variety-wrapper">
+                        <input type="checkbox" value="1" name="terpinolene" id="terpinolene">
+                        <label for="terpinolene" class="circle terpinolene">{% trans 'T' %}</label>
+                      </span>
+          <b>{% trans 'TERPINOLENE' %}</b>
+        </div>
+      </div>
+      <div class="form-field-group variety">
+        <div class="form-field">
+                      <span class="variety-wrapper">
+                        <input type="checkbox" value="1" name="ocimene" id="ocimene">
+                        <label for="ocimene" class="circle ocimene">{% trans 'O' %}</label>
+                      </span>
+          <b>{% trans 'OCIMENE' %}</b>
+        </div>
+      </div>
+      <div class="form-field-group variety">
+        <div class="form-field">
+                      <span class="variety-wrapper">
+                        <input type="checkbox" value="1" name="limonene" id="limonene">
+                        <label for="limonene" class="circle limonene">{% trans 'Le' %}</label>
+                      </span>
+          <b>{% trans 'LIMONENE' %}</b>
+        </div>
+      </div>
+      <div class="form-field-group variety">
+        <div class="form-field">
+                      <span class="variety-wrapper">
+                        <input type="checkbox" value="1" name="camphene" id="camphene">
+                        <label for="camphene" class="circle camphene">{% trans 'C' %}</label>
+                      </span>
+          <b>{% trans 'CAMPHENE' %}</b>
+        </div>
+      </div>
+      <div class="form-field-group variety">
+        <div class="form-field">
+                      <span class="variety-wrapper">
+                        <input type="checkbox" value="1" name="terpineol" id="terpineol">
+                        <label for="terpineol" class="circle terpineol">{% trans 'Ti' %}</label>
+                      </span>
+          <b>{% trans 'TERPINEOL' %}</b>
+        </div>
+      </div>
+      <div class="form-field-group variety">
+        <div class="form-field">
+                      <span class="variety-wrapper">
+                        <input type="checkbox" value="1" name="phellandrene" id="phellandrene">
+                        <label for="phellandrene" class="circle phellandrene">{% trans 'Ph' %}</label>
+                      </span>
+          <b>{% trans 'PHELLANDRENE' %}</b>
+        </div>
+      </div>
+      <div class="form-field-group variety">
+        <div class="form-field">
+                      <span class="variety-wrapper">
+                        <input type="checkbox" value="1" name="carene" id="carene">
+                        <label for="carene" class="circle carene">{% trans 'Ce' %}</label>
+                      </span>
+          <b>{% trans 'CARENE' %}</b>
+        </div>
+      </div>
+      <div class="form-field-group variety">
+        <div class="form-field">
+                      <span class="variety-wrapper">
+                        <input type="checkbox" value="1" name="pulegone" id="pulegone">
+                        <label for="pulegone" class="circle pulegone">{% trans 'Pu' %}</label>
+                      </span>
+          <b>{% trans 'PULEGONE' %}</b>
+        </div>
+      </div>
+      <div class="form-field-group variety">
+        <div class="form-field">
+                      <span class="variety-wrapper">
+                        <input type="checkbox" value="1" name="sabinene" id="sabinene">
+                        <label for="sabinene" class="circle sabinene">{% trans 'S' %}</label>
+                      </span>
+          <b>{% trans 'SABINENE' %}</b>
+        </div>
+      </div>
+      <div class="form-field-group variety">
+        <div class="form-field">
+                      <span class="variety-wrapper">
+                        <input type="checkbox" value="1" name="geraniol" id="geraniol">
+                        <label for="geraniol" class="circle geraniol">{% trans 'G' %}</label>
+                      </span>
+          <b>{% trans 'GERANIOL' %}</b>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="row">
+    <button class="btn-primary" type="submit">Search</button>
+  </div>
+  <div class="row">
+    <i class="fa fa-angle-left advanced-search-link"></i><i class="fa fa-angle-left advanced-search-link"></i>
+    <a href="{% url 'search:search' %}" class="advanced-search-link">{% trans 'Search by using Basic Search' %} </a>
+  </div>
+
+</form>

@@ -80,8 +80,7 @@ urlpatterns = [
     url(r'^(?P<page_slug>[\w-]+)/$',
         view=view_page,
         name='view_page'
-    ),
-
+    )
 
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
@@ -96,5 +95,6 @@ if settings.DEBUG:
         }),
         url(r'^500/$', default_views.server_error, kwargs={'template_name': '500.html'}),
     ]
+
 
 handler404 = 'web.system.views.page_404_handler'

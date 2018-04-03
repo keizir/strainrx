@@ -7,6 +7,21 @@ from . import views
 
 urlpatterns = [
     url(
+        regex=r'^search/results/$',
+        view=views.StrainAdvancedSearchResultView.as_view(),
+        name='advanced_search_result'
+    ),
+    url(
+        regex=r'^basic-search/$',
+        view=views.StrainSearchView.as_view(),
+        name='search'
+    ),
+    url(
+        regex=r'^search/$',
+        view=views.StrainAdvancedSearchView.as_view(),
+        name='advanced_search'
+    ),
+    url(
         regex=r'^search/strain/wizard/$',
         view=views.StrainSearchWizardView.as_view(),
         name='strain_wizard'

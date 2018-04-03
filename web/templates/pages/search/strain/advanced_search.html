@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+
+{% load staticfiles i18n %}
+
+{% block title %}Strain Search{% endblock %}
+
+{% block css %}
+  {{ block.super }}
+  <link href="{% static 'css/pages/base.css' %}" rel="stylesheet">
+  <link href="{% static 'css/pages/search/strain/advanced_search.css' %}" rel="stylesheet">
+{% endblock %}
+
+{% block content %}
+  <div class="container">
+    <div class="strain-search-wrapper">
+      <img src="{% static 'images/search/logo.png' %}" alt="StrainRx">
+      <h2 class="title">{% trans 'The Cannabis Search Engine' %}</h2>
+      <div class="subtitle-container">
+        <span class="subtitle">{% trans 'Instantly search thousands of strains' %}</span>
+      </div>
+
+      <div class="search-result-container">
+      {% block form_content %}
+        {% include 'pages/search/strain/inlines/advanced_search.html' %}
+      {% endblock form_content %}
+      </div>
+    </div>
+  </div>
+{% endblock %}

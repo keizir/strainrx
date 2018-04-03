@@ -3,8 +3,11 @@ import json
 from django.template.defaultfilters import slugify
 
 from web.businesses.api.services import get_open_closed, get_location_rating
+from web.common.utils import PythonJSONEncoder
 from web.es_service import BaseElasticService
 from web.search import es_mappings
+from web.search.api.serializers import StrainSearchSerializer
+from web.search.es_script_score import ADVANCED_SEARCH
 from web.search.models import StrainImage, Strain
 from web.system.models import SystemProperty
 
@@ -47,7 +50,7 @@ class SearchElasticService(BaseElasticService):
             db_strain = Strain.objects.get(pk=source.get('id'))
             rating = strain_ratings.get(source.get('id'))
             strain_image = StrainImage.objects.filter(strain=db_strain, is_approved=True)[:1]
-            srx_score = int(round(s.get('_score')))
+            srx_score = int(round(s.get('_score') or 0))
 
             if include_locations:
                 dispensaries = self.get_locations(source.get('id'), "dispensary", current_user, result_filter, only_active=True)
@@ -80,7 +83,11 @@ class SearchElasticService(BaseElasticService):
                         'image_url': strain_image[0].image.url if len(strain_image) > 0 else None,
                         'match_percentage': srx_score if srx_score <= 100 else 100,
                         'deliveries': deliveries,
-                        'locations': dispensaries
+                        'locations': dispensaries,
+
+                        'is_clean': source.get('is_clean'),
+                        'is_indoor': source.get('is_indoor'),
+                        'cannabinoids': source.get('cannabinoids')
                     })
 
         response_data = {
@@ -324,7 +331,7 @@ class SearchElasticService(BaseElasticService):
     def query_strain_srx_score(self, criteria, size=50, start_from=0, strain_ids=None, current_user=None,
                                result_filter=None, include_locations=True, is_similar=False, similar_strain_id=None):
         """
-            Return strains ranked by SRX score
+        Return strains ranked by SRX score
         """
         if start_from is None:
             start_from = 0
@@ -503,6 +510,205 @@ class SearchElasticService(BaseElasticService):
 
         return results
 
+    def lookup_strain_by_name(self, lookup_query, current_user, size=24, start_from=0):
+        """
+        Get stains by name in a 'name contains' manner, similar strains using more_like_this query
+
+        :param lookup_query: part of the word to search for
+        :param size: size of returned data
+        :param start_from: number of entity to start search from
+        :return: { 'list': [], 'total': 0, 'q': <lookup_query>, 'similar_strains'}
+        """
+
+        if start_from is None:
+            start_from = 0
+
+        method = self.METHODS.get('GET')
+        url = '{base}{index}/{type}/_search?size={size}&from={start_from}'.format(
+            base=self.BASE_ELASTIC_URL,
+            index=self.URLS.get('STRAIN'),
+            type=es_mappings.TYPES.get('strain'),
+            size=size,
+            start_from=start_from
+        )
+
+        # build query dict
+        query = {
+            'suggest': {
+                'name_suggestion': {
+                    'text': lookup_query,
+                    'completion': {
+                        'field': 'name_suggest',
+                        'size': size,
+                        'fuzzy': {
+                            'fuzziness': 1
+                        }
+                    }
+                }
+            }
+        }
+
+        q = self._request(method, url, data=json.dumps(query))
+
+        suggests = q.get('suggest', {}).get('name_suggestion', [])
+        more_like_strains = []
+        if suggests:
+            options = suggests[0].get('options', [])
+            for option in options:
+                more_like_strains.append({
+                    '_id': option.get('_id'),
+                    '_index': option.get('_index'),
+                    '_type': option.get('_type')})
+
+        if more_like_strains:
+            # If there are strains then use more_like_this query,
+            # otherwise increase fuzziness for suggestion query
+            query = {
+                'query': {
+                    'more_like_this': {
+                        'fields': ['name.stemmed', 'about'],
+                        'min_term_freq': 1,
+                        'max_query_terms': 50,
+                        'analyzer': 'name_analizer',
+                        'like': more_like_strains,
+                    }
+                }
+            }
+            similar_strains = self._request(method, url, data=json.dumps(query))
+            similar_strains_results = self._transform_strain_results(similar_strains, current_user, 'all',
+                                                                     include_locations=True, is_similar=False,
+                                                                     similar_strain_id=None)
+        else:
+            query = {
+                'suggest': {
+                    'name_suggestion': {
+                        'text': lookup_query,
+                        'completion': {
+                            'field': 'name_suggest',
+                            'size': size,
+                            'fuzzy': {
+                                'fuzziness': 2
+                            }
+                        }
+                    }
+                }
+            }
+            similar_strains = self._request(method, url, data=json.dumps(query))
+            similar_strains_results = self._transform_suggest_results(
+                similar_strains, include_locations=True, include_image=True, current_user=current_user)
+
+        # remove extra info returned by ES and do any other necessary transforms
+        results = self._transform_suggest_results(q, include_locations=True, include_image=True, current_user=current_user)
+        return {'total': results.get('total'), 'list': results.get('payloads'),
+                'q': lookup_query, 'similar_strains': similar_strains_results}
+
+    def advanced_search(self, lookup_query, current_user, size=24, start_from=0):
+        """
+        Search Algo:
+        Class match: 20 points for matching strains (a max of 20 points can be assigned for this category)
+        Cannabinoids: 100 points per matching cannabiniod;
+        if the delta between actual value and desired range is more than 75% of actual value,
+        subtract 75% of assigned points, per cannabinoid.
+        If delta is 55%-74%, subtract 50% of points.
+        If delta is 20%-54%, subtract 25% of points. (no max per category)
+
+          total += 100
+          if actual > max:
+            delta = actual - max
+          else:
+            delta = actual - min
+
+          if delta >= actual * 0.75:
+            total = total * 0.25
+          elif delta >= actual * 0.55:
+            total = total * 0.50
+          elif delta >= actual * 0.20:
+            total = total * 0.75
+
+        Terpenes: 20 points per matching terpene
+        Clean: 40 points
+        Indoor: 15 points
+        Cup: 10 points
+
+        :param lookup_query: dict with ranges for the cannabinoids,
+               boolean values for the terpenes, variety, cup, clean and indoor
+        :param size: size of returned data
+        :param start_from: number of entity to start search from
+        :return: { 'list': [], 'total': 0 }
+        """
+        if start_from is None:
+            start_from = 0
+
+        method = self.METHODS.get('GET')
+        url = '{base}{index}/{type}/_search?size={size}&from={start_from}'.format(
+            base=self.BASE_ELASTIC_URL,
+            index=self.URLS.get('STRAIN'),
+            type=es_mappings.TYPES.get('strain'),
+            size=size,
+            start_from=start_from
+        )
+
+        query_filters = []
+        for field in ('is_clean', 'is_indoor'):
+            if lookup_query.get(field):
+                query_filters.append({"term": {field: lookup_query[field]}})
+
+        if lookup_query.get('variety'):
+            query_filters.append({"terms": {'variety': lookup_query['variety']}})
+
+        for terpene in StrainSearchSerializer.TERPENES:
+            if lookup_query.get(terpene):
+                query_filters.append({
+                    "range": {
+                        'terpenes.{}'.format(terpene): {
+                            "gt": 0
+                        }
+                    }
+                })
+
+        for cannabinoid in StrainSearchSerializer.CANNABINOIDS:
+            if '{}_from'.format(cannabinoid) in lookup_query or '{}_to'.format(cannabinoid) in lookup_query:
+                query_filters.append({
+                    "range": {
+                        'cannabinoids.{}'.format(cannabinoid): {
+                            "gte": lookup_query.get('{}_from'.format(cannabinoid), 0),
+                            "lte": lookup_query.get('{}_to'.format(cannabinoid), 100),
+                        }
+                    }
+                })
+
+        query = {
+            'sort': {StrainSearchSerializer.SORT_FIELDS[item]: {'order': 'asc'}
+                     for item in lookup_query.get('sort', [])},
+            "query": {
+                "function_score": {
+                    "query": {
+                        "bool": {
+                            "must": query_filters,
+                            "must_not": {
+                                "exists": {"field": "removed_date"}
+                            }
+                        },
+                    },
+                    "functions": [{
+                        "script_score": {
+                            "script": {
+                                "lang": "painless",
+                                "params": lookup_query,
+                                "inline": ADVANCED_SEARCH
+                            }
+                        }
+                    }]
+                }
+            }
+        }
+
+        es_response = self._request(method, url, data=json.dumps(query, cls=PythonJSONEncoder))
+        results = self._transform_strain_results(es_response, current_user, 'all',
+                                                 include_locations=True, is_similar=False,
+                                                 similar_strain_id=None)
+        return results
+
     def lookup_business_location(self, query, bus_type=None, location=None, timezone=None):
         if bus_type is None:
             bus_type = []
@@ -513,15 +719,15 @@ class SearchElasticService(BaseElasticService):
             index=self.URLS.get('BUSINESS_LOCATION'),
         )
 
-        # context suggestor: https://www.elastic.co/guide/en/elasticsearch/reference/current/suggester-context.html
+        # context suggester: https://www.elastic.co/guide/en/elasticsearch/reference/current/suggester-context.html
         contexts = {
             "bus_type": bus_type
         }
 
         query = {
             "_source": {
-                "excludes": ["menu_items", "phone", "ext", "removed_by_id", "created_date", "manager_name", "location_email",
-                             "location_raw", "location_name_suggest"]
+                "excludes": ["menu_items", "phone", "ext", "removed_by_id", "created_date", "manager_name",
+                             "location_email", "location_raw", "location_name_suggest"]
             },
             "suggest": {
                 "location_suggestion": {
@@ -604,7 +810,7 @@ class SearchElasticService(BaseElasticService):
             'payloads': payloads
         }
 
-    def _transform_suggest_results(self, es_response):
+    def _transform_suggest_results(self, es_response, include_locations=False, include_image=False, current_user=None):
         suggests = es_response.get('suggest', {}).get('name_suggestion', [])
         total = 0
         payloads = []
@@ -615,8 +821,28 @@ class SearchElasticService(BaseElasticService):
             for option in suggestion.get('options'):
                 strain = option.get('_source')
                 if strain and not strain.get('removed_date'):
-                    payloads.append(strain)
 
+                    if include_locations and current_user:
+                        dispensaries = self.get_locations(strain.get('id'), "dispensary", current_user, 'local',
+                                                          only_active=True)
+                        dispensaries = self.transform_location_results(dispensaries, strain.get('id'), 'local',
+                                                                       current_user)
+
+                        deliveries = self.get_locations(strain.get('id'), "delivery", current_user,
+                                                        only_active=True)
+                        deliveries = self.transform_location_results(deliveries, strain.get('id'), 'delivery',
+                                                                     current_user)
+                    else:
+                        dispensaries = []
+                        deliveries = []
+
+                    if include_image:
+                        strain_image = StrainImage.objects.filter(strain=strain.get('id'), is_approved=True).first()
+                        strain['image_url'] = strain_image.image.url if strain_image and strain_image.image else None
+
+                    strain['deliveries'] = deliveries
+                    strain['locations'] = dispensaries
+                    payloads.append(strain)
         return {
             'total': total,
             'payloads': payloads
