@@ -117,11 +117,10 @@ class SearchElasticService(BaseElasticService):
                 lon = l.lng
 
             if result_filter == 'local':
-                proximity = current_user.proximity if current_user.proximity else 10
+                proximity = current_user.proximity if current_user.proximity else None
 
         if not proximity:
-            proximity = SystemProperty.objects.get(name='max_delivery_radius')
-            proximity = int(proximity.value)
+            proximity = SystemProperty.objects.max_delivery_radius()
 
         filter_query = {"geo_distance": {
             "distance": "{0}mi".format(proximity),
@@ -190,7 +189,9 @@ class SearchElasticService(BaseElasticService):
                 if delivery_radius and delivery_radius >= distance:
                     self.add_location(processed_results, s, strain_id, distance)
             elif result_filter == 'local' and current_user:
-                proximity = current_user.proximity if current_user.proximity else 10
+                proximity = current_user.proximity if current_user.proximity else \
+                    SystemProperty.objects.max_delivery_radius()
+
                 if float(distance) <= proximity:
                     self.add_location(processed_results, s, strain_id, distance)
             else:
@@ -339,8 +340,7 @@ class SearchElasticService(BaseElasticService):
         if strain_ids is None:
             strain_ids = []
 
-        proximity = SystemProperty.objects.get(name='max_delivery_radius')
-        proximity = int(proximity.value)
+        proximity = SystemProperty.objects.max_delivery_radius()
 
         method = self.METHODS.get('GET')
         url = '{base}{index}/{type}/_search?size={size}&from={start_from}'.format(

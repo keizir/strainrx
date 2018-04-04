@@ -33,18 +33,8 @@ class StrainSearchWizardView(APIView):
     permission_classes = (permissions.AllowAny,)
 
     def post(self, request):
-        criteria = SearchCriteriaSerializer(data=request.data.get('search_criteria'))
-        criteria.is_valid()
-
-        step_1_data = criteria.validated_data.get('step1')
-        step_2_data = criteria.validated_data.get('step2')
-        step_3_data = criteria.validated_data.get('step3')
-        step_4_data = criteria.validated_data.get('step4')
-
-        types = 'skipped' if step_1_data.get('skipped') else step_1_data
-        effects = 'skipped' if step_2_data.get('skipped') else step_2_data.get('effects')
-        benefits = 'skipped' if step_3_data.get('skipped') else step_3_data.get('effects')
-        side_effects = 'skipped' if step_4_data.get('skipped') else step_4_data.get('effects')
+        types, effects, benefits, side_effects = SearchCriteriaSerializer(
+            data=request.data.get('search_criteria')).get_search_criteria()
 
         request.session['search_criteria'] = {
             'strain_types': types,

@@ -109,9 +109,7 @@ class CustomAnonymousUser(AnonymousUser):
 
     @property
     def proximity(self):
-        proximity = SystemProperty.objects.get(name='max_delivery_radius')
-        proximity = int(proximity.value)
-        return proximity
+        return SystemProperty.objects.max_delivery_radius()
 
     def get_location(self):
         raw_location = self.request.COOKIES.get('user_geo_location')

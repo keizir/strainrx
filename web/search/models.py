@@ -235,6 +235,9 @@ class UserSearch(models.Model):
 
     objects = UserSearchQuerySet.as_manager()
 
+    class Meta:
+        ordering = ('-last_modified_date',)
+
     def to_search_criteria(self):
         return {
             'strain_types': self.varieties,

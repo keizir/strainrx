@@ -2,13 +2,16 @@
 from __future__ import absolute_import, unicode_literals
 
 import pytz
+from django.conf import settings
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.core.urlresolvers import reverse
+from django.utils import timezone
 from django.views.generic import DetailView, ListView, RedirectView, UpdateView
 from django.views.generic import TemplateView, FormView
 
-from .models import User
+from web.search.models import UserSearch
 from .forms import UserCreationForm
+from .models import User
 
 
 class UserDetailView(LoginRequiredMixin, DetailView):
@@ -137,4 +140,19 @@ class ConfirmEmailView(TemplateView):
 
         context = super(ConfirmEmailView, self).get_context_data(**kwargs)
         context['step'] = 7
+
+        criteria = UserSearch.objects.filter(user=user).first()
+
+        # if user signed up less then 8 minutes ago redirect him to search result page
+        if criteria and criteria.last_modified_date + timezone.timedelta(
+                minutes=settings.REDIRECT_SEARCH_RESULT_TIME) >= timezone.now():
+            context['redirect_url'] = reverse('search:strain_results')
+            self.request.session['search_criteria'] = {
+                'strain_types': criteria.varieties,
+                'effects': criteria.effects,
+                'benefits': criteria.benefits,
+                'side_effects': criteria.side_effects
+            }
+        else:
+            context['redirect_url'] = reverse('home')
         return context
