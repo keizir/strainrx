@@ -195,5 +195,4 @@ class FlavorAdmin(admin.ModelAdmin):
 
 @admin.register(UserSearch)
 class UserSearchAdmin(admin.ModelAdmin):
-    pass
-
+    search_fields = ['user__email']

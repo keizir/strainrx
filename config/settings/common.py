@@ -275,6 +275,9 @@ AUTH_USER_MODEL = 'users.User'
 LOGIN_REDIRECT_URL = 'users:redirect'
 LOGIN_URL = 'account_login'
 
+# time when user will be redirected to search result page after email confirmation
+REDIRECT_SEARCH_RESULT_TIME = 8  # minutes
+
 # SLUGLIFIER
 AUTOSLUG_SLUGIFY_FUNCTION = 'slugify.slugify'
 
@@ -301,6 +304,8 @@ LOGGER_NAME = 'web'
 
 MAX_STRAIN_IMAGE_SIZE = 10 * 1024 * 1024  # 10 MB
 MAX_BUSINESS_IMAGE_SIZE = 5 * 1024 * 1024  # 5 MB
+
+DEFAULT_DELIVERY_RADIUS = 10
 
 SENDGRID_API_KEY = env('SENDGRID_API_KEY', default='')
 DEFAULT_FROM_EMAIL = 'support@strainrx.co'

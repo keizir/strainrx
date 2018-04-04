@@ -16,6 +16,20 @@ class SearchCriteriaSerializer(serializers.Serializer):
     def update(self, instance, validated_data):
         pass
 
+    def get_search_criteria(self):
+        self.is_valid()
+
+        step_1_data = self.validated_data.get('step1', {})
+        step_2_data = self.validated_data.get('step2', {})
+        step_3_data = self.validated_data.get('step3', {})
+        step_4_data = self.validated_data.get('step4', {})
+
+        types = 'skipped' if step_1_data.get('skipped') else step_1_data
+        effects = 'skipped' if step_2_data.get('skipped') else step_2_data.get('effects')
+        benefits = 'skipped' if step_3_data.get('skipped') else step_3_data.get('effects')
+        side_effects = 'skipped' if step_4_data.get('skipped') else step_4_data.get('effects')
+        return types, effects, benefits, side_effects
+
 
 class StrainDetailSerializer(serializers.ModelSerializer):
     class Meta:

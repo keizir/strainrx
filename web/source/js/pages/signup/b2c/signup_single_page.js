@@ -49,6 +49,16 @@ W.pages.b2c.SignUpSinglePage = Class.extend({
     submit: function() {
         var payload = this.getInputs();
         var userGeoLocation = Cookies.get('user_geo_location');
+        var settings = new W.users.UserSettings({ userId: null });
+        settings.get(settings.settingName_WizardSearch, function (data) {
+            if (typeof data === 'object') {
+                payload.search_criteria = {
+                    step1: data['1'], step2: data['2'],
+                    step3: data['3'], step4: data['4']
+                }
+            }
+        });
+
         userGeoLocation = userGeoLocation ? JSON.parse(userGeoLocation) : {};
 
         payload.location = {

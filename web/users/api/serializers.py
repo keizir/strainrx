@@ -3,6 +3,7 @@ import uuid
 
 from rest_framework import serializers
 
+from web.system.models import SystemProperty
 from web.users.models import User, UserLocation
 
 logger = logging.getLogger(__name__)
@@ -39,6 +40,8 @@ class UserSignUpSerializer(serializers.ModelSerializer):
     is_terms_accepted = serializers.BooleanField()
 
     def create(self, validated_data):
+        proximity = SystemProperty.objects.max_delivery_radius()
+
         user = User(
             first_name=validated_data.get('first_name'),
             last_name=validated_data.get('last_name'),
@@ -46,7 +49,7 @@ class UserSignUpSerializer(serializers.ModelSerializer):
             username=str(uuid.uuid4())[:30],
             is_age_verified=validated_data.get('is_age_verified'),
             is_email_verified=False,
-            proximity=10,
+            proximity=proximity,
             type='consumer'
         )
         user.set_password(validated_data.get('pwd'))
@@ -55,4 +58,3 @@ class UserSignUpSerializer(serializers.ModelSerializer):
 
     def update(self, instance, validated_data):
         pass
-
