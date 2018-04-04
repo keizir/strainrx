@@ -25,9 +25,9 @@ class SearchCriteriaSerializer(serializers.Serializer):
         step_4_data = self.validated_data.get('step4', {})
 
         types = 'skipped' if step_1_data.get('skipped') else step_1_data
-        effects = 'skipped' if step_2_data.get('skipped') else step_2_data.get('effects')
-        benefits = 'skipped' if step_3_data.get('skipped') else step_3_data.get('effects')
-        side_effects = 'skipped' if step_4_data.get('skipped') else step_4_data.get('effects')
+        effects = 'skipped' if step_2_data.get('skipped') else step_2_data.get('effects', {})
+        benefits = 'skipped' if step_3_data.get('skipped') else step_3_data.get('effects', {})
+        side_effects = 'skipped' if step_4_data.get('skipped') else step_4_data.get('effects', {})
         return types, effects, benefits, side_effects
 
 
