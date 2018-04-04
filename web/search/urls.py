@@ -12,12 +12,12 @@ urlpatterns = [
         name='advanced_search_result'
     ),
     url(
-        regex=r'^basic-search/$',
+        regex=r'^search/$',
         view=views.StrainSearchView.as_view(),
         name='search'
     ),
     url(
-        regex=r'^search/$',
+        regex=r'^advanced-search/$',
         view=views.StrainAdvancedSearchView.as_view(),
         name='advanced_search'
     ),
