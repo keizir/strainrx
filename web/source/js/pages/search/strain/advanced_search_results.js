@@ -90,7 +90,7 @@ W.pages.AdvancedSearchResultsPage = Class.extend({
             },
             success: function (data) {
                 var searchResults = data.list || [];
-                var similarResults = (data.similar_strains && (data.similar_strains.list || data.similar_strains.payloads)) || [],
+                var similarResults = (data.similar_strains && data.similar_strains.list) || [],
                     i, position, $searchResult, $similarResult,
                     isBasicSearch = data.hasOwnProperty('similar_strains');
 

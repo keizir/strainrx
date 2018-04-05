@@ -190,7 +190,7 @@ body {
     font-size: $font-subtitle + 5;
     line-height: $font-subtitle + 5;
     font-weight: normal;
-    margin: 0.5em 0 3em;
+    margin: 0.5em 0 2em;
     align-self: flex-start;
   }
 
@@ -399,7 +399,7 @@ body {
   width: 100%;
 
   .search-result.basic-search {
-    border-bottom: 2px solid $grey-blue;
+    //border-bottom: 2px solid $grey-blue;
     padding-bottom: 2em;
   }
 

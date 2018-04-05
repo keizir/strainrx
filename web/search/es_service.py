@@ -534,73 +534,36 @@ class SearchElasticService(BaseElasticService):
 
         # build query dict
         query = {
-            'suggest': {
-                'name_suggestion': {
-                    'text': lookup_query,
-                    'completion': {
-                        'field': 'name_suggest',
-                        'size': size,
-                        'fuzzy': {
-                            'fuzziness': 1
-                        }
+            'query': {
+                'match': {
+                    'name.exact': lookup_query
+                }
+            }
+        }
+        q = self._request(method, url, data=json.dumps(query))
+        # remove extra info returned by ES and do any other necessary transforms
+        results = self._transform_strain_results(q, current_user, 'all',
+                                                 include_locations=True, is_similar=False,
+                                                 similar_strain_id=None)
+
+        query = {
+            "query": {
+                "bool": {
+                    "must": {
+                        "match": {"name": lookup_query}
+                    },
+                    "must_not": {
+                        "match": {"name.exact": lookup_query}
                     }
                 }
             }
         }
 
-        q = self._request(method, url, data=json.dumps(query))
+        similar_strains = self._request(method, url, data=json.dumps(query))
+        similar_strains_results = self._transform_strain_results(
+            similar_strains, current_user, 'all', include_locations=True, is_similar=False, similar_strain_id=None)
 
-        suggests = q.get('suggest', {}).get('name_suggestion', [])
-        more_like_strains = []
-        if suggests:
-            options = suggests[0].get('options', [])
-            for option in options:
-                more_like_strains.append({
-                    '_id': option.get('_id'),
-                    '_index': option.get('_index'),
-                    '_type': option.get('_type')})
-
-        if more_like_strains:
-            # If there are strains then use more_like_this query,
-            # otherwise increase fuzziness for suggestion query
-            query = {
-                'query': {
-                    'more_like_this': {
-                        'fields': ['name.stemmed', 'about'],
-                        'min_term_freq': 1,
-                        'max_query_terms': 50,
-                        'analyzer': 'name_analizer',
-                        'like': more_like_strains,
-                    }
-                }
-            }
-            similar_strains = self._request(method, url, data=json.dumps(query))
-            similar_strains_results = self._transform_strain_results(similar_strains, current_user, 'all',
-                                                                     include_locations=True, is_similar=False,
-                                                                     similar_strain_id=None)
-        else:
-            query = {
-                'suggest': {
-                    'name_suggestion': {
-                        'text': lookup_query,
-                        'completion': {
-                            'field': 'name_suggest',
-                            'size': size,
-                            'fuzzy': {
-                                'fuzziness': 2
-                            }
-                        }
-                    }
-                }
-            }
-            similar_strains = self._request(method, url, data=json.dumps(query))
-            similar_strains_results = self._transform_suggest_results(
-                similar_strains, include_locations=True, include_image=True, current_user=current_user)
-
-        # remove extra info returned by ES and do any other necessary transforms
-        results = self._transform_suggest_results(q, include_locations=True, include_image=True, current_user=current_user)
-        return {'total': results.get('total'), 'list': results.get('payloads'),
-                'q': lookup_query, 'similar_strains': similar_strains_results}
+        return {'q': lookup_query, 'similar_strains': similar_strains_results, **results}
 
     def advanced_search(self, lookup_query, current_user, size=24, start_from=0):
         """
