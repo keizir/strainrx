@@ -85,6 +85,7 @@ class SearchElasticService(BaseElasticService):
                         'deliveries': deliveries,
                         'locations': dispensaries,
 
+                        'cup_winner': source.get('cup_winner'),
                         'is_clean': source.get('is_clean'),
                         'is_indoor': source.get('is_indoor'),
                         'cannabinoids': source.get('cannabinoids')
@@ -641,8 +642,8 @@ class SearchElasticService(BaseElasticService):
                 })
 
         query = {
-            'sort': {StrainSearchSerializer.SORT_FIELDS[item]: {'order': 'asc'}
-                     for item in lookup_query.get('sort', [])},
+            'sort': [StrainSearchSerializer.SORT_FIELDS[item]
+                     for item in lookup_query.get('sort', [])],
             "query": {
                 "function_score": {
                     "query": {
@@ -665,6 +666,9 @@ class SearchElasticService(BaseElasticService):
                 }
             }
         }
+
+        query['sort'].append(StrainSearchSerializer.SORT_FIELDS[StrainSearchSerializer.BEST_MATCH])
+        query['sort'].append(StrainSearchSerializer.SORT_FIELDS[StrainSearchSerializer.NAME])
 
         es_response = self._request(method, url, data=json.dumps(query, cls=PythonJSONEncoder))
         results = self._transform_strain_results(es_response, current_user, 'all',

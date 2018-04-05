@@ -58,17 +58,17 @@ class StrainImageSerializer(serializers.ModelSerializer):
 
 class StrainSearchSerializer(serializers.ModelSerializer):
 
-    ALL, LOCATION, NAME, PRICE = '', 'location', 'name', 'price'
+    BEST_MATCH, LOCATION, NAME, PRICE = '', 'location', 'name', 'price'
 
     SORT_CHOICES = (
-        (ALL, 'all'),
+        (BEST_MATCH, 'best match'),
         (LOCATION, 'location'),
         (NAME, 'name'),
         (PRICE, 'price'),
     )
     SORT_OPTIONS = [key for key, value in SORT_CHOICES]
     SORT_FIELDS = {
-        ALL: '_score',
+        BEST_MATCH: '_score',
         PRICE: '_score',  # todo change it
         LOCATION: '_score',  # todo change it
         NAME: 'name.raw'

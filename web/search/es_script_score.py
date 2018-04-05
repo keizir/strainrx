@@ -58,14 +58,14 @@ ADVANCED_SEARCH = """
         }
     }
 
-    if (params._source.containsKey("is_clean")){
+    if (params._source.containsKey("is_clean") && params._source.is_clean && params.containsKey("is_clean")){
         total += 40;
     }
-    if (params._source.containsKey("is_indoor")){
+    if (params._source.containsKey("is_indoor") && params._source.is_indoor && params.containsKey("is_indoor")){
         total += 15;
     }
 
-    if (params._source.containsKey("cup_winner")){
+    if (params._source.containsKey("cup_winner") && params._source.cup_winner && params.containsKey("cup_winner")){
         total += 10;
     }
     
