@@ -13,7 +13,8 @@
 {% block content %}
   <div class="container">
     <div class="strain-search-wrapper">
-      <img src="{% static 'images/search/logo.png' %}" alt="StrainRx">
+
+      <a href="{{ search_url }}"><img src="{% static 'images/search/logo.png' %}" alt="StrainRx"></a>
       <h2 class="title">{% trans 'The Cannabis Search Engine' %}</h2>
       <div class="subtitle-container">
         <span class="subtitle">{% trans 'Instantly search thousands of strains' %}</span>

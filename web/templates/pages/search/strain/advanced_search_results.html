@@ -43,30 +43,51 @@
 
   <script type="x/srx-template" id="strain-result-template">
     <div class="search-result-header-wrapper">
+
+      <div class="breadcrumbs">
+        <ol>
+          <li>
+            <% if (isBasicSearch) { %>
+              <a href="{% url 'search:search' %}">{% trans 'Back to Basic Search' %}</a>
+            <% } else { %>
+              <a href="{% url 'search:advanced_search' %}">{% trans 'Back to Advanced Search' %}</a>
+            <% } %>
+            <span class="arrow">&gt;</span>
+          </li>
+          <li class="active">{% trans 'Search Results' %}</li>
+        </ol>
+      </div>
+
       <% if (isBasicSearch) { %>
         <% if (searchResults.length) { %>
           <div class="search-result-subtitle">{% trans 'Search Results' %}</div>
         <% } %>
       <% } else { %>
         <% if (searchResults.length) { %>
-          <div class="search-result-subtitle">{% trans 'Here Are Your Top Recommendations' %}</div>
+          <div class="search-result-subtitle">
+            {% trans 'Here Are Your Top Recommendations' %}
+          </div>
           <div class="filter-menu-wrapper">
             <div class="form-field-group">
               <span class="filter-title">{% trans 'Sort' %}:</span>
-              <span class="form-field">
-                <input type="checkbox" name="sort" id="sort-1" value="">
+              <span class="form-field" data-filter="">
+                <i class="fa fa-check-square-o checked" aria-hidden="true"></i>
+                <i class="fa fa-square-o blank" aria-hidden="true"></i>
                 <label for="sort-1">{% trans 'Best Match' %}</label>
               </span>
-              <span class="form-field">
-                <input type="checkbox" name="sort" id="sort-2" value="location">
+              <span class="form-field" data-filter="location">
+                <i class="fa fa-check-square-o checked" aria-hidden="true"></i>
+                <i class="fa fa-square-o blank" aria-hidden="true"></i>
                 <label for="sort-2">{% trans 'Nearest' %}</label>
               </span>
-              <span class="form-field">
-                <input type="checkbox" name="sort" id="sort-3" value="name">
+              <span class="form-field" data-filter="name">
+                <i class="fa fa-check-square-o checked" aria-hidden="true"></i>
+                <i class="fa fa-square-o blank" aria-hidden="true"></i>
                 <label for="sort-3">{% trans 'Name' %}</label>
               </span>
-              <span class="form-field">
-                <input type="checkbox" name="sort" id="sort-4" value="price">
+              <span class="form-field" data-filter="price">
+                <i class="fa fa-check-square-o checked" aria-hidden="true"></i>
+                <i class="fa fa-square-o blank" aria-hidden="true"></i>
                 <label for="sort-4">{% trans 'Price' %}</label>
               </span>
             </div>
@@ -97,32 +118,23 @@
   </script>
 
   <script type="x/srx-template" id="strain-item-template">
-    <div class="result-item<% if (isBasicSearch) { %> basic-search<% } %>">
+    <div class="result-item">
       <div class="item-image">
         <% if (strain.image_url) { %>
-        <img class="strain-logo" src="${ strain.image_url }" alt="Strain Image">
+          <img class="strain-logo" src="${ strain.image_url }" alt="Strain Image">
         <% } else { %>
-        <img class="strain-logo" src="{% static 'images/weed_small.jpg' %}" alt="Strain Image"/>
+          <img class="strain-logo" src="{% static 'images/weed_small.jpg' %}" alt="Strain Image"/>
         <% } %>
-        <% if (!isBasicSearch) { %>
-          <% if (strain.is_clean) { %>
-            <img class="clean-logo" src="{% static 'images/search/clean.png' %}">
-          <% } %>
+        <% if (strain.is_clean) { %>
+          <img class="clean-logo" src="{% static 'images/search/clean.png' %}">
         <% } %>
       </div>
-      <% if (!isBasicSearch) { %>
-        <% if (strain.locations && strain.locations.length) { %>
-          <span class="item-location"><i class="fa fa-map-marker"></i> ${ closestDistance(strain.locations) } Miles away</span>
-        <% } %>
+      <% if (strain.locations && strain.locations.length) { %>
+        <span class="item-location"><i class="fa fa-map-marker"></i> ${ closestDistance(strain.locations) } Miles away</span>
       <% } %>
 
       <div class="item-info">
         <div>
-          <% if (isBasicSearch) { %>
-            <div class="item-variety-logo">
-              <img src="{% static 'images/search/' %}${ strain.variety }-leaf.png">
-            </div>
-          <% } %>
           <div class="strain-name">
               <% if (obfuscated) { %>
                 <a class="blurred noselect">${ strain.name }</a>
@@ -132,7 +144,6 @@
           </div>
           <div class="strain-type">${ _.startCase(strain.variety) }</div>
         </div>
-
 
         <% if (strain.about) { %>
           <div class="strain-about">${ strain.about }</div>
@@ -148,31 +159,32 @@
         <% } %>
         <% if ( strain.locations.length && prices ) { %>
           <div class="strain-price">
-            <% if ( prices.price_gram.min != prices.price_gram.max ) { %>
-              ${ prices.price_gram.min } - ${ prices.price_gram.max }/G
-            <% } else { %>
-              ${ prices.price_gram.min }/G
+            <% if ( prices.price_gram.min || prices.price_gram.max ) { %>
+              <% if ( prices.price_gram.min != prices.price_gram.max && prices.price_gram.min && prices.price_gram.max ) { %>
+                ${ prices.price_gram.min } - ${ prices.price_gram.max }/G
+              <% } else { %>
+                ${ prices.price_gram.min || prices.price_gram.max }/G
+              <% } %>
             <% } %>
 
-            <% if ( prices.price_eighth.min != prices.price_eighth.max ) { %>
-              ${ prices.price_eighth.min } - ${ prices.price_eighth.max }/8th
-            <% } else { %>
-              ${ prices.price_eighth.min }/8th
+            <% if ( prices.price_eighth.min || prices.price_eighth.max ) { %>
+              <% if ( prices.price_eighth.min != prices.price_eighth.max && prices.price_eighth.min && prices.price_eighth.max ) { %>
+                ${ prices.price_eighth.min } - ${ prices.price_eighth.max }/8th
+              <% } else { %>
+                ${ prices.price_eighth.min || prices.price_eighth.max }/8th
+              <% } %>
             <% } %>
 
-            <% if ( prices.price_quarter.min != prices.price_quarter.max ) { %>
-              ${ prices.price_quarter.min } - ${ prices.price_quarter.max }/Q
-            <% } else { %>
-              ${ prices.price_quarter.min }/Q
+            <% if ( prices.price_quarter.min || prices.price_quarter.max ) { %>
+              <% if ( prices.price_quarter.min != prices.price_quarter.max && prices.price_quarter.min && prices.price_quarter.max ) { %>
+                ${ prices.price_quarter.min } - ${ prices.price_quarter.max }/Q
+              <% } else { %>
+                ${ prices.price_quarter.min || prices.price_quarter.max }/Q
+              <% } %>
             <% } %>
           </div>
         <% } %>
 
-        <% if (isBasicSearch) { %>
-          <% if (strain.locations && strain.locations.length) { %>
-            <span class="item-location"><i class="fa fa-map-marker"></i> ${ closestDistance(strain.locations) } Miles away</span>
-          <% } %>
-        <% } %>
         <div>
         <% if (strain.cup_winner) { %>
           <img class="cup-logo" src="{% static 'images/search/cup.png' %}">
@@ -180,17 +192,9 @@
         </div>
       </div>
 
-      <% if (!isBasicSearch || strain.is_clean) { %>
-        <div class="item-variety-logo">
-          <% if (!isBasicSearch) { %>
-          <img src="{% static 'images/search/' %}${ strain.variety }-leaf.png">
-          <% } else { %>
-              <% if (strain.is_clean) { %>
-                <img class="clean-logo" src="{% static 'images/search/clean.png' %}">
-              <% } %>
-          <% } %>
-        </div>
-      <% } %>
+      <div class="item-variety-logo">
+        <img src="{% static 'images/search/' %}${ strain.variety }-leaf.png">
+      </div>
     </div>
   </script>
 {% endblock %}

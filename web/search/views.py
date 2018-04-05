@@ -26,6 +26,12 @@ class StrainAdvancedSearchView(TemplateView):
 class StrainAdvancedSearchResultView(TemplateView):
     template_name = 'pages/search/strain/advanced_search_results.html'
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['search_url'] = reverse('search:search') if self.request.GET.get('q') else \
+            reverse('search:advanced_search')
+        return context
+
 
 class StrainSearchResultView(TemplateView):
     template_name = 'pages/search/strain/search_results.html'

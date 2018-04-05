@@ -174,6 +174,9 @@ class StrainImage(models.Model):
         i = self.image
         return i.url if i and i.url else None
 
+    class Meta:
+        ordering = ('created_date',)
+
 
 @python_2_unicode_compatible
 class Effect(models.Model):

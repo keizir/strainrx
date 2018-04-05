@@ -173,13 +173,12 @@ W.pages.StrainSearchResultsPage = Class.extend({
         var that = this;
 
         that.ui.$menuActiveLink.attr('filter', that.currentFilter);
-        $.each(that.ui.$menuLink, function () {
+        $.each(that.ui.menuLink, function () {
             var $menuLink = $(this);
             if ($menuLink.attr('filter') === that.currentFilter) {
                 that.ui.$menuActiveLink.text($menuLink.text());
             }
         });
-
 
         that.ui.$menuExpander.on('click', function () {
             that.ui.$menuHiddenLinks.toggleClass('hidden');
@@ -191,7 +190,7 @@ W.pages.StrainSearchResultsPage = Class.extend({
             that.ui.$menuFilter.removeClass('expanded');
         });
 
-        that.ui.$menuLink.on('click', function (e) {
+        that.ui.menuLink.on('click', function (e) {
             e.preventDefault();
             var $el = $(this),
                 filter = $el.attr('filter');
