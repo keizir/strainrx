@@ -56,11 +56,32 @@ class Command(BaseCommand):
         index_settings = {
             "settings": {
                 "analysis": {
+                    "tokenizer": {
+                        "exact_tokenizer": {
+                            "type": "pattern",
+                            "pattern": "\\*"
+                        }
+                    },
+                    "filter": {
+                        "replace_special_chars": {
+                          "type": "pattern_replace",
+                          "pattern": "[ :\\-+=\\&\\|\\>\\<\\!\\(\\)\\{\\}\\[\\]\\^\\\\\"\\~\\*\\?\\;\\/\\.\\,\\_]",
+                          "replacement": ""
+                        }
+                    },
                     "analyzer": {
                         "name_analyzer": {
                             "type": "custom",
                             "tokenizer": "whitespace",
                             "filter": ["lowercase"]
+                        },
+                        "exact_name_analyzer": {
+                            "type": "custom",
+                            "tokenizer": "exact_tokenizer",
+                            "filter": [
+                                "lowercase",
+                                "replace_special_chars"
+                            ]
                         }
                     }
                 }

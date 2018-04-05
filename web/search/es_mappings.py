@@ -26,6 +26,11 @@ strain_mapping = {
                 "stemmed": {
                     "type": "string",
                     "analyzer": "snowball"
+                },
+                "exact": {
+                    "type": "string",
+                    "index": "analyzed",
+                    "analyzer": "exact_name_analyzer",
                 }
             }
         },

@@ -14,15 +14,16 @@ W.pages.AdvancedSearchResultsPage = Class.extend({
         $document: $(document),
         $window: $(window),
 
-        searchHeader: '.search-result-header-wrapper',
         $searchResultFooterRegion: $('.search-result-footer-wrapper'),
-        $menuLinkWrapper: '.filter-menu-wrapper',
-        $menuLink: '.filter-menu-wrapper input[type="checkbox"]',
+        $searchContainer: $('.search-container'),
+        $loadingIcon: $('.scroll-icon i'),
+
+        searchHeader: '.search-result-header-wrapper',
+        menuLinkWrapper: '.filter-menu-wrapper',
+        menuLink: '.filter-menu-wrapper .form-field',
 
         searchResult: '.search-result',
         similarResult: '.similar-result',
-        $searchContainer: $('.search-container'),
-        $loadingIcon: $('.scroll-icon i'),
         resultItem: '.result-item'
     },
 
@@ -34,6 +35,7 @@ W.pages.AdvancedSearchResultsPage = Class.extend({
         this.search = new URLSearchParams(window.location.search);
 
         this.getSearchResults(function () {
+            that.buildResultsFilterMenu();
             if (!that.currentUserId) {
                 that.showLoginDialog();
             } else if (!that.isEmailVerified) {
@@ -88,7 +90,7 @@ W.pages.AdvancedSearchResultsPage = Class.extend({
             },
             success: function (data) {
                 var searchResults = data.list || [];
-                var similarResults = (data.similar_strains && (data.similar_strains.list || data.similar_strains.payloads)) || [],
+                var similarResults = (data.similar_strains && data.similar_strains.list) || [],
                     i, position, $searchResult, $similarResult,
                     isBasicSearch = data.hasOwnProperty('similar_strains');
 
@@ -116,11 +118,8 @@ W.pages.AdvancedSearchResultsPage = Class.extend({
                 that.ui.$loadingIcon.removeClass('rotating');
                 that.scrollPage += 1;
 
-                if (searchResults.length){
-                    that.buildResultsFilterMenu();
-                    if(success) {
-                        success();
-                    }
+                if(success) {
+                    success();
                 }
 
                 that.totalResultCount = $(that.ui.resultItem).length;
@@ -136,35 +135,28 @@ W.pages.AdvancedSearchResultsPage = Class.extend({
     buildResultsFilterMenu: function buildResultsFilterMenu() {
         var that = this,
             currentFilter = that.search.getAll(that.sortKey),
-            $menuLink = $(that.ui.$menuLink);
+            $menuLink = $(that.ui.menuLink);
         currentFilter = currentFilter.length ? currentFilter : [''];
+        that.ui.$menuLinkWrapper = $(that.ui.menuLinkWrapper);
 
         $.each($menuLink, function () {
             var $el = $(this);
 
-            if (currentFilter.indexOf($el.val()) !== -1) {
-                $el.prop("checked", true);
-                $el.parents('.form-field').addClass('active');
+            if (currentFilter.indexOf($el.data('filter')) !== -1) {
+                $el.addClass('active');
             } else {
-                $el.prop("checked", false);
-                $el.parents('.form-field').removeClass('active');
+                $el.removeClass('active');
             }
         });
 
-        $(that.ui.$menuLinkWrapper).on('change', 'input[type="checkbox"]', function (e) {
+        $(that.ui.menuLinkWrapper).on('click', '.form-field', function (e) {
             e.preventDefault();
+            var $el = $(this);
+
             that.search.delete(that.sortKey);
-
-            $.each($menuLink, function () {
-                var $el = $(this);
-
-                if ($el.is(':checked')){
-                    $el.parents('.form-field').addClass('active');
-                    that.search.append(that.sortKey, $el.val());
-                } else {
-                    $el.parents('.form-field').removeClass('active');
-                }
-            });
+            $(that.ui.menuLink).removeClass('active');
+            $el.addClass('active');
+            that.search.append(that.sortKey, $el.data('filter'));
 
             window.history.pushState({}, '', '?' + that.search.toString());
             that.applyNewFilter();
@@ -173,10 +165,9 @@ W.pages.AdvancedSearchResultsPage = Class.extend({
 
     applyNewFilter: function applyNewFilter() {
         this.scrollPage = 1;
-        $(this.ui.searchResult).empty();
-        this.firstRender = false;
-        this.ui.$searchResultFooterRegion.removeClass('hidden');
         this.ui.$window.off('scroll');
+        $(this.ui.searchResult).empty();
+        this.ui.$searchResultFooterRegion.removeClass('hidden');
         this.getSearchResults();
     },
 
@@ -251,6 +242,6 @@ W.pages.AdvancedSearchResultsPage = Class.extend({
     },
 
     formatPrice: function formatPrice(p) {
-        return p ? '${0}'.format(p) : 'n/a';
+        return p ? '${0}'.format(p) : null;
     }
 });

@@ -181,12 +181,16 @@ body {
     text-align: center;
   }
 
+  .breadcrumbs {
+    margin-top: 4em;
+  }
+
   .search-result-subtitle {
     color: $grey-blue;
     font-size: $font-subtitle + 5;
     line-height: $font-subtitle + 5;
     font-weight: normal;
-    margin: 2em 0;
+    margin: 0.5em 0 2em;
     align-self: flex-start;
   }
 
@@ -199,7 +203,7 @@ body {
     .subtitle:after {
       content: "";
       position: absolute;
-      height: 5px;
+      height: 9px;
       border-bottom: 2px solid $grey-blue;
       top: 0;
       width: 150px;
@@ -395,7 +399,7 @@ body {
   width: 100%;
 
   .search-result.basic-search {
-    border-bottom: 2px solid $grey-blue;
+    //border-bottom: 2px solid $grey-blue;
     padding-bottom: 2em;
   }
 
@@ -440,7 +444,7 @@ body {
 
       .item-location {
         position: absolute;
-        bottom: -1.1em;
+        bottom: -1.5em;
         left: 0;
       }
 
@@ -473,51 +477,6 @@ body {
         }
       }
     }
-
-    .result-item.basic-search {
-      flex-basis: 600px;
-
-      .item-image {
-        width: 16em;
-
-        .strain-logo {
-          width: 16em;
-          height: auto;
-          max-height: 16em;
-        }
-      }
-
-      .item-info, .item-location {
-
-        .strain-name{
-          display: inline;
-        }
-
-        .cup-logo{
-          width: 3.5em;
-          padding-top: 2em;
-        }
-
-        .strain-price, .strain-about, .strain-cannabinoids {
-          clear: both;
-        }
-
-      }
-
-      .item-variety-logo {
-        margin-right: 8px;
-        margin-left: 0;
-        float: left;
-
-        img {
-          margin-top: 0;
-          position: relative;
-          right: auto;
-          width: 3.5em;
-        }
-      }
-
-    }
   }
 
   .filter-menu-wrapper {
@@ -538,9 +497,24 @@ body {
 
       .form-field{
         padding-right: 2em;
+
+        .checked {
+          display: none;
+        }
+        .blank {
+          display: inline;
+        }
       }
+
       .form-field.active {
         font-weight: bold;
+
+        .checked {
+          display: inline;
+        }
+        .blank {
+          display: none;
+        }
       }
     }
   }
@@ -556,24 +530,6 @@ body {
       .subtitle:before,
       .subtitle:after {
         width: 50px;
-      }
-    }
-  }
-
-  .search-result-container {
-    .search-result, .similar-result {
-      .result-item.basic-search {
-        flex-basis: 100%;
-
-        .item-image {
-          width: 9em;
-
-          .strain-logo {
-            width: 9em;
-            height: auto;
-            max-height: 9em;
-          }
-        }
       }
     }
   }
@@ -622,32 +578,6 @@ body {
       }
       .search-input {
         width: auto;
-      }
-    }
-  }
-
-}
-
-@media (max-width: $screen-sm-min) {
-  .search-result-container {
-    .search-result, .similar-result {
-      .result-item.basic-search {
-        .item-variety-logo {
-          img {
-            position: absolute;
-            right: -2em;
-          }
-        }
-        .item-location{
-          position: relative;
-          bottom: auto;
-        }
-
-        .item-info, .item-location {
-          .cup-logo{
-            padding-top: 0;
-          }
-        }
       }
     }
   }
