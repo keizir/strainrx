@@ -148,6 +148,23 @@ strain_mapping = {
             "preserve_separators": True,
             "preserve_position_increments": True,
             "max_input_length": 50
+        },
+        "locations": {
+            "type": "nested",
+            "properties": {
+                "business_location_id": {"type": "long"},
+                "dispensary": {"type": "boolean"},
+                "delivery": {"type": "boolean"},
+                "grow_house": {"type": "boolean"},
+                "delivery_radius": {"type": "float"},
+                "location": {"type": "geo_point"},
+                "removed_date": {"type": "date"},
+                "price_gram": {"type": "float"},
+                "price_eighth": {"type": "float"},
+                "price_quarter": {"type": "float"},
+                "price_half": {"type": "float"},
+                "in_stock": {"type": "boolean"}
+            }
         }
     }
 }

@@ -7,7 +7,7 @@ from web.common.utils import PythonJSONEncoder
 from web.es_service import BaseElasticService
 from web.search import es_mappings
 from web.search.api.serializers import StrainSearchSerializer
-from web.search.es_script_score import ADVANCED_SEARCH
+from web.search.es_script_score import ADVANCED_SEARCH_SCORE, ADVANCED_SEARCH_CLOSEST_DISTANCE
 from web.search.models import StrainImage, Strain
 from web.system.models import SystemProperty
 
@@ -612,17 +612,17 @@ class SearchElasticService(BaseElasticService):
             start_from=start_from
         )
 
-        query_filters = []
+        must_query = []
         for field in ('is_clean', 'is_indoor'):
             if lookup_query.get(field):
-                query_filters.append({"term": {field: lookup_query[field]}})
+                must_query.append({"term": {field: lookup_query[field]}})
 
         if lookup_query.get('variety'):
-            query_filters.append({"terms": {'variety': lookup_query['variety']}})
+            must_query.append({"terms": {'variety': lookup_query['variety']}})
 
         for terpene in StrainSearchSerializer.TERPENES:
             if lookup_query.get(terpene):
-                query_filters.append({
+                must_query.append({
                     "range": {
                         'terpenes.{}'.format(terpene): {
                             "gt": 0
@@ -632,7 +632,7 @@ class SearchElasticService(BaseElasticService):
 
         for cannabinoid in StrainSearchSerializer.CANNABINOIDS:
             if '{}_from'.format(cannabinoid) in lookup_query or '{}_to'.format(cannabinoid) in lookup_query:
-                query_filters.append({
+                must_query.append({
                     "range": {
                         'cannabinoids.{}'.format(cannabinoid): {
                             "gte": lookup_query.get('{}_from'.format(cannabinoid), 0),
@@ -641,6 +641,9 @@ class SearchElasticService(BaseElasticService):
                     }
                 })
 
+        location = current_user.get_location()
+        proximity = current_user and current_user.proximity or SystemProperty.objects.max_delivery_radius()
+
         query = {
             'sort': [StrainSearchSerializer.SORT_FIELDS[item]
                      for item in lookup_query.get('sort', [])],
@@ -648,21 +651,90 @@ class SearchElasticService(BaseElasticService):
                 "function_score": {
                     "query": {
                         "bool": {
-                            "must": query_filters,
+                            "must": must_query,
                             "must_not": {
                                 "exists": {"field": "removed_date"}
                             }
-                        },
+                        }
                     },
                     "functions": [{
                         "script_score": {
                             "script": {
                                 "lang": "painless",
                                 "params": lookup_query,
-                                "inline": ADVANCED_SEARCH
+                                "inline": ADVANCED_SEARCH_SCORE
                             }
                         }
                     }]
+                }
+            },
+            "aggs": {
+                "strain": {
+                    "terms": {
+                        "field": "id"
+                    },
+                    "aggs": {
+                        "prices": {
+                            "nested": {
+                                "path": "locations"
+                            },
+                            "aggs": {
+                                "price_gram_min": {
+                                    "min": {
+                                        "field": "locations.price_gram"
+                                    }
+                                },
+                                "price_gram_max": {
+                                    "max": {
+                                        "field": "locations.price_gram"
+                                    }
+                                },
+                                "price_eighth_min": {
+                                    "min": {
+                                        "field": "locations.price_eighth"
+                                    }
+                                },
+                                "price_eighth_max": {
+                                    "max": {
+                                        "field": "locations.price_eighth"
+                                    }
+                                },
+                                "price_quarter_min": {
+                                    "min": {
+                                        "field": "locations.price_quarter"
+                                    }
+                                },
+                                "price_quarter_max": {
+                                    "max": {
+                                        "field": "locations.price_quarter"
+                                    }
+                                },
+                                "price_half_min": {
+                                    "min": {
+                                        "field": "locations.price_half"
+                                    }
+                                },
+                                "price_half_max": {
+                                    "max": {
+                                        "field": "locations.price_half"
+                                    }
+                                },
+                                "min_distance": {
+                                    "min": {
+                                        "script": {
+                                            "lang": "painless",
+                                            "inline": ADVANCED_SEARCH_CLOSEST_DISTANCE,
+                                            "params": {
+                                                "lat": location and location.lat or 0,
+                                                "lon": location and location.lng or 0,
+                                                "proximity": proximity
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
                 }
             }
         }
@@ -671,10 +743,12 @@ class SearchElasticService(BaseElasticService):
         query['sort'].append(StrainSearchSerializer.SORT_FIELDS[StrainSearchSerializer.NAME])
 
         es_response = self._request(method, url, data=json.dumps(query, cls=PythonJSONEncoder))
-        results = self._transform_strain_results(es_response, current_user, 'all',
-                                                 include_locations=True, is_similar=False,
-                                                 similar_strain_id=None)
-        return results
+        strains = es_response.get('hits', {}).get('hits', [])
+        total = es_response.get('hits', {}).get('total', 0)
+        return {
+            'list': strains,
+            'total': total
+        }
 
     def lookup_business_location(self, query, bus_type=None, location=None, timezone=None):
         if bus_type is None:

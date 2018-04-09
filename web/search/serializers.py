@@ -1,5 +1,6 @@
 from rest_framework import serializers
 
+from web.businesses.serializers import MenuItemSerializer
 from web.search.models import Strain
 
 
@@ -8,13 +9,15 @@ class StrainESSerializer(serializers.ModelSerializer):
     name_suggest = serializers.SerializerMethodField()
     terpenes = serializers.SerializerMethodField()
     cannabinoids = serializers.SerializerMethodField()
+    locations = serializers.SerializerMethodField()
 
     class Meta:
         model = Strain
         fields = ('id', 'name', 'strain_slug', 'variety', 'category',
                   'effects', 'benefits', 'side_effects', 'flavor', 'about',
                   'removed_date', 'removed_by_id', 'you_may_also_like_exclude',
-                  'name_suggest', 'terpenes', 'cannabinoids', 'cup_winner', 'is_indoor', 'is_clean')
+                  'name_suggest', 'terpenes', 'cannabinoids', 'cup_winner', 'is_indoor', 'is_clean',
+                  'locations')
 
     def get_name_suggest(self, instance):
         input_variants = [instance.name]
@@ -31,6 +34,12 @@ class StrainESSerializer(serializers.ModelSerializer):
 
     def get_cannabinoids(self, instance):
         return instance.cannabinoids and {key.lower(): value for key, value in instance.cannabinoids.items()}
+
+    def get_locations(self, instance):
+        queryset = instance.menu_items\
+            .filter(business_location__removed_date__isnull=True)\
+            .select_related('business_location')
+        return MenuItemSerializer(instance=queryset, many=True).data
 
 
 class StrainReviewESSerializer(serializers.Serializer):

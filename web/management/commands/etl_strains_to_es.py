@@ -103,7 +103,7 @@ class Command(BaseCommand):
     def load_strains(self):
         es = ElasticService()
         # fetch all strains
-        strains = Strain.objects.all()
+        strains = Strain.objects.all().prefetch_related('menu_items')
 
         bulk_strain_data = []
 
