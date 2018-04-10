@@ -71,12 +71,3 @@ ADVANCED_SEARCH_SCORE = """
     
     return total;
 """
-
-ADVANCED_SEARCH_CLOSEST_DISTANCE = """
-    if (params.lat != 0 && params.lon != 0){
-        def distance = doc['locations.location'].planeDistanceWithDefault(params.lat, params.lon, 0) * 0.000621371; 
-        if (distance !=0 && distance <= params.proximity){
-            return distance;
-        }
-    }
-"""

@@ -7,7 +7,7 @@ from web.common.utils import PythonJSONEncoder
 from web.es_service import BaseElasticService
 from web.search import es_mappings
 from web.search.api.serializers import StrainSearchSerializer
-from web.search.es_script_score import ADVANCED_SEARCH_SCORE, ADVANCED_SEARCH_CLOSEST_DISTANCE
+from web.search.es_script_score import ADVANCED_SEARCH_SCORE
 from web.search.models import StrainImage, Strain
 from web.system.models import SystemProperty
 
@@ -604,12 +604,10 @@ class SearchElasticService(BaseElasticService):
             start_from = 0
 
         method = self.METHODS.get('GET')
-        url = '{base}{index}/{type}/_search?size={size}&from={start_from}'.format(
+        url = '{base}{index}/{type}/_search'.format(
             base=self.BASE_ELASTIC_URL,
             index=self.URLS.get('STRAIN'),
-            type=es_mappings.TYPES.get('strain'),
-            size=size,
-            start_from=start_from
+            type=es_mappings.TYPES.get('strain')
         )
 
         must_query = []
@@ -642,10 +640,10 @@ class SearchElasticService(BaseElasticService):
                 })
 
         location = current_user.get_location()
-        proximity = current_user and current_user.proximity or SystemProperty.objects.max_delivery_radius()
-
         query = {
-            'sort': [StrainSearchSerializer.SORT_FIELDS[item]
+            "from": start_from, "size": size,
+            'sort': [StrainSearchSerializer.SORT_FIELDS[item](
+                location and location.lat or 0, location and location.lng or 0)
                      for item in lookup_query.get('sort', [])],
             "query": {
                 "function_score": {
@@ -667,88 +665,16 @@ class SearchElasticService(BaseElasticService):
                         }
                     }]
                 }
-            },
-            "aggs": {
-                "strain": {
-                    "terms": {
-                        "field": "id"
-                    },
-                    "aggs": {
-                        "prices": {
-                            "nested": {
-                                "path": "locations"
-                            },
-                            "aggs": {
-                                "price_gram_min": {
-                                    "min": {
-                                        "field": "locations.price_gram"
-                                    }
-                                },
-                                "price_gram_max": {
-                                    "max": {
-                                        "field": "locations.price_gram"
-                                    }
-                                },
-                                "price_eighth_min": {
-                                    "min": {
-                                        "field": "locations.price_eighth"
-                                    }
-                                },
-                                "price_eighth_max": {
-                                    "max": {
-                                        "field": "locations.price_eighth"
-                                    }
-                                },
-                                "price_quarter_min": {
-                                    "min": {
-                                        "field": "locations.price_quarter"
-                                    }
-                                },
-                                "price_quarter_max": {
-                                    "max": {
-                                        "field": "locations.price_quarter"
-                                    }
-                                },
-                                "price_half_min": {
-                                    "min": {
-                                        "field": "locations.price_half"
-                                    }
-                                },
-                                "price_half_max": {
-                                    "max": {
-                                        "field": "locations.price_half"
-                                    }
-                                },
-                                "min_distance": {
-                                    "min": {
-                                        "script": {
-                                            "lang": "painless",
-                                            "inline": ADVANCED_SEARCH_CLOSEST_DISTANCE,
-                                            "params": {
-                                                "lat": location and location.lat or 0,
-                                                "lon": location and location.lng or 0,
-                                                "proximity": proximity
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
             }
         }
 
-        query['sort'].append(StrainSearchSerializer.SORT_FIELDS[StrainSearchSerializer.BEST_MATCH])
-        query['sort'].append(StrainSearchSerializer.SORT_FIELDS[StrainSearchSerializer.NAME])
-
+        query['sort'].append(StrainSearchSerializer.SORT_FIELDS[StrainSearchSerializer.BEST_MATCH](None, None))
+        query['sort'].append(StrainSearchSerializer.SORT_FIELDS[StrainSearchSerializer.NAME](None, None))
         es_response = self._request(method, url, data=json.dumps(query, cls=PythonJSONEncoder))
-        strains = es_response.get('hits', {}).get('hits', [])
-        total = es_response.get('hits', {}).get('total', 0)
-        return {
-            'list': strains,
-            'total': total
-        }
+        results = self._transform_strain_results(es_response, current_user, 'all',
+                                                 include_locations=True, is_similar=False,
+                                                 similar_strain_id=None)
+        return results
 
     def lookup_business_location(self, query, bus_type=None, location=None, timezone=None):
         if bus_type is None:
