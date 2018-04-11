@@ -6,8 +6,4 @@ class BusinessConfig(AppConfig):
     verbose_name = "Businesses"
 
     def ready(self):
-        """Override this to put in:
-            Users system checks
-            Users signal registration
-        """
-        pass
+        from . import signals

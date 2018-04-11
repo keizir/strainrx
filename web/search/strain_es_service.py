@@ -73,7 +73,7 @@ class StrainESService(BaseElasticService):
                                                         type=es_mappings.TYPES.get('strain'),
                                                         es_id=es_strain.get('_id'))
             print('--- updating')
-            print(es_strain_source['removed_date'])
+            print(es_strain_source['removed_date'], strain.name)
             es_response = self._request(self.METHODS.get('PUT'), url, data=json.dumps(es_strain_source))
         else:
             data['removed_by_id'] = data.get('removed_by')

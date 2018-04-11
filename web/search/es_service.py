@@ -643,7 +643,7 @@ class SearchElasticService(BaseElasticService):
         query = {
             "from": start_from, "size": size,
             'sort': [StrainSearchSerializer.SORT_FIELDS[item](
-                location and location.lat or 0, location and location.lng or 0)
+                lat=location and location.lat or 0, lon=location and location.lng or 0)
                      for item in lookup_query.get('sort', [])],
             "query": {
                 "function_score": {
@@ -668,8 +668,9 @@ class SearchElasticService(BaseElasticService):
             }
         }
 
-        query['sort'].append(StrainSearchSerializer.SORT_FIELDS[StrainSearchSerializer.BEST_MATCH](None, None))
-        query['sort'].append(StrainSearchSerializer.SORT_FIELDS[StrainSearchSerializer.NAME](None, None))
+        query['sort'].append(StrainSearchSerializer.SORT_FIELDS[StrainSearchSerializer.BEST_MATCH]())
+        query['sort'].append(StrainSearchSerializer.SORT_FIELDS[StrainSearchSerializer.NAME]())
+
         es_response = self._request(method, url, data=json.dumps(query, cls=PythonJSONEncoder))
         results = self._transform_strain_results(es_response, current_user, 'all',
                                                  include_locations=True, is_similar=False,
