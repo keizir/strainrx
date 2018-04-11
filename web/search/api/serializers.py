@@ -72,24 +72,56 @@ class StrainSearchSerializer(serializers.ModelSerializer):
         PRICE: lambda **kwargs: {
             'locations.price_gram': {
                 "nested_path": "locations",
-                'order': 'asc'
+                'order': 'asc',
+                "mode": "min",
+                "nested_filter": {
+                    "geo_distance": {
+                        "distance": "{}mi".format(kwargs.get('proximity')),
+                        "distance_type": "plane",
+                        "locations.location": {"lat": kwargs.get('lat'), "lon": kwargs.get('lon')}
+                    }
+                }
             },
             'locations.price_eighth': {
                 "nested_path": "locations",
-                'order': 'asc'
+                'order': 'asc',
+                 "mode": "min",
+                 "nested_filter": {
+                    "geo_distance": {
+                        "distance": "{}mi".format(kwargs.get('proximity')),
+                        "distance_type": "plane",
+                        "locations.location": {"lat": kwargs.get('lat'), "lon": kwargs.get('lon')}
+                    }
+                }
             },
             'locations.price_quarter': {
                 "nested_path": "locations",
-                'order': 'asc'
+                'order': 'asc',
+                "mode": "min",
+                "nested_filter": {
+                    "geo_distance": {
+                        "distance": "{}mi".format(kwargs.get('proximity')),
+                        "distance_type": "plane",
+                        "locations.location": {"lat": kwargs.get('lat'), "lon": kwargs.get('lon')}
+                    }
+                }
             }
         },
         LOCATION: lambda **kwargs: {
             '_geo_distance': {
-                'locations.location': kwargs,
+                'locations.location': {"lat": kwargs.get('lat'), "lon": kwargs.get('lon')},
                 "nested_path": "locations",
                 'order': 'asc',
                 'unit': 'mi',
-                'distance_type': 'plane'
+                'distance_type': 'plane',
+                "mode": "min",
+                "nested_filter": {
+                    "geo_distance": {
+                        "distance": "{}mi".format(kwargs.get('proximity')),
+                        "distance_type": "plane",
+                        "locations.location": {"lat": kwargs.get('lat'), "lon": kwargs.get('lon')}
+                    }
+                }
             }
         },
         NAME: lambda **kwargs: 'name.raw'
