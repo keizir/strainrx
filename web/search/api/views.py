@@ -484,7 +484,7 @@ class StrainSearchAPIView(APIView):
         serializer = self.serializer_class(data=self.request.GET)
         serializer.is_valid(raise_exception=True)
         query = serializer.data
-        current_user = request.user if request.user.is_authenticated() else None
+        current_user = request.user
         q = query.get('q')
         if q:
             result = SearchElasticService().lookup_strain_by_name(

@@ -68,10 +68,31 @@ class StrainSearchSerializer(serializers.ModelSerializer):
     )
     SORT_OPTIONS = [key for key, value in SORT_CHOICES]
     SORT_FIELDS = {
-        BEST_MATCH: '_score',
-        PRICE: '_score',  # todo change it
-        LOCATION: '_score',  # todo change it
-        NAME: 'name.raw'
+        BEST_MATCH: lambda **kwargs: '_score',
+        PRICE: lambda **kwargs: {
+            'locations.price_gram': {
+                "nested_path": "locations",
+                'order': 'asc'
+            },
+            'locations.price_eighth': {
+                "nested_path": "locations",
+                'order': 'asc'
+            },
+            'locations.price_quarter': {
+                "nested_path": "locations",
+                'order': 'asc'
+            }
+        },
+        LOCATION: lambda **kwargs: {
+            '_geo_distance': {
+                'locations.location': kwargs,
+                "nested_path": "locations",
+                'order': 'asc',
+                'unit': 'mi',
+                'distance_type': 'plane'
+            }
+        },
+        NAME: lambda **kwargs: 'name.raw'
     }
 
     CANNABINOIDS = ['thc', 'thca', 'thcv', 'cbd', 'cbg', 'cbn', 'cbc']

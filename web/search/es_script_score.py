@@ -1,4 +1,4 @@
-ADVANCED_SEARCH = """
+ADVANCED_SEARCH_SCORE = """
     def total = 0;
     def varietyArray = params["variety"] ?: [];
     def terpenesArray = params['terpenes'] ?: [];

@@ -7,7 +7,7 @@ from web.common.utils import PythonJSONEncoder
 from web.es_service import BaseElasticService
 from web.search import es_mappings
 from web.search.api.serializers import StrainSearchSerializer
-from web.search.es_script_score import ADVANCED_SEARCH
+from web.search.es_script_score import ADVANCED_SEARCH_SCORE
 from web.search.models import StrainImage, Strain
 from web.system.models import SystemProperty
 
@@ -604,25 +604,23 @@ class SearchElasticService(BaseElasticService):
             start_from = 0
 
         method = self.METHODS.get('GET')
-        url = '{base}{index}/{type}/_search?size={size}&from={start_from}'.format(
+        url = '{base}{index}/{type}/_search'.format(
             base=self.BASE_ELASTIC_URL,
             index=self.URLS.get('STRAIN'),
-            type=es_mappings.TYPES.get('strain'),
-            size=size,
-            start_from=start_from
+            type=es_mappings.TYPES.get('strain')
         )
 
-        query_filters = []
+        must_query = []
         for field in ('is_clean', 'is_indoor'):
             if lookup_query.get(field):
-                query_filters.append({"term": {field: lookup_query[field]}})
+                must_query.append({"term": {field: lookup_query[field]}})
 
         if lookup_query.get('variety'):
-            query_filters.append({"terms": {'variety': lookup_query['variety']}})
+            must_query.append({"terms": {'variety': lookup_query['variety']}})
 
         for terpene in StrainSearchSerializer.TERPENES:
             if lookup_query.get(terpene):
-                query_filters.append({
+                must_query.append({
                     "range": {
                         'terpenes.{}'.format(terpene): {
                             "gt": 0
@@ -632,7 +630,7 @@ class SearchElasticService(BaseElasticService):
 
         for cannabinoid in StrainSearchSerializer.CANNABINOIDS:
             if '{}_from'.format(cannabinoid) in lookup_query or '{}_to'.format(cannabinoid) in lookup_query:
-                query_filters.append({
+                must_query.append({
                     "range": {
                         'cannabinoids.{}'.format(cannabinoid): {
                             "gte": lookup_query.get('{}_from'.format(cannabinoid), 0),
@@ -641,25 +639,28 @@ class SearchElasticService(BaseElasticService):
                     }
                 })
 
+        location = current_user.get_location()
         query = {
-            'sort': [StrainSearchSerializer.SORT_FIELDS[item]
+            "from": start_from, "size": size,
+            'sort': [StrainSearchSerializer.SORT_FIELDS[item](
+                lat=location and location.lat or 0, lon=location and location.lng or 0)
                      for item in lookup_query.get('sort', [])],
             "query": {
                 "function_score": {
                     "query": {
                         "bool": {
-                            "must": query_filters,
+                            "must": must_query,
                             "must_not": {
                                 "exists": {"field": "removed_date"}
                             }
-                        },
+                        }
                     },
                     "functions": [{
                         "script_score": {
                             "script": {
                                 "lang": "painless",
                                 "params": lookup_query,
-                                "inline": ADVANCED_SEARCH
+                                "inline": ADVANCED_SEARCH_SCORE
                             }
                         }
                     }]
@@ -667,8 +668,8 @@ class SearchElasticService(BaseElasticService):
             }
         }
 
-        query['sort'].append(StrainSearchSerializer.SORT_FIELDS[StrainSearchSerializer.BEST_MATCH])
-        query['sort'].append(StrainSearchSerializer.SORT_FIELDS[StrainSearchSerializer.NAME])
+        query['sort'].append(StrainSearchSerializer.SORT_FIELDS[StrainSearchSerializer.BEST_MATCH]())
+        query['sort'].append(StrainSearchSerializer.SORT_FIELDS[StrainSearchSerializer.NAME]())
 
         es_response = self._request(method, url, data=json.dumps(query, cls=PythonJSONEncoder))
         results = self._transform_strain_results(es_response, current_user, 'all',
