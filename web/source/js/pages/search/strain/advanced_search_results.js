@@ -234,7 +234,7 @@ W.pages.AdvancedSearchResultsPage = Class.extend({
 
             for (j = 0; j < weight.length; j++) {
                 result[weight[j]] = {
-                    min: this.formatPrice(Math.min.apply(Math, prices[weight[j]])),
+                    min: this.formatPrice(Math.min.apply(Math, prices[weight[j]].filter(Boolean))),
                     max: this.formatPrice(Math.max.apply(Math, prices[weight[j]]))
                 }
             }
@@ -243,6 +243,6 @@ W.pages.AdvancedSearchResultsPage = Class.extend({
     },
 
     formatPrice: function formatPrice(p) {
-        return p ? '${0}'.format(p) : null;
+        return p && p !== Infinity ? '${0}'.format(p) : null;
     }
 });
