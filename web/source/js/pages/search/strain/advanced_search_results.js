@@ -198,7 +198,7 @@ W.pages.AdvancedSearchResultsPage = Class.extend({
         var that = this,
             compiled = _.template($('#strain-item-template').html());
 
-        item.locations.concat(item.deliveries);
+        item.locations = item.locations.concat(item.deliveries);
         return compiled({
             'obfuscated': !Boolean(that.currentUserId) || !that.isEmailVerified,
             'position': position,
