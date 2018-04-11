@@ -81,30 +81,6 @@ class StrainSearchSerializer(serializers.ModelSerializer):
                         "locations.location": {"lat": kwargs.get('lat'), "lon": kwargs.get('lon')}
                     }
                 }
-            },
-            'locations.price_eighth': {
-                "nested_path": "locations",
-                'order': 'asc',
-                 "mode": "min",
-                 "nested_filter": {
-                    "geo_distance": {
-                        "distance": "{}mi".format(kwargs.get('proximity')),
-                        "distance_type": "plane",
-                        "locations.location": {"lat": kwargs.get('lat'), "lon": kwargs.get('lon')}
-                    }
-                }
-            },
-            'locations.price_quarter': {
-                "nested_path": "locations",
-                'order': 'asc',
-                "mode": "min",
-                "nested_filter": {
-                    "geo_distance": {
-                        "distance": "{}mi".format(kwargs.get('proximity')),
-                        "distance_type": "plane",
-                        "locations.location": {"lat": kwargs.get('lat'), "lon": kwargs.get('lon')}
-                    }
-                }
             }
         },
         LOCATION: lambda **kwargs: {
