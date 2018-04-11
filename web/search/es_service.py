@@ -8,7 +8,7 @@ from web.es_service import BaseElasticService
 from web.search import es_mappings
 from web.search.api.serializers import StrainSearchSerializer
 from web.search.es_script_score import ADVANCED_SEARCH_SCORE
-from web.search.models import StrainImage, Strain
+from web.search.models import StrainImage
 from web.system.models import SystemProperty
 
 
@@ -47,9 +47,8 @@ class SearchElasticService(BaseElasticService):
 
         for s in to_transform:
             source = s.get('_source', {})
-            db_strain = Strain.objects.get(pk=source.get('id'))
             rating = strain_ratings.get(source.get('id'))
-            strain_image = StrainImage.objects.filter(strain=db_strain, is_approved=True)[:1]
+            strain_image = StrainImage.objects.filter(strain=source.get('id'), is_approved=True)[:1]
             srx_score = int(round(s.get('_score') or 0))
 
             if include_locations:
@@ -341,8 +340,6 @@ class SearchElasticService(BaseElasticService):
         if strain_ids is None:
             strain_ids = []
 
-        proximity = SystemProperty.objects.max_delivery_radius()
-
         method = self.METHODS.get('GET')
         url = '{base}{index}/{type}/_search?size={size}&from={start_from}'.format(
             base=self.BASE_ELASTIC_URL,
@@ -358,7 +355,7 @@ class SearchElasticService(BaseElasticService):
             strain_ids = self.get_strain_ids_available_locally(current_user)
             query = self.build_srx_score_es_query(criteria, strain_ids)
         elif result_filter == 'delivery':
-            strain_ids = self.get_strain_ids_available_locally(current_user, True, deliver_max=proximity)
+            strain_ids = self.get_strain_ids_available_locally(current_user, True)
             query = self.build_srx_score_es_query(criteria, strain_ids)
         else:
             query = self.build_srx_score_es_query(criteria, strain_ids)
@@ -640,10 +637,11 @@ class SearchElasticService(BaseElasticService):
                 })
 
         location = current_user.get_location()
+        proximity = max(current_user.proximity, SystemProperty.objects.max_delivery_radius())
         query = {
             "from": start_from, "size": size,
             'sort': [StrainSearchSerializer.SORT_FIELDS[item](
-                lat=location and location.lat or 0, lon=location and location.lng or 0)
+                lat=location and location.lat or 0, lon=location and location.lng or 0, proximity=proximity)
                      for item in lookup_query.get('sort', [])],
             "query": {
                 "function_score": {
