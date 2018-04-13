@@ -104,8 +104,8 @@ class StrainSearchSerializer(serializers.ModelSerializer):
     }
 
     CANNABINOIDS = ['thc', 'thca', 'thcv', 'cbd', 'cbg', 'cbn', 'cbc']
-    TERPENES = ['humulene', 'pinene', 'linalool', 'caryophyllene', 'myrcene', 'terpinolene', 'ocimene',
-                'limonene', 'camphene', 'terpineol', 'phellandrene', 'carene', 'pulegone', 'sabinene', 'geraniol']
+    TERPENES = ['humulene', 'pinene', 'linalool', 'caryophyllene', 'myrcene', 'terpinolene', 'ocimene', 'limonene',
+                'camphene', 'terpineol', 'phellandrene', 'carene', 'pulegone', 'sabinene', 'geraniol', 'valencene']
 
     q = serializers.CharField(required=False)
     page = serializers.IntegerField(required=False, default=1)
@@ -146,6 +146,7 @@ class StrainSearchSerializer(serializers.ModelSerializer):
     pulegone = serializers.BooleanField(default=False, required=False)
     sabinene = serializers.BooleanField(default=False, required=False)
     geraniol = serializers.BooleanField(default=False, required=False)
+    valencene = serializers.BooleanField(default=False, required=False)
 
     class Meta:
         model = Strain
@@ -153,7 +154,7 @@ class StrainSearchSerializer(serializers.ModelSerializer):
                   'thcv_from', 'thcv_to', 'cbd_from', 'cbd_to', 'cbg_from', 'cbg_to', 'cbn_from', 'cbn_to', 'cbc_from',
                   'cbc_to', 'humulene', 'pinene', 'linalool', 'caryophyllene', 'myrcene', 'terpinolene', 'ocimene',
                   'limonene', 'camphene', 'terpineol', 'phellandrene', 'carene', 'pulegone', 'sabinene', 'geraniol',
-                  'q', 'page', 'size', 'start_from', 'sort')
+                  'valencene', 'q', 'page', 'size', 'start_from', 'sort')
 
     def to_internal_value(self, data):
         try:

@@ -83,7 +83,11 @@ class Strain(models.Model):
 
     terpenes = JSONField(default={"humulene": 0, "pinene": 0, "linalool": 0, "caryophyllene": 0, "myrcene": 0,
                                   "terpinolene": 0, "ocimene": 0, "limonene": 0, "camphene": 0, "terpineol": 0,
-                                  "phellandrene": 0, "carene": 0, "pulegone": 0, "sabinene": 0, "geraniol": 0})
+                                  "phellandrene": 0, "carene": 0, "pulegone": 0, "sabinene": 0, "geraniol": 0,
+                                  "valencene": 0})
+
+    quick_picks = JSONField(default={"pain relief": 0, "relaxation": 0, "euphoria": 0, "sleep": 0, "good vibes": 0,
+                                     "focus": 0, "passion": 0, "cbd": 0})
 
     cannabinoids = JSONField(default={"THC": 0, "THCA": 0, "THCV": 0, "CBD": 0, "CBG": 0, "CBN": 0, "CBC": 0})
 
