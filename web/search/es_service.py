@@ -7,13 +7,12 @@ from web.common.utils import PythonJSONEncoder
 from web.es_service import BaseElasticService
 from web.search import es_mappings
 from web.search.api.serializers import StrainSearchSerializer
-from web.search.es_script_score import ADVANCED_SEARCH_SCORE
+from web.search.es_script_score import ADVANCED_SEARCH_SCORE, SRX_RECOMMENDATION_SCORE
 from web.search.models import StrainImage
 from web.system.models import SystemProperty
 
 
 class SearchElasticService(BaseElasticService):
-    srx_score_script_min = "def psa=params.effectSum+params.benefitSum;def benefitPoints=0.0f;def effectPoints=0.0f;def negEffectPoints=0.0f;for(e in params.userEffects.entrySet()){def strainE=(float)params._source['effects'][e.getKey()];def userE=(float)e.getValue();def effectBonus=0.0f;def dist=strainE-userE;def npe=0.0f;if(dist>0){npe=-0.01f;}else{if(dist==0){npe=0.0f;}if(dist<0&&dist>=-1){npe=-0.14f*userE;}if(dist<-1&&dist>=-2){npe=-0.33f*userE;}if(dist<-2&&dist>=-3){npe=-0.51f*userE;}if(dist<-3&&dist>=-4){npe=-0.8f*userE;}if(dist<-4&&dist>=-5){npe=-1.0f*userE;}}if(userE==strainE){if(strainE==3){effectBonus=0.3f;}if(strainE==4){effectBonus=0.5f;}if(strainE==5){effectBonus=1.0f;}}effectPoints+=effectBonus+userE+npe;}for(b in params.userBenefits.entrySet()){def strainB=(float)params._source['benefits'][b.getKey()];def userB=(float)b.getValue();def benefitBonus=0.0f;def dist=strainB-userB;def npb=0.0f;if(dist>0){npb=-0.01f;}else{if(dist==0){npb=0.0f;}if(dist<0&&dist>=-1){npb=-0.14f*userB;}if(dist<-1&&dist>=-2){npb=-0.33f*userB;}if(dist<-2&&dist>=-3){npb=-0.51f*userB;}if(dist<-3&&dist>=-4){npb=-0.8f*userB;}if(dist<-4&&dist>=-5){npb=-1.0f*userB;}}if(userB==strainB){if(strainB==3){benefitBonus=0.3f;}if(strainB==4){benefitBonus=0.5f;}if(strainB==5){benefitBonus=1.0f;}}benefitPoints+=benefitBonus+userB+npb;}for(ne in params.userNegEffects.entrySet()){def strainNE=(float)params._source['side_effects'][ne.getKey()];def userNE=(float)ne.getValue();def negPoints=0.0f;if(userNE==0||strainNE==0){negPoints=0.0f;}else{negPoints=(float)((Math.pow(userNE-strainNE,2))*-1)/(float)psa;}negEffectPoints+=negPoints;}def tp=effectPoints+negEffectPoints+benefitPoints;return((float)tp/(float)psa)*100;"
 
     def _transform_strain_results(self, results, current_user=None, result_filter=None, include_locations=True,
                                   is_similar=False, similar_strain_id=None):
@@ -79,7 +78,7 @@ class SearchElasticService(BaseElasticService):
                         'variety': source.get('variety'),
                         'category': source.get('category'),
                         'rating': "{0:.2f}".format(round(rating, 2)) if rating else 'Not Rated',
-                        'image_url': strain_image[0].image.url if len(strain_image) > 0 else None,
+                        'image_url': strain_image[0].image.url if len(strain_image) > 0 and strain_image[0].image else None,
                         'match_percentage': srx_score if srx_score <= 100 else 100,
                         'deliveries': deliveries,
                         'locations': dispensaries,
@@ -312,7 +311,7 @@ class SearchElasticService(BaseElasticService):
                                     "userBenefits": benefits_data.get('data'),
                                     "userNegEffects": side_effects_data.get('data')
                                 },
-                                "inline": self.srx_score_script_min
+                                "inline": SRX_RECOMMENDATION_SCORE
                             }
                         }
                     }]
@@ -337,9 +336,6 @@ class SearchElasticService(BaseElasticService):
         if start_from is None:
             start_from = 0
 
-        if strain_ids is None:
-            strain_ids = []
-
         method = self.METHODS.get('GET')
         url = '{base}{index}/{type}/_search?size={size}&from={start_from}'.format(
             base=self.BASE_ELASTIC_URL,
@@ -352,11 +348,88 @@ class SearchElasticService(BaseElasticService):
         if result_filter == 'all':
             query = self.build_srx_score_es_query(criteria, strain_ids)
         elif result_filter == 'local':
-            strain_ids = self.get_strain_ids_available_locally(current_user)
-            query = self.build_srx_score_es_query(criteria, strain_ids)
+
+            location = current_user.get_location()
+            proximity = max(current_user.proximity, SystemProperty.objects.max_delivery_radius())
+            params = dict(lat=location and location.lat or 0, lon=location and location.lng or 0)
+
+            subquery = {
+                "nested": {
+                    "path": "locations",
+                    "query": {
+                        "bool": {
+                            "must": {
+                                "match": {
+                                    "locations.dispensary": True
+                                }
+                            },
+                            "filter": {
+                                "geo_distance": {
+                                    "locations.location": params,
+                                    "distance_type": "plane",
+                                    "distance": "{}mi".format(proximity)
+                                }
+                            }
+                        }
+                    },
+                    "inner_hits": {
+                        "size": 1000,
+                        "sort": [{
+                            '_geo_distance': {
+                                'locations.location': params,
+                                'order': 'asc',
+                                'unit': 'mi',
+                                'distance_type': 'plane',
+                                "mode": "min"
+                            }
+                        }]
+                    }
+                }
+            }
+            query = self.build_srx_score_es_query(criteria, None, subquery)
+
+            print(json.dumps(query))
+
         elif result_filter == 'delivery':
-            strain_ids = self.get_strain_ids_available_locally(current_user, True)
-            query = self.build_srx_score_es_query(criteria, strain_ids)
+            location = current_user.get_location()
+            params = dict(lat=location and location.lat or 0, lon=location and location.lng or 0)
+            subquery = {
+                "nested": {
+                    "query": {
+                        "bool": {
+                            "must": {
+                                "script": {
+                                    "script": {
+                                        "inline": """
+                                            def delivery_radius = doc['locations.delivery_radius'].value ?: 0; 
+                                            return doc['locations.dispensary'].value == true && delivery_radius >= 
+                                                doc['locations.location'].planeDistanceWithDefault(
+                                                  params.lat, params.lon, 0) * 0.000621371
+                                        """,
+                                        "lang": "painless",
+                                        "params": params
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "inner_hits": {
+                        "size": 1000,
+                        "sort": [{
+                            '_geo_distance': {
+                                'locations.location': params,
+                                'order': 'asc',
+                                'unit': 'mi',
+                                'distance_type': 'plane',
+                                "mode": "min"
+                            }
+                        }]
+                    },
+                    "path": "locations"
+                }
+            }
+
+            query = self.build_srx_score_es_query(criteria, None, subquery)
         else:
             query = self.build_srx_score_es_query(criteria, strain_ids)
 
@@ -366,7 +439,7 @@ class SearchElasticService(BaseElasticService):
                                                  similar_strain_id=similar_strain_id)
         return results
 
-    def build_srx_score_es_query(self, criteria, strain_ids):
+    def build_srx_score_es_query(self, criteria, strain_ids=None, nested_query=None):
         criteria_strain_types = self.parse_criteria_strains(criteria.get('strain_types'))
         effects_data = self.parse_criteria_data(criteria.get('effects'))
         benefits_data = self.parse_criteria_data(criteria.get('benefits'))
@@ -375,11 +448,15 @@ class SearchElasticService(BaseElasticService):
         query_filter = []
         if strain_ids:
             query_filter.append({"terms": {"id": strain_ids}})
+
+        if nested_query:
+            query_filter.append(nested_query)
+
         if criteria_strain_types:
             query_filter.append({"terms": {"variety": criteria_strain_types}})
 
         if query_filter:
-            strain_filter = {"bool": {"must": [query_filter]}}
+            strain_filter = {"bool": {"must": query_filter}}
         else:
             # if user skipped picking variety match all strains
             strain_filter = {"match_all": {}}
@@ -416,7 +493,6 @@ class SearchElasticService(BaseElasticService):
                 }
             }
         }
-
         return {
             "aggs": strain_aggs,
             "query": {
@@ -433,7 +509,7 @@ class SearchElasticService(BaseElasticService):
                                     "userBenefits": benefits_data.get('data'),
                                     "userNegEffects": side_effects_data.get('data')
                                 },
-                                "inline": self.srx_score_script_min
+                                "inline": SRX_RECOMMENDATION_SCORE
                             }
                         }
                     }]
@@ -813,218 +889,3 @@ class SearchElasticService(BaseElasticService):
             'total': total,
             'payloads': payloads
         }
-
-    def get_strain_ids_available_locally(self, current_user, only_deliveries=False, deliver_max=None):
-        strain_ids = []
-
-        if current_user:
-            l = current_user.get_location()
-
-            if l and l.lat and l.lng:
-                if not only_deliveries:
-                    dispensaries = self.get_locations(location_type="dispensary", current_user=current_user)
-                    strain_ids_id_dispensaries = self.get_strain_ids_from_locations(dispensaries)
-                    for i in strain_ids_id_dispensaries:
-                        if i not in strain_ids:
-                            strain_ids.append(i)
-
-                deliveries = self.get_locations(location_type="delivery", current_user=current_user)
-                strain_ids_id_deliveries = self.get_strain_ids_from_locations(deliveries)
-                for i in strain_ids_id_deliveries:
-                    if i not in strain_ids:
-                        strain_ids.append(i)
-
-        return strain_ids
-
-    def get_strain_ids_from_locations(self, es_locations_response):
-        locations = es_locations_response.get('hits', {}).get('hits', [])
-        ids = []
-        for l in locations:
-            s = l.get('_source')
-            for mi in s.get('menu_items'):
-                if not mi.get('removed_date'):
-                    ids.append(mi.get('strain_id'))
-        return ids
-
-
-"""
-Groovy script unminified
-
-Workflow:
-    - use https://groovyconsole.appspot.com/ to validate script runs
-    - minify via http://codebeautify.org/javaviewer (copy only part below comment below that is actual script)
-    - paste minified version into script field in query_strain_srx_score
-
-// TEMP for testing syntax
-def effectSum = 20;
-def benefitSum = 1;
-
-def _source = [
-    'effects': [
-        'happy': 4.5,
-        'relaxed': 4.0,
-        'creative': 2.23,
-        'talkative': 2.123,
-        'energetic': 1.564,
-        'sleepy': 3.23
-    ],
-    'side_effects': [
-        'dry_mouth': 7.4
-    ],
-    'benefits': [
-        'relieve_pain': 2.0
-    ]
-];
-
-def userEffects = [
-    'happy': 5,
-    'relaxed': 5,
-    'creative': 2,
-    'talkative': 2,
-    'energetic': 2,
-    'sleepy': 5
-];
-
-def userBenefits = [
-    'relieve_pain': 4
-];
-
-def userNegEffects = [
-    'dry_mouth': 3
-];
-
-
-// actual script below here
-//***********************************************************************
-
-// points available
-def psa = params.effectSum + params.benefitSum;
-
-// calculate distance
-def benefitPoints = 0.0f;
-def effectPoints = 0.0f;
-def negEffectPoints = 0.0f;
-
-// calc all effect points awarded
-for (e in params.userEffects.entrySet()) {
-    def strainE = (float) params._source['effects'][e.getKey()];
-    def userE = (float) e.getValue();
-    def effectBonus = 0.0f;
-
-    def dist = strainE - userE;
-    def npe = 0.0f;
-    if (dist > 0) {
-        npe = -0.01f;
-    } else {
-        if (dist == 0) {
-            npe = 0.0f;
-        }
-
-        if (dist < 0 && dist >= -1) {
-            npe = -0.14f * userE;
-        }
-
-        if (dist < -1 && dist >= -2) {
-            npe = -0.33f * userE;
-        }
-
-        if (dist < -2 && dist >= -3) {
-            npe = -0.51f * userE;
-        }
-
-        if (dist < -3 && dist >= -4) {
-            npe = -0.8f * userE;
-        }
-
-        if (dist < -4 && dist >= -5) {
-            npe = -1.0f * userE;
-        }
-    }
-
-    if (userE == strainE) {
-        if (strainE == 3) {
-            effectBonus = 0.3f;
-        }
-
-        if (strainE == 4) {
-            effectBonus = 0.5f;
-        }
-
-        if (strainE == 5) {
-            effectBonus = 1.0f;
-        }
-    }
-
-    effectPoints += effectBonus + userE + npe;
-}
-
-// calc all benefit points awarded
-for (b in params.userBenefits.entrySet()) {
-    def strainB = (float) params._source['benefits'][b.getKey()];
-    def userB = (float) b.getValue();
-    def benefitBonus = 0.0f;
-
-    def dist = strainB - userB;
-    def npb = 0.0f;
-    if (dist > 0) {
-        npb = -0.01f;
-    } else {
-        if (dist == 0) {
-            npb = 0.0f;
-        }
-
-        if (dist < 0 && dist >= -1) {
-            npb = -0.14f * userB;
-        }
-
-        if (dist < -1 && dist >= -2) {
-            npb = -0.33f * userB;
-        }
-
-        if (dist < -2 && dist >= -3) {
-            npb = -0.51f * userB;
-        }
-
-        if (dist < -3 && dist >= -4) {
-            npb = -0.8f * userB;
-        }
-
-        if (dist < -4 && dist >= -5) {
-            npb = -1.0f * userB;
-        }
-    }
-
-    if (userB == strainB) {
-        if (strainB == 3) {
-            benefitBonus = 0.3f;
-        }
-
-        if (strainB == 4) {
-            benefitBonus = 0.5f;
-        }
-
-        if (strainB == 5) {
-            benefitBonus = 1.0f;
-        }
-    }
-
-    benefitPoints += benefitBonus + userB + npb;
-}
-
-for (ne in params.userNegEffects.entrySet()) {
-    def strainNE = (float) params._source['side_effects'][ne.getKey()];
-    def userNE = (float) ne.getValue();
-    def negPoints = 0.0f;
-
-    if (userNE == 0 || strainNE == 0) {
-        negPoints = 0.0f;
-    } else {
-        negPoints = (float) ((Math.pow(userNE - strainNE, 2)) * -1) / (float) psa;
-    }
-
-    negEffectPoints += negPoints;
-}
-
-def tp = effectPoints + negEffectPoints + benefitPoints;
-return ((float) tp / (float) psa) * 100;​
-"""

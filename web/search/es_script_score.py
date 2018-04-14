@@ -71,3 +71,188 @@ ADVANCED_SEARCH_SCORE = """
     
     return total;
 """
+
+"""
+Groovy script unminified
+
+Workflow:
+    - use https://groovyconsole.appspot.com/ to validate script runs
+    - minify via http://codebeautify.org/javaviewer (copy only part below comment below that is actual script)
+    - paste minified version into script field in query_strain_srx_score
+
+// TEMP for testing syntax
+
+def effectSum = 20;
+def benefitSum = 1;
+
+def _source = [
+    'effects': [
+        'happy': 4.5,
+        'relaxed': 4.0,
+        'creative': 2.23,
+        'talkative': 2.123,
+        'energetic': 1.564,
+        'sleepy': 3.23
+    ],
+    'side_effects': [
+        'dry_mouth': 7.4
+    ],
+    'benefits': [
+        'relieve_pain': 2.0
+    ]
+];
+
+def userEffects = [
+    'happy': 5,
+    'relaxed': 5,
+    'creative': 2,
+    'talkative': 2,
+    'energetic': 2,
+    'sleepy': 5
+];
+
+def userBenefits = [
+    'relieve_pain': 4
+];
+
+def userNegEffects = [
+    'dry_mouth': 3
+];
+
+
+// actual script below here
+//***********************************************************************
+
+// points available
+def psa = params.effectSum + params.benefitSum;
+
+// calculate distance
+def benefitPoints = 0.0f;
+def effectPoints = 0.0f;
+def negEffectPoints = 0.0f;
+
+// calc all effect points awarded
+for (e in params.userEffects.entrySet()) {
+    def strainE = (float) params._source['effects'][e.getKey()];
+    def userE = (float) e.getValue();
+    def effectBonus = 0.0f;
+
+    def dist = strainE - userE;
+    def npe = 0.0f;
+    if (dist > 0) {
+        npe = -0.01f;
+    } else {
+        if (dist == 0) {
+            npe = 0.0f;
+        }
+
+        if (dist < 0 && dist >= -1) {
+            npe = -0.14f * userE;
+        }
+
+        if (dist < -1 && dist >= -2) {
+            npe = -0.33f * userE;
+        }
+
+        if (dist < -2 && dist >= -3) {
+            npe = -0.51f * userE;
+        }
+
+        if (dist < -3 && dist >= -4) {
+            npe = -0.8f * userE;
+        }
+
+        if (dist < -4 && dist >= -5) {
+            npe = -1.0f * userE;
+        }
+    }
+
+    if (userE == strainE) {
+        if (strainE == 3) {
+            effectBonus = 0.3f;
+        }
+
+        if (strainE == 4) {
+            effectBonus = 0.5f;
+        }
+
+        if (strainE == 5) {
+            effectBonus = 1.0f;
+        }
+    }
+
+    effectPoints += effectBonus + userE + npe;
+}
+
+// calc all benefit points awarded
+for (b in params.userBenefits.entrySet()) {
+    def strainB = (float) params._source['benefits'][b.getKey()];
+    def userB = (float) b.getValue();
+    def benefitBonus = 0.0f;
+
+    def dist = strainB - userB;
+    def npb = 0.0f;
+    if (dist > 0) {
+        npb = -0.01f;
+    } else {
+        if (dist == 0) {
+            npb = 0.0f;
+        }
+
+        if (dist < 0 && dist >= -1) {
+            npb = -0.14f * userB;
+        }
+
+        if (dist < -1 && dist >= -2) {
+            npb = -0.33f * userB;
+        }
+
+        if (dist < -2 && dist >= -3) {
+            npb = -0.51f * userB;
+        }
+
+        if (dist < -3 && dist >= -4) {
+            npb = -0.8f * userB;
+        }
+
+        if (dist < -4 && dist >= -5) {
+            npb = -1.0f * userB;
+        }
+    }
+
+    if (userB == strainB) {
+        if (strainB == 3) {
+            benefitBonus = 0.3f;
+        }
+
+        if (strainB == 4) {
+            benefitBonus = 0.5f;
+        }
+
+        if (strainB == 5) {
+            benefitBonus = 1.0f;
+        }
+    }
+
+    benefitPoints += benefitBonus + userB + npb;
+}
+
+for (ne in params.userNegEffects.entrySet()) {
+    def strainNE = (float) params._source['side_effects'][ne.getKey()];
+    def userNE = (float) ne.getValue();
+    def negPoints = 0.0f;
+
+    if (userNE == 0 || strainNE == 0) {
+        negPoints = 0.0f;
+    } else {
+        negPoints = (float) ((Math.pow(userNE - strainNE, 2)) * -1) / (float) psa;
+    }
+
+    negEffectPoints += negPoints;
+}
+
+def tp = effectPoints + negEffectPoints + benefitPoints;
+return ((float) tp / (float) psa) * 100;​
+"""
+
+SRX_RECOMMENDATION_SCORE = "def psa=params.effectSum+params.benefitSum;def benefitPoints=0.0f;def effectPoints=0.0f;def negEffectPoints=0.0f;for(e in params.userEffects.entrySet()){def strainE=(float)params._source['effects'][e.getKey()];def userE=(float)e.getValue();def effectBonus=0.0f;def dist=strainE-userE;def npe=0.0f;if(dist>0){npe=-0.01f;}else{if(dist==0){npe=0.0f;}if(dist<0&&dist>=-1){npe=-0.14f*userE;}if(dist<-1&&dist>=-2){npe=-0.33f*userE;}if(dist<-2&&dist>=-3){npe=-0.51f*userE;}if(dist<-3&&dist>=-4){npe=-0.8f*userE;}if(dist<-4&&dist>=-5){npe=-1.0f*userE;}}if(userE==strainE){if(strainE==3){effectBonus=0.3f;}if(strainE==4){effectBonus=0.5f;}if(strainE==5){effectBonus=1.0f;}}effectPoints+=effectBonus+userE+npe;}for(b in params.userBenefits.entrySet()){def strainB=(float)params._source['benefits'][b.getKey()];def userB=(float)b.getValue();def benefitBonus=0.0f;def dist=strainB-userB;def npb=0.0f;if(dist>0){npb=-0.01f;}else{if(dist==0){npb=0.0f;}if(dist<0&&dist>=-1){npb=-0.14f*userB;}if(dist<-1&&dist>=-2){npb=-0.33f*userB;}if(dist<-2&&dist>=-3){npb=-0.51f*userB;}if(dist<-3&&dist>=-4){npb=-0.8f*userB;}if(dist<-4&&dist>=-5){npb=-1.0f*userB;}}if(userB==strainB){if(strainB==3){benefitBonus=0.3f;}if(strainB==4){benefitBonus=0.5f;}if(strainB==5){benefitBonus=1.0f;}}benefitPoints+=benefitBonus+userB+npb;}for(ne in params.userNegEffects.entrySet()){def strainNE=(float)params._source['side_effects'][ne.getKey()];def userNE=(float)ne.getValue();def negPoints=0.0f;if(userNE==0||strainNE==0){negPoints=0.0f;}else{negPoints=(float)((Math.pow(userNE-strainNE,2))*-1)/(float)psa;}negEffectPoints+=negPoints;}def tp=effectPoints+negEffectPoints+benefitPoints;return((float)tp/(float)psa)*100;"
