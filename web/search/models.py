@@ -155,10 +155,13 @@ def upload_image_to(instance, filename):
 
 
 def validate_image(field_file_obj):
-    file_size = field_file_obj.file.size
-    megabyte_limit = settings.MAX_STRAIN_IMAGE_SIZE
-    if file_size > megabyte_limit:
-        raise ValidationError("Max file size is %sMB" % str(megabyte_limit))
+    try:
+        file_size = field_file_obj.file.size
+        megabyte_limit = settings.MAX_STRAIN_IMAGE_SIZE
+        if file_size > megabyte_limit:
+            raise ValidationError("Max file size is %sMB" % str(megabyte_limit))
+    except OSError:
+        raise ValidationError('Image does not exists')
 
 
 @python_2_unicode_compatible
@@ -176,7 +179,7 @@ class StrainImage(models.Model):
 
     def __str__(self):
         i = self.image
-        return i.url if i and i.url else None
+        return '{}: {}'.format(self.strain, i.url if i and i.url else '')
 
     class Meta:
         ordering = ('created_date',)
