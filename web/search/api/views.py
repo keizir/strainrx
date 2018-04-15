@@ -68,11 +68,7 @@ class StrainSearchResultsView(APIView):
                                                              result_filter=result_filter)
         result_list = data.get('list')
 
-        if request.user.is_authenticated() and request.user.is_email_verified:
-            user_strain_ratings = StrainRating.objects.filter(created_by=request.user, removed_date=None)
-            if len(user_strain_ratings) > 0:
-                result_list = self.change_strain_scores(result_list, user_strain_ratings, request.user, page)
-        else:
+        if not (request.user.is_authenticated() and request.user.is_email_verified):
             result_list = [dict(x, name=obfuscate(x['name']), strain_slug=obfuscate(x['strain_slug']))
                            for x in result_list]
 
@@ -80,63 +76,6 @@ class StrainSearchResultsView(APIView):
             'search_results': result_list,
             'search_results_total': data.get('total')
         }, status=status.HTTP_200_OK)
-
-    @staticmethod
-    def change_strain_scores(result_list, user_strain_reviews, current_user, page):
-        if len(result_list) == 0:
-            return []
-
-        latest_user_search = UserSearch.objects.user_criteria(current_user)
-
-        user_review_scores = {}
-        user_review_strain_ids = []
-        for r in user_strain_reviews:
-            new_score = SearchElasticService().query_user_review_srx_score(latest_user_search.to_search_criteria(),
-                                                                           strain_id=r.strain.id,
-                                                                           user_id=current_user.id)
-            user_review_strain_ids.append(r.strain.id)
-            user_review_scores[r.strain.id] = new_score
-
-        current_scores = []
-        for s in result_list:
-            current_scores.append(s.get('match_percentage'))
-
-        min_score = min(current_scores)
-        max_score = max(current_scores)
-
-        to_remove = []
-        for s in result_list:
-            if s.get('id') in user_review_strain_ids:
-                current_score = s.get('match_percentage')
-                review_score = user_review_scores.get(s.get('id'))
-                if review_score != current_score:
-                    to_remove.append(s)
-
-        if len(to_remove) > 0:
-            for rem in to_remove:
-                result_list.remove(rem)
-
-        to_remove = []
-        for k, v in user_review_scores.items():
-            if v == 'n/a' or (max_score < v and int(page) != 1):
-                to_remove.append(k)
-
-        if len(to_remove) > 0:
-            for key in to_remove:
-                del user_review_scores[key]
-
-        for k, v in user_review_scores.items():
-            if v != 'n/a' and ((max_score <= v and int(page) == 1) or max_score >= v > min_score or v == min_score):
-                strain = Strain.objects.get(id=k)
-                data = SearchElasticService().query_strain_srx_score(strain.to_search_criteria(),
-                                                                     strain_ids=[strain.id], current_user=current_user)
-                if len(data.get('list')) > 0:
-                    users_strain = data.get('list')[0]
-                    users_strain['match_percentage'] = user_review_scores.get(k)
-                    result_list.append(users_strain)
-
-        result_list = sorted(result_list, key=itemgetter('match_percentage'), reverse=True)
-        return result_list
 
 
 class StrainFavoriteView(LoginRequiredMixin, APIView):
