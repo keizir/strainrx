@@ -8,7 +8,7 @@ from web.common.utils import PythonJSONEncoder
 from web.es_service import BaseElasticService
 from web.search import es_mappings
 from web.search.api.serializers import StrainSearchSerializer
-from web.search.es_script_score import ADVANCED_SEARCH_SCORE, SRX_RECOMMENDATION_SCORE
+from web.search.es_script_score import ADVANCED_SEARCH_SCORE, SRX_RECOMMENDATION_SCORE, CHECK_DELIVERY_RADIUS
 from web.search.models import StrainImage
 from web.system.models import SystemProperty
 
@@ -96,12 +96,14 @@ class SearchElasticService(BaseElasticService):
             url += '?size={0}'.format(size)
 
         filter_query = {}
+        should_query = {}
+        script_fields = {}
         params = {}
 
         if current_user:
             location = current_user.get_location()
             params = dict(lat=location and location.lat or 0, lon=location and location.lng or 0)
-            proximity = location_type == 'dispensary' and current_user.proximity
+            proximity = location_type in ('dispensary', 'all') and current_user.proximity
 
             if not proximity:
                 proximity = SystemProperty.objects.max_delivery_radius()
@@ -110,17 +112,44 @@ class SearchElasticService(BaseElasticService):
                 filter_query = {
                     "script": {
                         "script": {
-                            "inline": """
-                            def delivery_radius = doc['delivery_radius'].value ?: 0; 
-                            return doc['dispensary'].value == true && delivery_radius >= 
-                                doc['location'].planeDistanceWithDefault(
-                                  params.lat, params.lon, 0) * 0.000621371
-                            """,
+                            "inline": CHECK_DELIVERY_RADIUS,
                             "lang": "painless",
                             "params": params
                         }
                     }
                 }
+            elif location_type == 'all':
+
+                script_fields = {
+                    "is_delivery": {
+                        "script": {
+                            "lang": "painless",
+                            "params": params,
+                            "inline": CHECK_DELIVERY_RADIUS
+                        }
+                    },
+                }
+
+                should_query = [
+                    {"script": {
+                        "script": {
+                            "inline": CHECK_DELIVERY_RADIUS,
+                            "lang": "painless",
+                            "params": params
+                        }
+                    }},
+                    {"bool": {
+                        "must": [
+                            {
+                                "geo_distance": {
+                                    "distance": "{0}mi".format(proximity),
+                                    "distance_type": "plane", "location": params
+                                }
+                            },
+                            {"match": {'dispensary': True}}
+                        ]
+                    }}
+                ]
             else:
                 filter_query = {
                     "geo_distance": {
@@ -129,6 +158,21 @@ class SearchElasticService(BaseElasticService):
                     }
                 }
 
+        bool_menu_items = {"must_not": {"exists": {"field": "menu_items.removed_date"}}}
+
+        if strain_id:
+            bool_menu_items["must"] = {"match": {"menu_items.strain_id": strain_id}}
+
+        must_query = [{"nested": {"path": "menu_items", "query": {"bool": bool_menu_items}}}]
+
+        if location_type in ('dispensary', 'delivery'):
+            must_query.append({"match": {location_type: True}})
+
+        must_not_query = {}
+        if only_active:
+            must_not_query.update({"exists": {"field": "removed_date"}})
+
+        # Sort
         sort_query = []
         if order_field != 'distance' and order_field != 'rating' and not order_field.startswith('menu_items'):
             sort_query.append({order_field: {"order": order_dir}})
@@ -149,29 +193,20 @@ class SearchElasticService(BaseElasticService):
                 sort_query.append({"_geo_distance": {
                     "location": params, "order": "asc", "unit": "mi", "distance_type": "plane"}})
 
-        bool_menu_items = {"must_not": {"exists": {"field": "menu_items.removed_date"}}}
-
-        if strain_id:
-            bool_menu_items["must"] = {"match": {"menu_items.strain_id": strain_id}}
-
-        must_query = [{"nested": {"path": "menu_items", "query": {"bool": bool_menu_items}}}]
-
-        if location_type:
-            must_query.append({"match": {location_type: True}})
-
-        must_not_query = {}
-
-        if only_active:
-            must_not_query.update({"exists": {"field": "removed_date"}})
-
         query = {
+            "_source": ['menu_items', 'business_id', 'business_location_id', 'category', 'slug_name', 'city',
+                        'state', 'location_name',
+                        'mon_open', 'tue_open', 'wed_open', 'thu_open', 'fri_open', 'sat_open', 'sun_open',
+                        'mon_close', 'tue_close', 'wed_close', 'thu_close', 'fri_close', 'sat_close', 'sun_close'],
             "query": {
                 "bool": {
                     "must": must_query,
                     "must_not": must_not_query,
-                    "filter": filter_query
+                    "filter": filter_query,
+                    "should": should_query
                 }
             },
+            'script_fields': script_fields,
             "sort": sort_query
         }
 
@@ -182,6 +217,7 @@ class SearchElasticService(BaseElasticService):
         processed_results = []
         for l in locations:
             s = l.get('_source')
+            is_delivery = l.get('fields', {}).get('is_delivery', [None])[0]
             sort = l.get('sort')
             distance = sort[1] if sort and len(sort) >= 2 else sort[0] if sort and len(sort) == 1 else None
             menu_item_id = None
@@ -211,7 +247,7 @@ class SearchElasticService(BaseElasticService):
                 'price_gram': price_gram, 'price_half': price_half,
                 'price_quarter': price_quarter, 'price_eighth': price_eighth,
                 'open': get_open_closed(s) == 'Opened',
-                'is_delivery': s.get('delivery'),
+                'is_delivery': is_delivery if is_delivery is not None else s.get('delivery'),
                 'rating': get_location_rating(s.get('business_location_id'))
             })
 

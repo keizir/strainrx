@@ -6,6 +6,7 @@ from operator import itemgetter
 from django.contrib.auth.mixins import LoginRequiredMixin
 from rest_framework import permissions
 from rest_framework import status
+from rest_framework.generics import get_object_or_404
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
@@ -157,7 +158,7 @@ class StrainFavoriteView(LoginRequiredMixin, APIView):
 
 class StrainSRXScoreView(LoginRequiredMixin, APIView):
     def get(self, request, strain_id):
-        strain = Strain.objects.get(pk=strain_id)
+        strain = get_object_or_404(Strain, pk=strain_id)
         score = StrainDetailsService().calculate_srx_score(strain, request.user)
         return Response({'srx_score': score}, status=status.HTTP_200_OK)
 
@@ -233,13 +234,12 @@ class StrainDeliveriesView(APIView):
 
     def get(self, request, strain_id):
         d = request.GET
-        result_filter = d.get('filter')
         order_field = d.get('order_field')
         order_dir = d.get('order_dir')
-        location_type = d.get('location_type')
-        user = request.user if request.user.is_authenticated() else None
+        location_type = d.get('filter')
+        user = request.user
 
-        l = StrainDetailsService().build_strain_locations(strain_id, user, result_filter, order_field,
+        l = StrainDetailsService().build_strain_locations(strain_id, user, order_field,
                                                           order_dir, location_type)
         return Response(l, status=status.HTTP_200_OK)
 
