@@ -13,11 +13,6 @@
                 <a href="{% url 'search:advanced_search_result' %}<%= model.from_advanced_search %>" class="search-link">
                     <i class="fa fa-arrow-left" aria-hidden="true"></i>back to search results</a>
             </div>
-            <% } else if (model.from_basic_search) { %>
-            <div class="back-to-search-wrapper">
-                <a href="{% url 'search:advanced_search_result' %}<%= model.from_basic_search %>" class="search-link">
-                    <i class="fa fa-arrow-left" aria-hidden="true"></i>back to search results</a>
-            </div>
             <% } %>
             {% if from_location %}
             <div class="back-to-search-wrapper">

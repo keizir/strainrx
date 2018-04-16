@@ -41,6 +41,7 @@ W.pages.strain.StrainDetailPage = Class.extend({
 
                     that.model = new W.common.Model(strain_data);
                     that.model.set('from_search', search);
+                    that.model.set('from_advanced_search', window.location.search);
                     that.model.set('share_urls', W.common.Sharer.getSharerUrls(encodeURIComponent(window.location.href)));
 
                     firstLetter = that.model.get('strain').name.charAt(0).toLowerCase();
