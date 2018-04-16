@@ -1,7 +1,6 @@
 import json
 import logging
 from datetime import datetime
-from operator import itemgetter
 
 from django.contrib.auth.mixins import LoginRequiredMixin
 from rest_framework import permissions
@@ -16,7 +15,7 @@ from web.search.api.serializers import SearchCriteriaSerializer, StrainReviewFor
 from web.search.api.services import StrainDetailsService
 from web.search.es_service import SearchElasticService
 from web.search.models import Strain, StrainImage, Effect, StrainReview, StrainRating, UserFavoriteStrain, \
-    UserSearch, Flavor
+    Flavor
 from web.search.strain_es_service import StrainESService
 from web.search.strain_user_rating_es_service import StrainUserRatingESService
 from web.system.models import SystemProperty
@@ -431,4 +430,8 @@ class StrainSearchAPIView(APIView):
         else:
             result = SearchElasticService().advanced_search(
                 query, current_user, size=query['size'], start_from=query.get('start_from', 0))
+
+        if not (request.user.is_authenticated() and request.user.is_email_verified):
+            result['list'] = [dict(x, name=obfuscate(x['name']), strain_slug=obfuscate(x['strain_slug']))
+                              for x in result['list']]
         return Response(result, status=status.HTTP_200_OK)

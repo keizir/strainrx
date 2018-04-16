@@ -48,9 +48,9 @@
         <ol>
           <li>
             <% if (isBasicSearch) { %>
-              <a href="{% url 'search:search' %}">{% trans 'Back to Basic Search' %}</a>
+              <a href="{% url 'search:search' %}?${ searchParams }">{% trans 'Back to Basic Search' %}</a>
             <% } else { %>
-              <a href="{% url 'search:advanced_search' %}">{% trans 'Back to Advanced Search' %}</a>
+              <a href="{% url 'search:advanced_search' %}?${ searchParams }">{% trans 'Back to Advanced Search' %}</a>
             <% } %>
             <span class="arrow">&gt;</span>
           </li>
@@ -128,10 +128,10 @@
         <% if (strain.is_clean) { %>
           <img class="clean-logo" src="{% static 'images/search/clean.png' %}">
         <% } %>
+        <% if (strain.locations && strain.locations.length) { %>
+          <span class="item-location"><i class="fa fa-map-marker"></i> ${ closestDistance(strain.locations) } Miles away</span>
+        <% } %>
       </div>
-      <% if (strain.locations && strain.locations.length) { %>
-        <span class="item-location"><i class="fa fa-map-marker"></i> ${ closestDistance(strain.locations) } Miles away</span>
-      <% } %>
 
       <div class="item-info">
         <div>
@@ -139,15 +139,13 @@
               <% if (obfuscated) { %>
                 <a class="blurred noselect">${ strain.name }</a>
               <% } else { %>
-                  <b><a href="/strains/${ strain.variety }/${ strain.strain_slug }/">${ strain.name }</a></b>
+                  <b><a href="/strains/${ strain.variety }/${ strain.strain_slug }/?${ searchParams }">
+                    ${ strain.name }</a></b>
               <% } %>
           </div>
           <div class="strain-type">${ _.startCase(strain.variety) }</div>
         </div>
 
-        <% if (strain.about) { %>
-          <div class="strain-about">${ strain.about }</div>
-        <% } %>
         <% if (strain.cannabinoids) { %>
           <div class="strain-cannabinoids"><b>
             <% _.forEach(strain.cannabinoids, function(value, key) { %>

@@ -8,6 +8,7 @@ from django.db.models import Q
 from django.http import Http404
 from django.views.generic import TemplateView
 
+from web.search.api.serializers import StrainSearchSerializer
 from web.search.models import Strain, StrainImage
 
 
@@ -21,6 +22,13 @@ class StrainSearchView(TemplateView):
 
 class StrainAdvancedSearchView(TemplateView):
     template_name = 'pages/search/strain/advanced_search.html'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        serializer = StrainSearchSerializer(data=self.request.GET)
+        serializer.is_valid(raise_exception=False)
+        context['form'] = serializer
+        return context
 
 
 class StrainAdvancedSearchResultView(TemplateView):
