@@ -190,7 +190,8 @@ W.pages.AdvancedSearchResultsPage = Class.extend({
             'isBasicSearch': isBasicSearch,
             'similarResult': similar_strains,
             'searchResults': searchResults,
-            'q': q
+            'q': q,
+            'searchParams': window.location.search.slice(1)
         });
     },
 
@@ -205,7 +206,8 @@ W.pages.AdvancedSearchResultsPage = Class.extend({
             'strain': item,
             'closestDistance': that.findClosestDistance,
             'prices': that.findPriceRange(item.locations),
-            'isBasicSearch': isBasicSearch
+            'isBasicSearch': isBasicSearch,
+            'searchParams': window.location.search.slice(1)
         });
     },
 
@@ -216,7 +218,7 @@ W.pages.AdvancedSearchResultsPage = Class.extend({
                 distances.push(locations[i].distance);
             }
             min = Math.min.apply(Math, distances);
-            return '{0}'.format(Math.round(min * 100) / 100);
+            return '{0}'.format(Math.round(min * 10) / 10);
         }
     },
 

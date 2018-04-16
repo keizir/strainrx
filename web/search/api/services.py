@@ -7,7 +7,7 @@ from web.search.services import build_strain_rating
 class StrainDetailsService:
     def build_strain_details(self, strain_id, current_user=None):
         strain = Strain.objects.get(pk=strain_id)
-        image = StrainImage.objects.filter(strain=strain, is_approved=True)[:1]
+        image = StrainImage.objects.filter(strain=strain, is_approved=True).first()
         strain_origins = self.get_strain_origins(strain)
         rating = build_strain_rating(strain)
         reviews = self.get_strain_reviews(strain)
@@ -29,7 +29,7 @@ class StrainDetailsService:
 
         return {
             'strain': StrainDetailSerializer(strain).data,
-            'strain_image': image[0].image.url if image else None,
+            'strain_image': image.image.url if image and image.image else None,
             'strain_origins': strain_origins,
             'strain_rating': rating,
             'user_strain_review': StrainRatingSerializer(strain_review[0]).data if len(strain_review) > 0 else None,
@@ -84,8 +84,8 @@ class StrainDetailsService:
                                                                            user_id=current_user.id)
                 return score
             else:
-                data = SearchElasticService().query_strain_srx_score(latest_user_search.to_search_criteria(),
-                                                                     strain_ids=[current_strain.id])
+                data = SearchElasticService().query_strain_srx_score(
+                    latest_user_search.to_search_criteria(), strain_ids=[current_strain.id], include_locations=False)
                 strain = data.get('list')[0] if len(data.get('list')) > 0 else {'match_percentage': 0}
                 return strain.get('match_percentage')
 
@@ -141,12 +141,11 @@ class StrainDetailsService:
         }
 
     @staticmethod
-    def build_strain_locations(strain_id, current_user, result_filter=None, order_field=None, order_dir=None,
-                               location_type=None):
+    def build_strain_locations(strain_id, current_user, order_field=None, order_dir=None, location_type=None):
         service = SearchElasticService()
-        es_response = service.get_locations(strain_id=strain_id, current_user=current_user, result_filter=result_filter,
+        es_response = service.get_locations(strain_id=strain_id, current_user=current_user,
                                             order_field=order_field, order_dir=order_dir, location_type=location_type,
                                             size=6, only_active=True)
 
-        locations = service.transform_location_results(es_response, strain_id=strain_id, result_filter=result_filter)
+        locations = service.transform_location_results(es_response, strain_id=strain_id)
         return {'locations': locations}

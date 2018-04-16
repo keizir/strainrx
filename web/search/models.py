@@ -167,7 +167,7 @@ def validate_image(field_file_obj):
 @python_2_unicode_compatible
 class StrainImage(models.Model):
     strain = models.ForeignKey(Strain, on_delete=models.DO_NOTHING, related_name='images')
-    image = models.ImageField(max_length=255, upload_to=upload_image_to, blank=True,
+    image = models.ImageField(max_length=255, upload_to=upload_image_to,
                               help_text='Maximum file size allowed is 10Mb',
                               validators=[validate_image])
 

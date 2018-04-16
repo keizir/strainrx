@@ -8,7 +8,7 @@
       <div class="form-field-group variety">
         <div class="form-field">
           <label for="search">
-            <input type="text" class="search-input" name="q"
+            <input type="text" class="search-input" name="q" value="{{ request.GET.q }}"
                    placeholder="{% trans 'Example: Blue Dream, Maui Wowie, Pineapple Express ...' %}">
           </label>
           <button class="btn-primary search-btn" type="submit">Search Strain</button>

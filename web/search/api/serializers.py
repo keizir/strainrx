@@ -148,6 +148,8 @@ class StrainSearchSerializer(serializers.ModelSerializer):
     geraniol = serializers.BooleanField(default=False, required=False)
     valencene = serializers.BooleanField(default=False, required=False)
 
+    default_style = {'template_pack': 'pages/search/strain/inlines/'}
+
     class Meta:
         model = Strain
         fields = ('variety', 'cup_winner', 'is_indoor', 'is_clean', 'thc_from', 'thc_to', 'thca_from', 'thca_to',

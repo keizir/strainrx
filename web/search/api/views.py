@@ -1,11 +1,11 @@
 import json
 import logging
 from datetime import datetime
-from operator import itemgetter
 
 from django.contrib.auth.mixins import LoginRequiredMixin
 from rest_framework import permissions
 from rest_framework import status
+from rest_framework.generics import get_object_or_404
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
@@ -15,7 +15,7 @@ from web.search.api.serializers import SearchCriteriaSerializer, StrainReviewFor
 from web.search.api.services import StrainDetailsService
 from web.search.es_service import SearchElasticService
 from web.search.models import Strain, StrainImage, Effect, StrainReview, StrainRating, UserFavoriteStrain, \
-    UserSearch, Flavor
+    Flavor
 from web.search.strain_es_service import StrainESService
 from web.search.strain_user_rating_es_service import StrainUserRatingESService
 from web.system.models import SystemProperty
@@ -67,11 +67,7 @@ class StrainSearchResultsView(APIView):
                                                              result_filter=result_filter)
         result_list = data.get('list')
 
-        if request.user.is_authenticated() and request.user.is_email_verified:
-            user_strain_ratings = StrainRating.objects.filter(created_by=request.user, removed_date=None)
-            if len(user_strain_ratings) > 0:
-                result_list = self.change_strain_scores(result_list, user_strain_ratings, request.user, page)
-        else:
+        if not (request.user.is_authenticated() and request.user.is_email_verified):
             result_list = [dict(x, name=obfuscate(x['name']), strain_slug=obfuscate(x['strain_slug']))
                            for x in result_list]
 
@@ -79,63 +75,6 @@ class StrainSearchResultsView(APIView):
             'search_results': result_list,
             'search_results_total': data.get('total')
         }, status=status.HTTP_200_OK)
-
-    @staticmethod
-    def change_strain_scores(result_list, user_strain_reviews, current_user, page):
-        if len(result_list) == 0:
-            return []
-
-        latest_user_search = UserSearch.objects.user_criteria(current_user)
-
-        user_review_scores = {}
-        user_review_strain_ids = []
-        for r in user_strain_reviews:
-            new_score = SearchElasticService().query_user_review_srx_score(latest_user_search.to_search_criteria(),
-                                                                           strain_id=r.strain.id,
-                                                                           user_id=current_user.id)
-            user_review_strain_ids.append(r.strain.id)
-            user_review_scores[r.strain.id] = new_score
-
-        current_scores = []
-        for s in result_list:
-            current_scores.append(s.get('match_percentage'))
-
-        min_score = min(current_scores)
-        max_score = max(current_scores)
-
-        to_remove = []
-        for s in result_list:
-            if s.get('id') in user_review_strain_ids:
-                current_score = s.get('match_percentage')
-                review_score = user_review_scores.get(s.get('id'))
-                if review_score != current_score:
-                    to_remove.append(s)
-
-        if len(to_remove) > 0:
-            for rem in to_remove:
-                result_list.remove(rem)
-
-        to_remove = []
-        for k, v in user_review_scores.items():
-            if v == 'n/a' or (max_score < v and int(page) != 1):
-                to_remove.append(k)
-
-        if len(to_remove) > 0:
-            for key in to_remove:
-                del user_review_scores[key]
-
-        for k, v in user_review_scores.items():
-            if v != 'n/a' and ((max_score <= v and int(page) == 1) or max_score >= v > min_score or v == min_score):
-                strain = Strain.objects.get(id=k)
-                data = SearchElasticService().query_strain_srx_score(strain.to_search_criteria(),
-                                                                     strain_ids=[strain.id], current_user=current_user)
-                if len(data.get('list')) > 0:
-                    users_strain = data.get('list')[0]
-                    users_strain['match_percentage'] = user_review_scores.get(k)
-                    result_list.append(users_strain)
-
-        result_list = sorted(result_list, key=itemgetter('match_percentage'), reverse=True)
-        return result_list
 
 
 class StrainFavoriteView(LoginRequiredMixin, APIView):
@@ -157,7 +96,7 @@ class StrainFavoriteView(LoginRequiredMixin, APIView):
 
 class StrainSRXScoreView(LoginRequiredMixin, APIView):
     def get(self, request, strain_id):
-        strain = Strain.objects.get(pk=strain_id)
+        strain = get_object_or_404(Strain, pk=strain_id)
         score = StrainDetailsService().calculate_srx_score(strain, request.user)
         return Response({'srx_score': score}, status=status.HTTP_200_OK)
 
@@ -233,13 +172,12 @@ class StrainDeliveriesView(APIView):
 
     def get(self, request, strain_id):
         d = request.GET
-        result_filter = d.get('filter')
         order_field = d.get('order_field')
         order_dir = d.get('order_dir')
-        location_type = d.get('location_type')
-        user = request.user if request.user.is_authenticated() else None
+        location_type = d.get('filter')
+        user = request.user
 
-        l = StrainDetailsService().build_strain_locations(strain_id, user, result_filter, order_field,
+        l = StrainDetailsService().build_strain_locations(strain_id, user, order_field,
                                                           order_dir, location_type)
         return Response(l, status=status.HTTP_200_OK)
 
@@ -492,4 +430,8 @@ class StrainSearchAPIView(APIView):
         else:
             result = SearchElasticService().advanced_search(
                 query, current_user, size=query['size'], start_from=query.get('start_from', 0))
+
+        if not (request.user.is_authenticated() and request.user.is_email_verified):
+            result['list'] = [dict(x, name=obfuscate(x['name']), strain_slug=obfuscate(x['strain_slug']))
+                              for x in result['list']]
         return Response(result, status=status.HTTP_200_OK)
