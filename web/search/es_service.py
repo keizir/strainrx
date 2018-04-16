@@ -203,7 +203,8 @@ class SearchElasticService(BaseElasticService):
                     "must": must_query,
                     "must_not": must_not_query,
                     "filter": filter_query,
-                    "should": should_query
+                    "should": should_query,
+                    "minimum_should_match": '0<80%',
                 }
             },
             'script_fields': script_fields,
@@ -227,7 +228,7 @@ class SearchElasticService(BaseElasticService):
             price_quarter = None
             price_eighth = None
 
-            for mi in s.get('menu_items'):
+            for mi in s.get('menu_items', []):
                 if int(mi.get('strain_id')) == int(strain_id):
                     menu_item_id = mi.get('id')
                     in_stock = mi.get('in_stock')

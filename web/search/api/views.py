@@ -432,6 +432,6 @@ class StrainSearchAPIView(APIView):
                 query, current_user, size=query['size'], start_from=query.get('start_from', 0))
 
         if not (request.user.is_authenticated() and request.user.is_email_verified):
-            result['list'] = [dict(x, name=obfuscate(x['name']), strain_slug=obfuscate(x['strain_slug']))
+            result['list'] = [dict(x, name=obfuscate(x['name'] or ''), strain_slug=obfuscate(x['strain_slug'] or ''))
                               for x in result['list']]
         return Response(result, status=status.HTTP_200_OK)

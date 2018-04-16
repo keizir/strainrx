@@ -7,8 +7,8 @@ from web.es_service import BaseElasticService
 
 
 class SearchTestCase(APITestCase):
-    SUCCESS_RESPONSE = {'suggest': {'name_suggestion': [
-        {'options': [{'_source': {'name': 'test', 'removed_date': None}}]}]}}
+    SUCCESS_RESPONSE = {'hits': {'total': 1, 'hits': [
+        {'_source': {'name': 'test', 'removed_date': None}}]}}
 
     def setUp(self):
         self.url = reverse('search_api:search')
@@ -36,14 +36,14 @@ class SearchTestCase(APITestCase):
         response = self.client.get('{}?q={}&page=test&size=2000'.format(self.url, 'test'))
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(response.json(), {'list': [], 'q': 'test',
-                                           'similar_strains': {'payloads': [], 'total': 0}, 'total': 0})
+                                           'similar_strains': {'list': [], 'total': 0}, 'total': 0})
 
         response = self.client.get('{}?q={}&page=10&size=test'.format(self.url, 'test'))
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(response.json(), {'list': [], 'q': 'test',
-                                           'similar_strains': {'payloads': [], 'total': 0}, 'total': 0})
+                                           'similar_strains': {'list': [], 'total': 0}, 'total': 0})
 
         response = self.client.get('{}?q={}&page=10&size='.format(self.url, 'test'))
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(response.json(), {'list': [], 'q': 'test',
-                                           'similar_strains': {'payloads': [], 'total': 0}, 'total': 0})
+                                           'similar_strains': {'list': [], 'total': 0}, 'total': 0})
