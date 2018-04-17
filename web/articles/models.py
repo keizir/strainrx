@@ -1,28 +1,35 @@
+import logging
+from uuid import uuid4
+
 from django.conf import settings
+from django.core.exceptions import ValidationError
+from django.core.urlresolvers import reverse
 from django.db import models
-from djangocms_text_ckeditor.fields import HTMLField
-from django_resized import ResizedImageField
+from django.template.defaultfilters import truncatechars
 from django.utils import timezone
 from django.utils.text import slugify
-from uuid import uuid4
-from django.template.defaultfilters import truncatechars
-
-
-import logging
+from django_resized import ResizedImageField
+from djangocms_text_ckeditor.fields import HTMLField
 
 logger = logging.getLogger(__name__)
+
 
 def upload_to(instance, filename):
     path = 'articles/{0}_{1}'.format(uuid4(), filename)
     return path
 
-def validate_image(field_file_obj):
-    file_size = field_file_obj.file.size
-    megabyte_limit = settings.MAX_IMAGE_SIZE
-    if file_size > megabyte_limit:
-        raise ValidationError("Max file size is %sMB" % str(megabyte_limit))
 
-class Category(models.Model):          
+def validate_image(field_file_obj):
+    try:
+        file_size = field_file_obj.file.size
+        megabyte_limit = settings.MAX_IMAGE_SIZE
+        if file_size > megabyte_limit:
+            raise ValidationError('Max file size is {}MB'.format(megabyte_limit))
+    except OSError:
+        raise ValidationError('File does not exists.')
+
+
+class Category(models.Model):
     title = models.CharField(max_length=256, unique=True, blank=False)
     is_active = models.BooleanField(default=False)
     slug = models.SlugField(max_length=1024, default=None, blank=True, null=True, unique=True)
@@ -37,6 +44,7 @@ class Category(models.Model):
     def get_absolute_url(self):
         return reverse('category', kwargs={'slug': self.slug})
 
+
 class Article(models.Model):
     title = models.CharField(max_length=1024, unique=True, blank=False)
     summary = models.CharField(max_length=3072, blank=True)
@@ -49,17 +57,17 @@ class Article(models.Model):
     published_date = models.DateTimeField(null=True, blank=True)
     updated_date = models.DateTimeField(auto_now=True)
     deleted_date = models.DateTimeField(null=True, blank=True)
-    category = models.ForeignKey(Category, null=True, blank=True,  verbose_name='Category')
-    image = ResizedImageField(max_length=255, blank=True, help_text='Maximum file size allowed is 10Mb', validators=[validate_image], quality=75, size=[1024, 1024], upload_to=upload_to)
+    category = models.ForeignKey(Category, null=True, blank=True, verbose_name='Category')
+    image = ResizedImageField(max_length=255, blank=True, help_text='Maximum file size allowed is 10Mb',
+                              validators=[validate_image], quality=75, size=[1024, 1024], upload_to=upload_to)
     image_caption = models.CharField(max_length=1024, blank=True)
     slug = models.SlugField(max_length=1024, default=None, blank=True, null=True)
     is_page = models.BooleanField(default=False)
 
     def save(self, *args, **kwargs):
         self.slug = slugify(self.title)
-      
         super(Article, self).save(*args, **kwargs)
-        
+
         # try:
         #     ping_google()
         # except Exception as e:
@@ -70,8 +78,7 @@ class Article(models.Model):
     def get_absolute_url(self):
         if self.is_page:
             return reverse('view_page', kwargs={'slug': self.slug})
-        else:
-            return reverse('view_article', kwargs={'category_slug': self.cagetory.slug, 'slug': self.slug})
+        return reverse('view_article', kwargs={'category_slug': self.category.slug, 'slug': self.slug})
 
     @property
     def short_title(self):
@@ -79,12 +86,9 @@ class Article(models.Model):
 
     @property
     def url(self):
-        if self.is_page:
-            return '/%s' % self.slug
-        else:
-            return '/%s/%s' % (self.category.slug, self.slug) if self.category is not None else ""
+        if self.is_page or not self.category:
+            return '/{}'.format(self.slug)
+        return '/{}/{}'.format(self.category.slug, self.slug)
 
     def __str__(self):
         return self.title
-
-
