@@ -135,8 +135,8 @@ body {
 .results-dialog {
   display: none;
   position: absolute;
-  top: calc(50vh);
-  left: calc(50vw - 24em);
+  top: calc(50vh - 10em);
+  left: calc(50vw - 20em);
 
   width: 26em;
 
@@ -400,7 +400,6 @@ body {
 }
 
 .search-result-container {
-
   width: 100%;
 
   .search-result.basic-search {
@@ -526,6 +525,22 @@ body {
 
   .search-result-footer-wrapper {
     text-align: center;
+  }
+}
+
+@media (max-width: $screen-md-max) {
+  .results-dialog {
+    display: none;
+    position: absolute;
+    top: calc(50vh - 10em);
+    left: calc(50vw - 13em);
+  }
+
+  .search-result-container .search-result .result-item .item-location,
+  .search-result-container .similar-result .result-item .item-location {
+    font-size: 12px;
+    line-height: 11px;
+    bottom: -1.9em;
   }
 }
 

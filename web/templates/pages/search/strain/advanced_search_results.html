@@ -130,6 +130,8 @@
         <% } %>
         <% if (strain.locations && strain.locations.length) { %>
           <span class="item-location"><i class="fa fa-map-marker"></i> ${ closestDistance(strain.locations) } Miles away</span>
+        <% } else { %>
+          <span class="item-location">Not available nearby</span>
         <% } %>
       </div>
 
