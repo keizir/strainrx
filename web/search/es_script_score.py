@@ -1,3 +1,5 @@
+MILE = 0.000621371
+
 ADVANCED_SEARCH_SCORE = """
     def total = 0;
     def varietyArray = params["variety"] ?: [];
@@ -77,13 +79,32 @@ def advanced_search_nested_location_filter(**kwargs):
 
 def advanced_search_sort(**kwargs):
     nested_filter = advanced_search_nested_location_filter(**kwargs)
-    nested_filter.append({
-        "geo_distance": {
-            "distance": "{}mi".format(kwargs.get('proximity')),
-            "distance_type": "plane",
-            "locations.location": {"lat": kwargs.get('lat'), "lon": kwargs.get('lon')}
-        }
-    })
+    should_query = [
+        {"script": {
+            "script": {
+                "inline": """
+                    def delivery_radius = doc['locations.delivery_radius'].value ?: 0; 
+                    return doc['locations.delivery'].value == true && delivery_radius >= 
+                        doc['locations.location'].planeDistanceWithDefault(
+                          params.lat, params.lon, 0) * {}
+                    """.format(MILE),
+                "lang": "painless",
+                "params": kwargs
+            }
+        }},
+        {"bool": {
+            "must": [
+                {
+                    "geo_distance": {
+                        "distance": "{0}mi".format(kwargs.get('proximity')),
+                        "distance_type": "plane",
+                        "locations.location": {"lat": kwargs.get('lat'), "lon": kwargs.get('lon')}
+                    }
+                },
+                {"match": {'locations.dispensary': True}}
+            ]
+        }}
+    ]
 
     query = {
         "nested_path": "locations",
@@ -91,7 +112,9 @@ def advanced_search_sort(**kwargs):
         "mode": "min",
         "nested_filter": {
             'bool': {
-                'must': nested_filter
+                'must': nested_filter,
+                "should": should_query,
+                "minimum_should_match": '0<80%'
             }
         }
     }
@@ -288,6 +311,5 @@ CHECK_DELIVERY_RADIUS = """
     def delivery_radius = doc['delivery_radius'].value ?: 0; 
     return doc['delivery'].value == true && delivery_radius >= 
         doc['location'].planeDistanceWithDefault(
-          params.lat, params.lon, 0) * 0.000621371
-    """
-
+          params.lat, params.lon, 0) * {}
+    """.format(MILE)

@@ -8,7 +8,7 @@ from web.common.utils import PythonJSONEncoder
 from web.es_service import BaseElasticService
 from web.search import es_mappings
 from web.search.api.serializers import StrainSearchSerializer
-from web.search.es_script_score import ADVANCED_SEARCH_SCORE, SRX_RECOMMENDATION_SCORE, CHECK_DELIVERY_RADIUS
+from web.search.es_script_score import ADVANCED_SEARCH_SCORE, SRX_RECOMMENDATION_SCORE, CHECK_DELIVERY_RADIUS, MILE
 from web.search.models import StrainImage
 from web.system.models import SystemProperty
 
@@ -718,8 +718,7 @@ class SearchElasticService(BaseElasticService):
                 })
 
         distance = current_user.get_location()
-        proximity = max(current_user.proximity, SystemProperty.objects.max_delivery_radius())
-
+        proximity = current_user.proximity
         sort_query = []
         for item in list(lookup_query.get('sort', [])) + [
             StrainSearchSerializer.BEST_MATCH, StrainSearchSerializer.NAME, StrainSearchSerializer.LOCATION,
@@ -782,13 +781,13 @@ class SearchElasticService(BaseElasticService):
                 'image_url': strain_image.image.url if strain_image and strain_image.image else None,
                 'cup_winner': source.get('cup_winner'),
                 'cannabinoids': source.get('cannabinoids'),
-                'distance': distance,
-                'price_gram': gram,
-                'max_price_gram': max_gram,
-                'price_eighth': eighth,
-                'max_price_eighth': max_eighth,
-                'price_quarter': quarter,
-                'max_price_quarter': max_quarter
+                'distance': distance * MILE if isinstance(distance, float) else None,
+                'price_gram': gram if isinstance(gram, float) else None,
+                'max_price_gram': max_gram if isinstance(max_gram, float) else None,
+                'price_eighth': eighth if isinstance(eighth, float) else None,
+                'max_price_eighth': max_eighth if isinstance(max_eighth, float) else None,
+                'price_quarter': quarter if isinstance(quarter, float) else None,
+                'max_price_quarter': max_quarter if isinstance(max_quarter, float) else None
             })
         return {
             'list': processed_results,

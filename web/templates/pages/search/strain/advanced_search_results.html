@@ -160,25 +160,25 @@
         <div class="strain-price">
           <% if ( strain.price_gram || strain.max_price_gram ) { %>
             <% if ( strain.price_gram != strain.max_price_gram && strain.price_gram && strain.max_price_gram ) { %>
-              ${ strain.price_gram } - ${ strain.max_price_gram }/G
+              ${ price_format(strain.price_gram) } - ${ price_format(strain.max_price_gram) }/G
             <% } else { %>
-              ${ strain.price_gram || strain.max_price_gram }/G
+              ${ price_format(strain.price_gram || strain.max_price_gram) }/G
             <% } %>
           <% } %>
 
           <% if ( strain.price_eighth || strain.price_max_eighth ) { %>
             <% if ( strain.price_eighth != strain.price_max_eighth && strain.price_eighth && strain.price_max_eighth ) { %>
-              ${ strain.price_eighth } - ${ strain.price_max_eighth }/8th
+              ${ price_format(strain.price_eighth) } - ${ price_format(strain.price_max_eighth) }/8th
             <% } else { %>
-              ${ strain.price_eighth || strain.price_max_eighth }/8th
+              ${ price_format(strain.price_eighth || strain.price_max_eighth) }/8th
             <% } %>
           <% } %>
 
           <% if ( strain.price_quarter || strain.price_max_quarter ) { %>
             <% if ( strain.price_quarter != strain.price_max_quarter && strain.price_quarter && strain.price_max_quarter ) { %>
-              ${ strain.price_quarter } - ${ strain.price_max_quarter }/Q
+              ${ price_format(strain.price_quarter) } - ${ price_format(strain.price_max_quarter) }/Q
             <% } else { %>
-              ${ strain.price_quarter || strain.price_max_quarter }/Q
+              ${ price_format(strain.price_quarter || strain.price_max_quarter) }/Q
             <% } %>
           <% } %>
         </div>

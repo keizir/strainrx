@@ -211,9 +211,9 @@ W.pages.AdvancedSearchResultsPage = Class.extend({
     },
 
     formatPrice: function (p) {
-        return p && p !== Infinity ? '${0}'.format(p) : null;
+        return p && p !== 'Infinity' ? '${0}'.format(p) : null;
     },
     formatDistance: function (distance) {
-        return distance && distance !== Infinity ? '{0}'.format(Math.round(distance * 10) / 10) : null;
+        return distance && distance !== 'Infinity' ? '{0}'.format(Math.round(distance * 10) / 10) : null;
     }
 });
