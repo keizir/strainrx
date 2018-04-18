@@ -1,6 +1,7 @@
 from rest_framework import serializers
 from rest_framework.exceptions import ValidationError
 
+from web.search.es_script_score import advanced_search_sort, advanced_search_nested_location_filter
 from web.search.models import Strain, StrainReview, StrainRating, StrainImage
 
 
@@ -59,6 +60,8 @@ class StrainImageSerializer(serializers.ModelSerializer):
 class StrainSearchSerializer(serializers.ModelSerializer):
 
     BEST_MATCH, LOCATION, NAME, PRICE = '', 'location', 'name', 'price'
+    MAX_PRICE_GRAM, PRICE_EIGHTH, MAX_PRICE_EIGHTH, PRICE_QUARTER, MAX_PRICE_QUARTER = \
+        'max_price_gram', 'price_eighth', 'max_price_eighth', 'price_quarter', 'max_price_quarter'
 
     SORT_CHOICES = (
         (BEST_MATCH, 'best match'),
@@ -67,40 +70,38 @@ class StrainSearchSerializer(serializers.ModelSerializer):
         (PRICE, 'price'),
     )
     SORT_OPTIONS = [key for key, value in SORT_CHOICES]
+
     SORT_FIELDS = {
         BEST_MATCH: lambda **kwargs: '_score',
         PRICE: lambda **kwargs: {
-            'locations.price_gram': {
-                "nested_path": "locations",
-                'order': 'asc',
-                "mode": "min",
-                "nested_filter": {
-                    "geo_distance": {
-                        "distance": "{}mi".format(kwargs.get('proximity')),
-                        "distance_type": "plane",
-                        "locations.location": {"lat": kwargs.get('lat'), "lon": kwargs.get('lon')}
-                    }
-                }
-            }
+            'locations.price_gram': advanced_search_sort(**kwargs)
         },
         LOCATION: lambda **kwargs: {
-            '_geo_distance': {
-                'locations.location': {"lat": kwargs.get('lat'), "lon": kwargs.get('lon')},
-                "nested_path": "locations",
-                'order': 'asc',
-                'unit': 'mi',
-                'distance_type': 'plane',
-                "mode": "min",
-                "nested_filter": {
-                    "geo_distance": {
-                        "distance": "{}mi".format(kwargs.get('proximity')),
-                        "distance_type": "plane",
-                        "locations.location": {"lat": kwargs.get('lat'), "lon": kwargs.get('lon')}
-                    }
-                }
-            }
+            '_geo_distance': advanced_search_sort(
+                subquery={'locations.location': {"lat": kwargs.get('lat'), "lon": kwargs.get('lon')}},
+                **kwargs
+            )
         },
-        NAME: lambda **kwargs: 'name.raw'
+        NAME: lambda **kwargs: {'name.raw': {
+            "order": 'asc',
+            "nested_path": "locations",
+            "nested_filter": {"bool": {'must': advanced_search_nested_location_filter(**kwargs)}}
+        }},
+        MAX_PRICE_GRAM: lambda **kwargs: {
+            'locations.price_gram': advanced_search_sort(subquery={"order": 'desc'}, **kwargs)
+        },
+        PRICE_EIGHTH: lambda **kwargs: {
+            'locations.price_eighth': advanced_search_sort(**kwargs)
+        },
+        MAX_PRICE_EIGHTH: lambda **kwargs: {
+            'locations.price_eighth': advanced_search_sort(subquery={"order": 'desc'}, **kwargs)
+        },
+        PRICE_QUARTER: lambda **kwargs: {
+            'locations.price_quarter': advanced_search_sort(**kwargs)
+        },
+        MAX_PRICE_QUARTER: lambda **kwargs: {
+            'locations.price_quarter': advanced_search_sort(subquery={"order": 'desc'}, **kwargs)
+        }
     }
 
     CANNABINOIDS = ['thc', 'thca', 'thcv', 'cbd', 'cbg', 'cbn', 'cbc']
@@ -114,6 +115,8 @@ class StrainSearchSerializer(serializers.ModelSerializer):
     sort = serializers.MultipleChoiceField(required=False, choices=SORT_CHOICES)
 
     variety = serializers.MultipleChoiceField(required=False, choices=Strain.VARIETY_CHOICES)
+    is_indoor = serializers.BooleanField(default=False, required=False)
+    is_clean = serializers.BooleanField(default=False, required=False)
     # cannabinoids
     thc_from = serializers.IntegerField(allow_null=True, required=False)
     thc_to = serializers.IntegerField(allow_null=True, required=False)

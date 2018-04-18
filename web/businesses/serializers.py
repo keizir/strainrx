@@ -22,7 +22,7 @@ class MenuItemSerializer(serializers.ModelSerializer):
         model = BusinessLocationMenuItem
         fields = ('price_gram', 'price_eighth', 'price_quarter', 'price_half', 'in_stock',
                   'business_location_id', 'dispensary', 'delivery', 'grow_house',
-                  'delivery_radius', 'location', 'removed_date')
+                  'delivery_radius', 'location', 'removed_date', 'is_clean', 'is_indoor')
 
     def get_location(self, instance):
         if instance.business_location.lat and instance.business_location.lng:

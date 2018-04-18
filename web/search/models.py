@@ -107,8 +107,6 @@ class Strain(models.Model):
     meta_keywords = models.CharField(max_length=3072, blank=True)
 
     cup_winner = models.BooleanField(default=False)
-    is_indoor = models.BooleanField(default=True)
-    is_clean = models.BooleanField(default=False)
 
     class Meta:
         unique_together = (("name", "category"),)

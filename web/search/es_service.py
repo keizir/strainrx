@@ -76,8 +76,6 @@ class SearchElasticService(BaseElasticService):
                     'deliveries': deliveries,
                     'locations': dispensaries,
                     'cup_winner': source.get('cup_winner'),
-                    'is_clean': source.get('is_clean'),
-                    'is_indoor': source.get('is_indoor'),
                     'cannabinoids': source.get('cannabinoids')
                 })
 
@@ -400,7 +398,7 @@ class SearchElasticService(BaseElasticService):
             }
             query = self.build_srx_score_es_query(criteria, None, subquery)
             query["_source"] = ["name", "effects", "benefits", "side_effects", "id", "strain_slug",
-                                "variety", "category", "cup_winner", "is_clean", "is_indoor", "cannabinoids"]
+                                "variety", "category", "cup_winner", "cannabinoids"]
 
         elif result_filter == 'delivery':
             location = current_user.get_location()
@@ -681,9 +679,19 @@ class SearchElasticService(BaseElasticService):
         )
 
         must_query = []
+        nested_filter = []
         for field in ('is_clean', 'is_indoor'):
             if lookup_query.get(field):
-                must_query.append({"term": {field: lookup_query[field]}})
+                nested_filter.append({"term": {'locations.{}'.format(field): lookup_query[field]}})
+
+        if nested_filter:
+            must_query.append({
+                "nested": {
+                    "path": "locations",
+                    "query": {
+                        "bool": {"must": nested_filter}
+                    }}
+            })
 
         if lookup_query.get('variety'):
             must_query.append({"terms": {'variety': lookup_query['variety']}})
@@ -709,13 +717,27 @@ class SearchElasticService(BaseElasticService):
                     }
                 })
 
-        location = current_user.get_location()
+        distance = current_user.get_location()
         proximity = max(current_user.proximity, SystemProperty.objects.max_delivery_radius())
+
+        sort_query = []
+        for item in list(lookup_query.get('sort', [])) + [
+            StrainSearchSerializer.BEST_MATCH, StrainSearchSerializer.NAME, StrainSearchSerializer.LOCATION,
+            StrainSearchSerializer.PRICE, StrainSearchSerializer.MAX_PRICE_GRAM, StrainSearchSerializer.PRICE_EIGHTH,
+            StrainSearchSerializer.MAX_PRICE_EIGHTH, StrainSearchSerializer.PRICE_QUARTER,
+            StrainSearchSerializer.MAX_PRICE_QUARTER
+        ]:
+            sort_query.append(
+                StrainSearchSerializer.SORT_FIELDS[item](
+                    lat=distance and distance.lat or 0, lon=distance and distance.lng or 0,
+                    proximity=proximity, is_clean=lookup_query.get('is_clean'),
+                    is_indoor=lookup_query.get('is_indoor'))
+            )
+
         query = {
-            "from": start_from, "size": size,
-            'sort': [StrainSearchSerializer.SORT_FIELDS[item](
-                lat=location and location.lat or 0, lon=location and location.lng or 0, proximity=proximity)
-                     for item in lookup_query.get('sort', [])],
+            "from": start_from,
+            "size": size,
+            'sort': sort_query,
             "query": {
                 "function_score": {
                     "query": {
@@ -739,14 +761,39 @@ class SearchElasticService(BaseElasticService):
             }
         }
 
-        query['sort'].append(StrainSearchSerializer.SORT_FIELDS[StrainSearchSerializer.BEST_MATCH]())
-        query['sort'].append(StrainSearchSerializer.SORT_FIELDS[StrainSearchSerializer.NAME]())
-
         es_response = self._request(method, url, data=json.dumps(query, cls=PythonJSONEncoder))
-        results = self._transform_strain_results(es_response, current_user, 'all',
-                                                 include_locations=True, is_similar=False,
-                                                 similar_strain_id=None)
-        return results
+        strains = es_response.get('hits', {}).get('hits', [])
+        total = es_response.get('hits', {}).get('total', 0)
+        processed_results = []
+
+        for s in strains:
+            source = s.get('_source', {})
+            sort = s.get('sort', [None] * 7)[-7:]
+            distance, gram, max_gram, eighth, max_eighth, quarter, max_quarter = sort
+
+            strain_image = StrainImage.objects.filter(strain=source.get('id'), is_approved=True)\
+                .exclude(Q(image__isnull=True) | Q(image='')).first()
+            processed_results.append({
+                'id': source.get('id'),
+                'name': source.get('name'),
+                'strain_slug': source.get('strain_slug'),
+                'variety': source.get('variety'),
+                'category': source.get('category'),
+                'image_url': strain_image.image.url if strain_image and strain_image.image else None,
+                'cup_winner': source.get('cup_winner'),
+                'cannabinoids': source.get('cannabinoids'),
+                'distance': distance,
+                'price_gram': gram,
+                'max_price_gram': max_gram,
+                'price_eighth': eighth,
+                'max_price_eighth': max_eighth,
+                'price_quarter': quarter,
+                'max_price_quarter': max_quarter
+            })
+        return {
+            'list': processed_results,
+            'total': total
+        }
 
     def lookup_business_location(self, query, bus_type=None, location=None, timezone=None):
         if bus_type is None:

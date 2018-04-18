@@ -199,52 +199,21 @@ W.pages.AdvancedSearchResultsPage = Class.extend({
         var that = this,
             compiled = _.template($('#strain-item-template').html());
 
-        item.locations = item.locations.concat(item.deliveries);
         return compiled({
             'obfuscated': !Boolean(that.currentUserId) || !that.isEmailVerified,
             'position': position,
             'strain': item,
-            'closestDistance': that.findClosestDistance,
-            'prices': that.findPriceRange(item.locations),
+            'price_format': that.formatPrice,
+            'distance_format': that.formatDistance,
             'isBasicSearch': isBasicSearch,
             'searchParams': window.location.search.slice(1)
         });
     },
 
-    findClosestDistance: function findClosestDistance(locations) {
-        var distances = [], min;
-        if (locations && locations.length > 0) {
-            for (var i = 0; i < locations.length; i++) {
-                distances.push(locations[i].distance);
-            }
-            min = Math.min.apply(Math, distances);
-            return '{0}'.format(Math.round(min * 10) / 10);
-        }
-    },
-
-    findPriceRange: function findClosestDistance(locations) {
-        var prices = {'price_eighth': [], 'price_gram': [], 'price_quarter': []},
-            result = {},
-            weight = Object.keys(prices);
-
-        if (locations && locations.length > 0) {
-            for (var i = 0; i < locations.length; i++) {
-                for (var j = 0; j < weight.length; j++) {
-                    prices[weight[j]].push(locations[i][weight[j]]);
-                }
-            }
-
-            for (j = 0; j < weight.length; j++) {
-                result[weight[j]] = {
-                    min: this.formatPrice(Math.min.apply(Math, prices[weight[j]].filter(Boolean))),
-                    max: this.formatPrice(Math.max.apply(Math, prices[weight[j]]))
-                }
-            }
-            return result;
-        }
-    },
-
-    formatPrice: function formatPrice(p) {
+    formatPrice: function (p) {
         return p && p !== Infinity ? '${0}'.format(p) : null;
+    },
+    formatDistance: function (distance) {
+        return distance && distance !== Infinity ? '{0}'.format(Math.round(distance * 10) / 10) : null;
     }
 });

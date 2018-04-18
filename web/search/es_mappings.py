@@ -163,7 +163,9 @@ strain_mapping = {
                 "price_eighth": {"type": "float"},
                 "price_quarter": {"type": "float"},
                 "price_half": {"type": "float"},
-                "in_stock": {"type": "boolean"}
+                "in_stock": {"type": "boolean"},
+                "is_clean": {"type": "boolean"},
+                "is_indoor": {"type": "boolean"},
             }
         }
     }

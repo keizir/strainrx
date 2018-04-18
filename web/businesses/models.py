@@ -406,6 +406,36 @@ class BusinessLocationPermanentlyRemoved(models.Model):
 
 @python_2_unicode_compatible
 class BusinessLocationMenuItem(models.Model):
+
+    INDOOR_SOIL, INDOOR_HYDRO, INDOOR_COCO, OUTDOOR, GREENHOUSE, AQUAPONICS = range(1, 7)
+
+    GROWING_METHOD_CHOICES = (
+        (INDOOR_SOIL, 'Indoor Soil'),
+        (INDOOR_HYDRO, 'Indoor Hydro'),
+        (INDOOR_COCO, 'Indoor Coco'),
+        (OUTDOOR, 'Outdoor'),
+        (GREENHOUSE, 'Greenhouse'),
+        (AQUAPONICS, 'Aquaponics'),
+    )
+
+    NATURAL, HID, LED, DOUBLE_ENDED, HALOGEN = range(1, 6)
+
+    LIGHTING_CHOICES = (
+        (NATURAL, 'Natural Light Schedule'),
+        (HID, 'HID'),
+        (LED, 'LED'),
+        (DOUBLE_ENDED, 'Double Ended'),
+        (HALOGEN, 'Halogen'),
+    )
+
+    SYNTHETIC, ORGANIC, BLENDED = range(1, 4)
+
+    NUTRIENT_BASE_CHOICES = (
+        (SYNTHETIC, 'Synthetic Nutrients'),
+        (ORGANIC, 'Organic Nutrients'),
+        (BLENDED, 'Blended Nutrients'),
+    )
+
     business_location = models.ForeignKey(BusinessLocation, on_delete=models.CASCADE)
     strain = models.ForeignKey(Strain, on_delete=models.DO_NOTHING, related_name='menu_items')
 
@@ -416,7 +446,19 @@ class BusinessLocationMenuItem(models.Model):
 
     in_stock = models.BooleanField(default=True)
 
+    growing_method = models.IntegerField(choices=GROWING_METHOD_CHOICES, default=INDOOR_SOIL)
+    lighting = models.IntegerField(choices=LIGHTING_CHOICES, default=NATURAL)
+    nutrient_base = models.IntegerField(choices=NUTRIENT_BASE_CHOICES, default=SYNTHETIC)
+
     removed_date = models.DateTimeField(blank=True, null=True)
+
+    @property
+    def is_indoor(self):
+        return self.growing_method in (self.INDOOR_SOIL, self.INDOOR_HYDRO, self.INDOOR_COCO)
+
+    @property
+    def is_clean(self):
+        return self.nutrient_base == self.ORGANIC
 
 
 @python_2_unicode_compatible

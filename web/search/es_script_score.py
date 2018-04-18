@@ -53,24 +53,51 @@ ADVANCED_SEARCH_SCORE = """
     }
 
     for (int i = 0; i < varietyArray.length; ++i){
-        if (params._source.variety == varietyArray[i]) {
+        if (doc['variety'].value == varietyArray[i]) {
             total += 20;
         }
     }
 
-    if (params._source.containsKey("is_clean") && params._source.is_clean && params.containsKey("is_clean")){
-        total += 40;
-    }
-    if (params._source.containsKey("is_indoor") && params._source.is_indoor && params.containsKey("is_indoor")){
-        total += 15;
-    }
-
-    if (params._source.containsKey("cup_winner") && params._source.cup_winner && params.containsKey("cup_winner")){
+    if (doc['cup_winner'].value && params.containsKey("cup_winner")){
         total += 10;
     }
     
     return total;
 """
+
+
+def advanced_search_nested_location_filter(**kwargs):
+    nested_filter = []
+    if kwargs.get('is_indoor'):
+        nested_filter.append({'term': {'locations.is_indoor': True}})
+    if kwargs.get('is_clean'):
+        nested_filter.append({'term': {'locations.is_clean': True}})
+    return nested_filter
+
+
+def advanced_search_sort(**kwargs):
+    nested_filter = advanced_search_nested_location_filter(**kwargs)
+    nested_filter.append({
+        "geo_distance": {
+            "distance": "{}mi".format(kwargs.get('proximity')),
+            "distance_type": "plane",
+            "locations.location": {"lat": kwargs.get('lat'), "lon": kwargs.get('lon')}
+        }
+    })
+
+    query = {
+        "nested_path": "locations",
+        'order': 'asc',
+        "mode": "min",
+        "nested_filter": {
+            'bool': {
+                'must': nested_filter
+            }
+        }
+    }
+    query.update(kwargs.get('subquery', {}))
+    return query
+
 
 """
 Groovy script unminified
@@ -263,3 +290,4 @@ CHECK_DELIVERY_RADIUS = """
         doc['location'].planeDistanceWithDefault(
           params.lat, params.lon, 0) * 0.000621371
     """
+

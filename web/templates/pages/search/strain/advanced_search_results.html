@@ -128,8 +128,8 @@
         <% if (strain.is_clean) { %>
           <img class="clean-logo" src="{% static 'images/search/clean.png' %}">
         <% } %>
-        <% if (strain.locations && strain.locations.length) { %>
-          <span class="item-location"><i class="fa fa-map-marker"></i> ${ closestDistance(strain.locations) } Miles away</span>
+        <% if (strain.distance) { %>
+          <span class="item-location"><i class="fa fa-map-marker"></i> ${ distance_format(strain.distance) } Miles away</span>
         <% } else { %>
           <span class="item-location">Not available nearby</span>
         <% } %>
@@ -157,33 +157,31 @@
             <% }); %>
           </b></div>
         <% } %>
-        <% if ( strain.locations.length && prices ) { %>
-          <div class="strain-price">
-            <% if ( prices.price_gram.min || prices.price_gram.max ) { %>
-              <% if ( prices.price_gram.min != prices.price_gram.max && prices.price_gram.min && prices.price_gram.max ) { %>
-                ${ prices.price_gram.min } - ${ prices.price_gram.max }/G
-              <% } else { %>
-                ${ prices.price_gram.min || prices.price_gram.max }/G
-              <% } %>
+        <div class="strain-price">
+          <% if ( strain.price_gram || strain.max_price_gram ) { %>
+            <% if ( strain.price_gram != strain.max_price_gram && strain.price_gram && strain.max_price_gram ) { %>
+              ${ strain.price_gram } - ${ strain.max_price_gram }/G
+            <% } else { %>
+              ${ strain.price_gram || strain.max_price_gram }/G
             <% } %>
+          <% } %>
 
-            <% if ( prices.price_eighth.min || prices.price_eighth.max ) { %>
-              <% if ( prices.price_eighth.min != prices.price_eighth.max && prices.price_eighth.min && prices.price_eighth.max ) { %>
-                ${ prices.price_eighth.min } - ${ prices.price_eighth.max }/8th
-              <% } else { %>
-                ${ prices.price_eighth.min || prices.price_eighth.max }/8th
-              <% } %>
+          <% if ( strain.price_eighth || strain.price_max_eighth ) { %>
+            <% if ( strain.price_eighth != strain.price_max_eighth && strain.price_eighth && strain.price_max_eighth ) { %>
+              ${ strain.price_eighth } - ${ strain.price_max_eighth }/8th
+            <% } else { %>
+              ${ strain.price_eighth || strain.price_max_eighth }/8th
             <% } %>
+          <% } %>
 
-            <% if ( prices.price_quarter.min || prices.price_quarter.max ) { %>
-              <% if ( prices.price_quarter.min != prices.price_quarter.max && prices.price_quarter.min && prices.price_quarter.max ) { %>
-                ${ prices.price_quarter.min } - ${ prices.price_quarter.max }/Q
-              <% } else { %>
-                ${ prices.price_quarter.min || prices.price_quarter.max }/Q
-              <% } %>
+          <% if ( strain.price_quarter || strain.price_max_quarter ) { %>
+            <% if ( strain.price_quarter != strain.price_max_quarter && strain.price_quarter && strain.price_max_quarter ) { %>
+              ${ strain.price_quarter } - ${ strain.price_max_quarter }/Q
+            <% } else { %>
+              ${ strain.price_quarter || strain.price_max_quarter }/Q
             <% } %>
-          </div>
-        <% } %>
+          <% } %>
+        </div>
 
         <div>
         <% if (strain.cup_winner) { %>
