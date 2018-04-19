@@ -432,7 +432,7 @@ class SearchElasticService(BaseElasticService):
             query = self.build_srx_score_es_query(criteria, strain_ids)
 
         es_response = self._request(method, url, data=json.dumps(query))
-        return self._transform_strain_results(es_response, current_user, result_filter,
+        return self._transform_strain_results(es_response, current_user,
                                               include_locations=include_locations, is_similar=is_similar,
                                               similar_strain_id=similar_strain_id)
 
@@ -601,8 +601,24 @@ class SearchElasticService(BaseElasticService):
             start_from=start_from
         )
 
+        location = current_user.get_location()
+        proximity = current_user.proximity
+        sort_query = []
+        for item in [
+            StrainSearchSerializer.BEST_MATCH, StrainSearchSerializer.NAME, StrainSearchSerializer.LOCATION,
+            StrainSearchSerializer.PRICE, StrainSearchSerializer.MAX_PRICE_GRAM, StrainSearchSerializer.PRICE_EIGHTH,
+            StrainSearchSerializer.MAX_PRICE_EIGHTH, StrainSearchSerializer.PRICE_QUARTER,
+            StrainSearchSerializer.MAX_PRICE_QUARTER
+        ]:
+            sort_query.append(
+                StrainSearchSerializer.SORT_FIELDS[item](
+                    lat=location and location.lat or 0, lon=location and location.lng or 0,
+                    proximity=proximity)
+            )
+
         # build query dict
         query = {
+            'sort': sort_query,
             'query': {
                 'match': {
                     'name.exact': lookup_query
@@ -611,11 +627,10 @@ class SearchElasticService(BaseElasticService):
         }
         q = self._request(method, url, data=json.dumps(query))
         # remove extra info returned by ES and do any other necessary transforms
-        results = self._transform_strain_results(q, current_user, 'all',
-                                                 include_locations=True, is_similar=False,
-                                                 similar_strain_id=None)
+        results = self._transform_search_results(q)
 
         query = {
+            'sort': sort_query,
             "query": {
                 "bool": {
                     "must": {
@@ -629,8 +644,7 @@ class SearchElasticService(BaseElasticService):
         }
 
         similar_strains = self._request(method, url, data=json.dumps(query))
-        similar_strains_results = self._transform_strain_results(
-            similar_strains, current_user, 'all', include_locations=True, is_similar=False, similar_strain_id=None)
+        similar_strains_results = self._transform_search_results(similar_strains)
 
         return {'q': lookup_query, 'similar_strains': similar_strains_results, **results}
 
@@ -717,7 +731,7 @@ class SearchElasticService(BaseElasticService):
                     }
                 })
 
-        distance = current_user.get_location()
+        location = current_user.get_location()
         proximity = current_user.proximity
         sort_query = []
         for item in list(lookup_query.get('sort', [])) + [
@@ -728,7 +742,7 @@ class SearchElasticService(BaseElasticService):
         ]:
             sort_query.append(
                 StrainSearchSerializer.SORT_FIELDS[item](
-                    lat=distance and distance.lat or 0, lon=distance and distance.lng or 0,
+                    lat=location and location.lat or 0, lon=location and location.lng or 0,
                     proximity=proximity, is_clean=lookup_query.get('is_clean'),
                     is_indoor=lookup_query.get('is_indoor'))
             )
@@ -759,8 +773,10 @@ class SearchElasticService(BaseElasticService):
                 }
             }
         }
-
         es_response = self._request(method, url, data=json.dumps(query, cls=PythonJSONEncoder))
+        return self._transform_search_results(es_response)
+
+    def _transform_search_results(self, es_response):
         strains = es_response.get('hits', {}).get('hits', [])
         total = es_response.get('hits', {}).get('total', 0)
         processed_results = []
@@ -781,7 +797,7 @@ class SearchElasticService(BaseElasticService):
                 'image_url': strain_image.image.url if strain_image and strain_image.image else None,
                 'cup_winner': source.get('cup_winner'),
                 'cannabinoids': source.get('cannabinoids'),
-                'distance': distance * MILE if isinstance(distance, float) else None,
+                'distance': distance,
                 'price_gram': gram if isinstance(gram, float) else None,
                 'max_price_gram': max_gram if isinstance(max_gram, float) else None,
                 'price_eighth': eighth if isinstance(eighth, float) else None,

@@ -89,7 +89,11 @@ def advanced_search_sort(**kwargs):
                           params.lat, params.lon, 0) * {}
                     """.format(MILE),
                 "lang": "painless",
-                "params": kwargs
+                "params": {
+                    "lat": kwargs.get('lat'),
+                    "lon": kwargs.get('lon'),
+                    'proximity': kwargs.get('proximity')
+                }
             }
         }},
         {"bool": {
