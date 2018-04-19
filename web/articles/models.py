@@ -76,9 +76,9 @@ class Article(models.Model):
         #     pass        
 
     def get_absolute_url(self):
-        if self.is_page:
-            return reverse('view_page', kwargs={'slug': self.slug})
-        return reverse('view_article', kwargs={'category_slug': self.category.slug, 'slug': self.slug})
+        if self.is_page or not self.category:
+            return reverse('view_page', args=(self.slug,))
+        return reverse('view_article', kwargs={'category_slug': self.category.slug, 'article_slug': self.slug})
 
     @property
     def short_title(self):
@@ -86,9 +86,7 @@ class Article(models.Model):
 
     @property
     def url(self):
-        if self.is_page or not self.category:
-            return '/{}'.format(self.slug)
-        return '/{}/{}'.format(self.category.slug, self.slug)
+        return self.get_absolute_url()
 
     def __str__(self):
         return self.title
