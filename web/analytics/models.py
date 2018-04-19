@@ -1,10 +1,10 @@
 from django.contrib.postgres.fields import JSONField
+from django.db import models
+from django.utils import timezone
+from django.utils.encoding import python_2_unicode_compatible
 
 from web.analytics.managers import EventQuerySet
 from web.users.models import User
-from django.db import models
-from django.utils.encoding import python_2_unicode_compatible
-from django.utils import timezone
 from web.users.models import User
 
 

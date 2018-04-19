@@ -220,7 +220,6 @@ class UserSignUpWizardView(APIView):
         request_data = request.data
         location_data = request.data.get('location')
         search_criteria = request.data.get('search_criteria')
-        del request_data['location']
 
         user_serializer = UserSignUpSerializer(data=request_data)
         location_serializer = UserLocationSerializer(data=location_data)
@@ -234,20 +233,6 @@ class UserSignUpWizardView(APIView):
         user_data = user_serializer.validated_data
         l_data = location_serializer.validated_data
         email = user_data.get('email').lower()
-
-        if User.objects.filter(email__iexact=email).exists():
-            return bad_request({'email': ['There is already an account associated with that email address']})
-
-        try:
-            validators.validate_pwd(user_data.get('pwd'), user_data.get('pwd2'))
-        except ValidationError as e:
-            return bad_request({'pwd': [e.message], 'pwd2': [e.message]})
-
-        if not user_data.get('is_terms_accepted'):
-            return bad_request({'is_terms_accepted': ['Required']})
-
-        if not user_data.get('is_age_verified'):
-            return bad_request({'is_age_verified': ['Required']})
 
         try:
             user = user_serializer.save()

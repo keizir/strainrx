@@ -16,6 +16,6 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='user',
             name='image',
-            field=models.ImageField(blank=True, help_text='Maximum file size allowed is 5Mb', max_length=255, upload_to=web.users.models.upload_image_to, validators=[web.users.models.validate_image]),
+            field=models.ImageField(blank=True, help_text='Maximum file size allowed is 5Mb', max_length=255, upload_to=web.users.models.upload_image_to, validators=[web.users.validators.validate_image]),
         ),
     ]
