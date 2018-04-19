@@ -121,9 +121,9 @@
     <div class="result-item">
       <div class="item-image">
         <% if (strain.image_url) { %>
-          <img class="strain-logo" src="${ strain.image_url }" alt="Strain Image">
+          <img class="strain-logo" src="${ strain.image_url }" alt="${ strain.name } Strain Image">
         <% } else { %>
-          <img class="strain-logo" src="{% static 'images/weed_small.jpg' %}" alt="Strain Image"/>
+          <img class="strain-logo" src="{% static 'images/weed_small.jpg' %}" alt="${ strain.name } Strain Image"/>
         <% } %>
         <% if (strain.is_clean) { %>
           <img class="clean-logo" src="{% static 'images/search/clean.png' %}">
