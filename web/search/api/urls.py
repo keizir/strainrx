@@ -83,4 +83,9 @@ urlpatterns = [
         view=BusinessLocationLookupView.as_view(),
         name='dispensary_lookup'
     ),
+    url(
+        regex=r'^search/$',
+        view=StrainSearchAPIView.as_view(),
+        name='search'
+    ),
 ]

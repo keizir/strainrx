@@ -1,5 +1,7 @@
 from rest_framework import serializers
+from rest_framework.exceptions import ValidationError
 
+from web.search.es_script_score import advanced_search_sort, advanced_search_nested_location_filter
 from web.search.models import Strain, StrainReview, StrainRating, StrainImage
 
 
@@ -14,6 +16,20 @@ class SearchCriteriaSerializer(serializers.Serializer):
 
     def update(self, instance, validated_data):
         pass
+
+    def get_search_criteria(self):
+        self.is_valid()
+
+        step_1_data = self.validated_data.get('step1', {})
+        step_2_data = self.validated_data.get('step2', {})
+        step_3_data = self.validated_data.get('step3', {})
+        step_4_data = self.validated_data.get('step4', {})
+
+        types = 'skipped' if step_1_data.get('skipped') else step_1_data
+        effects = 'skipped' if step_2_data.get('skipped') else step_2_data.get('effects', {})
+        benefits = 'skipped' if step_3_data.get('skipped') else step_3_data.get('effects', {})
+        side_effects = 'skipped' if step_4_data.get('skipped') else step_4_data.get('effects', {})
+        return types, effects, benefits, side_effects
 
 
 class StrainDetailSerializer(serializers.ModelSerializer):
@@ -39,3 +55,135 @@ class StrainReviewFormSerializer(serializers.ModelSerializer):
 class StrainImageSerializer(serializers.ModelSerializer):
     class Meta:
         model = StrainImage
+
+
+class StrainSearchSerializer(serializers.ModelSerializer):
+
+    BEST_MATCH, LOCATION, NAME, PRICE = '', 'location', 'name', 'price'
+    MAX_PRICE_GRAM, PRICE_EIGHTH, MAX_PRICE_EIGHTH, PRICE_QUARTER, MAX_PRICE_QUARTER = \
+        'max_price_gram', 'price_eighth', 'max_price_eighth', 'price_quarter', 'max_price_quarter'
+
+    SORT_CHOICES = (
+        (BEST_MATCH, 'best match'),
+        (LOCATION, 'location'),
+        (NAME, 'name'),
+        (PRICE, 'price'),
+    )
+    SORT_OPTIONS = [key for key, value in SORT_CHOICES]
+
+    SORT_FIELDS = {
+        BEST_MATCH: lambda **kwargs: '_score',
+        PRICE: lambda **kwargs: {
+            'locations.price_gram': advanced_search_sort(**kwargs)
+        },
+        LOCATION: lambda **kwargs: {
+            '_geo_distance': advanced_search_sort(
+                subquery={"unit": "mi", 'locations.location': {"lat": kwargs.get('lat'), "lon": kwargs.get('lon')}},
+                **kwargs
+            )
+        },
+        NAME: lambda **kwargs: {'name.raw': {
+            "order": 'asc',
+            "nested_path": "locations",
+            "nested_filter": {"bool": {'must': advanced_search_nested_location_filter(**kwargs)}}
+        }},
+        MAX_PRICE_GRAM: lambda **kwargs: {
+            'locations.price_gram': advanced_search_sort(subquery={"order": 'desc'}, **kwargs)
+        },
+        PRICE_EIGHTH: lambda **kwargs: {
+            'locations.price_eighth': advanced_search_sort(**kwargs)
+        },
+        MAX_PRICE_EIGHTH: lambda **kwargs: {
+            'locations.price_eighth': advanced_search_sort(subquery={"order": 'desc'}, **kwargs)
+        },
+        PRICE_QUARTER: lambda **kwargs: {
+            'locations.price_quarter': advanced_search_sort(**kwargs)
+        },
+        MAX_PRICE_QUARTER: lambda **kwargs: {
+            'locations.price_quarter': advanced_search_sort(subquery={"order": 'desc'}, **kwargs)
+        }
+    }
+
+    CANNABINOIDS = ['thc', 'thca', 'thcv', 'cbd', 'cbg', 'cbn', 'cbc']
+    TERPENES = ['humulene', 'pinene', 'linalool', 'caryophyllene', 'myrcene', 'terpinolene', 'ocimene', 'limonene',
+                'camphene', 'terpineol', 'phellandrene', 'carene', 'pulegone', 'sabinene', 'geraniol', 'valencene']
+
+    q = serializers.CharField(required=False)
+    page = serializers.IntegerField(required=False, default=1)
+    size = serializers.IntegerField(required=False, default=24, max_value=24)
+    start_from = serializers.IntegerField(required=False)
+    sort = serializers.MultipleChoiceField(required=False, choices=SORT_CHOICES)
+
+    variety = serializers.MultipleChoiceField(required=False, choices=Strain.VARIETY_CHOICES)
+    is_indoor = serializers.BooleanField(default=False, required=False)
+    is_clean = serializers.BooleanField(default=False, required=False)
+    # cannabinoids
+    thc_from = serializers.IntegerField(allow_null=True, required=False)
+    thc_to = serializers.IntegerField(allow_null=True, required=False)
+    thca_from = serializers.IntegerField(allow_null=True, required=False)
+    thca_to = serializers.IntegerField(allow_null=True, required=False)
+    thcv_from = serializers.IntegerField(allow_null=True, required=False)
+    thcv_to = serializers.IntegerField(allow_null=True, required=False)
+    cbd_from = serializers.IntegerField(allow_null=True, required=False)
+    cbd_to = serializers.IntegerField(allow_null=True, required=False)
+    cbg_from = serializers.IntegerField(allow_null=True, required=False)
+    cbg_to = serializers.IntegerField(allow_null=True, required=False)
+    cbn_from = serializers.IntegerField(allow_null=True, required=False)
+    cbn_to = serializers.IntegerField(allow_null=True, required=False)
+    cbc_from = serializers.IntegerField(allow_null=True, required=False)
+    cbc_to = serializers.IntegerField(allow_null=True, required=False)
+
+    # terpenes
+    humulene = serializers.BooleanField(default=False, required=False)
+    pinene = serializers.BooleanField(default=False, required=False)
+    linalool = serializers.BooleanField(default=False, required=False)
+    caryophyllene = serializers.BooleanField(default=False, required=False)
+    myrcene = serializers.BooleanField(default=False, required=False)
+    terpinolene = serializers.BooleanField(default=False, required=False)
+    ocimene = serializers.BooleanField(default=False, required=False)
+    limonene = serializers.BooleanField(default=False, required=False)
+    camphene = serializers.BooleanField(default=False, required=False)
+    terpineol = serializers.BooleanField(default=False, required=False)
+    phellandrene = serializers.BooleanField(default=False, required=False)
+    carene = serializers.BooleanField(default=False, required=False)
+    pulegone = serializers.BooleanField(default=False, required=False)
+    sabinene = serializers.BooleanField(default=False, required=False)
+    geraniol = serializers.BooleanField(default=False, required=False)
+    valencene = serializers.BooleanField(default=False, required=False)
+
+    default_style = {'template_pack': 'pages/search/strain/inlines/'}
+
+    class Meta:
+        model = Strain
+        fields = ('variety', 'cup_winner', 'is_indoor', 'is_clean', 'thc_from', 'thc_to', 'thca_from', 'thca_to',
+                  'thcv_from', 'thcv_to', 'cbd_from', 'cbd_to', 'cbg_from', 'cbg_to', 'cbn_from', 'cbn_to', 'cbc_from',
+                  'cbc_to', 'humulene', 'pinene', 'linalool', 'caryophyllene', 'myrcene', 'terpinolene', 'ocimene',
+                  'limonene', 'camphene', 'terpineol', 'phellandrene', 'carene', 'pulegone', 'sabinene', 'geraniol',
+                  'valencene', 'q', 'page', 'size', 'start_from', 'sort')
+
+    def to_internal_value(self, data):
+        try:
+            return super().to_internal_value(data)
+        except ValidationError as e:
+            errors = e.detail
+            data = data.copy()
+            if errors.pop('page', None):
+                data.pop('page')
+            if errors.pop('size', None):
+                data.pop('size')
+            if errors.pop('sort', None):
+                sort = data.pop('sort', [])
+                data.setlist('sort', [item for item in sort if item in self.SORT_OPTIONS])
+            if errors:
+                raise ValidationError(errors)
+            return super().to_internal_value(data)
+
+    def validate(self, attrs):
+        page = attrs.get('page') or self.fields['page'].default
+        size = attrs.get('size') or self.fields['size'].default
+        attrs['start_from'] = (int(page) - 1) * int(size)
+        return attrs
+
+    def to_representation(self, instance):
+        ret = super().to_representation(instance)
+        return {key: value for key, value in ret.items() if value}

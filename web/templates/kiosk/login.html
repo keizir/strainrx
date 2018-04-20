@@ -5,17 +5,11 @@
 {% block title %}Dispensary Login{% endblock %}
 
 {% block content %}
-<style>
-#kiosk-wrapper { width: 100%; text-align: center; }
-#kiosk-wrapper form label { display: none; }
-#kiosk-wrapper input { border: 1px solid #AAAAAA; font-size: 15px; }
-#kiosk-wrapper button { font-size: 15px; margin: 25px }
-.footer-region { background: none; }
-</style>
+
 <h2 style="margin:50px; font-weight: bold; font-size: 25px; color:#555555; letter-spacing: 2px;">WELCOME TO</h2>
-<img style="width:275px; margin-bottom: 25px;" src="{% static business.logo %}"/>
+<img style="width:275px; margin-bottom: 25px;" src="{% static business.image %}"/>
 <h3 style="margin: 25px; font-weight: normal; font-size: 19px; color:#777777; letter-spacing: 1px;">PLEASE ENTER YOUR EMAIL TO GET STARTED</h3>
-<form method="post" style="margin-bottom:100px;">
+<form method="post" style="margin-bottom:100px;" action="/kiosk/{{business.id}}/start">
     {% csrf_token %}
     {{ form.as_p }}
     <button class="btn btn-primary" type="submit">Next</button>

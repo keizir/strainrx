@@ -219,6 +219,7 @@ class UserSignUpWizardView(APIView):
     def post(self, request):
         request_data = request.data
         location_data = request.data.get('location')
+        search_criteria = request.data.get('search_criteria')
         del request_data['location']
 
         user_serializer = UserSignUpSerializer(data=request_data)
@@ -255,12 +256,21 @@ class UserSignUpWizardView(APIView):
                                     lat=l_data.get('lat'), lng=l_data.get('lng'),
                                     location_raw=l_data.get('location_raw'))
             location.save()
+
+            if search_criteria:
+                types, effects, benefits, side_effects = SearchCriteriaSerializer(
+                    data=search_criteria).get_search_criteria()
+                if types and effects and benefits and side_effects:
+                    UserSearch.objects.create(user=user, varieties=types, effects=effects,
+                                              benefits=benefits, side_effects=side_effects)
         except Exception:
             logger.exception('Cannot sign up user')
 
             if UserLocation.objects.filter(user__email__iexact=email).exists():
                 l = UserLocation.objects.get(user__email__iexact=email)
                 l.delete()
+
+            UserSearch.objects.filter(user__email__iexact=email).delete()
 
             if User.objects.filter(email__iexact=email).exists():
                 u = User.objects.get(email__iexact=email)
@@ -414,18 +424,8 @@ class UserStrainSearchesView(LoginRequiredMixin, APIView):
         return Response({}, status=status.HTTP_204_NO_CONTENT)
 
     def post(self, request, user_id):
-        criteria = SearchCriteriaSerializer(data=request.data.get('search_criteria'))
-        criteria.is_valid()
-
-        step_1_data = criteria.validated_data.get('step1')
-        step_2_data = criteria.validated_data.get('step2')
-        step_3_data = criteria.validated_data.get('step3')
-        step_4_data = criteria.validated_data.get('step4')
-
-        types = 'skipped' if step_1_data.get('skipped') else step_1_data
-        effects = 'skipped' if step_2_data.get('skipped') else step_2_data.get('effects')
-        benefits = 'skipped' if step_3_data.get('skipped') else step_3_data.get('effects')
-        side_effects = 'skipped' if step_4_data.get('skipped') else step_4_data.get('effects')
+        search_criteria = request.data.get('search_criteria')
+        types, effects, benefits, side_effects = SearchCriteriaSerializer(data=search_criteria).get_search_criteria()
 
         UserSearch.objects.create(
             user=request.user, varieties=types, effects=effects, benefits=benefits, side_effects=side_effects

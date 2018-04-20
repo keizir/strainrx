@@ -6,4 +6,4 @@ class SearchConfig(AppConfig):
     verbose_name = "Search"
 
     def ready(self):
-        pass
+        from . import signals

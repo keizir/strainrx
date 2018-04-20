@@ -722,6 +722,7 @@
 
     .body {
         margin: 1em 2em;
+        padding: 1em 0 0 0;
     }
 
     .from-body {
@@ -761,6 +762,8 @@
         display: flex;
         justify-content: center;
         font-size: 0.75em;
+        text-align: center;
+        padding-bottom: 1em;
 
         a {
             margin-left: 0.25em;
@@ -786,6 +789,8 @@
     .btn-wrapper {
         display: flex;
         justify-content: center;
+        text-align: center;
+        padding: 1em 0;
     }
 
     .btn-request-dialog {
@@ -803,6 +808,12 @@
         display: flex;
         justify-content: center;
         font-size: 0.75em;
+        padding: 0 0 1em 0;
+        text-align: center;
+        -webkit-box-pack: justify;
+        -moz-box-pack: justify;
+        -ms-flex-pack: justify;
+        -webkit-justify-content: center;
     }
 
     #request-notify {

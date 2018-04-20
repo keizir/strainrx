@@ -9,6 +9,7 @@ from django.contrib.sitemaps.views import sitemap
 from django.views import defaults as default_views
 from django.views.generic import TemplateView
 
+from web.articles.sitemaps import ArticleSitemap
 from web.businesses.sitemaps import BusinessLocationSitemap, DispensariesRootSitemap, StateRootSitemap, CityRootSitemap
 from web.search.sitemaps import StrainRootSitemap
 from web.users.sitemaps import StrainSitemap, StaticViewSitemap
@@ -21,7 +22,8 @@ sitemaps = {
     'dispensaries_root': DispensariesRootSitemap,
     'dispensaries_state_root': StateRootSitemap,
     'dispensaries_city_root': CityRootSitemap,
-    'static': StaticViewSitemap
+    'articles': ArticleSitemap,
+    'static': StaticViewSitemap,
 }
 
 urlpatterns = [
@@ -80,8 +82,7 @@ urlpatterns = [
     url(r'^(?P<page_slug>[\w-]+)/$',
         view=view_page,
         name='view_page'
-    ),
-
+    )
 
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
@@ -96,5 +97,6 @@ if settings.DEBUG:
         }),
         url(r'^500/$', default_views.server_error, kwargs={'template_name': '500.html'}),
     ]
+
 
 handler404 = 'web.system.views.page_404_handler'

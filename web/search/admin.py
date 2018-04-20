@@ -83,7 +83,8 @@ class StrainAdmin(admin.ModelAdmin):
         ('Info', {'fields': ('id', 'name', 'common_name', 'strain_slug'), }),
         ('Social', {'fields': ('meta_desc', 'meta_keywords', 'social_image'), }),
         ('Type', {'fields': ('variety', 'category',), }),
-        ('Effects', {'fields': ('effects', 'benefits', 'side_effects', 'flavor', 'terpenes', 'cannabinoids'), }),
+        ('Effects', {'fields': ('cup_winner', 'effects', 'benefits', 'side_effects', 'flavor',
+                                'terpenes', 'cannabinoids', 'quick_picks'), }),
         ('Additional', {'fields': ('about', 'origins', 'you_may_also_like_exclude'), }),
     )
     inlines = (StrainImageInline,)
@@ -194,5 +195,4 @@ class FlavorAdmin(admin.ModelAdmin):
 
 @admin.register(UserSearch)
 class UserSearchAdmin(admin.ModelAdmin):
-    pass
-
+    search_fields = ['user__email']
