@@ -786,7 +786,7 @@ W.pages.strain.StrainDetailPage = Class.extend({
         } else {
             $.ajax({
                 method: 'GET',
-                url: '/api/v1/search/strain/{0}/deliveries?filter=all&order_field=menu_items.price_gram&order_dir=asc'.format(this.ui.$strainId.val()),
+                url: '/api/v1/search/strain/{0}/deliveries?filter=all&order_field=distance&order_dir=asc'.format(this.ui.$strainId.val()),
                 success: function (data) {
                     that.locations = data.locations;
                     success(data.locations);

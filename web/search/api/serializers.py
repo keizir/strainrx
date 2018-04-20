@@ -78,7 +78,8 @@ class StrainSearchSerializer(serializers.ModelSerializer):
         },
         LOCATION: lambda **kwargs: {
             '_geo_distance': advanced_search_sort(
-                subquery={"unit": "mi", 'locations.location': {"lat": kwargs.get('lat'), "lon": kwargs.get('lon')}},
+                subquery={"unit": "mi", "distance_type": "plane",
+                          'locations.location': {"lat": kwargs.get('lat'), "lon": kwargs.get('lon')}},
                 **kwargs
             )
         },
