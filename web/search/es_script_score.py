@@ -113,7 +113,6 @@ def advanced_search_sort(**kwargs):
     query = {
         "nested_path": "locations",
         'order': 'asc',
-        "mode": "min",
         "nested_filter": {
             'bool': {
                 'must': nested_filter,

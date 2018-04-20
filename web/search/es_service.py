@@ -8,7 +8,7 @@ from web.common.utils import PythonJSONEncoder
 from web.es_service import BaseElasticService
 from web.search import es_mappings
 from web.search.api.serializers import StrainSearchSerializer
-from web.search.es_script_score import ADVANCED_SEARCH_SCORE, SRX_RECOMMENDATION_SCORE, CHECK_DELIVERY_RADIUS, MILE
+from web.search.es_script_score import ADVANCED_SEARCH_SCORE, SRX_RECOMMENDATION_SCORE, CHECK_DELIVERY_RADIUS
 from web.search.models import StrainImage
 from web.system.models import SystemProperty
 
@@ -85,7 +85,7 @@ class SearchElasticService(BaseElasticService):
         }
 
     def get_locations(self, strain_id=None, location_type=None, current_user=None,
-                      order_field="menu_items.price_gram", order_dir="asc", size=None, only_active=False):
+                      order_field="distance", order_dir="asc", size=None, only_active=False):
 
         method = self.METHODS.get('GET')
         url = '{0}{1}{2}'.format(self.BASE_ELASTIC_URL, self.URLS.get('BUSINESS_LOCATION'), '/_search')
