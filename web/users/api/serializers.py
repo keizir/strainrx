@@ -1,13 +1,14 @@
 import logging
 import uuid
 
+import datetime
 from rest_framework import serializers
 from rest_framework.exceptions import ValidationError
 from django.core.exceptions import ValidationError as DjangoValidationError
 
 from web.system.models import SystemProperty
 from web.users import validators
-from web.users.models import User, UserLocation
+from web.users.models import User, UserLocation, GENDER
 
 logger = logging.getLogger(__name__)
 
@@ -27,10 +28,42 @@ class UserSerializer(serializers.ModelSerializer):
 
 
 class UserDetailSerializer(serializers.ModelSerializer):
+    EMPTY_OPTION = [('', '- Select One -')]
+    MONTH_CHOICES = EMPTY_OPTION + [(datetime.date(1900, i, 1).strftime('%b'),
+                                     datetime.date(1900, i, 1).strftime('%B')) for i in range(1, 13)]
+    DAY_CHOICES = EMPTY_OPTION + list(zip(range(1, 32), range(1, 32)))
+    YEAR_CHOICES = EMPTY_OPTION + list(zip(range(1900, datetime.date.today().year),
+                                           range(1900, datetime.date.today().year)))
+    GENDER_CHOICES = EMPTY_OPTION + GENDER
+
+    birth_month = serializers.ChoiceField(choices=MONTH_CHOICES, label='', allow_blank=True, allow_null=True,
+                                          style={'template_pack': 'rest_framework/inline/'})
+    birth_day = serializers.ChoiceField(choices=DAY_CHOICES, label='', allow_blank=True, allow_null=True,
+                                        style={'template_pack': 'rest_framework/inline/'})
+    birth_year = serializers.ChoiceField(choices=YEAR_CHOICES, label='', allow_blank=True, allow_null=True,
+                                         style={'template_pack': 'rest_framework/inline/'})
+    gender = serializers.ChoiceField(choices=GENDER_CHOICES, label='', allow_blank=True, allow_null=True)
+
+    style = {}
+
     class Meta:
         model = User
         fields = ('name', 'first_name', 'last_name', 'email', 'birth_month', 'birth_day', 'birth_year', 'gender',
                   'timezone')
+        extra_kwargs = {
+            'email': {'label': 'Email'}
+        }
+
+    def validate(self, attrs):
+        attrs = super().validate(attrs)
+        if attrs.get('birth_month') or attrs.get('birth_day') or attrs.get('birth_year'):
+            if not attrs.get('birth_month'):
+                self.errors.update({'birth_month': ['This field is required.']})
+            if not attrs.get('birth_day'):
+                self.errors.update({'birth_day': ['This field is required.']})
+            if not attrs.get('birth_year'):
+                self.errors.update({'birth_year': ['This field is required.']})
+        return attrs
 
 
 class UserSignUpSerializer(serializers.ModelSerializer):

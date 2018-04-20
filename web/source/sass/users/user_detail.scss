@@ -224,6 +224,11 @@
             .form-field.date-field {
                 display: inline-block;
                 float: left;
+
+                .form-group {
+                    display: inline;
+                }
+
             }
 
             .form-field.date-field label {
