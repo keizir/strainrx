@@ -204,7 +204,7 @@ W.pages.AdvancedSearchResultsPage = Class.extend({
             'position': position,
             'strain': item,
             'price_format': that.formatPrice,
-            'distance_format': that.formatDistance,
+            'distance': that.formatDistance(item.distance),
             'isBasicSearch': isBasicSearch,
             'searchParams': window.location.search.slice(1)
         });

@@ -128,8 +128,8 @@
         <% if (strain.is_clean) { %>
           <img class="clean-logo" src="{% static 'images/search/clean.png' %}">
         <% } %>
-        <% if (strain.distance) { %>
-          <span class="item-location"><i class="fa fa-map-marker"></i> ${ distance_format(strain.distance) } Miles away</span>
+        <% if (distance) { %>
+          <span class="item-location"><i class="fa fa-map-marker"></i> ${ distance } Miles away</span>
         <% } else { %>
           <span class="item-location">Not available nearby</span>
         <% } %>
