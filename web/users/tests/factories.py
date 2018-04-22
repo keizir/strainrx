@@ -1,3 +1,5 @@
+import random
+
 import factory.faker
 from allauth.account.models import EmailAddress
 from django.conf import settings
@@ -21,7 +23,7 @@ class UserFactory(factory.django.DjangoModelFactory):
     is_age_verified = True
     is_email_verified = True
     type = 'consumer'
-    gender = GENDER[1][0]
+    gender = factory.LazyAttribute(lambda x: random.choice(GENDER)[0])
 
     @factory.post_generation
     def emailaddress(self, create, extracted, **kwargs):

@@ -28,21 +28,21 @@ class UserSerializer(serializers.ModelSerializer):
 
 
 class UserDetailSerializer(serializers.ModelSerializer):
-    EMPTY_OPTION = [('', '- Select One -')]
-    MONTH_CHOICES = EMPTY_OPTION + [(datetime.date(1900, i, 1).strftime('%b'),
-                                     datetime.date(1900, i, 1).strftime('%B')) for i in range(1, 13)]
-    DAY_CHOICES = EMPTY_OPTION + list(zip(range(1, 32), range(1, 32)))
-    YEAR_CHOICES = EMPTY_OPTION + list(zip(range(1900, datetime.date.today().year),
-                                           range(1900, datetime.date.today().year)))
-    GENDER_CHOICES = EMPTY_OPTION + GENDER
+    MONTH_CHOICES = [(datetime.date(1900, i, 1).strftime('%b'),
+                      datetime.date(1900, i, 1).strftime('%B')) for i in range(1, 13)]
+    DAY_CHOICES = list(zip(range(1, 32), range(1, 32)))
+    YEAR_CHOICES = list(zip(range(1900, datetime.date.today().year),
+                            range(1900, datetime.date.today().year)))
+    GENDER_CHOICES = GENDER
 
-    birth_month = serializers.ChoiceField(choices=MONTH_CHOICES, label='', allow_blank=True, allow_null=True,
-                                          style={'template_pack': 'rest_framework/inline/'})
-    birth_day = serializers.ChoiceField(choices=DAY_CHOICES, label='', allow_blank=True, allow_null=True,
-                                        style={'template_pack': 'rest_framework/inline/'})
-    birth_year = serializers.ChoiceField(choices=YEAR_CHOICES, label='', allow_blank=True, allow_null=True,
-                                         style={'template_pack': 'rest_framework/inline/'})
-    gender = serializers.ChoiceField(choices=GENDER_CHOICES, label='', allow_blank=True, allow_null=True)
+    birth_month = serializers.ChoiceField(choices=MONTH_CHOICES, label='', required=False, allow_blank=True,
+                                          allow_null=True, style={'template_pack': 'rest_framework/inline/'})
+    birth_day = serializers.ChoiceField(choices=DAY_CHOICES, label='', required=False, allow_null=True,
+                                        allow_blank=True, style={'template_pack': 'rest_framework/inline/'})
+    birth_year = serializers.ChoiceField(choices=YEAR_CHOICES, label='', required=False, allow_null=True,
+                                         allow_blank=True, style={'template_pack': 'rest_framework/inline/'})
+    gender = serializers.ChoiceField(choices=GENDER_CHOICES, label='', required=False,
+                                     allow_null=True, allow_blank=True)
 
     style = {}
 
@@ -51,18 +51,38 @@ class UserDetailSerializer(serializers.ModelSerializer):
         fields = ('name', 'first_name', 'last_name', 'email', 'birth_month', 'birth_day', 'birth_year', 'gender',
                   'timezone')
         extra_kwargs = {
-            'email': {'label': 'Email'}
+            'email': {'label': 'Email', 'required': True, 'allow_blank': False, 'allow_null': False},
+            'name': {'label': 'Username'}
         }
+
+    def __init__(self, instance=None, **kwargs):
+        super().__init__(instance, **kwargs)
+        if instance and instance.name:
+            self.fields['name'].read_only = True
 
     def validate(self, attrs):
         attrs = super().validate(attrs)
+
+        try:
+            validators.validate_name(attrs.get('name'), self.instance.pk)
+        except DjangoValidationError as e:
+            raise ValidationError({'name': e.messages})
+
+        if User.objects.filter(email__iexact=attrs['email']).exclude(pk=self.instance.pk).exists():
+            raise ValidationError({'email': ['There is already an account associated with that email address']})
+
         if attrs.get('birth_month') or attrs.get('birth_day') or attrs.get('birth_year'):
             if not attrs.get('birth_month'):
-                self.errors.update({'birth_month': ['This field is required.']})
+                raise ValidationError({'birth_month': ['This field is required.']})
             if not attrs.get('birth_day'):
-                self.errors.update({'birth_day': ['This field is required.']})
+                raise ValidationError({'birth_day': ['This field is required.']})
             if not attrs.get('birth_year'):
-                self.errors.update({'birth_year': ['This field is required.']})
+                raise ValidationError({'birth_year': ['This field is required.']})
+
+        attrs['birth_month'] = attrs.get('birth_month') or None
+        attrs['birth_day'] = attrs.get('birth_day') or None
+        attrs['birth_year'] = attrs.get('birth_year') or None
+
         return attrs
 
 

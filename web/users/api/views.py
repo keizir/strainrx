@@ -58,7 +58,7 @@ class UserDetailView(UpdateAPIView):
     def perform_update(self, serializer):
         super().perform_update(serializer)
 
-        location_data = self.request.data.get('location')
+        location_data = self.request.data.get('location', {})
         serializer = UserLocationSerializer(data=location_data)
         serializer.is_valid(raise_exception=True)
         data = serializer.validated_data

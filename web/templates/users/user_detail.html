@@ -10,13 +10,25 @@
         <fieldset>
           <div class="form-field-group">
             <div class="form-field">
+              {% render_field form.name style=form.style %}
+            </div>
+            <div class="form-field">
+              {% render_field form.email style=form.style %}
+            </div>
+            <div class="form-field timezone-form-field">
+              {% render_field form.timezone style=form.style %}
+            </div>
+          </div>
+          <div class="form-field-group">
+            <div class="form-field">
               {% render_field form.first_name style=form.style %}
             </div>
             <div class="form-field">
               {% render_field form.last_name style=form.style %}
             </div>
-            <div class="form-field">
-              {% render_field form.email style=form.style %}
+            <div class="form-field gender-field">
+              <label for="gender">Gender (Optional)</label>
+              {% render_field form.gender style=form.style %}
             </div>
           </div>
           <div class="form-field-group">
@@ -25,9 +37,6 @@
               <input id="address" type="text" name="address" value="">
               <span class="removable remove-location hidden" title="Clear value"></span>
             </div>
-            <div class="form-field timezone-form-field">
-              {% render_field form.timezone style=form.style %}
-            </div>
           </div>
           <div class="form-field-group">
             <div class="form-field date-field">
@@ -35,10 +44,6 @@
               {% render_field form.birth_month style=form.style %}
               {% render_field form.birth_day style=form.style %}
               {% render_field form.birth_year style=form.style %}
-            </div>
-            <div class="form-field gender-field">
-              <label for="gender">Gender (Optional)</label>
-              {% render_field form.gender style=form.style %}
             </div>
           </div>
         </fieldset>
