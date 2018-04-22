@@ -36,18 +36,11 @@ def upload_image_to(instance, filename):
     return 'users/{0}/images/{1}___{2}'.format(instance.pk, uuid4(), filename)
 
 
-def validate_image(field_file_obj):
-    file_size = field_file_obj.file.size
-    megabyte_limit = settings.MAX_BUSINESS_IMAGE_SIZE
-    if file_size > megabyte_limit:
-        raise ValidationError("Max file size is %sMB" % str(megabyte_limit))
-
-
 @python_2_unicode_compatible
 class User(AbstractUser):
     # First Name and Last Name do not cover name patterns
     # around the globe.
-    name = models.CharField(_('Name of User'), blank=True, null=True, max_length=255)
+    name = models.CharField(_('Name of User'), blank=True, max_length=25)
 
     is_age_verified = models.BooleanField(default=False)
     is_email_verified = models.BooleanField(default=False)
@@ -64,11 +57,11 @@ class User(AbstractUser):
                                 choices=zip(pytz.common_timezones, pytz.common_timezones))
 
     image = models.ImageField(max_length=255, upload_to=upload_image_to, blank=True,
-                              help_text='Maximum file size allowed is 5Mb', validators=[validate_image])
+                              help_text='Maximum file size allowed is 5Mb', validators=[validators.validate_image])
 
     def clean(self):
         validators.validate_email(self.email)
-
+        validators.validate_name(self.name, self.pk)
         if not self.is_age_verified:
             return ValidationError('Age verification is required')
 
