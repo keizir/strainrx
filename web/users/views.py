@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 from __future__ import absolute_import, unicode_literals
 
-import pytz
 from django.conf import settings
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.core.urlresolvers import reverse
@@ -10,6 +9,7 @@ from django.views.generic import DetailView, ListView, RedirectView, UpdateView
 from django.views.generic import TemplateView, FormView
 
 from web.search.models import UserSearch
+from web.users.api.serializers import UserDetailSerializer
 from .forms import UserCreationForm
 from .models import User
 
@@ -23,7 +23,7 @@ class UserDetailView(LoginRequiredMixin, DetailView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['tab'] = 'info'
-        context['timezones'] = pytz.common_timezones
+        context['form'] = UserDetailSerializer(instance=self.request.user)
         return context
 
 

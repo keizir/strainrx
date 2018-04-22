@@ -47,7 +47,7 @@ class MyUserAdmin(UserAdminImpersonateMixin, AuthUserAdmin, ExportActionModelAdm
     add_form = MyUserCreationForm
     fieldsets = (
         ('User Profile', {'fields': ('name', 'is_email_verified')}),
-        ('', {'fields': ('type',)}),
+        ('', {'fields': ('type', 'timezone', 'proximity', 'gender', 'birth_month', 'birth_day', 'birth_year')}),
     ) + AuthUserAdmin.fieldsets
     list_display = (
         'email', 'first_name', 'last_name', 'type', 'last_login', 'date_joined', 'is_email_verified', 'is_superuser')

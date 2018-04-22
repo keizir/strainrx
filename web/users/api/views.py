@@ -17,6 +17,7 @@ from rest_framework import status
 from rest_framework.exceptions import ValidationError as RestFrameworkValidationError
 from rest_framework.response import Response
 from rest_framework.views import APIView
+from rest_framework.generics import UpdateAPIView
 
 from web.users.login import pre_login
 from web.search.api.serializers import SearchCriteriaSerializer
@@ -47,64 +48,22 @@ class UsersView(APIView):
         return Response({'exist': does_exist}, status=status.HTTP_200_OK)
 
 
-class UserDetailView(LoginRequiredMixin, APIView):
-    permission_classes = (UserAccountOwner,)
+class UserDetailView(UpdateAPIView):
+    permission_classes = (permissions.IsAuthenticated, UserAccountOwner)
+    serializer_class = UserDetailSerializer
 
-    def put(self, request, user_id):
-        request_data = request.data
-        location_data = request.data.get('location')
+    def get_object(self):
+        return self.request.user
 
-        del request_data['location']
+    def perform_update(self, serializer):
+        super().perform_update(serializer)
 
-        serializer = UserDetailSerializer(data=request_data)
-        serializer.is_valid(raise_exception=True)
-
-        user = User.objects.get(pk=user_id)
-
-        email = serializer.validated_data.get('email').lower()
-        if user.email.lower() != email:
-            try:
-                validators.validate_email(email)
-            except ValidationError as e:
-                return bad_request(e.message)
-
-            does_exist = User.objects.filter(email__iexact=email).exists()
-            if does_exist:
-                return bad_request('There is already an account associated with that email address')
-
-        user.name = serializer.validated_data.get('name')
-        user.first_name = serializer.validated_data.get('first_name')
-        user.last_name = serializer.validated_data.get('last_name')
-        user.email = email
-        user.birth_month = serializer.validated_data.get('birth_month')
-        user.birth_day = serializer.validated_data.get('birth_day')
-        user.birth_year = serializer.validated_data.get('birth_year')
-        user.gender = serializer.validated_data.get('gender')
-        user.timezone = serializer.validated_data.get('timezone')
-        user.save()
-
+        location_data = self.request.data.get('location', {})
         serializer = UserLocationSerializer(data=location_data)
         serializer.is_valid(raise_exception=True)
         data = serializer.validated_data
 
-        try:
-            location = UserLocation.objects.get(user__id=user_id)
-            location.street1 = data.get('street1')
-            location.city = data.get('city')
-            location.state = data.get('state')
-            location.zipcode = data.get('zipcode')
-            location.lat = data.get('lat')
-            location.lng = data.get('lng')
-            location.location_raw = data.get('location_raw')
-        except UserLocation.DoesNotExist:
-            location = UserLocation(
-                user=request.user,
-                street1=data.get('street1'), city=data.get('city'),
-                state=data.get('state'), zipcode=data.get('zipcode'),
-                lat=data.get('lat'), lng=data.get('lng'), location_raw=data.get('location_raw')
-            )
-
-        location.save()
+        UserLocation.objects.update_or_create(user_id=self.request.user.id, defaults=data)
         return Response({}, status=status.HTTP_200_OK)
 
 
@@ -220,7 +179,6 @@ class UserSignUpWizardView(APIView):
         request_data = request.data
         location_data = request.data.get('location')
         search_criteria = request.data.get('search_criteria')
-        del request_data['location']
 
         user_serializer = UserSignUpSerializer(data=request_data)
         location_serializer = UserLocationSerializer(data=location_data)
@@ -234,20 +192,6 @@ class UserSignUpWizardView(APIView):
         user_data = user_serializer.validated_data
         l_data = location_serializer.validated_data
         email = user_data.get('email').lower()
-
-        if User.objects.filter(email__iexact=email).exists():
-            return bad_request({'email': ['There is already an account associated with that email address']})
-
-        try:
-            validators.validate_pwd(user_data.get('pwd'), user_data.get('pwd2'))
-        except ValidationError as e:
-            return bad_request({'pwd': [e.message], 'pwd2': [e.message]})
-
-        if not user_data.get('is_terms_accepted'):
-            return bad_request({'is_terms_accepted': ['Required']})
-
-        if not user_data.get('is_age_verified'):
-            return bad_request({'is_age_verified': ['Required']})
 
         try:
             user = user_serializer.save()

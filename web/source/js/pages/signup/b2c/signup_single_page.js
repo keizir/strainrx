@@ -5,6 +5,7 @@ W.ns('W.pages.b2c');
 W.pages.b2c.SignUpSinglePage = Class.extend({
 
     ui: {
+        $name: $('#id_name'),
         $email: $('#id_email'),
         $firstName: $('#id_first_name'),
         $lastName: $('#id_last_name'),
@@ -27,6 +28,7 @@ W.pages.b2c.SignUpSinglePage = Class.extend({
 
     getInputs: function() {
         return {
+            name: this.ui.$name.val(),
             email: this.ui.$email.val(),
             first_name: this.ui.$firstName.val(),
             last_name: this.ui.$lastName.val(),

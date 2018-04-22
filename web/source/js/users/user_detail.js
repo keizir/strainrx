@@ -8,7 +8,8 @@ W.users.DetailPage = Class.extend({
 
     ui: {
         $userId: $('.user-id'),
-        $messagesRegion: $('.messages')
+        $messagesRegion: $('.messages'),
+        $name: $('.info-form-wrapper input[name="name"]')
     },
 
     init: function () {
@@ -17,6 +18,10 @@ W.users.DetailPage = Class.extend({
         $('select').focus(function () {
             that.ui.$messagesRegion.text('');
         });
+
+        if (that.ui.$name.val()) {
+            that.ui.$name.prop('disabled', true);
+        }
 
         this.changeAddress();
         this.preFillUserAddress();
@@ -134,6 +139,7 @@ W.users.DetailPage = Class.extend({
                     timezone = $('select[name="timezone"]').val();
 
                 return {
+                    'name': that.ui.$name.val(),
                     'first_name': $('input[name="first_name"]').val(),
                     'last_name': $('input[name="last_name"]').val(),
                     'email': $('input[name="email"]').val(),
@@ -198,13 +204,17 @@ W.users.DetailPage = Class.extend({
     },
 
     showErrorMessage: function showErrorMessage(error) {
-        var that = this;
+        var that = this,
+            text = '';
+
         if (error.status === 400) {
             var errorText = JSON.parse(error.responseText);
-            that.displayErrorMessage(errorText.error ?
-                errorText.error : errorText.zipcode ?
-                'Zip Code may contain max 10 characters' : errorText.email ?
-                'Email format is invalid' : 'Exception');
+
+            Object.keys(errorText).forEach(function(key) {
+                text += key.replace('_', ' ') + ': ' + errorText[key]
+            });
+
+            that.displayErrorMessage(text);
         }
     },
 
