@@ -164,13 +164,13 @@ def validate_image(field_file_obj):
 
 @python_2_unicode_compatible
 class StrainImage(models.Model):
-    strain = models.ForeignKey(Strain, on_delete=models.DO_NOTHING, related_name='images')
+    strain = models.ForeignKey(Strain, on_delete=models.CASCADE, related_name='images')
     image = models.ImageField(max_length=255, upload_to=upload_image_to,
                               help_text='Maximum file size allowed is 10Mb',
                               validators=[validate_image])
 
     created_date = models.DateField(blank=False, null=False, default=datetime.now)
-    created_by = models.ForeignKey(User, on_delete=models.DO_NOTHING)
+    created_by = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
 
     is_approved = models.BooleanField(default=False)
     is_primary = models.BooleanField(default=False)
@@ -261,18 +261,18 @@ class UserSearch(models.Model):
 @python_2_unicode_compatible
 class StrainReview(models.Model):
     """
-        A 5-star rating
+    A 5-star rating
     """
-    strain = models.ForeignKey(Strain, on_delete=models.DO_NOTHING)
+    strain = models.ForeignKey(Strain, on_delete=models.CASCADE)
 
     rating = models.FloatField()
     review = models.TextField(default='', blank=True)
     review_approved = models.BooleanField(default=False)
 
     created_date = models.DateTimeField()
-    created_by = models.ForeignKey(User, on_delete=models.DO_NOTHING, related_name='+')
+    created_by = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, related_name='+')
     last_modified_date = models.DateTimeField()
-    last_modified_by = models.ForeignKey(User, on_delete=models.DO_NOTHING, null=True, related_name='+')
+    last_modified_by = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, related_name='+')
 
     def __init__(self, *args, **kwargs):
         #
@@ -303,7 +303,7 @@ class StrainRating(models.Model):
         ('processed', 'Processed'),
     )
 
-    strain = models.ForeignKey(Strain, on_delete=models.DO_NOTHING)
+    strain = models.ForeignKey(Strain, on_delete=models.CASCADE)
 
     effects = JSONField(default={})
     effects_changed = models.BooleanField(default=False)
@@ -318,10 +318,10 @@ class StrainRating(models.Model):
     removed_date = models.DateTimeField(null=True)
 
     created_date = models.DateTimeField(auto_now_add=True)
-    created_by = models.ForeignKey(User, on_delete=models.DO_NOTHING, related_name='+')
+    created_by = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, related_name='+')
     created_by_ip = models.CharField(max_length=30, blank=True, null=True)
     last_modified_date = models.DateTimeField(auto_now=True)
-    last_modified_by = models.ForeignKey(User, on_delete=models.DO_NOTHING, null=True, related_name='+')
+    last_modified_by = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, related_name='+')
     last_modified_by_ip = models.CharField(max_length=30, blank=True, null=True)
 
 
