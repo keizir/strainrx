@@ -70,6 +70,10 @@ class Article(models.Model):
     def __str__(self):
         return self.title
 
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.original_data = {'slug': self.slug, 'category_slug': self.category.slug if self.category else None}
+
     def save(self, *args, **kwargs):
         if not self.slug:
             self.slug = slugify(self.title)
