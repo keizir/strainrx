@@ -398,13 +398,6 @@ def exist_by_slug_name(location_slug_name):
 
 
 @python_2_unicode_compatible
-class BusinessLocationPermanentlyRemoved(models.Model):
-    city_slug = models.TextField()
-    slug_name = models.TextField()
-    state = models.TextField()
-
-
-@python_2_unicode_compatible
 class BusinessLocationMenuItem(models.Model):
 
     INDOOR_SOIL, INDOOR_HYDRO, INDOOR_COCO, OUTDOOR, GREENHOUSE, AQUAPONICS = range(1, 7)

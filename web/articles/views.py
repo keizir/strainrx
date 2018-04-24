@@ -1,16 +1,22 @@
-from django.shortcuts import render, get_object_or_404
-from web.articles.models import Article
 import html
 
+from django.shortcuts import render, get_object_or_404
+from django.views.generic import DetailView
 
-def view_article(request, category_slug, article_slug):
-    article = get_object_or_404(Article, category__slug=category_slug, slug=article_slug)
-    #article = Article.objects.get(category__slug=category_slug, slug=article_slug, is_approved=True, deleted_date__isnull=True)
+from web.articles.models import Article
 
-    return render(request, 'pages/articles/article.html', {
-        "article": article,
-        "text": html.unescape(article.text)
-        })
+
+class ArticleDetailView(DetailView):
+    template_name = 'pages/articles/article.html'
+    context_object_name = 'article'
+
+    def get_object(self, queryset=None):
+        return get_object_or_404(Article, slug=self.kwargs['article_slug'])
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['text'] = html.unescape(self.object.text)
+        return context
 
 
 def view_page(request, page_slug):
