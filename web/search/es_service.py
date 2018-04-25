@@ -620,8 +620,15 @@ class SearchElasticService(BaseElasticService):
         query = {
             'sort': sort_query,
             'query': {
-                'match': {
-                    'name.exact': lookup_query
+                "bool": {
+                    "must": {
+                        'match': {
+                            'name.exact': lookup_query
+                        }
+                    },
+                    "must_not": {
+                        "exists": {"field": "removed_date"}
+                    }
                 }
             }
         }
@@ -636,9 +643,10 @@ class SearchElasticService(BaseElasticService):
                     "must": {
                         "match": {"name": lookup_query}
                     },
-                    "must_not": {
-                        "match": {"name.exact": lookup_query}
-                    }
+                    "must_not": [
+                        {"match": {"name.exact": lookup_query}},
+                        {"exists": {"field": "removed_date"}}
+                    ]
                 }
             }
         }

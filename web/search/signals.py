@@ -1,11 +1,13 @@
 from __future__ import unicode_literals, absolute_import
 
-from django.db.models.signals import post_save
+from django.db.models.signals import post_save, pre_delete
 from django.dispatch import receiver
+from rest_framework import status
 
 from web.search.models import StrainReview, Strain, StrainRating
 from web.search.serializers import StrainReviewESSerializer
 from web.search.strain_es_service import StrainESService
+from web.system.models import PermanentlyRemoved
 from web.users.models import User
 
 
@@ -30,3 +32,16 @@ def create_es_strain(sender, **kwargs):
             r = StrainRating(strain=strain, created_by=rate_bot, effects=strain.effects, benefits=strain.benefits,
                              side_effects=strain.side_effects, status='pending')
             r.save()
+
+
+@receiver(pre_delete, sender=Strain)
+def remove_permanently(sender, instance, **kwargs):
+    """
+    Add record to PermanentlyRemoved model
+    Update ES index
+    """
+    StrainESService().delete_strain(instance.pk)
+    PermanentlyRemoved.objects.create(
+        status=status.HTTP_410_GONE,
+        url=instance.get_absolute_url()
+    )

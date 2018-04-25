@@ -30,19 +30,24 @@ def validate_image(field_file_obj):
 
 
 class Category(models.Model):
+    parent = models.ForeignKey('self', null=True, blank=True, on_delete=models.CASCADE)
     title = models.CharField(max_length=256, unique=True, blank=False)
-    is_active = models.BooleanField(default=False)
-    slug = models.SlugField(max_length=1024, default=None, blank=True, null=True, unique=True)
+    is_active = models.BooleanField(default=True)
+    slug = models.SlugField(max_length=1024, unique=True, blank=True)
 
     def __str__(self):
         return self.title
 
     def save(self, *args, **kwargs):
-        self.slug = slugify(self.title)
+        if not self.slug:
+            self.slug = slugify(self.title)
         super(Category, self).save(*args, **kwargs)
 
-    def get_absolute_url(self):
-        return reverse('category', kwargs={'slug': self.slug})
+    @property
+    def url(self):
+        if self.parent:
+            return '{}/{}'.format(self.parent.url, self.slug)
+        return self.slug
 
 
 class Article(models.Model):
@@ -56,37 +61,29 @@ class Article(models.Model):
     created_date = models.DateTimeField(default=timezone.now)
     published_date = models.DateTimeField(null=True, blank=True)
     updated_date = models.DateTimeField(auto_now=True)
-    deleted_date = models.DateTimeField(null=True, blank=True)
     category = models.ForeignKey(Category, null=True, blank=True, verbose_name='Category')
     image = ResizedImageField(max_length=255, blank=True, help_text='Maximum file size allowed is 10Mb',
                               validators=[validate_image], quality=75, size=[1024, 1024], upload_to=upload_to)
     image_caption = models.CharField(max_length=1024, blank=True)
-    slug = models.SlugField(max_length=1024, default=None, blank=True, null=True)
-    is_page = models.BooleanField(default=False)
+    slug = models.SlugField(max_length=1024, blank=True, unique=True)
+
+    def __str__(self):
+        return self.title
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.original_data = {'slug': self.slug, 'category_slug': self.category.slug if self.category else None}
 
     def save(self, *args, **kwargs):
-        self.slug = slugify(self.title)
+        if not self.slug:
+            self.slug = slugify(self.title)
         super(Article, self).save(*args, **kwargs)
 
-        # try:
-        #     ping_google()
-        # except Exception as e:
-        #     logger.error("Unable to ping google for sitemap update")
-        #     # Bare 'except' because we could get a variety of HTTP-related exceptions.
-        #     pass        
-
     def get_absolute_url(self):
-        if self.is_page or not self.category:
-            return reverse('view_page', args=(self.slug,))
-        return reverse('view_article', kwargs={'category_slug': self.category.slug, 'article_slug': self.slug})
+        if self.category:
+            return reverse('view_article', kwargs={'category_slug': self.category.url, 'article_slug': self.slug})
+        return reverse('view_page', args=(self.slug,))
 
     @property
     def short_title(self):
         return truncatechars(self.title, 75)
-
-    @property
-    def url(self):
-        return self.get_absolute_url()
-
-    def __str__(self):
-        return self.title

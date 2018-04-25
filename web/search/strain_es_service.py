@@ -77,7 +77,7 @@ class StrainESService(BaseElasticService):
             es_response = self._request(self.METHODS.get('PUT'), url, data=json.dumps(es_strain_source))
         else:
             data['removed_by_id'] = data.get('removed_by')
-            del data['removed_by']
+            data.pop('removed_by', None)
 
             url = '{base}{index}/{type}'.format(base=self.BASE_ELASTIC_URL, index=self.URLS.get('STRAIN'),
                                                 type=es_mappings.TYPES.get('strain'))

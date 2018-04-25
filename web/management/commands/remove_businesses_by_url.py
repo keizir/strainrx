@@ -4,7 +4,6 @@ import logging
 
 from django.core.management.base import BaseCommand, CommandError
 
-from web.businesses.api.services import BusinessService
 from web.businesses.models import BusinessLocation
 
 
@@ -47,12 +46,10 @@ class Command(BaseCommand):
 
                 try:
                     location = BusinessLocation.objects.get(**kwargs)
+                    location.business.delete()
+                    print('Removed successfully')
+                    print('')
+
                 except BusinessLocation.DoesNotExist:
                     print('Not found')
                     print('')
-                    continue
-
-                BusinessService().remove_permanently(location.business_id)
-
-                print('Removed successfully')
-                print('')

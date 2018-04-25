@@ -13,7 +13,6 @@ from web.articles.sitemaps import ArticleSitemap
 from web.businesses.sitemaps import BusinessLocationSitemap, DispensariesRootSitemap, StateRootSitemap, CityRootSitemap
 from web.search.sitemaps import StrainRootSitemap
 from web.users.sitemaps import StrainSitemap, StaticViewSitemap
-from web.articles.views import view_article, view_page
 
 sitemaps = {
     'strain': StrainSitemap,
@@ -51,12 +50,6 @@ urlpatterns = [
     url(r'^filer/', include('filer.urls')),
     url(r'^filebrowser_filer/', include('ckeditor_filebrowser_filer.urls')),
 
-    # articles
-    url(r'^(?P<category_slug>[\w-]+)/(?P<article_slug>[\w-]+)/$',
-        view=view_article,
-        name='view_article'
-    ),
-
     # Your stuff: custom urls includes go here
     url(r'^api-auth/', include('rest_framework.urls', namespace='rest_framework')),
 
@@ -78,11 +71,7 @@ urlpatterns = [
         }),
 
     # must be at end!
-    # view pages
-    url(r'^(?P<page_slug>[\w-]+)/$',
-        view=view_page,
-        name='view_page'
-    )
+    url(r'^', include('web.articles.urls'))
 
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 

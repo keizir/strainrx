@@ -12,11 +12,11 @@ from django.core.urlresolvers import reverse
 from django.db import models
 from django.template.defaultfilters import slugify
 from django.utils.encoding import python_2_unicode_compatible
-from django.utils.timezone import now
 from django.utils.translation import ugettext_lazy as _
 from django_resized import ResizedImageField
 
 from web.search.managers import UserSearchQuerySet
+from web.system.models import ReviewAbstract
 from web.users.models import User
 
 
@@ -164,13 +164,13 @@ def validate_image(field_file_obj):
 
 @python_2_unicode_compatible
 class StrainImage(models.Model):
-    strain = models.ForeignKey(Strain, on_delete=models.DO_NOTHING, related_name='images')
+    strain = models.ForeignKey(Strain, on_delete=models.CASCADE, related_name='images')
     image = models.ImageField(max_length=255, upload_to=upload_image_to,
                               help_text='Maximum file size allowed is 10Mb',
                               validators=[validate_image])
 
     created_date = models.DateField(blank=False, null=False, default=datetime.now)
-    created_by = models.ForeignKey(User, on_delete=models.DO_NOTHING)
+    created_by = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
 
     is_approved = models.BooleanField(default=False)
     is_primary = models.BooleanField(default=False)
@@ -259,51 +259,24 @@ class UserSearch(models.Model):
 
 
 @python_2_unicode_compatible
-class StrainReview(models.Model):
+class StrainReview(ReviewAbstract):
     """
-        A 5-star rating
+    A 5-star rating
     """
-    strain = models.ForeignKey(Strain, on_delete=models.DO_NOTHING)
-
-    rating = models.FloatField()
-    review = models.TextField(default='', blank=True)
-    review_approved = models.BooleanField(default=False)
-
-    created_date = models.DateTimeField()
-    created_by = models.ForeignKey(User, on_delete=models.DO_NOTHING, related_name='+')
-    last_modified_date = models.DateTimeField()
-    last_modified_by = models.ForeignKey(User, on_delete=models.DO_NOTHING, null=True, related_name='+')
-
-    def __init__(self, *args, **kwargs):
-        #
-        super().__init__(*args, **kwargs)
-        self.__created_date = self.created_date
-        self.__last_modified_date = self.last_modified_date
-
-    def save(self, *args, **kwargs):
-        # We want to have auto_now_add and auto_add behaviour but
-        # also allow to edit the dates through admin
-
-        if self.created_date is None:
-            self.created_date = now()
-
-        if self.last_modified_date == self.__last_modified_date:
-            self.last_modified_date = now()
-
-        super().save(*args, **kwargs)
+    strain = models.ForeignKey(Strain, on_delete=models.CASCADE)
 
 
 @python_2_unicode_compatible
 class StrainRating(models.Model):
     """
-        A user's strain review, that user left via Disagree link in SPD
+    A user's strain review, that user left via Disagree link in SPD
     """
     STATUS_CHOICES = (
         ('pending', 'Pending'),
         ('processed', 'Processed'),
     )
 
-    strain = models.ForeignKey(Strain, on_delete=models.DO_NOTHING)
+    strain = models.ForeignKey(Strain, on_delete=models.CASCADE)
 
     effects = JSONField(default={})
     effects_changed = models.BooleanField(default=False)
@@ -318,15 +291,15 @@ class StrainRating(models.Model):
     removed_date = models.DateTimeField(null=True)
 
     created_date = models.DateTimeField(auto_now_add=True)
-    created_by = models.ForeignKey(User, on_delete=models.DO_NOTHING, related_name='+')
+    created_by = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, related_name='+')
     created_by_ip = models.CharField(max_length=30, blank=True, null=True)
     last_modified_date = models.DateTimeField(auto_now=True)
-    last_modified_by = models.ForeignKey(User, on_delete=models.DO_NOTHING, null=True, related_name='+')
+    last_modified_by = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, related_name='+')
     last_modified_by_ip = models.CharField(max_length=30, blank=True, null=True)
 
 
 @python_2_unicode_compatible
 class UserFavoriteStrain(models.Model):
-    strain = models.ForeignKey(Strain, on_delete=models.DO_NOTHING)
-    created_by = models.ForeignKey(User, on_delete=models.DO_NOTHING)
+    strain = models.ForeignKey(Strain, on_delete=models.CASCADE)
+    created_by = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
     created_date = models.DateTimeField(auto_now=True)

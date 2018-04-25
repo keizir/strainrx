@@ -20,6 +20,7 @@ from django_resized import ResizedImageField
 
 from web.analytics.managers import BusinessLocationMenuUpdateRequestQuerySet
 from web.search.models import Strain
+from web.system.models import ReviewAbstract
 from web.users.models import User
 
 
@@ -398,13 +399,6 @@ def exist_by_slug_name(location_slug_name):
 
 
 @python_2_unicode_compatible
-class BusinessLocationPermanentlyRemoved(models.Model):
-    city_slug = models.TextField()
-    slug_name = models.TextField()
-    state = models.TextField()
-
-
-@python_2_unicode_compatible
 class BusinessLocationMenuItem(models.Model):
 
     INDOOR_SOIL, INDOOR_HYDRO, INDOOR_COCO, OUTDOOR, GREENHOUSE, AQUAPONICS = range(1, 7)
@@ -437,7 +431,7 @@ class BusinessLocationMenuItem(models.Model):
     )
 
     business_location = models.ForeignKey(BusinessLocation, on_delete=models.CASCADE)
-    strain = models.ForeignKey(Strain, on_delete=models.DO_NOTHING, related_name='menu_items')
+    strain = models.ForeignKey(Strain, on_delete=models.CASCADE, related_name='menu_items')
 
     price_gram = models.FloatField(max_length=50, blank=True, null=True)
     price_eighth = models.FloatField(max_length=50, blank=True, null=True)
@@ -517,17 +511,8 @@ class UserFavoriteLocation(models.Model):
 
 
 @python_2_unicode_compatible
-class LocationReview(models.Model):
+class LocationReview(ReviewAbstract):
     location = models.ForeignKey(BusinessLocation, on_delete=models.CASCADE)
-
-    rating = models.FloatField()
-    review = models.CharField(max_length=500, default='', blank=True)
-    review_approved = models.BooleanField(default=False)
-
-    created_date = models.DateTimeField(auto_now_add=True)
-    created_by = models.ForeignKey(User, on_delete=models.DO_NOTHING, related_name='+')
-    last_modified_date = models.DateTimeField(auto_now=True)
-    last_modified_by = models.ForeignKey(User, on_delete=models.DO_NOTHING, null=True, related_name='+')
 
 
 @python_2_unicode_compatible

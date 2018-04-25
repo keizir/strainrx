@@ -26,7 +26,7 @@ def deactivate_selected_strains(modeladmin, request, queryset):
         # Delete strain from locations menu
         if BusinessLocationMenuItem.objects.filter(strain=strain).exists():
             for mi in BusinessLocationMenuItem.objects.filter(strain=strain):
-                business_location_es_service.delete_menu_item(mi.id, mi.business_location.id)
+                business_location_es_service.delete_menu_item(mi)
                 mi.removed_date = datetime.now()
                 mi.save()
 
@@ -80,30 +80,19 @@ class StrainAdmin(admin.ModelAdmin):
     form = StrainAdminForm
     readonly_fields = ('id',)
     fieldsets = (
-        ('Info', {'fields': ('id', 'name', 'common_name', 'strain_slug'), }),
-        ('Social', {'fields': ('meta_desc', 'meta_keywords', 'social_image'), }),
-        ('Type', {'fields': ('variety', 'category',), }),
+        ('Info', {'fields': ('id', 'name', 'common_name', 'strain_slug')}),
+        ('Social', {'fields': ('meta_desc', 'meta_keywords', 'social_image')}),
+        ('Type', {'fields': ('variety', 'category')}),
         ('Effects', {'fields': ('cup_winner', 'effects', 'benefits', 'side_effects', 'flavor',
-                                'terpenes', 'cannabinoids', 'quick_picks'), }),
-        ('Additional', {'fields': ('about', 'origins', 'you_may_also_like_exclude'), }),
+                                'terpenes', 'cannabinoids', 'quick_picks')}),
+        ('Additional', {'fields': ('about', 'origins', 'you_may_also_like_exclude')}),
     )
     inlines = (StrainImageInline,)
-
-    def get_actions(self, request):
-        # Disable delete
-        actions = super(StrainAdmin, self).get_actions(request)
-        #del actions['delete_selected']
-        return actions
-
-    def has_delete_permission(self, request, obj=None):
-        # Disable delete
-        return False
-
-    list_display = ['name', 'category', 'variety', 'removed_date']
-    search_fields = ['name', 'category', 'variety']
-    list_filter = [StrainRemovedFilter, 'category', 'variety', 'name']
-    ordering = ['name']
-    actions = [activate_selected_strains, deactivate_selected_strains]
+    list_display = ('name', 'category', 'variety', 'removed_date')
+    search_fields = ('name', 'category', 'variety')
+    list_filter = (StrainRemovedFilter, 'category', 'variety', 'name')
+    ordering = ('name',)
+    actions = (activate_selected_strains, deactivate_selected_strains)
 
 
 def approve_selected_ratings(modeladmin, request, queryset):

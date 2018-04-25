@@ -1,17 +1,14 @@
 # -*- coding: utf-8 -*-
 from __future__ import absolute_import, unicode_literals
 
-import json
 from datetime import datetime
 
 import pytz
 from django.contrib.staticfiles.templatetags.staticfiles import static
 from django.core.exceptions import ObjectDoesNotExist
 from django.core.urlresolvers import reverse
-from django.db.models import Count
-from django.http import Http404, HttpResponseNotFound
+from django.http import Http404
 from django.shortcuts import get_object_or_404
-from django.template.response import TemplateResponse
 from django.views.generic import RedirectView, TemplateView, FormView
 
 from web.analytics.models import Event
@@ -19,7 +16,7 @@ from web.analytics.service import Analytics
 from web.businesses.api.services import FeaturedBusinessLocationService
 from web.businesses.emails import EmailService
 from web.businesses.forms import ClaimForm, AnalyticsFilterForm
-from web.businesses.models import Business, BusinessLocation, BusinessLocationPermanentlyRemoved
+from web.businesses.models import Business, BusinessLocation
 from web.businesses.models import State, City, BusinessLocationMenuUpdateRequest
 from web.businesses.utils import NamePaginator
 from web.search.services import get_strains_and_images_for_location
@@ -139,21 +136,6 @@ class BusinessLocationsView(TemplateView):
 
 class DispensaryInfoView(TemplateView):
     template_name = 'pages/dispensary/dispensary_info.html'
-
-    def get(self, request, *args, **kwargs):
-        try:
-            return super().get(request, *args, **kwargs)
-        except Http404:
-            kwargs = {
-                'state__iexact': kwargs['state'],
-                'city_slug__iexact': kwargs['city_slug'],
-                'slug_name__iexact': kwargs['slug_name'],
-            }
-
-            if BusinessLocationPermanentlyRemoved.objects.filter(**kwargs).exists():
-                return TemplateResponse(request, '410.html', status=410)
-
-        return HttpResponseNotFound()
 
     def get_context_data(self, **kwargs):
         try:
@@ -346,21 +328,6 @@ class GrowersCitiesView(TemplateView):
 
 class GrowerInfoView(TemplateView):
     template_name = 'pages/grower/grower_info.html'
-
-    def get(self, request, *args, **kwargs):
-        try:
-            return super().get(request, *args, **kwargs)
-        except Http404:
-            kwargs = {
-                'state__iexact': kwargs['state'],
-                'city_slug__iexact': kwargs['city_slug'],
-                'slug_name__iexact': kwargs['slug_name'],
-            }
-
-            if BusinessLocationPermanentlyRemoved.objects.filter(**kwargs).exists():
-                return TemplateResponse(request, '410.html', status=410)
-
-        return HttpResponseNotFound()
 
     def get_context_data(self, **kwargs):
         query_kwargs = {
