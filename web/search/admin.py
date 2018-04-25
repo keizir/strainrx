@@ -26,7 +26,7 @@ def deactivate_selected_strains(modeladmin, request, queryset):
         # Delete strain from locations menu
         if BusinessLocationMenuItem.objects.filter(strain=strain).exists():
             for mi in BusinessLocationMenuItem.objects.filter(strain=strain):
-                business_location_es_service.delete_menu_item(mi.id, mi.business_location.id)
+                business_location_es_service.delete_menu_item(mi)
                 mi.removed_date = datetime.now()
                 mi.save()
 

@@ -1,6 +1,6 @@
 from __future__ import unicode_literals, absolute_import
 
-from django.db.models.signals import post_save, post_delete
+from django.db.models.signals import post_save, pre_delete
 from django.dispatch import receiver
 from rest_framework import status
 
@@ -34,7 +34,7 @@ def create_es_strain(sender, **kwargs):
             r.save()
 
 
-@receiver(post_delete, sender=Strain)
+@receiver(pre_delete, sender=Strain)
 def remove_permanently(sender, instance, **kwargs):
     """
     Add record to PermanentlyRemoved model

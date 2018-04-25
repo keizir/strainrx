@@ -103,6 +103,16 @@ def post_delete_payment(sender, **kwargs):
     update_business_payments(payment.business_id)
 
 
+@receiver(post_delete, sender=BusinessLocationMenuItem)
+def post_delete_menu_item(sender, instance, **kwargs):
+    """
+    Delete menu item from ES index
+    """
+    BusinessLocationESService().delete_menu_item(instance)
+    # Update Strain
+    StrainESService().save_strain(instance.strain)
+
+
 @receiver(pre_delete, sender=Business)
 def remove_permanently(sender, instance, **kwargs):
     """

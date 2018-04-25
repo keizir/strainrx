@@ -430,7 +430,7 @@ class BusinessLocationMenuItem(models.Model):
     )
 
     business_location = models.ForeignKey(BusinessLocation, on_delete=models.CASCADE)
-    strain = models.ForeignKey(Strain, on_delete=models.DO_NOTHING, related_name='menu_items')
+    strain = models.ForeignKey(Strain, on_delete=models.CASCADE, related_name='menu_items')
 
     price_gram = models.FloatField(max_length=50, blank=True, null=True)
     price_eighth = models.FloatField(max_length=50, blank=True, null=True)

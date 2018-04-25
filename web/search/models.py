@@ -296,7 +296,7 @@ class StrainReview(models.Model):
 @python_2_unicode_compatible
 class StrainRating(models.Model):
     """
-        A user's strain review, that user left via Disagree link in SPD
+    A user's strain review, that user left via Disagree link in SPD
     """
     STATUS_CHOICES = (
         ('pending', 'Pending'),
@@ -327,6 +327,6 @@ class StrainRating(models.Model):
 
 @python_2_unicode_compatible
 class UserFavoriteStrain(models.Model):
-    strain = models.ForeignKey(Strain, on_delete=models.DO_NOTHING)
-    created_by = models.ForeignKey(User, on_delete=models.DO_NOTHING)
+    strain = models.ForeignKey(Strain, on_delete=models.CASCADE)
+    created_by = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
     created_date = models.DateTimeField(auto_now=True)
