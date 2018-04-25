@@ -5,7 +5,7 @@ from datetime import datetime
 from django.contrib.auth.mixins import LoginRequiredMixin
 from rest_framework import permissions
 from rest_framework import status
-from rest_framework.generics import get_object_or_404
+from rest_framework.generics import get_object_or_404, CreateAPIView
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
@@ -143,19 +143,16 @@ class StrainImagesView(APIView):
         return Response({}, status=status.HTTP_200_OK)
 
 
-class StrainRateView(LoginRequiredMixin, APIView):
-    def post(self, request, strain_id):
-        strain = Strain.objects.get(pk=strain_id)
-        serializer = StrainReviewFormSerializer(data=request.data)
-        serializer.is_valid(raise_exception=True)
+class StrainRateView(CreateAPIView):
+    permission_classes = (permissions.IsAuthenticated,)
+    serializer_class = StrainReviewFormSerializer
 
-        review_text = serializer.validated_data.get('review')
-        is_approved = False if review_text and len(review_text) > 0 else True
-        review = StrainReview(strain=strain, created_by=request.user,
-                              rating=serializer.validated_data.get('rating'),
-                              review=review_text, review_approved=is_approved)
-        review.save()
-        return Response({}, status=status.HTTP_200_OK)
+    def perform_create(self, serializer):
+        serializer.save(
+            strain=get_object_or_404(Strain, pk=self.kwargs.get('strain_id')),
+            created_by=self.request.user,
+            review_approved=False if serializer.validated_data.get('review') else True
+        )
 
 
 class StrainDetailsView(APIView):

@@ -8,8 +8,7 @@ from django.contrib.gis.geos import Point
 from django.contrib.gis.measure import Distance
 from django.db.models import Avg
 
-from web.businesses.models import BusinessLocation, BusinessLocationPermanentlyRemoved, Business, LocationReview
-from web.businesses.es_service import BusinessLocationESService
+from web.businesses.models import BusinessLocation, Business, LocationReview
 from web.system.models import SystemProperty
 from web.users import validators
 from web.users.models import User, UserLocation
@@ -114,20 +113,6 @@ class BusinessSignUpService:
             sun_close=data.get('sun_close')
         )
         return business_location
-
-
-class BusinessService:
-    def remove_permanently(self, business_id):
-        for business_location in BusinessLocation.objects.filter(business_id=business_id):
-            BusinessLocationESService().delete_business_location(business_location.id)
-
-            BusinessLocationPermanentlyRemoved.objects.create(
-                city_slug=business_location.city_slug,
-                slug_name=business_location.slug_name,
-                state=business_location.state,
-            )
-
-        Business.objects.get(id=business_id).delete()
 
 
 class BusinessLocationService:

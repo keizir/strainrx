@@ -1,7 +1,9 @@
 from __future__ import unicode_literals, absolute_import
 
-from django.db.models.signals import post_save, pre_save, post_delete
+from django.core.urlresolvers import reverse
+from django.db.models.signals import post_save, pre_save, post_delete, pre_delete
 from django.dispatch import receiver
+from rest_framework import status
 
 from web.businesses.emails import EmailService
 from web.businesses.es_service import BusinessLocationESService
@@ -9,6 +11,7 @@ from web.businesses.models import BusinessLocation, State, City, BusinessLocatio
     BusinessLocationMenuUpdate, BusinessLocationMenuUpdateRequest, Payment, Business
 from web.search.models import Strain
 from web.search.strain_es_service import StrainESService
+from web.system.models import PermanentlyRemoved
 
 
 @receiver(pre_save, sender=BusinessLocation)
@@ -98,3 +101,29 @@ def post_save_payment(sender, **kwargs):
 def post_delete_payment(sender, **kwargs):
     payment = kwargs.get('instance')
     update_business_payments(payment.business_id)
+
+
+@receiver(post_delete, sender=BusinessLocationMenuItem)
+def post_delete_menu_item(sender, instance, **kwargs):
+    """
+    Delete menu item from ES index
+    """
+    BusinessLocationESService().delete_menu_item(instance)
+    # Update Strain
+    StrainESService().save_strain(instance.strain)
+
+
+@receiver(pre_delete, sender=Business)
+def remove_permanently(sender, instance, **kwargs):
+    """
+    Add record to PermanentlyRemoved model for each location
+    Update ES index
+    """
+    for location in BusinessLocation.objects.filter(business_id=instance.id):
+        BusinessLocationESService().delete_business_location(location.id)
+
+        PermanentlyRemoved.objects.create(
+            status=status.HTTP_410_GONE,
+            url=reverse('businesses:dispensary_info',
+                        args=(location.state, location.city_slug, location.slug_name))
+        )

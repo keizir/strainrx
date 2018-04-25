@@ -123,24 +123,8 @@ class BusinessLocationReviewView(APIView):
                                                     review_approved=True).order_by('-created_date')
         reviews = []
         for r in reviews_raw:
-            reviews.append(self.build_review(r))
+            reviews.append(StrainDetailsService.build_review(r))
         return Response({'reviews': reviews}, status=status.HTTP_200_OK)
-
-    @staticmethod
-    def build_review(review):
-        created_by = review.created_by
-        display_user_name = '{0} {1}.'.format(created_by.first_name, created_by.last_name[0]) \
-            if created_by.first_name and created_by.last_name \
-            else created_by.email.split('@')[0]
-
-        return {
-            'id': review.id,
-            'rating': review.rating,
-            'review': review.review,
-            'created_date': review.created_date,
-            'created_by_name': display_user_name,
-            'created_by_image': created_by.image.url if created_by.image and created_by.image.url else None
-        }
 
     def post(self, request, business_id, business_location_id):
         location = BusinessLocation.objects.get(pk=business_location_id)
