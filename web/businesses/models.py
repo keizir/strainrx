@@ -20,6 +20,7 @@ from django_resized import ResizedImageField
 
 from web.analytics.managers import BusinessLocationMenuUpdateRequestQuerySet
 from web.search.models import Strain
+from web.system.models import ReviewAbstract
 from web.users.models import User
 
 
@@ -510,17 +511,8 @@ class UserFavoriteLocation(models.Model):
 
 
 @python_2_unicode_compatible
-class LocationReview(models.Model):
+class LocationReview(ReviewAbstract):
     location = models.ForeignKey(BusinessLocation, on_delete=models.CASCADE)
-
-    rating = models.FloatField()
-    review = models.CharField(max_length=500, default='', blank=True)
-    review_approved = models.BooleanField(default=False)
-
-    created_date = models.DateTimeField(auto_now_add=True)
-    created_by = models.ForeignKey(User, on_delete=models.DO_NOTHING, related_name='+')
-    last_modified_date = models.DateTimeField(auto_now=True)
-    last_modified_by = models.ForeignKey(User, on_delete=models.DO_NOTHING, null=True, related_name='+')
 
 
 @python_2_unicode_compatible

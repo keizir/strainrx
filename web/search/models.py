@@ -12,11 +12,11 @@ from django.core.urlresolvers import reverse
 from django.db import models
 from django.template.defaultfilters import slugify
 from django.utils.encoding import python_2_unicode_compatible
-from django.utils.timezone import now
 from django.utils.translation import ugettext_lazy as _
 from django_resized import ResizedImageField
 
 from web.search.managers import UserSearchQuerySet
+from web.system.models import ReviewAbstract
 from web.users.models import User
 
 
@@ -259,38 +259,11 @@ class UserSearch(models.Model):
 
 
 @python_2_unicode_compatible
-class StrainReview(models.Model):
+class StrainReview(ReviewAbstract):
     """
     A 5-star rating
     """
     strain = models.ForeignKey(Strain, on_delete=models.CASCADE)
-
-    rating = models.FloatField()
-    review = models.TextField(default='', blank=True)
-    review_approved = models.BooleanField(default=False)
-
-    created_date = models.DateTimeField()
-    created_by = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, related_name='+')
-    last_modified_date = models.DateTimeField()
-    last_modified_by = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, related_name='+')
-
-    def __init__(self, *args, **kwargs):
-        #
-        super().__init__(*args, **kwargs)
-        self.__created_date = self.created_date
-        self.__last_modified_date = self.last_modified_date
-
-    def save(self, *args, **kwargs):
-        # We want to have auto_now_add and auto_add behaviour but
-        # also allow to edit the dates through admin
-
-        if self.created_date is None:
-            self.created_date = now()
-
-        if self.last_modified_date == self.__last_modified_date:
-            self.last_modified_date = now()
-
-        super().save(*args, **kwargs)
 
 
 @python_2_unicode_compatible

@@ -82,7 +82,8 @@ class UserDetailTestCase(APITestCase):
         name = self.user.name
         self.client.login(username=self.user.email, password=TEST_USER_PASSWORD)
         response = self.client.put(self.url, format='json')
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+        self.assertEqual(response.json(), {'email': ['This field is required.']})
         self.user.refresh_from_db()
         self.assertEqual(email, self.user.email)
         self.assertEqual(name, self.user.name)
@@ -118,21 +119,33 @@ class UserDetailTestCase(APITestCase):
         """
         User does not send full birthday date and get error
         """
+        data = {
+            'email': '{}@example.com'.format(lorem_ipsum.words(1)),
+            'birth_month': 'Jan'
+        }
         self.client.login(username=self.user.email, password=TEST_USER_PASSWORD)
-        response = self.client.put(self.url, {'birth_month': 'Jan'}, format='json')
+        response = self.client.put(self.url, data, format='json')
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
         self.assertEqual(response.json(), {'birth_day': ['This field is required.']})
 
-        response = self.client.put(self.url, {'birth_month': 'Jan', 'birth_day': 10}, format='json')
+        data = {
+            'email': '{}@example.com'.format(lorem_ipsum.words(1)),
+            'birth_month': 'Jan', 'birth_day': 10
+        }
+        response = self.client.put(self.url, data, format='json')
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
         self.assertEqual(response.json(), {'birth_year': ['This field is required.']})
 
-        response = self.client.put(self.url, {'birth_month': '', 'birth_day': '', 'birth_year': ''}, format='json')
+        data = {
+            'birth_month': '', 'birth_day': '', 'birth_year': '',
+            'email': '{}@example.com'.format(lorem_ipsum.words(1))
+        }
+        response = self.client.put(self.url, data, format='json')
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(response.json(), {'birth_day': None,
                                            'birth_month': None,
                                            'birth_year': None,
-                                           'email': self.user.email,
+                                           'email': data['email'],
                                            'first_name': self.user.first_name,
                                            'gender': self.user.gender,
                                            'last_name': self.user.last_name,
@@ -141,13 +154,14 @@ class UserDetailTestCase(APITestCase):
 
     def test_gender(self):
         self.client.login(username=self.user.email, password=TEST_USER_PASSWORD)
-        response = self.client.put(self.url, {'gender': ''}, format='json')
+        data = {'gender': '', 'email': '{}@example.com'.format(lorem_ipsum.words(1))}
+        response = self.client.put(self.url, data, format='json')
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.user.refresh_from_db()
         self.assertEqual(response.json(), {'birth_day': None,
                                            'birth_month': None,
                                            'birth_year': None,
-                                           'email': self.user.email,
+                                           'email': data['email'],
                                            'first_name': self.user.first_name,
                                            'gender': '',
                                            'last_name': self.user.last_name,
