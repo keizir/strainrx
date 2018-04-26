@@ -30,13 +30,17 @@ def validate_image(field_file_obj):
 
 
 class Category(models.Model):
-    parent = models.ForeignKey('self', null=True, blank=True, on_delete=models.CASCADE)
+    parent = models.ForeignKey('self', null=True, blank=True, on_delete=models.CASCADE, related_name='subcategories')
     title = models.CharField(max_length=256, unique=True, blank=False)
     is_active = models.BooleanField(default=True)
     slug = models.SlugField(max_length=1024, unique=True, blank=True)
 
     def __str__(self):
         return self.title
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.original_data = {'slug': self.slug, 'parent': self.parent}
 
     def save(self, *args, **kwargs):
         if not self.slug:
@@ -61,7 +65,7 @@ class Article(models.Model):
     created_date = models.DateTimeField(default=timezone.now)
     published_date = models.DateTimeField(null=True, blank=True)
     updated_date = models.DateTimeField(auto_now=True)
-    category = models.ForeignKey(Category, null=True, blank=True, verbose_name='Category')
+    category = models.ForeignKey(Category, null=True, blank=True, verbose_name='Category', related_name='articles')
     image = ResizedImageField(max_length=255, blank=True, help_text='Maximum file size allowed is 10Mb',
                               validators=[validate_image], quality=75, size=[1024, 1024], upload_to=upload_to)
     image_caption = models.CharField(max_length=1024, blank=True)
