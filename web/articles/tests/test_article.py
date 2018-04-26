@@ -114,3 +114,14 @@ class ArticleTestCase(APITestCase):
         item = PermanentlyRemoved.objects.last()
         self.assertEqual(item.url, '/{}/{}/{}/{}/'.format(
             old_slug, self.category.parent.slug, self.category.slug, self.article.slug))
+
+    def test_view_page_url(self):
+        self.article = ArticleFactory()
+        self.url = reverse('view_page', args=(self.article.slug,))
+        response = self.client.get(self.url)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+        self.article.category = CategoryFactory()
+        self.article.save()
+        response = self.client.get(self.url)
+        self.assertEqual(response.status_code, status.HTTP_301_MOVED_PERMANENTLY)
