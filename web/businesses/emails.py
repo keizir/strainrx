@@ -6,7 +6,7 @@ from django.conf import settings
 from django.contrib.staticfiles.storage import staticfiles_storage
 from django.core.urlresolvers import reverse
 from django.template.loader import render_to_string
-from sendgrid.helpers.mail import *
+from sendgrid.helpers.mail import Email, Content, Mail, Personalization
 
 from web.common import html
 
@@ -75,12 +75,12 @@ class EmailService:
         })
         html_content = Content('text/html', html_template)
 
-        # This should probably be a bcc, but sendgrid has some weird problems
-        # with that.
-        m = Mail(from_email, subject, from_email, html_content)
-        sg.client.mail.send.post(request_body=m.get())
-
         m = Mail(from_email, subject, to_email, html_content)
+        personalization = Personalization()
+        personalization.add_cc(from_email)
+        personalization.add_to(to_email)
+        m.add_personalization(personalization)
+
         return sg.client.mail.send.post(request_body=m.get())
 
     def send_menu_update_request_served_email(self, update_request):

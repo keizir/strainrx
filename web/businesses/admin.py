@@ -10,7 +10,7 @@ from web.businesses.api.services import BusinessLocationService
 from web.businesses.es_service import BusinessLocationESService
 from web.businesses.models import Business, BusinessLocation, FeaturedBusinessLocation, \
     LocationReview, State, City, Payment, GrowerDispensaryPartnership, BusinessLocationMenuUpdate, \
-    BusinessLocationMenuItem
+    BusinessLocationMenuItem, BusinessLocationMenuUpdateRequest
 
 
 class PaymentAdmin(admin.TabularInline):
@@ -315,3 +315,6 @@ class GrowerDispensaryPartnershipAdmin(admin.ModelAdmin):
 
     list_display = ('grower', 'dispensary')
     search_fields = ('grower', 'dispensary')
+
+
+admin.site.register(BusinessLocationMenuUpdateRequest)
