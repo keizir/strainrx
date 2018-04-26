@@ -219,7 +219,7 @@
             {% for strain, image_url in menu %}
                 <div class="strain {% if forloop.counter|divisibleby:4 %}rightmost{% endif %}" data-variety="{{ strain.variety }}">
                     <a class="image" href="{{ strain.url }}">
-                        <img src="{{ image_url }}"/>
+                        <img src="{{ image_url }}" class="grower-strain-image"/>
                     </a>
                     <div class="details">
                         <div>
