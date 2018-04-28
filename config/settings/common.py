@@ -309,6 +309,7 @@ DEFAULT_DELIVERY_RADIUS = 10
 
 SENDGRID_API_KEY = env('SENDGRID_API_KEY', default='')
 DEFAULT_FROM_EMAIL = 'support@strainrx.co'
+CC_DEFAULT_EMAIL = env('CC_DEFAULT_EMAIL', default='support@strainrx.co')
 
 HOST = env('HOST_URL', default='http://localhost:8000')
 

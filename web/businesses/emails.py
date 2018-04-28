@@ -58,6 +58,7 @@ class EmailService:
 
         from_email = Email(settings.DEFAULT_FROM_EMAIL)
         to_email = Email(location.location_email)
+        cc_email = Email(settings.CC_DEFAULT_EMAIL)
 
         subject = 'Menu Update Request'
 
@@ -77,7 +78,7 @@ class EmailService:
 
         m = Mail(from_email, subject, to_email, html_content)
         personalization = Personalization()
-        personalization.add_cc(from_email)
+        personalization.add_cc(cc_email)
         personalization.add_to(to_email)
         m.add_personalization(personalization)
 
