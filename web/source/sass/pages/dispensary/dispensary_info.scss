@@ -435,11 +435,20 @@
                 vertical-align: top;
 
                 .menu-section-wrapper {
+
+                    .help-text {
+                        margin-top: -17px;
+                        display: block;
+                        font-weight: bold;
+                        font-size: 15px;
+                        padding-bottom: 4px;
+                    }
+
                     h3 {
                         font-weight: bold;
                         color: $grey-dark;
                         text-align: center;
-                        margin-bottom: 0.2em;
+                        margin-bottom: -0.3em;
                     }
 
                     .current-strain-menu-item {
@@ -840,9 +849,20 @@
     margin-bottom: 2em;
 }
 
-@media (min-width: $screen-xs-min) {
+@media (max-width: $screen-md-max) {
     .business-location-holder {
-
+        .content-region {
+            .location-content {
+                .right-column {
+                    .menu-section-wrapper {
+                        .help-text {
+                            margin-top: 0;
+                            display: block;
+                        }
+                    }
+                }
+            }
+        }
     }
 }
 

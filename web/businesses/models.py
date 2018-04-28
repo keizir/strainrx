@@ -486,6 +486,9 @@ class BusinessLocationMenuUpdateRequest(models.Model):
 
     objects = BusinessLocationMenuUpdateRequestQuerySet.as_manager()
 
+    def __str__(self):
+        return '{} - {} - {}'.format(self.date_time, self.user, self.business_location)
+
 
 @python_2_unicode_compatible
 class GrowerDispensaryPartnership(models.Model):

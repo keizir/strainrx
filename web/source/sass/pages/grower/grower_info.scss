@@ -335,9 +335,14 @@
                 width: 100%;
             }
 
+            .grower-strain-image {
+                max-height: 13.6em;
+                max-width: 21.5em;
+                width: auto;
+            }
+
             .strain {
                 display: inline-block;
-                width: calc(25% - 1em);
 
                 margin-bottom: 2em;
                 margin-right: 1em;
