@@ -4,6 +4,10 @@ W.ns('W.views');
 
 W.views.LocationView = W.views.BaseLocationView.extend({
 
+    ui: {
+        locationField: $('.your-location-value')
+    },
+
     init: function (options) {
         this.authenticated = options && options.authenticated;
         this.userId = options && options.userId;
@@ -74,7 +78,7 @@ W.views.LocationView = W.views.BaseLocationView.extend({
 
     preFillUserLocation: function preFillUserLocation() {
         if (this.location) {
-            $('.your-location-value').val(W.common.Format.formatAddress(this.location)).trigger('change');
+            this.ui.locationField.val(W.common.Format.formatAddress(this.location)).trigger('change');
         }
     },
 
@@ -84,6 +88,10 @@ W.views.LocationView = W.views.BaseLocationView.extend({
         that.getLocation(function (data) {
             that.timezone = data.timezone;
             that.saveUserLocation(data.address);
+            that.location = data.address;
+            if (!that.ui.locationField.val()){
+                that.preFillUserLocation();
+            }
         }, function () {
             console.log('Cannot locate user');
         });
@@ -91,13 +99,12 @@ W.views.LocationView = W.views.BaseLocationView.extend({
 
     saveUserLocation: function saveUserLocation(data) {
         var that = this,
-            locationRaw = data.location_raw,
-            $locationInput = $('.your-location-value');
+            locationRaw = data.location_raw;
 
         if (locationRaw) {
             var parsed = JSON.parse(locationRaw);
-            if (parsed && parsed[0] && $locationInput) {
-                $locationInput.val(parsed[0].formatted_address).trigger('change');
+            if (parsed && parsed[0] && that.ui.locationField.length) {
+                that.ui.locationField.val(parsed[0].formatted_address).trigger('change');
             }
         }
 

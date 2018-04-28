@@ -129,8 +129,8 @@ W.views.BaseLocationView = Class.extend({
                     location_raw:'',
                     street1: '',
                     city: data.geoplugin_city,
-                    state: data.geoplugin_regionCode,
-                    zipcode: data.geoplugin_dmaCode
+                    state: data.geoplugin_regionName,
+                    zipcode: ''
                 },
                 timezone: data.geoplugin_timezone
             });
