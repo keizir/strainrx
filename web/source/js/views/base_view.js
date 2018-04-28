@@ -1,5 +1,7 @@
 'use strict';
 
+function callback (){}
+
 W.ns('W.views');
 
 // using john resig's simple class inheritence see http://ejohn.org/blog/simple-javascript-inheritance/
@@ -121,20 +123,31 @@ W.views.BaseLocationView = Class.extend({
     },
     
     getLocationByIP: function (success, failure) {
-        $.getJSON('http://www.geoplugin.net/json.gp?jsoncallback=?', function(data) {
-            success({
-                address: {
-                    lat: data.geoplugin_latitude,
-                    lng: data.geoplugin_longitude,
-                    location_raw:'',
-                    street1: '',
-                    city: data.geoplugin_city,
-                    state: data.geoplugin_regionName,
-                    zipcode: ''
-                },
-                timezone: data.geoplugin_timezone
-            });
+        var that = this;
+
+        $.ajax({
+            url: 'https://geoip-db.com/jsonp',
+            dataType: 'jsonp',
+            jsonp: 'callback',
+            jsonpCallback: 'callback',
+            success: function (location) {
+                that.getTimezone(location.latitude, location.longitude, function (json) {
+                    success({
+                        address: {
+                            lat: location.latitude,
+                            lng: location.longitude,
+                            location_raw:'',
+                            street1: '',
+                            city: location.city,
+                            state: location.state,
+                            zipcode: location.postal
+                        },
+                        timezone:  json.timeZoneId || ''
+                    });
+                })
+            }
         });
+
         failure()
     }
 });
