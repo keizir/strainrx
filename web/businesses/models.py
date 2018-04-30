@@ -155,7 +155,7 @@ class BusinessLocation(models.Model):
     CATEGORY_CHOICES = (
         ('dispensary', 'Dispensary'),
         ('delivery', 'Delivery'),
-        ('grow_house', 'Grow House'),
+        ('grow_house', 'Cultivator'),
     )
 
     DEFAULT_IMAGE_URL = '{base}images/default-location-image.jpeg'.format(base=settings.STATIC_URL)
@@ -290,7 +290,7 @@ class BusinessLocation(models.Model):
         if self.dispensary:
             types.append('dispensary')
         if self.grow_house:
-            types.append('grow house')
+            types.append('cultivator')
         if self.delivery:
             types.append('delivery')
 
@@ -388,7 +388,7 @@ class BusinessLocation(models.Model):
     def clean(self):
         if not any((self.delivery, self.dispensary, self.grow_house)):
             raise ValidationError('Business Location needs to be one of the '
-                                  'following: delivery, dispensary or grow house.')
+                                  'following: delivery, dispensary or cultivator.')
 
     def __str__(self):
         return self.location_name

@@ -101,8 +101,8 @@
 
         hr {
             z-index: 1;
-            width: 35em;
-            margin: -1em auto 0 auto;
+            width: 31em;
+            margin: -1em auto 0 1em;
         }
 
         .wizard-step {
@@ -377,10 +377,16 @@
             display: block;
             width: 50%;
             margin: 0 auto;
+            text-align: left;
+
+            label {
+                width: 100%;
+            }
 
             .check {
                 display: inline-block;
                 float: left;
+                text-align: center;
             }
 
             .text {
@@ -449,7 +455,8 @@
             }
 
             hr {
-                width: 18em;
+                width: 16em;
+                margin: -1em auto 0 auto;
             }
         }
     }
@@ -470,7 +477,8 @@
             }
 
             hr {
-                width: 22em;
+                width: 20em;
+                margin: -1em auto 0 auto;
             }
         }
 
