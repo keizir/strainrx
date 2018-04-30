@@ -19,52 +19,55 @@
                 </label>
             </div>
         </div>
+
+        {% with first_location=locations.first %}
+
         <div class="form-field-group">
             <div class="form-field">
                 <label for="location_name">Business Name:</label>
-                <input type="text" name="location_name" id="location_name" value="{{ locations.first.location_name }}">
+                <input type="text" name="location_name" id="location_name" value="{{ first_location.location_name }}">
             </div>
         </div>
         <div class="form-field-group">
             <div class="form-field">
                 <label for="manager">Manager (optional):</label>
                 <input type="text" name="manager" id="manager"
-                       {% if locations.first.manager_name %}value="{{ locations.first.manager_name }}" {% endif %}>
+                       {% if first_location.manager_name %}value="{{ first_location.manager_name }}" {% endif %}>
             </div>
         </div>
         <div class="form-field-group">
             <div class="form-field textarea-field">
                 <label for="about">About Us (optional):</label>
-                <textarea name="about" id="about">{{ locations.first.about }}</textarea>
+                <textarea name="about" id="about">{{ first_location.about }}</textarea>
             </div>
         </div>
         <div class="form-field-group">
             <div class="form-field">
                 <label for="location_email">Email:</label>
                 <input type="text" name="location_email" id="location_email"
-                       value="{{ locations.first.location_email }}">
+                       value="{{ first_location.location_email }}">
             </div>
         </div>
         <div class="form-field-group phone-field-group">
             <div class="form-field">
                 <label for="phone">Phone Number:</label>
-                <input type="text" name="phone" id="phone" value="{{ locations.first.phone }}">
+                <input type="text" name="phone" id="phone" value="{{ first_location.phone }}">
             </div>
             <div class="form-field">
                 <label for="ext">Ext.</label>
                 <input type="text" name="ext" id="ext" maxlength="5"
-                       value="{% if locations.first.ext %}{{ locations.first.ext }}{% endif %}">
+                       value="{% if first_location.ext %}{{ first_location.ext }}{% endif %}">
             </div>
         </div>
         <div class="form-field-group timezone-field-group">
             <div class="form-field timezone-form-field">
                 <label for="timezone">Timezone</label>
                 <select id="timezone" name="timezone">
-                    <option {% if locations.first.timezone == None %}selected{% endif %}>- Select One -
+                    <option {% if first_location.timezone == None %}selected{% endif %}>- Select One -
                     </option>
                     {% for tz in timezones %}
                         <option value="{{ tz }}"
-                                {% if locations.first.timezone == tz %}selected="selected"{% endif %}>{{ tz }}
+                                {% if first_location.timezone == tz %}selected="selected"{% endif %}>{{ tz }}
                         </option>
                     {% endfor %}
                 </select>
@@ -74,24 +77,27 @@
             <h3>Business Type</h3>
             <div class="form-field">
                 <input type="checkbox" name="dispensary" id="dispensary"
-                       {% if locations.first.dispensary %}checked{% endif %}>
+                       {% if first_location.dispensary %}checked{% endif %}>
                 <label for="dispensary">Dispensary</label>
             </div>
             <div class="form-field">
                 <input type="checkbox" name="delivery" id="delivery"
-                       {% if locations.first.delivery %}checked{% endif %}>
+                       {% if first_location.delivery %}checked{% endif %}>
                 <label for="delivery">Delivery</label>
             </div>
             <div class="form-field">
                 <input type="checkbox" name="grow_house" id="grow_house"
-                       {% if locations.first.grow_house %}checked{% endif %}>
+                       {% if first_location.grow_house %}checked{% endif %}>
                 <label for="grow_house">Cultivator</label>
             </div>
         </div>
-        <div class="form-field-group hours-field-group">
+
+        <div class="form-field-group hours-field-group hidden">
             <h3>Hours of Operation</h3>
             <div class="location-operational-hours"></div>
         </div>
+
+        {% endwith %}
         <span class="error-message"></span>
         <div class="form-actions">
             <button type="submit" class="btn-primary btn-update-info" disabled="disabled">Update</button>

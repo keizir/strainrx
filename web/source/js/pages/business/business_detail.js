@@ -8,7 +8,11 @@ W.pages.business.BusinessDetail = Class.extend({
         $businessId: $('.business-id'),
         $locations: $('.location-select'),
         $locationOperationalHours: $('.location-operational-hours'),
-        $btnUpdateInfo: $('.btn-update-info')
+        $btnUpdateInfo: $('.btn-update-info'),
+        $hoursFieldGroup: $('.hours-field-group'),
+        $dispensary: $('#dispensary'),
+        $delivery: $('#delivery'),
+        $grow_house: $('#grow_house')
     },
 
     init: function init() {
@@ -33,6 +37,7 @@ W.pages.business.BusinessDetail = Class.extend({
 
         this.clickUpdateBusinessInfo();
         this.changeLocation();
+        this.changeBusinessType();
 
         var $input = $('input'),
             $selectTimezone = $('select[name="timezone"]'),
@@ -112,6 +117,19 @@ W.pages.business.BusinessDetail = Class.extend({
         }
     },
 
+
+    changeBusinessType: function () {
+        var that = this;
+
+        $('#dispensary, #delivery, #grow_house').change(function () {
+            if (that.ui.$grow_house && !that.ui.$delivery.is(':checked') && !that.ui.$dispensary.is(':checked')) {
+                that.ui.$hoursFieldGroup.addClass('hidden');
+            } else {
+                that.ui.$hoursFieldGroup.removeClass('hidden');
+            }
+        });
+    },
+
     clickUpdateBusinessInfo: function clickUpdateBusinessInfo() {
         var that = this;
 
@@ -121,6 +139,7 @@ W.pages.business.BusinessDetail = Class.extend({
             if (data) {
                 that.updateBusinessInfo(data);
             }
+            return false;
         });
     },
 
@@ -250,7 +269,7 @@ W.pages.business.BusinessDetail = Class.extend({
                     $errorMessage.addClass('error-message');
                     $errorMessage.removeClass('success-message');
                 }, 3000);
-                window.location.reload();
+                // window.location.reload();
             },
             error: function (error) {
                 if (error.status === 400) {
@@ -291,6 +310,12 @@ W.pages.business.BusinessDetail = Class.extend({
                         $('input[name="delivery"]').prop('checked', true);
                     } else {
                         $('input[name="delivery"]').removeProp('checked');
+                    }
+
+                    if (location.grow_house && !location.delivery && !location.dispensary) {
+                        that.ui.$hoursFieldGroup.addClass('hidden');
+                    } else {
+                        that.ui.$hoursFieldGroup.removeClass('hidden');
                     }
 
                     var $select = $('select[name="timezone"]');
