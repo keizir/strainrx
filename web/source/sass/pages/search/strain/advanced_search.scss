@@ -178,6 +178,12 @@ body {
       width: 48px;
       margin: 0;
     }
+
+    .form-field-group {
+      label.error {
+        color: $light-red
+      }
+    }
   }
 
   .title {

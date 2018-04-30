@@ -2,6 +2,39 @@
 
 W.ns('W.pages');
 
+W.pages.AdvancedSearchFormPage = Class.extend({
+
+    fields: ['thc_from', 'thc_to', 'thca_from', 'thca_to', 'cbc_to', 'cbn_to', 'cbn_from',
+             'thcv_from', 'thcv_to', 'cbd_from', 'cbd_to', 'cbg_from', 'cbg_to', 'cbc_from'],
+
+    ui: {
+      $form: $('.search-form')
+    },
+    
+    init: function () {
+        this.name = 'AdvancedSearchFormPage';
+        this.addFormValidation();
+    },
+
+    addFormValidation: function () {
+        var rules = {};
+
+        for (var i=0, n=this.fields.length; i<n; i+=1){
+            rules[this.fields[i]] = {
+              required: false,
+              number: true
+            }
+        }
+
+        this.ui.$form.validate({
+            rules: rules,
+            errorPlacement: function(error, element) {
+                error.insertAfter(element.parents('.form-field-wrapper'));
+            }
+        });
+    }
+});
+
 W.pages.AdvancedSearchResultsPage = Class.extend({
 
     scrollPage: 1,
