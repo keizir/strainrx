@@ -372,7 +372,7 @@ class BusinessAnalyticsView(FormView):
         return self.render_to_response(self.get_context_data(form=form))
 
     def get_object(self):
-        return get_object_or_404(Business, pk=self.kwargs.get('business_id'))
+        return get_object_or_404(Business, pk=self.kwargs.get('business_id'), users=self.request.user)
 
     def get_form_kwargs(self):
         kwargs = super().get_form_kwargs()
@@ -405,7 +405,8 @@ class BusinessAnalyticsView(FormView):
             entity_id=kwargs.get('business_id'),
             event__in=[Event.VIEW_DISP, Event.VIEW_DISP_AVAIL_AT, Event.DISP_LOOKUP]).count()
         context["total_calls"] = Event.objects.filter(entity_id=kwargs.get('business_id'), event=Event.DISP_CALL).count()
-        context["total_directions"] = Event.objects.filter(entity_id=kwargs.get('business_id'), event=Event.DISP_GETDIR).count()
+        context["total_directions"] = Event.objects.filter(
+            entity_id=kwargs.get('business_id'), event=Event.DISP_GETDIR).count()
         context['chart_biz_lookup'] = business_lookups_data
         context['chart_search'] = search_data
         context['chart_update_request_data'] = update_request_data
