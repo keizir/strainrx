@@ -172,10 +172,12 @@ body {
     font-size: 16px;
   }
 
-  input[type="number"] {
-    padding: 8px 10px;
-    width: 48px;
-    margin: 0;
+  .cannabinoids-group {
+    input[type="text"] {
+      padding: 8px 10px;
+      width: 48px;
+      margin: 0;
+    }
   }
 
   .title {

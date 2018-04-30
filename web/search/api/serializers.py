@@ -119,20 +119,20 @@ class StrainSearchSerializer(serializers.ModelSerializer):
     is_indoor = serializers.BooleanField(default=False, required=False)
     is_clean = serializers.BooleanField(default=False, required=False)
     # cannabinoids
-    thc_from = serializers.IntegerField(allow_null=True, required=False)
-    thc_to = serializers.IntegerField(allow_null=True, required=False)
-    thca_from = serializers.IntegerField(allow_null=True, required=False)
-    thca_to = serializers.IntegerField(allow_null=True, required=False)
-    thcv_from = serializers.IntegerField(allow_null=True, required=False)
-    thcv_to = serializers.IntegerField(allow_null=True, required=False)
-    cbd_from = serializers.IntegerField(allow_null=True, required=False)
-    cbd_to = serializers.IntegerField(allow_null=True, required=False)
-    cbg_from = serializers.IntegerField(allow_null=True, required=False)
-    cbg_to = serializers.IntegerField(allow_null=True, required=False)
-    cbn_from = serializers.IntegerField(allow_null=True, required=False)
-    cbn_to = serializers.IntegerField(allow_null=True, required=False)
-    cbc_from = serializers.IntegerField(allow_null=True, required=False)
-    cbc_to = serializers.IntegerField(allow_null=True, required=False)
+    thc_from = serializers.FloatField(allow_null=True, required=False)
+    thc_to = serializers.FloatField(allow_null=True, required=False)
+    thca_from = serializers.FloatField(allow_null=True, required=False)
+    thca_to = serializers.FloatField(allow_null=True, required=False)
+    thcv_from = serializers.FloatField(allow_null=True, required=False)
+    thcv_to = serializers.FloatField(allow_null=True, required=False)
+    cbd_from = serializers.FloatField(allow_null=True, required=False)
+    cbd_to = serializers.FloatField(allow_null=True, required=False)
+    cbg_from = serializers.FloatField(allow_null=True, required=False)
+    cbg_to = serializers.FloatField(allow_null=True, required=False)
+    cbn_from = serializers.FloatField(allow_null=True, required=False)
+    cbn_to = serializers.FloatField(allow_null=True, required=False)
+    cbc_from = serializers.FloatField(allow_null=True, required=False)
+    cbc_to = serializers.FloatField(allow_null=True, required=False)
 
     # terpenes
     humulene = serializers.BooleanField(default=False, required=False)
@@ -153,6 +153,8 @@ class StrainSearchSerializer(serializers.ModelSerializer):
     valencene = serializers.BooleanField(default=False, required=False)
 
     default_style = {'template_pack': 'pages/search/strain/inlines/'}
+    error_fields = ('thc_from', 'thc_to', 'thca_from', 'thca_to', 'cbc_to', 'page', 'size', 'cbn_to',
+                    'thcv_from', 'thcv_to', 'cbd_from', 'cbd_to', 'cbg_from', 'cbg_to', 'cbn_from', 'cbc_from')
 
     class Meta:
         model = Strain
@@ -168,10 +170,9 @@ class StrainSearchSerializer(serializers.ModelSerializer):
         except ValidationError as e:
             errors = e.detail
             data = data.copy()
-            if errors.pop('page', None):
-                data.pop('page')
-            if errors.pop('size', None):
-                data.pop('size')
+            for field in self.error_fields:
+                if errors.pop(field, None):
+                    data.pop(field)
             if errors.pop('sort', None):
                 sort = data.pop('sort', [])
                 data.setlist('sort', [item for item in sort if item in self.SORT_OPTIONS])
