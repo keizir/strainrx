@@ -61,7 +61,7 @@
     <script src="{% static 'js/pages/strain/strain_detail_review_dialog.js' %}"></script>
     <script src="{% static 'js/pages/strain/strain_detail_view.js' %}"></script>
     <script type="text/javascript">
-        W.pages.strain.StrainDetailView.init();
+        W.pages.strain.StrainDetailView.init({authenticated: '{{ request.user.is_authenticated }}' == 'True',});
     </script>
 {% endblock %}
 

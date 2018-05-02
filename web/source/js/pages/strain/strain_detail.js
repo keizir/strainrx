@@ -23,10 +23,10 @@ W.pages.strain.StrainDetailPage = Class.extend({
     priceSort: 'asc',
     locationBlocked: undefined,
 
-    init: function init() {
+    init: function init(options) {
         var that = this;
         this.name = 'StrainDetailPage';
-
+        this.authenticated = options.authenticated || false;
 
         $(window).on('resize', _.debounce(function () {
             that.recalculateSimilarStrainsSectionWidth();
@@ -103,6 +103,10 @@ W.pages.strain.StrainDetailPage = Class.extend({
 
     checkGeolocationPermission: function handlePermission(success) {
         var that  = this;
+        if (this.authenticated) {
+            that.locationBlocked = false;
+            return;
+        }
 
         navigator.permissions.query({name: 'geolocation'}).then(function (result) {
             if (result.state === 'granted') {
