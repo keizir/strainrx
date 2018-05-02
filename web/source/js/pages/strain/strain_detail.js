@@ -105,6 +105,9 @@ W.pages.strain.StrainDetailPage = Class.extend({
         var that  = this;
         if (this.authenticated) {
             that.locationBlocked = false;
+            if (success) {
+                success()
+            }
             return;
         }
 
