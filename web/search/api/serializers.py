@@ -188,4 +188,7 @@ class StrainSearchSerializer(serializers.ModelSerializer):
 
     def to_representation(self, instance):
         ret = super().to_representation(instance)
-        return {key: value for key, value in ret.items() if value}
+        data = {key: value for key, value in ret.items() if value is not None}
+        data['cannabinoids'] = self.CANNABINOIDS
+        data['terpenes'] = self.TERPENES
+        return data
