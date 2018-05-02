@@ -16,6 +16,7 @@ from web.analytics.service import Analytics
 from web.businesses.api.services import FeaturedBusinessLocationService
 from web.businesses.emails import EmailService
 from web.businesses.forms import ClaimForm, AnalyticsFilterForm
+from web.businesses.mixins import BusinessDetailMixin
 from web.businesses.models import Business, BusinessLocation
 from web.businesses.models import State, City, BusinessLocationMenuUpdateRequest
 from web.businesses.utils import NamePaginator
@@ -81,56 +82,39 @@ class ConfirmMenuView(TemplateView):
         return super().get(request, *args, **kwargs)
 
 
-class BusinessDetailView(TemplateView):
+class BusinessDetailView(BusinessDetailMixin, TemplateView):
     template_name = 'pages/business/business_detail.html'
 
     def get_context_data(self, **kwargs):
         context = super(BusinessDetailView, self).get_context_data(**kwargs)
-        business = Business.objects.get(pk=kwargs.get('business_id'))
-        context['business'] = business
-        context['locations'] = BusinessLocation.objects.filter(business=business, removed_date=None).order_by('id')
-        context['timezones'] = pytz.common_timezones
         context['tab'] = 'info'
         return context
 
 
-class BusinessMenuView(TemplateView):
+class BusinessMenuView(BusinessDetailMixin, TemplateView):
     template_name = 'pages/business/business_menu.html'
 
     def get_context_data(self, **kwargs):
         context = super(BusinessMenuView, self).get_context_data(**kwargs)
-        business = Business.objects.get(pk=kwargs.get('business_id'))
-        context['business'] = business
-        context['locations'] = BusinessLocation.objects.filter(business=business, removed_date=None).order_by('id')
-        context['tab'] = 'menu'
+        context['tab'] = self.kwargs['category']
         return context
 
 
-class BusinessPartnershipsView(TemplateView):
+class BusinessPartnershipsView(BusinessDetailMixin, TemplateView):
     template_name = 'pages/business/business_partnerships.html'
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        business = Business.objects.get(pk=kwargs.get('business_id'))
-        context['business'] = business
-        context['locations'] = BusinessLocation.objects.filter(business=business, removed_date=None).order_by('id')
-        context['grow_houses'] = BusinessLocation.objects.filter(business=business,
-                                                                 grow_house=True,
-                                                                 removed_date=None).order_by('id')
         context['tab'] = 'partnerships'
         return context
 
 
-class BusinessLocationsView(TemplateView):
+class BusinessLocationsView(BusinessDetailMixin, TemplateView):
     template_name = 'pages/business/business_locations.html'
 
     def get_context_data(self, **kwargs):
         context = super(BusinessLocationsView, self).get_context_data(**kwargs)
-        business = Business.objects.get(pk=kwargs.get('business_id'))
-        context['business'] = business
-        context['locations'] = BusinessLocation.objects.filter(business=business, removed_date=None).order_by('id')
         context['tab'] = 'locations'
-
         return context
 
 
@@ -361,7 +345,7 @@ class GrowerInfoView(TemplateView):
         return context
 
 
-class BusinessAnalyticsView(FormView):
+class BusinessAnalyticsView(BusinessDetailMixin, FormView):
     template_name = 'pages/business/business_analytics.html'
     form_class = AnalyticsFilterForm
 

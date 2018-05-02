@@ -1,8 +1,9 @@
 <script type="x/srx-template" id="menu-item-template">
     <div class="menu-item-wrapper">
-        <input type="hidden" class="menu-item-<%= item.id %>" value="<%= item.id %>">
-        <div class="menu-item strains"><%= item.strain_name %></div>
+      <input type="hidden" class="menu-item-<%= item.id %>" value="<%= item.id %>">
+      <div class="menu-item strains"><%= item.strain_name %></div>
 
+      <% if (!is_strains) { %>
         <% if (item.price_gram) { %>
         <div class="menu-item gram">$ <%= item.price_gram %></div>
         <% } else { %>
@@ -39,10 +40,12 @@
                 <span class="check"></span>
             </label>
         </div>
-        <div class="menu-item actions">
-            <div class="btn-remove-menu-item" id="<%= item.id %>" variety="<%= item.strain_variety %>">
-                <i class="fa fa-trash-o" aria-hidden="true"></i>
-            </div>
-        </div>
+      <% } %>
+
+      <div class="menu-item actions">
+          <div class="btn-remove-menu-item" id="<%= item.id %>" variety="<%= item.strain_variety %>">
+              <i class="fa fa-trash-o" aria-hidden="true"></i>
+          </div>
+      </div>
     </div>
 </script>

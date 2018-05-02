@@ -29,7 +29,7 @@ urlpatterns = [
         name='detail'
     ),
     url(
-        regex=r'^businesses/(?P<business_id>[0-9]{1,})/menu/$',
+        regex=r'^businesses/(?P<business_id>[0-9]{1,})/(?P<category>(menu|strains))/$',
         view=user_is_owner(views.BusinessMenuView.as_view()),
         name='menu'
     ),

@@ -17,10 +17,17 @@
                 <label class="locations" for="locations">
                     <span class="label">Location:</span>
                     <select class="location-select" id="locations">
-                        {% for l in locations %}
-                            <option value="{{ l.id }}">{{ l.location_name }} - {{ l.street1 }},
-                                {{ l.city }}, {{ l.state }} {{ l.zip_code }}</option>
+                      {% if tab == 'strains' %}
+                        {% for location in grow_houses %}
+                            <option value="{{ location.id }}">{{ location.location_name }} - {{ location.street1 }},
+                                {{ location.city }}, {{ location.state }} {{ location.zip_code }}</option>
                         {% endfor %}
+                      {% else %}
+                        {% for location in dispensaries %}
+                            <option value="{{ location.id }}">{{ location.location_name }} - {{ location.street1 }},
+                                {{ location.city }}, {{ location.state }} {{ location.zip_code }}</option>
+                        {% endfor %}
+                      {% endif %}
                     </select>
                     <span class="pointer"><i class="fa fa-sort-desc" aria-hidden="true"></i></span>
                 </label>
@@ -28,18 +35,22 @@
         </div>
         <div class="form-field-group add-strain-field-group">
             <div class="form-field strain-name-field"></div>
-            <div class="form-field price-field">
-                <input type="number" name="price_gram" placeholder="$ / Gram">
-            </div>
-            <div class="form-field price-field">
-                <input type="number" name="price_eighth" placeholder="$ / Eighth">
-            </div>
-            <div class="form-field price-field">
-                <input type="number" name="price_quarter" placeholder="$ / Quarter">
-            </div>
-            <div class="form-field price-field">
-                <input type="number" name="price_half" placeholder="$ / Half">
-            </div>
+
+            {% if tab != 'strains' %}
+              <div class="form-field price-field">
+                  <input type="number" name="price_gram" placeholder="$ / Gram">
+              </div>
+              <div class="form-field price-field">
+                  <input type="number" name="price_eighth" placeholder="$ / Eighth">
+              </div>
+              <div class="form-field price-field">
+                  <input type="number" name="price_quarter" placeholder="$ / Quarter">
+              </div>
+              <div class="form-field price-field">
+                  <input type="number" name="price_half" placeholder="$ / Half">
+              </div>
+            {% endif %}
+
             <div class="form-field actions-field">
                 <button type="button" class="btn-primary btn-add-strain">Add</button>
             </div>
@@ -64,7 +75,7 @@
     <script src="{% static 'js/pages/business/business_menu_view.js' %}"></script>
     <script src="{% static 'js/pages/strain/strain_lookup.js' %}"></script>
     <script type="text/javascript">
-        W.pages.business.BusinessMenuView.init();
+        W.pages.business.BusinessMenuView.init({'is_strains': '{{ tab }}' == 'strains'});
     </script>
 {% endblock %}
 

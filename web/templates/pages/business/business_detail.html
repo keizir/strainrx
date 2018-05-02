@@ -20,8 +20,6 @@
             </div>
         </div>
 
-        {% with first_location=locations.first %}
-
         <div class="form-field-group">
             <div class="form-field">
                 <label for="location_name">Business Name:</label>
@@ -97,7 +95,6 @@
             <div class="location-operational-hours"></div>
         </div>
 
-        {% endwith %}
         <span class="error-message"></span>
         <div class="form-actions">
             <button type="submit" class="btn-primary btn-update-info" disabled="disabled">Update</button>

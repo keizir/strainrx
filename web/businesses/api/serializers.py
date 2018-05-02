@@ -129,10 +129,10 @@ class BusinessLocationDetailSerializer(serializers.Serializer):
 class BusinessLocationMenuItemSerializer(serializers.Serializer):
     strain_id = serializers.IntegerField()
 
-    price_gram = serializers.FloatField(allow_null=True)
-    price_eighth = serializers.FloatField(allow_null=True)
-    price_quarter = serializers.FloatField(allow_null=True)
-    price_half = serializers.FloatField(allow_null=True)
+    price_gram = serializers.FloatField(allow_null=True, required=False)
+    price_eighth = serializers.FloatField(allow_null=True, required=False)
+    price_quarter = serializers.FloatField(allow_null=True, required=False)
+    price_half = serializers.FloatField(allow_null=True, required=False)
 
     in_stock = serializers.BooleanField(default=True)
 

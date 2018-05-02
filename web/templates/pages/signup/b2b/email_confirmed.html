@@ -30,10 +30,10 @@
                     <span class="message-1">
                         Thanks for signing up! A representative will contact you shortly to set up billing for you account.
                         From here you can proceed to
-                        <a href="{% url 'businesses:menu' business.id %}">create your menu</a>!
+                        <a href="{% url 'businesses:menu' business.id 'menu' %}">create your menu</a>!
                     </span>
                     <button class="btn-primary go-to-menu" type="button">
-                        <a href="{% url 'businesses:menu' business.id %}">Continue to Site</a>
+                        <a href="{% url 'businesses:menu' business.id 'menu' %}">Continue to Site</a>
                     </button>
                 </div>
             </div>
