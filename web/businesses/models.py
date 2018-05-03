@@ -19,6 +19,7 @@ from django.utils.translation import ugettext_lazy as _
 from django_resized import ResizedImageField
 
 from web.analytics.managers import BusinessLocationMenuUpdateRequestQuerySet
+from web.businesses.querysets import MenuItemQuerySet
 from web.search.models import Strain
 from web.system.models import ReviewAbstract
 from web.users.models import User
@@ -445,6 +446,8 @@ class BusinessLocationMenuItem(models.Model):
     nutrient_base = models.IntegerField(choices=NUTRIENT_BASE_CHOICES, default=SYNTHETIC)
 
     removed_date = models.DateTimeField(blank=True, null=True)
+
+    objects = MenuItemQuerySet.as_manager()
 
     @property
     def is_indoor(self):

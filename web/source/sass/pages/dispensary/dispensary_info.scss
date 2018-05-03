@@ -108,6 +108,14 @@
                     margin-bottom: 1em;
                 }
 
+                .avg-price {
+                    margin-bottom: 20px;
+
+                    .avg-price-indicator {
+                        cursor: pointer;
+                    }
+                }
+
                 .phone-wrapper {
                     position: relative;
                     margin-bottom: 1em;
@@ -693,6 +701,17 @@
     }
 }
 
+.avg-price-dialog {
+    height: 200px;
+
+    .body {
+        font-size: 16px;
+        line-height: 22px;
+        margin-top: -10px;
+        padding: 0 35px;
+    }
+}
+
 .phone-dialog {
     text-align: center;
 
@@ -850,6 +869,13 @@
 }
 
 @media (max-width: $screen-md-max) {
+
+    .avg-price-dialog {
+        .body {
+            padding: 0;
+        }
+    }
+
     .business-location-holder {
         .content-region {
             .location-content {
@@ -867,6 +893,7 @@
 }
 
 @media (min-width: $screen-sm-min) {
+
     .nav-region {
         background-color: $grey-lighter;
     }

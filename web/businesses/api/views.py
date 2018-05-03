@@ -196,6 +196,7 @@ class BusinessLocationView(APIView):
             d['location']['rating'] = get_location_rating(business_location_id)
             d['location']['is_open'] = open_closed == 'Opened'
             d['location']['open_closed'] = open_closed
+            d['location']['avg_price'] = BusinessLocationMenuItem.objects.avg_8th_price(location)
 
         return Response(d, status=status.HTTP_200_OK)
 

@@ -15,7 +15,7 @@ from django.utils.encoding import python_2_unicode_compatible
 from django.utils.translation import ugettext_lazy as _
 from django_resized import ResizedImageField
 
-from web.search.managers import UserSearchQuerySet
+from web.search.querysets import UserSearchQuerySet
 from web.system.models import ReviewAbstract
 from web.users.models import User
 
