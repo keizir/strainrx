@@ -80,7 +80,7 @@ class Strain(models.Model):
                                 "sage": 0, "skunk": 0, "spicy-herbal": 0, "strawberry": 0, "sweet": 0,
                                 "tar": 0, "tea": 0, "tobacco": 0, "tree-fruit": 0, "tropical": 0,
                                 "vanilla": 0, "violet": 0, "woody": 0})
-
+    # if new terpene is added we need to update StrainSearchSerializer
     terpenes = JSONField(default={"humulene": 0, "pinene": 0, "linalool": 0, "caryophyllene": 0, "myrcene": 0,
                                   "terpinolene": 0, "ocimene": 0, "limonene": 0, "camphene": 0, "terpineol": 0,
                                   "phellandrene": 0, "carene": 0, "pulegone": 0, "sabinene": 0, "geraniol": 0,
@@ -89,6 +89,7 @@ class Strain(models.Model):
     quick_picks = JSONField(default={"pain relief": 0, "relaxation": 0, "euphoria": 0, "sleep": 0, "good vibes": 0,
                                      "focus": 0, "passion": 0, "cbd": 0})
 
+    # if new cannabinoid is added we need to update StrainSearchSerializer and to es mapping
     cannabinoids = JSONField(default={"THC": 0, "THCA": 0, "THCV": 0, "CBD": 0, "CBG": 0, "CBN": 0, "CBC": 0})
 
     about = models.TextField(_('Description'), null=True, blank=True)

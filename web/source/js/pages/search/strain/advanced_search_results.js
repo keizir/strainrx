@@ -66,6 +66,7 @@ W.pages.AdvancedSearchResultsPage = Class.extend({
         this.isEmailVerified = options.isEmailVerified;
         this.currentUserId = options.currentUserId;
         this.search = new URLSearchParams(window.location.search);
+        this.terpenesAbbreviation = JSON.parse(options.terpenesAbbreviation);
 
         this.getSearchResults(function () {
             that.buildResultsFilterMenu();
@@ -236,6 +237,7 @@ W.pages.AdvancedSearchResultsPage = Class.extend({
             'obfuscated': !Boolean(that.currentUserId) || !that.isEmailVerified,
             'position': position,
             'strain': item,
+            'terpenesAbbreviation': that.terpenesAbbreviation,
             'price_format': that.formatPrice,
             'distance': that.formatDistance(item.distance),
             'isBasicSearch': isBasicSearch,

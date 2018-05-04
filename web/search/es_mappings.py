@@ -40,6 +40,17 @@ strain_mapping = {
         },
         "variety": {"type": "string"},
         "category": {"type": "string"},
+        "cannabinoids": {
+            "properties": {
+                "thc": {"type": "double"},
+                "thca": {"type": "double"},
+                "thcv": {"type": "double"},
+                "cbd": {"type": "double"},
+                "cbg": {"type": "double"},
+                "cbn": {"type": "double"},
+                "cbc": {"type": "double"}
+            }
+        },
         "effects": {
             "properties": {
                 "happy": {"type": "short"},

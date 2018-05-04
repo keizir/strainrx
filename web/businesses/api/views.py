@@ -268,6 +268,7 @@ class BusinessLocationMenuView(APIView):
             menu_item.removed_date = None
         except BusinessLocationMenuItem.DoesNotExist:
             menu_item = BusinessLocationMenuItem(business_location=location, strain=strain,
+                                                 in_stock=data.get('in_stock'),
                                                  price_gram=data.get('price_gram'),
                                                  price_eighth=data.get('price_eighth'),
                                                  price_quarter=data.get('price_quarter'),

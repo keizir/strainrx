@@ -131,7 +131,7 @@ W.pages.business.BusinessMenu = Class.extend({
                 price_eighth: that.getPriceValue(priceEighth),
                 price_quarter: that.getPriceValue(priceQuarter),
                 price_half: that.getPriceValue(priceHalf),
-                in_stock: true
+                in_stock: !that.is_strains
             };
 
             $.ajax({

@@ -54,7 +54,7 @@ ADVANCED_SEARCH_SCORE = """
     }
 
     for (int i = 0; i < varietyArray.length; ++i){
-        if (doc['variety'].value == varietyArray[i]) {
+        if (params._source.variety == varietyArray[i]) {
             total += 20;
         }
     }

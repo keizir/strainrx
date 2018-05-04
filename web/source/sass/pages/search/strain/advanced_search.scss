@@ -198,6 +198,18 @@ body {
     margin-top: 4em;
   }
 
+  .circle {
+    width: $circle-size;
+    height: $circle-size;
+    border-radius: 50%;
+    font-size: $font-cannabinoids-title;
+    font-weight: bold;
+    color: #fff;
+    line-height: $circle-size - 5px;
+    text-align: center;
+    margin: 0.2em 0.5em;
+  }
+
   .search-result-subtitle {
     color: $grey-blue;
     font-size: $font-subtitle + 5;
@@ -369,18 +381,6 @@ body {
       }
     }
 
-    .circle {
-      width: $circle-size;
-      height: $circle-size;
-      border-radius: 50%;
-      font-size: $font-cannabinoids-title;
-      font-weight: bold;
-      color: #fff;
-      line-height: $circle-size - 5px;
-      text-align: center;
-      margin: 0.2em 0.5em;
-    }
-
     /* Search page */
     .search-btn {
       margin-bottom: 1em;
@@ -477,6 +477,15 @@ body {
           width: 2.5em;
           padding-top: 0.5em;
         }
+
+        .strain-terpenes {
+            .terpene {
+              padding: 0.3em;
+              margin: 1px;
+              display: inline-block;
+            }
+        }
+
       }
 
       .item-variety-logo {

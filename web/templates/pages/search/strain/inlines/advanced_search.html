@@ -1,5 +1,6 @@
 {% load staticfiles i18n %}
 {% load rest_framework %}
+{% load search_template_tags %}
 
 <form class="search-form" method="get" action="{% url 'search:advanced_search_result' %}">
   <div class="row">
@@ -143,150 +144,22 @@
   <div class="terpenes row">
     <span class="terpenes-title">{% trans 'Terpenes' %}</span>
     <div class="terpenes-group">
-      <div class="form-field-group variety">
-        <div class="form-field">
-          <span class="variety-wrapper">
-            {% render_field form.humulene style=form.default_style %}
-            <label for="humulene" class="circle humulene">{% trans 'H' %}</label>
-          </span>
-          <b>{% trans 'HUMULENE' %}</b>
-        </div>
-      </div>
-      <div class="form-field-group variety">
-        <div class="form-field">
-                      <span class="variety-wrapper">
-                        {% render_field form.pinene style=form.default_style %}
-                        <label for="pinene" class="circle pinene">{% trans 'P' %}</label>
-                      </span>
-          <b>{% trans 'PINENE' %}</b>
-        </div>
-      </div>
-      <div class="form-field-group variety">
-        <div class="form-field">
-                      <span class="variety-wrapper">
-                        {% render_field form.linalool style=form.default_style %}
-                        <label for="linalool" class="circle linalool">{% trans 'L' %}</label>
-                      </span>
-          <b>{% trans 'LINALOOL' %}</b>
-        </div>
-      </div>
-      <div class="form-field-group variety">
-        <div class="form-field">
-                      <span class="variety-wrapper">
-                        {% render_field form.caryophyllene style=form.default_style %}
-                        <label for="caryophyllene" class="circle caryophyllene">{% trans 'Cr' %}</label>
-                      </span>
-          <b>{% trans 'CARYOPHYLLENE' %}</b>
-        </div>
-      </div>
-      <div class="form-field-group variety">
-        <div class="form-field">
-                      <span class="variety-wrapper">
-                        {% render_field form.myrcene style=form.default_style %}
-                        <label for="myrcene" class="circle myrcene">{% trans 'M' %}</label>
-                      </span>
-          <b>{% trans 'MYRCENE' %}</b>
-        </div>
-      </div>
-      <div class="form-field-group variety">
-        <div class="form-field">
-                      <span class="variety-wrapper">
-                        {% render_field form.terpinolene style=form.default_style %}
-                        <label for="terpinolene" class="circle terpinolene">{% trans 'T' %}</label>
-                      </span>
-          <b>{% trans 'TERPINOLENE' %}</b>
-        </div>
-      </div>
-      <div class="form-field-group variety">
-        <div class="form-field">
-                      <span class="variety-wrapper">
-                        {% render_field form.ocimene style=form.default_style %}
-                        <label for="ocimene" class="circle ocimene">{% trans 'O' %}</label>
-                      </span>
-          <b>{% trans 'OCIMENE' %}</b>
-        </div>
-      </div>
-      <div class="form-field-group variety">
-        <div class="form-field">
-                      <span class="variety-wrapper">
-                        {% render_field form.limonene style=form.default_style %}
-                        <label for="limonene" class="circle limonene">{% trans 'Le' %}</label>
-                      </span>
-          <b>{% trans 'LIMONENE' %}</b>
-        </div>
-      </div>
-      <div class="form-field-group variety">
-        <div class="form-field">
-                      <span class="variety-wrapper">
-                        {% render_field form.camphene style=form.default_style %}
-                        <label for="camphene" class="circle camphene">{% trans 'C' %}</label>
-                      </span>
-          <b>{% trans 'CAMPHENE' %}</b>
-        </div>
-      </div>
-      <div class="form-field-group variety">
-        <div class="form-field">
-                      <span class="variety-wrapper">
-                        {% render_field form.terpineol style=form.default_style %}
-                        <label for="terpineol" class="circle terpineol">{% trans 'Ti' %}</label>
-                      </span>
-          <b>{% trans 'TERPINEOL' %}</b>
-        </div>
-      </div>
-      <div class="form-field-group variety">
-        <div class="form-field">
-                      <span class="variety-wrapper">
-                        {% render_field form.phellandrene style=form.default_style %}
-                        <label for="phellandrene" class="circle phellandrene">{% trans 'Ph' %}</label>
-                      </span>
-          <b>{% trans 'PHELLANDRENE' %}</b>
-        </div>
-      </div>
-      <div class="form-field-group variety">
-        <div class="form-field">
-                      <span class="variety-wrapper">
-                        {% render_field form.carene style=form.default_style %}
-                        <label for="carene" class="circle carene">{% trans 'Ce' %}</label>
-                      </span>
-          <b>{% trans 'CARENE' %}</b>
-        </div>
-      </div>
-      <div class="form-field-group variety">
-        <div class="form-field">
-                      <span class="variety-wrapper">
-                        {% render_field form.pulegone style=form.default_style %}
-                        <label for="pulegone" class="circle pulegone">{% trans 'Pu' %}</label>
-                      </span>
-          <b>{% trans 'PULEGONE' %}</b>
-        </div>
-      </div>
-      <div class="form-field-group variety">
-        <div class="form-field">
-                      <span class="variety-wrapper">
-                        {% render_field form.sabinene style=form.default_style %}
-                        <label for="sabinene" class="circle sabinene">{% trans 'S' %}</label>
-                      </span>
-          <b>{% trans 'SABINENE' %}</b>
-        </div>
-      </div>
-      <div class="form-field-group variety">
-        <div class="form-field">
-                      <span class="variety-wrapper">
-                        {% render_field form.geraniol style=form.default_style %}
-                        <label for="geraniol" class="circle geraniol">{% trans 'G' %}</label>
-                      </span>
-          <b>{% trans 'GERANIOL' %}</b>
-        </div>
-      </div>
-      <div class="form-field-group variety">
-        <div class="form-field">
-                      <span class="variety-wrapper">
-                        {% render_field form.valencene style=form.default_style %}
-                        <label for="valencene" class="circle valencene">{% trans 'Va' %}</label>
-                      </span>
-          <b>{% trans 'VALENCENE' %}</b>
-        </div>
-      </div>
+
+      {% for field in form %}
+        {% if field.name in form.TERPENES %}
+          <div class="form-field-group variety">
+            <div class="form-field">
+              <span class="variety-wrapper">
+                {% render_field field style=form.default_style %}
+                <label for="{{ field.name }}" class="circle {{ field.name }}">
+                  {{ form.TERPENES_ABBREVIATION|get_item:field.name }}
+                </label>
+              </span>
+              <b>{{ field.name|upper }}</b>
+            </div>
+          </div>
+        {% endif %}
+      {% endfor %}
     </div>
   </div>
 

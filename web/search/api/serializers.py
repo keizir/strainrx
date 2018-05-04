@@ -108,6 +108,11 @@ class StrainSearchSerializer(serializers.ModelSerializer):
     CANNABINOIDS = ['thc', 'thca', 'thcv', 'cbd', 'cbg', 'cbn', 'cbc']
     TERPENES = ['humulene', 'pinene', 'linalool', 'caryophyllene', 'myrcene', 'terpinolene', 'ocimene', 'limonene',
                 'camphene', 'terpineol', 'phellandrene', 'carene', 'pulegone', 'sabinene', 'geraniol', 'valencene']
+    TERPENES_ABBREVIATION = {
+        'humulene': 'H', 'pinene': 'P', 'linalool': 'L', 'caryophyllene': 'Cr', 'myrcene': 'M', 'terpinolene': 'T',
+        'ocimene': 'O', 'limonene': 'Le', 'camphene': 'C', 'terpineol': 'Ti', 'phellandrene': 'Ph', 'carene': 'Ce',
+        'pulegone': 'Pu', 'sabinene': 'S', 'geraniol': 'G', 'valencene': 'Va'
+    }
 
     q = serializers.CharField(required=False)
     page = serializers.IntegerField(required=False, default=1)
@@ -153,8 +158,8 @@ class StrainSearchSerializer(serializers.ModelSerializer):
     valencene = serializers.BooleanField(default=False, required=False)
 
     default_style = {'template_pack': 'pages/search/strain/inlines/'}
-    error_fields = ('thc_from', 'thc_to', 'thca_from', 'thca_to', 'cbc_to', 'page', 'size', 'cbn_to',
-                    'thcv_from', 'thcv_to', 'cbd_from', 'cbd_to', 'cbg_from', 'cbg_to', 'cbn_from', 'cbc_from')
+    skip_error_fields = ('thc_from', 'thc_to', 'thca_from', 'thca_to', 'cbc_to', 'page', 'size', 'cbn_to',
+                         'thcv_from', 'thcv_to', 'cbd_from', 'cbd_to', 'cbg_from', 'cbg_to', 'cbn_from', 'cbc_from')
 
     class Meta:
         model = Strain
@@ -170,7 +175,7 @@ class StrainSearchSerializer(serializers.ModelSerializer):
         except ValidationError as e:
             errors = e.detail
             data = data.copy()
-            for field in self.error_fields:
+            for field in self.skip_error_fields:
                 if errors.pop(field, None):
                     data.pop(field)
             if errors.pop('sort', None):
