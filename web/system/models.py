@@ -60,6 +60,9 @@ class PermanentlyRemoved(models.Model):
     redirect_url = models.CharField(max_length=255, blank=True)
     status = models.PositiveSmallIntegerField(choices=STATUS_CHOICES)
 
+    class Meta:
+        ordering = ('-pk',)
+
     def clean(self):
         if self.status == status.HTTP_301_MOVED_PERMANENTLY and not self.redirect_url:
             raise ValidationError({'redirect_url': 'This field is required.'})

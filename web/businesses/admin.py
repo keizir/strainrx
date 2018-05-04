@@ -163,10 +163,6 @@ class FeaturedBusinessLocationAdmin(admin.ModelAdmin):
     search_fields = ('business_location', 'zip_code')
     actions = [stop_featuring]
 
-    def has_delete_permission(self, request, obj=None):
-        # Disable delete
-        return False
-
 
 class FeaturedBusinessLocationInline(admin.TabularInline):
     extra = 0
@@ -206,20 +202,6 @@ class BusinessLocationAdmin(admin.ModelAdmin):
 
     def form_url(self, instance):
         return mark_safe('<a target="_blank" href="{url}">{url}</a>'.format(url=instance.url))
-
-    def get_actions(self, request):
-        # Disable delete
-        actions = super(BusinessLocationAdmin, self).get_actions(request)
-        #del actions['delete_selected']
-        return actions
-
-    def has_delete_permission(self, request, obj=None):
-        # Disable delete
-        return False
-
-    def get_queryset(self, request):
-        objects_all = BusinessLocation.objects.all()
-        return objects_all
 
     list_display = ['business', 'location_name', 'dispensary', 'delivery', 'grow_house',
                     'created_date', 'removed_date', 'owner_email_verified']
