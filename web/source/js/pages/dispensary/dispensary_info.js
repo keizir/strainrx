@@ -94,7 +94,7 @@ W.pages.dispensary.DispensaryInfo = Class.extend({
         W.common.Rating.readOnly($avgPrice, {
             rating: $avgPrice.text(), spacing: '-5px',
             starWidth: '20px',
-            starSvg: '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 288 512"><path d="M209.2 233.4l-108-31.6C88.7 198.2 80 186.5 80 173.5c0-16.3 13.2-29.5 29.5-29.5h66.3c12.2 0 24.2 3.7 34.2 10.5 6.1 4.1 14.3 3.1 19.5-2l34.8-34c7.1-6.9 6.1-18.4-1.8-24.5C238 74.8 207.4 64.1 176 64V16c0-8.8-7.2-16-16-16h-32c-8.8 0-16 7.2-16 16v48h-2.5C45.8 64-5.4 118.7.5 183.6c4.2 46.1 39.4 83.6 83.8 96.6l102.5 30c12.5 3.7 21.2 15.3 21.2 28.3 0 16.3-13.2 29.5-29.5 29.5h-66.3C100 368 88 364.3 78 357.5c-6.1-4.1-14.3-3.1-19.5 2l-34.8 34c-7.1 6.9-6.1 18.4 1.8 24.5 24.5 19.2 55.1 29.9 86.5 30v48c0 8.8 7.2 16 16 16h32c8.8 0 16-7.2 16-16v-48.2c46.6-.9 90.3-28.6 105.7-72.7 21.5-61.6-14.6-124.8-72.5-141.7z"/></svg>'
+            starSvg: '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 288 512"><path d="M209.2 233.4l-108-31.6C88.7 198.2 80 186.5 80 173.5c0-16.3 13.2-29.5 29.5-29.5h66.3c12.2 0 24.2 3.7 34.2 10.5 6.1 4.1 14.3 3.1 19.5-2l34.8-34c7.1-6.9 6.1-18.4-1.8-24.5C238 74.8 207.4 64.1 176 64V16c0-8.8-7.2-16-16-16h-32c-8.8 0-16 7.2-16 16v48h-2.5C45.8 64-5.4 118.7.5 183.6c4.2 46.1 39.4 83.6 83.8 96.6l102.5 30c12.5 3.7 21.2 15.3 21.2 28.3 0 16.3-13.2 29.5-29.5 29.5h-66.3C100 368 88 364.3 78 357.5c-6.1-4.1-14.3-3.1-19.5 2l-34.8 34c-7.1 6.9-6.1 18.4 1.8 24.5 24.5 19.2 55.1 29.9 86.5 30v48c0 8.8 7.2 16 16 16h32c8.8 0 16-7.2 16-16v-48.2c46.6-.9 90.3-28.6 105.7-72.7 21.5-61.6-14.6-124.8-72.5-141.7z"/></svg>' // dollar sign
         });
 
         this.clickRateLink();
@@ -283,7 +283,7 @@ W.pages.dispensary.DispensaryInfo = Class.extend({
     clickPlaceOrderBtn: function clickPlaceOrderBtn() {
         var that = this,
             $btn = $('.btn-place-order');
-        if ($btn && $btn.length != 0) {
+        if ($btn && $btn.length !== 0) {
             $btn.on('click', function () {
                 that.showPhoneDialog();
             });
@@ -302,14 +302,14 @@ W.pages.dispensary.DispensaryInfo = Class.extend({
 
     clickGetDirectionsBtn: function clickGetDirectionsBtn() {
         var that = this, $btn = $('.btn-get-directions'), q;
-        if ($btn && $btn.length != 0) {
+        if ($btn && $btn.length !== 0) {
             $btn.on('click', function () {
                 q = W.common.Format.formatAddress(that.location);
                 
                 W.track({
                     event: "DISP_GETDIR",
                     entity_id: that.ui.$businessId.val()
-                })
+                });
 
                 if (q) {
                     setTimeout(function(){
@@ -347,7 +347,8 @@ W.pages.dispensary.DispensaryInfo = Class.extend({
                     formatScore: that.formatScore,
                     getStrainUrl: that.getStrainUrl,
                     reviews: reviewToShow,
-                    deals: []
+                    deals: [],
+                    is_authenticated: AUTHENTICATED
                 }));
 
                 that.postShowContent();
@@ -370,6 +371,13 @@ W.pages.dispensary.DispensaryInfo = Class.extend({
 
         $('.btn-request').on('click', this.onBtnRequestClick.bind(this));
         $('.menu-item-header .match').on('click', this.showMatchInfoDialog.bind(this));
+        $('.out-of-stock')
+            .on('click', this.showOutOfStockDialog.bind(this))
+            .tooltip({
+              content: function () {
+                  return $(this).prop('title');
+              }
+            });
     },
 
     postUpdateRequest: function postUpdateRequest(url) {
@@ -455,7 +463,7 @@ W.pages.dispensary.DispensaryInfo = Class.extend({
     },
 
     showAllReviews: function showAllReviews() {
-        var that = this, reviews;
+        var that = this;
 
         $('.all-reviews-link-wrapper a').on('click', function (e) {
             e.preventDefault();
@@ -642,6 +650,25 @@ W.pages.dispensary.DispensaryInfo = Class.extend({
             that.postUpdateRequest(url).always(function() {
                 $requestBtn.attr('disabled', true);
                 $requestBtn.attr('title', 'You have recently requested a menu update');
+
+                that.showMenuUpdateRequestOkDialog();
+            });
+        });
+    },
+
+    showOutOfStockDialog: function (el) {
+        if (!this.isAuthenticated) {
+            return false;
+        }
+        var url = this.urls.menuUpdateRequest.format(this.ui.$businessId.val(), this.ui.$location_id.val()),
+            that = this,
+            $requestBtn = $(el);
+
+        that.closeDialog();
+        that.dialog = Dialog('#out-of-stock-dialog', '#btn-report-out-of-stock', {title: null}, function () {
+            that.postUpdateRequest(url).always(function() {
+                $requestBtn.attr('disabled', true);
+                $requestBtn.attr('title', 'You have recently report dispensary');
 
                 that.showMenuUpdateRequestOkDialog();
             });

@@ -14,6 +14,10 @@
     border-bottom: 1px solid $grey-light;
 }
 
+.ui-tooltip {
+    text-align: center;
+}
+
 .business-location-holder {
     position: relative;
     height: 100%;
@@ -479,6 +483,10 @@
                             .match {
                                 width: 19%;
                             }
+
+                            .out-of-stock {
+                                width: 1%;
+                            }
                         }
 
                         .menu-item {
@@ -496,6 +504,11 @@
 
                             .match {
                                 width: 19%;
+                            }
+                            .out-of-stock {
+                                width: 1%;
+                                font-size: 21px;
+                                color: $white;
                             }
                         }
                     }
@@ -532,6 +545,10 @@
                                     cursor: help;
                                 }
                             }
+
+                            .out-of-stock {
+                                width: 1%;
+                            }
                         }
 
                         .menu-item {
@@ -558,6 +575,12 @@
 
                             .match {
                                 width: 19%;
+                            }
+
+                            .out-of-stock {
+                                width: 1%;
+                                font-size: 21px;
+                                color: $white;
                             }
                         }
                     }
@@ -727,6 +750,12 @@
             position: relative;
             top: -16px;
         }
+    }
+}
+
+.out-of-stock-dialog {
+    .body {
+        text-align: center;
     }
 }
 
