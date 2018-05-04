@@ -3,6 +3,7 @@ from django import forms
 from django.contrib import admin
 from django.contrib.admin import SimpleListFilter
 from django.contrib.admin.widgets import AdminTimeWidget
+from django.utils import timezone
 from django.utils.safestring import mark_safe
 from tinymce.widgets import TinyMCE
 
@@ -10,7 +11,7 @@ from web.businesses.api.services import BusinessLocationService
 from web.businesses.es_service import BusinessLocationESService
 from web.businesses.models import Business, BusinessLocation, FeaturedBusinessLocation, \
     LocationReview, State, City, Payment, GrowerDispensaryPartnership, BusinessLocationMenuUpdate, \
-    BusinessLocationMenuItem, BusinessLocationMenuUpdateRequest
+    BusinessLocationMenuItem, BusinessLocationMenuUpdateRequest, ReportOutOfStock
 
 
 class PaymentInline(admin.TabularInline):
@@ -312,3 +313,14 @@ class GrowerDispensaryPartnershipAdmin(admin.ModelAdmin):
 
 
 admin.site.register(BusinessLocationMenuUpdateRequest)
+
+
+@admin.register(ReportOutOfStock)
+class ReportOutOfStockAdmin(admin.ModelAdmin):
+    list_display = ('menu_item__business_location__name', 'menu_item__strain', 'user', 'created', 'countdown')
+    list_select_related = ('menu_item__business_location', 'menu_item__strain')
+
+    def countdown(self, instance):
+        delta = timezone.now() - instance.created
+        if delta.days < 30:
+            return delta

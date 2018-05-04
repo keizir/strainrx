@@ -15,7 +15,8 @@ W.pages.dispensary.DispensaryInfo = Class.extend({
         location: '/api/v1/businesses/{0}/locations/{1}?ddp=true',
         menu: '/api/v1/businesses/{0}/locations/{1}/menu?ddp=true',
         review: '/api/v1/businesses/{0}/locations/{1}/reviews',
-        menuUpdateRequest: '/api/v1/businesses/{0}/locations/{1}/menu-update-requests'
+        menuUpdateRequest: '/api/v1/businesses/{0}/locations/{1}/menu-update-requests',
+        reportOutOfStock: '/api/v1/businesses/{0}/menu_item/{1}/report-out-of-stock'
     },
 
     ui: {
@@ -656,23 +657,29 @@ W.pages.dispensary.DispensaryInfo = Class.extend({
         });
     },
 
-    showOutOfStockDialog: function (el) {
+    showOutOfStockDialog: function (event) {
         if (!this.isAuthenticated) {
             return false;
         }
-        var url = this.urls.menuUpdateRequest.format(this.ui.$businessId.val(), this.ui.$location_id.val()),
-            that = this,
-            $requestBtn = $(el);
+        var $requestBtn = $(event.target).parents('.out-of-stock'),
+            url = this.urls.reportOutOfStock.format(this.ui.$businessId.val(), $requestBtn.attr('data-menu-id')),
+            that = this;
 
         that.closeDialog();
-        that.dialog = Dialog('#out-of-stock-dialog', '#btn-report-out-of-stock', {title: null}, function () {
+        that.dialog = Dialog('#out-of-stock-dialog', '#btn-report-out-of-stock', {title: 'Report out of stock'}, function () {
             that.postUpdateRequest(url).always(function() {
                 $requestBtn.attr('disabled', true);
                 $requestBtn.attr('title', 'You have recently report dispensary');
-
-                that.showMenuUpdateRequestOkDialog();
+                $requestBtn.tooltip();
+                that.showOutOfStockOkDialog();
             });
-        });
+        }, '.cancel');
+    },
+
+    showOutOfStockOkDialog: function showMenuUpdateRequestOkDialog() {
+        this.closeDialog();
+        this.dialog = Dialog('#menu-update-request-ok-dialog', '#menu-update-request-ok-dialog #btn-close',
+            {title: 'Report out of stock'}, this.closeDialog.bind(this));
     },
 
     showMenuUpdateRequestOkDialog: function showMenuUpdateRequestOkDialog() {
@@ -693,7 +700,7 @@ W.pages.dispensary.DispensaryInfo = Class.extend({
 });
 
 
-var Dialog = function Dialog(dialogSelector, btnSelector, props, onConfirm) {
+var Dialog = function Dialog(dialogSelector, btnSelector, props, onConfirm, btnCancel) {
     var $dialog = $(dialogSelector),
         width = 'auto',
         defaultProps;
@@ -720,6 +727,9 @@ var Dialog = function Dialog(dialogSelector, btnSelector, props, onConfirm) {
             $(this).css('max-width', '450px');
             $(this).css('min-height', 'auto');
             $('.srx-dialog').css('min-height', 'auto');
+        },
+        close: function() {
+            $('.out-of-stock').tooltip( "close" );
         }
     };
 
@@ -727,7 +737,13 @@ var Dialog = function Dialog(dialogSelector, btnSelector, props, onConfirm) {
 
     $(btnSelector).off('click');
     $(btnSelector).on('click', onConfirm);
-
+    if (btnCancel) {
+        $dialog.find(btnCancel)
+            .off('click')
+            .on('click', function () {
+                $dialog.dialog('close');
+            });
+    }
     $(':focus').blur();
     $dialog.focus();
 

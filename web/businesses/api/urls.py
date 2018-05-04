@@ -45,6 +45,11 @@ urlpatterns = [
         name='business_location_menu_update_detail'
     ),
     url(
+        regex=r'^(?P<business_id>[0-9]+)/menu_item/(?P<menu_item_id>[0-9]+)/report-out-of-stock$',
+        view=BusinessLocationReportOutOfStockView.as_view(),
+        name='business_location_report_out_of_stock'
+    ),
+    url(
         regex=r'^(?P<business_id>[0-9]+)/locations/(?P<business_location_id>[0-9]+)$',
         view=BusinessLocationView.as_view(),
         name='business_location'

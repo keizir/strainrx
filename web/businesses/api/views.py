@@ -13,6 +13,7 @@ from django.utils.crypto import get_random_string
 
 from rest_framework import permissions
 from rest_framework import status
+from rest_framework.generics import CreateAPIView, get_object_or_404
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
@@ -22,7 +23,7 @@ from web.businesses.api.services import BusinessSignUpService, BusinessLocationS
     get_location_rating, FeaturedBusinessLocationService
 from web.businesses.emails import EmailService
 from web.businesses.models import Business, BusinessLocation, BusinessLocationMenuItem, LocationReview, \
-    UserFavoriteLocation, State, City, BusinessLocationMenuUpdateRequest
+    UserFavoriteLocation, State, City, BusinessLocationMenuUpdateRequest, ReportOutOfStock
 from web.businesses.serializers import BusinessSerializer, BusinessLocationSerializer
 from web.businesses.utils import NamePaginator
 from web.search.api.services import StrainDetailsService
@@ -331,6 +332,25 @@ class BusinessLocationMenuUpdateRequestDetailView(APIView):
         )
 
         EmailService().send_menu_update_request_email(update_request)
+
+        return Response(status=status.HTTP_201_CREATED)
+
+
+class BusinessLocationReportOutOfStockView(CreateAPIView):
+    permission_classes = (permissions.IsAuthenticated,)
+
+    def get_object(self):
+        return get_object_or_404(
+            BusinessLocationMenuItem.objects.select_related('business_location__business', 'strain'),
+            id=self.kwargs['menu_item_id'])
+
+    def create(self, request, *args, **kwargs):
+        menu = self.get_object()
+        ReportOutOfStock.objects.create(
+            user=self.request.user,
+            menu_item=menu
+        )
+        EmailService().send_report_out_of_stock(menu)
 
         return Response(status=status.HTTP_201_CREATED)
 

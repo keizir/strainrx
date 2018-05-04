@@ -61,9 +61,6 @@
                         <span class="quarter">1/4</span>
                         <span class="half">1/2</span>
                         <span class="match">Match %</span>
-                        <% if (is_authenticated) { %>
-                          <span class="out-of-stock"></span>
-                        <% } %>
                     </div>
                     <div class="menu-item ${ selectedStrainMenuItem.strain_variety }">
                         <span class="name">${ selectedStrainMenuItem.strain_name }</span>
@@ -72,11 +69,6 @@
                         <span class="quarter">${ formatPrice(selectedStrainMenuItem.price_quarter) }</span>
                         <span class="half">${ formatPrice(selectedStrainMenuItem.price_half) }</span>
                         <span class="match">${ formatScore(selectedStrainMenuItem.match_score) }</span>
-                        <% if (is_authenticated) { %>
-                          <span class="out-of-stock">
-                            <i class="fa fa-times-circle-o" aria-hidden="true"></i>
-                          </span>
-                        <% } %>
                     </div>
                 </div>
                 <% } %>
@@ -108,9 +100,10 @@
                         <span class="half">${ formatPrice(mi.price_half) }</span>
                         <span class="match">${ formatScore(mi.match_score) }</span>
                         <% if (is_authenticated) { %>
-                          <span class="out-of-stock">
+                          <button class="out-of-stock" data-menu-id="${ mi.id }"
+                             title="Mark as <br/><b>out from stock</b>">
                             <i class="fa fa-times-circle-o" aria-hidden="true"></i>
-                          </span>
+                          </button>
                         <% } %>
                     </div>
                     <% }) %>
@@ -144,10 +137,10 @@
                         <span class="half">${ formatPrice(mi.price_half) }</span>
                         <span class="match">${ formatScore(mi.match_score) }</span>
                         <% if (is_authenticated) { %>
-                          <a href="#" class="out-of-stock"
+                          <button class="out-of-stock" data-menu-id="${ mi.id }"
                              title="Mark as <br/><b>out from stock</b>">
                             <i class="fa fa-times-circle-o" aria-hidden="true"></i>
-                          </a>
+                          </button>
                         <% } %>
                     </div>
                     <% }) %>
@@ -181,9 +174,10 @@
                         <span class="half">${ formatPrice(mi.price_half) }</span>
                         <span class="match">${ formatScore(mi.match_score) }</span>
                         <% if (is_authenticated) { %>
-                          <span class="out-of-stock">
+                          <button class="out-of-stock" data-menu-id="${ mi.id }"
+                             title="Mark as <br/><b>out from stock</b>">
                             <i class="fa fa-times-circle-o" aria-hidden="true"></i>
-                          </span>
+                          </button>
                         <% } %>
                     </div>
                     <% }) %>

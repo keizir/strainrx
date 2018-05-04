@@ -124,3 +124,20 @@ class EmailService:
 
         m = Mail(from_email, subject, to_email, html_content)
         return sg.client.mail.send.post(request_body=m.get())
+
+    def send_report_out_of_stock(self, menu):
+        sg = self.get_client()
+
+        from_email = Email(settings.DEFAULT_FROM_EMAIL)
+        to_email = Email(menu.business_location.location_email)
+
+        subject = 'Out Of Stock'
+        context = {
+            'name': menu.business_location.business.name,
+            'strain': menu.strain.name
+        }
+        html_template = render_to_string('emails/report_out_of_stock.html', context)
+        html_content = Content('text/html', html_template)
+
+        m = Mail(from_email, subject, to_email, html_content)
+        return sg.client.mail.send.post(request_body=m.get())

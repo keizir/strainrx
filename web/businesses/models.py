@@ -494,6 +494,17 @@ class BusinessLocationMenuUpdateRequest(models.Model):
 
 
 @python_2_unicode_compatible
+class ReportOutOfStock(models.Model):
+    user = models.ForeignKey(User)
+    menu_item = models.ForeignKey(BusinessLocationMenuItem)
+    is_active = models.BooleanField(default=True)
+    created = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return '{} - {} - {}'.format(self.created, self.user, self.menu_item)
+
+
+@python_2_unicode_compatible
 class GrowerDispensaryPartnership(models.Model):
     grower = models.ForeignKey(BusinessLocation, related_name='dispensary_partnerships', on_delete=models.CASCADE)
     dispensary = models.ForeignKey(BusinessLocation, related_name='grower_partnerships', on_delete=models.CASCADE)
