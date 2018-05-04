@@ -138,6 +138,19 @@
           </div>
         </div>
       </div>
+      <div class="form-field-group">
+        <span class="group-label">{% trans 'CBDA' %}</span>
+        <div class="form-field-wrapper">
+          <div class="form-field">
+            <label for="cbda_from">{% trans 'From' %}</label>
+            {% render_field form.cbda_from style=form.default_style %}&nbsp;%
+          </div>
+          <div class="form-field">
+            <label for="cbda_to">{% trans 'To' %}</label>
+            {% render_field form.cbda_to style=form.default_style %}&nbsp;%
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 

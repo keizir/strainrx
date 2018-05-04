@@ -90,7 +90,8 @@ class Strain(models.Model):
                                      "focus": 0, "passion": 0, "cbd": 0})
 
     # if new cannabinoid is added we need to update StrainSearchSerializer and to es mapping
-    cannabinoids = JSONField(default={"THC": 0, "THCA": 0, "THCV": 0, "CBD": 0, "CBG": 0, "CBN": 0, "CBC": 0})
+    cannabinoids = JSONField(default={"THC": 0, "THCA": 0, "THCV": 0, "CBD": 0, "CBG": 0, "CBN": 0,
+                                      "CBC": 0, "CBDA": 0})
 
     about = models.TextField(_('Description'), null=True, blank=True)
     origins = models.ManyToManyField('self', symmetrical=False, blank=True)

@@ -105,7 +105,7 @@ class StrainSearchSerializer(serializers.ModelSerializer):
         }
     }
 
-    CANNABINOIDS = ['thc', 'thca', 'thcv', 'cbd', 'cbg', 'cbn', 'cbc']
+    CANNABINOIDS = ['thc', 'thca', 'thcv', 'cbd', 'cbg', 'cbn', 'cbc', 'cbda']
     TERPENES = ['humulene', 'pinene', 'linalool', 'caryophyllene', 'myrcene', 'terpinolene', 'ocimene', 'limonene',
                 'camphene', 'terpineol', 'phellandrene', 'carene', 'pulegone', 'sabinene', 'geraniol', 'valencene']
     TERPENES_ABBREVIATION = {
@@ -138,6 +138,8 @@ class StrainSearchSerializer(serializers.ModelSerializer):
     cbn_to = serializers.FloatField(allow_null=True, required=False)
     cbc_from = serializers.FloatField(allow_null=True, required=False)
     cbc_to = serializers.FloatField(allow_null=True, required=False)
+    cbda_from = serializers.FloatField(allow_null=True, required=False)
+    cbda_to = serializers.FloatField(allow_null=True, required=False)
 
     # terpenes
     humulene = serializers.BooleanField(default=False, required=False)
@@ -159,13 +161,15 @@ class StrainSearchSerializer(serializers.ModelSerializer):
 
     default_style = {'template_pack': 'pages/search/strain/inlines/'}
     skip_error_fields = ('thc_from', 'thc_to', 'thca_from', 'thca_to', 'cbc_to', 'page', 'size', 'cbn_to',
-                         'thcv_from', 'thcv_to', 'cbd_from', 'cbd_to', 'cbg_from', 'cbg_to', 'cbn_from', 'cbc_from')
+                         'thcv_from', 'thcv_to', 'cbd_from', 'cbd_to', 'cbg_from', 'cbg_to', 'cbn_from', 'cbc_from',
+                         'cbda_from', 'cbda_to')
 
     class Meta:
         model = Strain
         fields = ('variety', 'cup_winner', 'is_indoor', 'is_clean', 'thc_from', 'thc_to', 'thca_from', 'thca_to',
                   'thcv_from', 'thcv_to', 'cbd_from', 'cbd_to', 'cbg_from', 'cbg_to', 'cbn_from', 'cbn_to', 'cbc_from',
-                  'cbc_to', 'humulene', 'pinene', 'linalool', 'caryophyllene', 'myrcene', 'terpinolene', 'ocimene',
+                  'cbc_to', 'cbda_from', 'cbda_to',
+                  'humulene', 'pinene', 'linalool', 'caryophyllene', 'myrcene', 'terpinolene', 'ocimene',
                   'limonene', 'camphene', 'terpineol', 'phellandrene', 'carene', 'pulegone', 'sabinene', 'geraniol',
                   'valencene', 'q', 'page', 'size', 'start_from', 'sort')
 

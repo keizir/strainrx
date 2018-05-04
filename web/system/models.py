@@ -59,6 +59,7 @@ class PermanentlyRemoved(models.Model):
     url = models.CharField(max_length=255)
     redirect_url = models.CharField(max_length=255, blank=True)
     status = models.PositiveSmallIntegerField(choices=STATUS_CHOICES)
+    created_date = models.DateTimeField(auto_now_add=True)
 
     class Meta:
         ordering = ('-pk',)

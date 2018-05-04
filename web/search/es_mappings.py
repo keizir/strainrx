@@ -48,7 +48,8 @@ strain_mapping = {
                 "cbd": {"type": "double"},
                 "cbg": {"type": "double"},
                 "cbn": {"type": "double"},
-                "cbc": {"type": "double"}
+                "cbc": {"type": "double"},
+                "cbda": {"type": "double"},
             }
         },
         "effects": {
