@@ -11,7 +11,7 @@ from import_export.formats import base_formats
 from rangefilter.filter import DateRangeFilter
 
 from web.users.resources import UserResource
-from .models import User
+from .models import User, UserLocation
 
 
 class MyUserChangeForm(UserChangeForm):
@@ -57,3 +57,6 @@ class MyUserAdmin(UserAdminImpersonateMixin, AuthUserAdmin, ExportActionModelAdm
         'type'
     )
     open_new_window = True
+
+
+admin.site.register(UserLocation)
