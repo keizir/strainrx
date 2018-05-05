@@ -50,10 +50,10 @@ W.pages.dispensary.DispensaryInfo = Class.extend({
     },
 
     priceIndicator: function (avg_price) {
-      if (avg_price < 35) return 1;
-      else if (avg_price < 45) return 2;
-      else if (avg_price < 55) return 3;
-      else if (avg_price < 65) return 4;
+      if (avg_price < 31) return 1;
+      else if (avg_price < 41) return 2;
+      else if (avg_price < 51) return 3;
+      else if (avg_price < 66) return 4;
       else return 5;
     },
 
