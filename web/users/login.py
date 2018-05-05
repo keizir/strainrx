@@ -5,10 +5,13 @@ from web.businesses.serializers import BusinessSerializer
 def pre_login(user, request):
     # If user is a business user we need a business object to be available across the app
     if user.type == 'business':
-        business = Business.objects.filter(users__in=[user])[:1]
-        request.session['business'] = BusinessSerializer(business[0]).data
+        business = Business.objects.filter(users__in=[user]).first()
+        if not business:
+            return
 
-        locations = BusinessLocation.objects.filter(business__id=business[0].id, primary=True, removed_date=None)
+        request.session['business'] = BusinessSerializer(business).data
+
+        locations = BusinessLocation.objects.filter(business__id=business.id, primary=True, removed_date=None)
         if len(locations) > 0:
             primary = locations[0]
             business_image = primary.image.url if len(
