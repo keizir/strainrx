@@ -1,18 +1,24 @@
+from django.test import TestCase
 from django.utils import timezone
 from mock import patch
-from django.test import TestCase
 from rest_framework import status
 from rest_framework.reverse import reverse
 
 from web.businesses.emails import EmailService
-from web.businesses.models import ReportOutOfStock
+from web.businesses.es_service import BusinessLocationESService
+from web.businesses.models import ReportOutOfStock, BusinessLocationMenuUpdate
 from web.businesses.tests.factories import BusinessLocationMenuItemFactory
+from web.search.strain_es_service import StrainESService
 from web.users.tests.factories import UserFactory
 
 
 class OutOfStockTestCase(TestCase):
 
-    def setUp(self):
+    @patch.object(EmailService, 'send_report_out_of_stock', return_value=None)
+    @patch.object(BusinessLocationESService, 'save_menu_item', return_value=None)
+    @patch.object(StrainESService, 'save_strain', return_value=None)
+    @patch.object(BusinessLocationMenuUpdate, 'record_business_location_menu_update', return_value=None)
+    def setUp(self, *args):
         self.user = UserFactory()
         self.menu = BusinessLocationMenuItemFactory()
         self.url = reverse('businesses_api:business_location_report_out_of_stock',
@@ -26,7 +32,11 @@ class OutOfStockTestCase(TestCase):
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
 
     @patch.object(EmailService, 'send_report_out_of_stock', return_value=None)
-    def test_report_out_of_stock(self, _):
+    @patch.object(BusinessLocationESService, 'save_menu_item', return_value=None)
+    @patch.object(StrainESService, 'save_strain', return_value=None)
+    @patch.object(BusinessLocationMenuUpdate, 'record_business_location_menu_update', return_value=None)
+    @patch.object(BusinessLocationESService, 'save_business_location', return_value=None)
+    def test_report_out_of_stock(self, *args):
         """
         User report out of stock
         """
@@ -39,33 +49,38 @@ class OutOfStockTestCase(TestCase):
         self.assertEqual(report.menu_item, self.menu)
 
     @patch.object(EmailService, 'send_report_out_of_stock', return_value=None)
-    def test_report_out_of_stock_second_time(self, _):
+    @patch.object(BusinessLocationESService, 'save_menu_item', return_value=None)
+    @patch.object(StrainESService, 'save_strain', return_value=None)
+    @patch.object(BusinessLocationMenuUpdate, 'record_business_location_menu_update', return_value=None)
+    def test_report_out_of_stock_second_time(self, *args):
         """
         User report out of stock second time in 7 days after first report
         """
-        first_report = ReportOutOfStock.objects.create(menu_item=self.menu, user=self.user)
+        ReportOutOfStock.objects.create(menu_item=self.menu, user=self.user,
+                                        created=timezone.now() - timezone.timedelta(days=5))
         self.client.force_login(self.user)
         response = self.client.post(self.url)
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
         self.assertEqual(ReportOutOfStock.objects.count(), 2)
 
-        report = ReportOutOfStock.objects.last()
+        report = ReportOutOfStock.objects.first()
         self.assertEqual(report.user, self.user)
         self.assertEqual(report.menu_item, self.menu)
-
-        first_report.refresh_from_db()
-        self.assertFalse(first_report.is_active)
+        self.assertEqual(report.count, 2)
 
         self.menu.refresh_from_db()
-        self.assertEqual(self.menu.removed_date.date(), timezone.now().date())
+        self.assertFalse(self.menu.in_stock)
 
     @patch.object(EmailService, 'send_report_out_of_stock', return_value=None)
-    def test_report_out_of_stock_second_time_more_then_7_days(self, _):
+    @patch.object(BusinessLocationESService, 'save_menu_item', return_value=None)
+    @patch.object(StrainESService, 'save_strain', return_value=None)
+    @patch.object(BusinessLocationMenuUpdate, 'record_business_location_menu_update', return_value=None)
+    def test_report_out_of_stock_second_time_more_then_7_days(self, *args):
         """
         User report out of stock second time more the 7 days after first report
         """
-        first_report = ReportOutOfStock.objects.create(menu_item=self.menu, user=self.user,
-                                                       created=timezone.now()-timezone.timedelta(days=8))
+        ReportOutOfStock.objects.create(menu_item=self.menu, user=self.user,
+                                        start_timer=timezone.now()-timezone.timedelta(days=8))
         self.client.force_login(self.user)
         response = self.client.post(self.url)
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
@@ -75,8 +90,5 @@ class OutOfStockTestCase(TestCase):
         self.assertEqual(report.user, self.user)
         self.assertEqual(report.menu_item, self.menu)
 
-        first_report.refresh_from_db()
-        self.assertTrue(first_report.is_active)
-
         self.menu.refresh_from_db()
-        self.assertEqual(self.menu.removed_date, None)
+        self.assertTrue(self.menu.in_stock)

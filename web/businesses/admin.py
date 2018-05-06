@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 from django import forms
+from django.conf import settings
 from django.contrib import admin
 from django.contrib.admin import SimpleListFilter
 from django.contrib.admin.widgets import AdminTimeWidget
@@ -317,10 +318,19 @@ admin.site.register(BusinessLocationMenuUpdateRequest)
 
 @admin.register(ReportOutOfStock)
 class ReportOutOfStockAdmin(admin.ModelAdmin):
-    list_display = ('menu_item__business_location__name', 'menu_item__strain', 'user', 'created', 'countdown')
+    list_display = ('business_location', 'strain', 'user', 'created', 'countdown', 'count')
     list_select_related = ('menu_item__business_location', 'menu_item__strain')
+    readonly_fields = ('count',)
+
+    def business_location(self, instance):
+        return instance.menu_item.business_location.name
+
+    def strain(self, instance):
+        return instance.menu_item.strain.name
 
     def countdown(self, instance):
-        delta = timezone.now() - instance.created
-        if delta.days < 30:
-            return delta
+        delta = timezone.now() - instance.start_timer
+        if instance.count == 2 and delta.days < settings.PERIOD_BLOCK_MENU_ITEM_OUT_OF_STOCK:
+            return timezone.timedelta(days=settings.PERIOD_BLOCK_MENU_ITEM_OUT_OF_STOCK) - delta.days
+        elif instance.count == 1 and delta.days < settings.PERIOD_OUT_OF_STOCK:
+            return timezone.timedelta(days=settings.PERIOD_OUT_OF_STOCK) - delta.days

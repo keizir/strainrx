@@ -497,11 +497,16 @@ class BusinessLocationMenuUpdateRequest(models.Model):
 class ReportOutOfStock(models.Model):
     user = models.ForeignKey(User)
     menu_item = models.ForeignKey(BusinessLocationMenuItem)
-    is_active = models.BooleanField(default=True)
+    count = models.SmallIntegerField(default=1)
+    start_timer = models.DateTimeField(default=datetime.now)
     created = models.DateTimeField(auto_now_add=True)
+    modified = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        ordering = ('menu_item', '-start_timer')
 
     def __str__(self):
-        return '{} - {} - {}'.format(self.created, self.user, self.menu_item)
+        return '{} - {} - {}'.format(self.start_timer, self.user, self.menu_item)
 
 
 @python_2_unicode_compatible

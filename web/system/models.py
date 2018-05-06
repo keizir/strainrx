@@ -9,12 +9,6 @@ from rest_framework import status
 
 from .managers import SystemPropertyQuerySet
 
-SYSTEM_PROPERTY_NAME = (
-    ('rating_recalculation_size', 'Rating Recalculation Size'),
-    ('max_delivery_radius', 'Max Delivery/Proximity Radius'),
-    ('auto_email_verification_for_business', 'Auto Email Verification for Business Users'),
-)
-
 
 class ReviewAbstract(models.Model):
     rating = models.FloatField()
@@ -44,6 +38,16 @@ class ReviewAbstract(models.Model):
 
 @python_2_unicode_compatible
 class SystemProperty(models.Model):
+    RATING_RECALCULATION_SIZE = 'rating_recalculation_size'
+    MAX_DELIVERY_RADIUS = 'max_delivery_radius',
+    AUTO_EMAIL_VERIFICATION_FOR_BUSINESS = 'auto_email_verification_for_business'
+
+    SYSTEM_PROPERTY_NAME = (
+        (RATING_RECALCULATION_SIZE, 'Rating Recalculation Size'),
+        (MAX_DELIVERY_RADIUS, 'Max Delivery/Proximity Radius'),
+        (AUTO_EMAIL_VERIFICATION_FOR_BUSINESS, 'Auto Email Verification for Business Users'),
+    )
+
     name = models.CharField(max_length=50, choices=SYSTEM_PROPERTY_NAME, unique=True)
     value = models.CharField(max_length=100, blank=False, null=False)
 

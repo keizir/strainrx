@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 import json
 import logging
-from datetime import datetime
 
 from boto.s3.connection import S3Connection, Bucket, Key
 from django.conf import settings
@@ -9,11 +8,12 @@ from django.contrib.auth import authenticate, login
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.core.exceptions import ValidationError, ObjectDoesNotExist
 from django.db.models.query import Q
+from django.utils import timezone
 from django.utils.crypto import get_random_string
 
 from rest_framework import permissions
 from rest_framework import status
-from rest_framework.generics import CreateAPIView, get_object_or_404
+from rest_framework.generics import CreateAPIView, get_object_or_404, GenericAPIView
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
@@ -289,7 +289,7 @@ class BusinessLocationMenuView(APIView):
     def delete(self, request, business_id, business_location_id):
         menu_item_id = request.data.get('menu_item_id')
         item = BusinessLocationMenuItem.objects.get(pk=menu_item_id)
-        item.removed_date = datetime.now()
+        item.removed_date = timezone.now()
         item.save()
         return Response({}, status=status.HTTP_200_OK)
 
@@ -346,12 +346,20 @@ class BusinessLocationReportOutOfStockView(CreateAPIView):
 
     def create(self, request, *args, **kwargs):
         menu = self.get_object()
+        reports = ReportOutOfStock.objects.filter(
+            menu_item=menu,
+            start_timer__gte=timezone.now() - timezone.timedelta(days=settings.PERIOD_OUT_OF_STOCK)).count()
+
         ReportOutOfStock.objects.create(
             user=self.request.user,
-            menu_item=menu
+            menu_item=menu,
+            count=reports + 1
         )
-        EmailService().send_report_out_of_stock(menu)
+        EmailService().send_report_out_of_stock(menu, is_second=reports == 1)
 
+        if reports:
+            menu.in_stock = False
+            menu.save()
         return Response(status=status.HTTP_201_CREATED)
 
 
