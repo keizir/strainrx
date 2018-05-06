@@ -1,6 +1,8 @@
 from rest_framework import serializers
 
-from web.businesses.models import phone_number_validator, LocationReview, GrowerDispensaryPartnership
+from web.businesses.models import phone_number_validator, LocationReview, GrowerDispensaryPartnership, \
+    BusinessLocationMenuItem
+from web.search.api.services import StrainDetailsService
 
 
 class BusinessSignUpSerializer(serializers.Serializer):
@@ -126,21 +128,44 @@ class BusinessLocationDetailSerializer(serializers.Serializer):
         pass
 
 
-class BusinessLocationMenuItemSerializer(serializers.Serializer):
-    strain_id = serializers.IntegerField()
+class BusinessLocationMenuItemListSerializer(serializers.ListSerializer):
 
-    price_gram = serializers.FloatField(allow_null=True, required=False)
-    price_eighth = serializers.FloatField(allow_null=True, required=False)
-    price_quarter = serializers.FloatField(allow_null=True, required=False)
-    price_half = serializers.FloatField(allow_null=True, required=False)
+    def to_representation(self, data):
+        ret = super().to_representation(data)
+        request = self.context['view'].request
 
-    in_stock = serializers.BooleanField(default=True)
+        if request.GET.get('ddp') and request.user.is_authenticated():
+            strain_ids = [mi.get('strain_id') for mi in ret]
 
-    def update(self, instance, validated_data):
-        pass
+            scores = StrainDetailsService().calculate_srx_scores(strain_ids, request.user)
+            if len(scores) > 0:
+                for mi in ret:
+                    mi['match_score'] = scores.get(mi.get('strain_id'))
+        return ret
 
-    def create(self, validated_data):
-        pass
+
+class BusinessLocationMenuItemSerializer(serializers.ModelSerializer):
+    strain_id = serializers.IntegerField(required=False)
+    url = serializers.ReadOnlyField(source='strain.get_absolute_url')
+    strain_name = serializers.ReadOnlyField(source='strain.name')
+    strain_variety = serializers.ReadOnlyField(source='strain.variety')
+
+    class Meta:
+        model = BusinessLocationMenuItem
+        list_serializer = BusinessLocationMenuItemListSerializer
+        fields = ('id', 'strain_id', 'strain_name', 'strain_variety', 'price_gram',
+                  'price_eighth', 'price_quarter', 'price_half', 'in_stock', 'url')
+
+    def __init__(self, instance=None, **kwargs):
+        if instance and kwargs.get('data') and kwargs['data'].get('menu_item'):
+            kwargs['data'] = kwargs['data']['menu_item']
+        super().__init__(instance, **kwargs)
+
+    def validate(self, attrs):
+        attrs = super().validate(attrs)
+        if not self.instance and not attrs.get('strain_id'):
+            raise serializers.ValidationError({'strain_id': 'This field is required.'})
+        return attrs
 
 
 class LocationReviewFormSerializer(serializers.ModelSerializer):

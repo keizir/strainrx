@@ -72,7 +72,7 @@ class MenuTestCase(APITestCase):
         """
         self.client.force_login(self.user)
         response = self.client.post(self.url, self.data)
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
         self.assertEqual(BusinessLocationMenuItem.objects.count(), 1)
 
         menu = BusinessLocationMenuItem.objects.first()
@@ -157,8 +157,7 @@ class MenuTestCase(APITestCase):
         self.assertEqual(response.json(), {
             'price_eighth': ['A valid number is required.'],
             'price_gram': ['A valid number is required.'],
-            'price_quarter': ['A valid number is required.'],
-            'strain_id': ['This field is required.']})
+            'price_quarter': ['A valid number is required.']})
 
     @patch.object(EmailService, 'send_report_out_of_stock', return_value=None)
     @patch.object(StrainESService, 'save_strain', return_value=None)
@@ -199,7 +198,7 @@ class MenuTestCase(APITestCase):
             }
         }
         response = self.client.put(self.url, data, format='json')
-        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+        self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
 
     @patch.object(EmailService, 'send_report_out_of_stock', return_value=None)
     @patch.object(StrainESService, 'save_strain', return_value=None)
@@ -223,12 +222,37 @@ class MenuTestCase(APITestCase):
 
         self.client.force_login(self.user)
         response = self.client.put(self.url, data, format='json')
-        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(BusinessLocationMenuItem.objects.count(), 1)
-        self.assertEqual(
-            response.json(),
-            {'in_stock': 'You can\'t add this strain to your menu for the next {} days'
-                .format(settings.PERIOD_BLOCK_MENU_ITEM_OUT_OF_STOCK - 8)})
+        menu.refresh_from_db()
+        self.assertFalse(menu.in_stock)
+
+    @patch.object(EmailService, 'send_report_out_of_stock', return_value=None)
+    @patch.object(StrainESService, 'save_strain', return_value=None)
+    @patch.object(BusinessLocationESService, 'save_menu_item', return_value=None)
+    @patch.object(BusinessLocationESService, 'delete_menu_item', return_value=None)
+    @patch.object(BusinessLocationMenuUpdate, 'record_business_location_menu_update', return_value=None)
+    def test_update_out_of_stock_after_second_out_of_stock_report_was_expired(self, *args):
+        """
+        User can change out of stock attr after 10 days
+        after second report that item is out of stock
+        """
+        menu = BusinessLocationMenuItemFactory(strain=self.strain, business_location=self.location, in_stock=False)
+        ReportOutOfStock.objects.create(menu_item=menu, user=self.user, count=2,
+                                        start_timer=timezone.now() - timezone.timedelta(days=11))
+        data = {
+            'menu_item': {
+                'id': menu.pk,
+                'in_stock': True
+            }
+        }
+
+        self.client.force_login(self.user)
+        response = self.client.put(self.url, data, format='json')
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(BusinessLocationMenuItem.objects.count(), 1)
+        menu.refresh_from_db()
+        self.assertTrue(menu.in_stock)
 
     @patch.object(EmailService, 'send_report_out_of_stock', return_value=None)
     @patch.object(StrainESService, 'save_strain', return_value=None)
@@ -244,7 +268,7 @@ class MenuTestCase(APITestCase):
 
         response = self.client.get(self.url)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertEqual(response.json(), {'menu': [
+        self.assertEqual(response.json(), [
             {
                 'id': menu1.id,
                 'strain_id': menu1.strain.id,
@@ -268,7 +292,7 @@ class MenuTestCase(APITestCase):
                 'in_stock': menu2.in_stock,
                 'url': menu2.strain.get_absolute_url(),
             }
-        ]})
+        ])
 
     @patch.object(EmailService, 'send_report_out_of_stock', return_value=None)
     @patch.object(StrainESService, 'save_strain', return_value=None)
@@ -285,7 +309,7 @@ class MenuTestCase(APITestCase):
             'menu_item_id': menu.pk
         }
         response = self.client.delete(self.url, data, format='json')
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
         self.assertEqual(BusinessLocationMenuItem.objects.count(), 1)
         menu.refresh_from_db()
         self.assertEqual(menu.removed_date.date(), timezone.now().date())
@@ -304,7 +328,7 @@ class MenuTestCase(APITestCase):
             'menu_item_id': BusinessLocationMenuItemFactory().pk
         }
         response = self.client.delete(self.url, data, format='json')
-        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+        self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
         self.assertEqual(BusinessLocationMenuItem.objects.count(), 1)
 
     @patch.object(EmailService, 'send_report_out_of_stock', return_value=None)
@@ -323,7 +347,7 @@ class MenuTestCase(APITestCase):
         }
         # Delete menu
         response = self.client.delete(self.url, data, format='json')
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
         self.assertEqual(BusinessLocationMenuItem.objects.count(), 1)
 
         # Add menu
@@ -345,12 +369,14 @@ class MenuTestCase(APITestCase):
         """
         self.client.force_login(self.user)
         menu = BusinessLocationMenuItemFactory(strain=self.strain, business_location=self.location)
+        ReportOutOfStock.objects.create(menu_item=menu, user=self.user, count=2,
+                                        start_timer=timezone.now() - timezone.timedelta(days=8))
         data = {
             'menu_item_id': menu.pk
         }
         # Delete menu
         response = self.client.delete(self.url, data, format='json')
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
         self.assertEqual(BusinessLocationMenuItem.objects.count(), 1)
 
         # Add menu

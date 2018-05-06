@@ -48,8 +48,8 @@ W.pages.business.BusinessMenu = Class.extend({
             method: 'GET',
             url: '/api/v1/businesses/{0}/locations/{1}/menu'.format(this.ui.$businessId.val(), locationId),
             success: function (data) {
-                if (data.menu) {
-                    $.each(data.menu, function (i, item) {
+                if (data) {
+                    $.each(data, function (i, item) {
                         that.pushMenuItem(item.strain_variety, item);
                     });
                     that.renderMenus();
