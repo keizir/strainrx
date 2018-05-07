@@ -135,14 +135,16 @@ class EmailService:
         context = {
             'name': menu.business_location.business.name,
             'strain': menu.strain.name,
-            'days_count': settings.PERIOD_BLOCK_MENU_ITEM_OUT_OF_STOCK
+            'days_count': settings.PERIOD_BLOCK_MENU_ITEM_OUT_OF_STOCK,
+            'header_logo_url': settings.HOST + self.header_logo_url,
+            'envelope_image_url': settings.HOST + self.envelope_image_url,
+            'leaf_image_url': settings.HOST + self.leaf_image_url
         }
         if is_second:
-            html_template = render_to_string('emails/report_out_of_stock.html', context)
-        else:
             html_template = render_to_string('emails/second_report_out_of_stock.html', context)
+        else:
+            html_template = render_to_string('emails/report_out_of_stock.html', context)
 
         html_content = Content('text/html', html_template)
-
         m = Mail(from_email, subject, to_email, html_content)
         return sg.client.mail.send.post(request_body=m.get())

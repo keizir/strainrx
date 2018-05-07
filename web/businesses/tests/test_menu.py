@@ -280,6 +280,7 @@ class MenuTestCase(APITestCase):
                 'price_half': menu1.price_half,
                 'in_stock': menu1.in_stock,
                 'url': menu1.strain.get_absolute_url(),
+                'report_count': 0
             }, {
                 'id': menu2.id,
                 'strain_id': menu2.strain.id,
@@ -291,6 +292,7 @@ class MenuTestCase(APITestCase):
                 'price_half': menu2.price_half,
                 'in_stock': menu2.in_stock,
                 'url': menu2.strain.get_absolute_url(),
+                'report_count': 0
             }
         ])
 
