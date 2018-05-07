@@ -23,7 +23,6 @@ class BusinessSignUpSerializer(serializers.Serializer):
     state = serializers.CharField()
     zip_code = serializers.CharField()
     phone = serializers.CharField()
-    ext = serializers.CharField(allow_blank=True, allow_null=True)
 
     lat = serializers.FloatField(allow_null=True)
     lng = serializers.FloatField(allow_null=True)

@@ -242,7 +242,6 @@
             }
 
             .form-field.phone-number {
-                width: 70%;
 
                 ::-webkit-input-placeholder {
                     text-align: left;
@@ -250,11 +249,6 @@
                 ::-moz-placeholder {
                     text-align: left;
                 }
-            }
-
-            .form-field.phone-ext {
-                width: 25%;
-                margin-left: 4%;
             }
         }
     }

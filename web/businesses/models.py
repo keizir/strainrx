@@ -27,7 +27,7 @@ from web.users.models import User
 
 @python_2_unicode_compatible
 class State(models.Model):
-    abbreviation = models.CharField(max_length=2, blank=False, null=False, db_index=True)
+    abbreviation = models.CharField(max_length=4, blank=False, null=False, db_index=True)
     full_name = models.CharField(max_length=100, blank=True, null=True)
     description = models.TextField(blank=True, null=True,
                                    help_text='This will be used on /dispensaries page as a state description')

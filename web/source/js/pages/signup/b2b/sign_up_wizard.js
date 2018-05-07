@@ -53,7 +53,7 @@ W.pages.b2b.SignUpWizard = W.common.Wizard.extend({
             grow_house: data[4].growHouse,
             street1: data[5].street1, city: data[5].city, state: data[5].state, zip_code: data[5].zipcode,
             lat: data[5].lat, lng: data[5].lng, location_raw: data[5].location_raw,
-            phone: data[5].phone, ext: data[5].ext,
+            phone: data[5].phone,
             certified_legal_compliance: data[8].certified_legal_compliance,
             is_terms_accepted: data[8].terms
         };
