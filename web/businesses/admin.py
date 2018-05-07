@@ -319,7 +319,7 @@ admin.site.register(BusinessLocationMenuItem)
 
 @admin.register(ReportOutOfStock)
 class ReportOutOfStockAdmin(admin.ModelAdmin):
-    list_display = ('business_location', 'strain', 'user', 'created', 'countdown', 'count')
+    list_display = ('business_location', 'strain', 'user', 'start_timer', 'countdown', 'count')
     list_select_related = ('menu_item__business_location', 'menu_item__strain')
     readonly_fields = ('count',)
 

@@ -44,6 +44,9 @@
                             <% if (is_authenticated && !model.is_rated) { %>
                             <span class="separator"></span>
                             <span class="rate-link"><a href="#">Rate</a></span>
+                            <% } else if (!is_authenticated) { %>
+                              <span class="separator"></span>
+                              <a href="{% url 'account_login' %}?next={{ request.path }}">Sign in to</a> rate</a>
                             <% } %>
                         </div>
                     </div>
