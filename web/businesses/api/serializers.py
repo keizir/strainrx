@@ -152,7 +152,7 @@ class BusinessLocationMenuItemSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = BusinessLocationMenuItem
-        list_serializer = BusinessLocationMenuItemListSerializer
+        list_serializer_class = BusinessLocationMenuItemListSerializer
         fields = ('id', 'strain_id', 'strain_name', 'strain_variety', 'price_gram',
                   'price_eighth', 'price_quarter', 'price_half', 'in_stock', 'url', 'report_count')
 

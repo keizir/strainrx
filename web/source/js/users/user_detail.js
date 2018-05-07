@@ -55,7 +55,7 @@ W.users.DetailPage = Class.extend({
             GoogleLocations;
 
         if ($googleInput && $googleInput.length > 0) {
-            GoogleLocations = new W.Common.GoogleLocations({$input: $googleInput.get(0)})
+            GoogleLocations = new W.Common.GoogleLocations({$input: $googleInput.get(0)});
 
             GoogleLocations.initGoogleAutocomplete(
                 function (autocomplete, $input) {
@@ -116,8 +116,6 @@ W.users.DetailPage = Class.extend({
                     data: JSON.stringify(data),
                     success: function () {
                         that.showSuccessMessage('You profile information has been successfully updated');
-                        W.Navbar.updateAddress(data.location);
-
                         var firstName = $('input[name="first_name"]').val(),
                             lastName = $('input[name="last_name"]').val();
 

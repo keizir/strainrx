@@ -112,7 +112,7 @@ W.Navbar = function () {
 
     return {
         init: function init(options) {
-            new Navbar(options);
+            return new Navbar(options);
         }
     };
 }();
