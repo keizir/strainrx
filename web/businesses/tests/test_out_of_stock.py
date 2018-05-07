@@ -56,8 +56,8 @@ class OutOfStockTestCase(TestCase):
         """
         User report out of stock second time in 7 days after first report
         """
-        ReportOutOfStock.objects.create(menu_item=self.menu, user=self.user,
-                                        created=timezone.now() - timezone.timedelta(days=5))
+        report1 = ReportOutOfStock.objects.create(menu_item=self.menu, user=self.user,
+                                                  created=timezone.now() - timezone.timedelta(days=5))
         self.client.force_login(self.user)
         response = self.client.post(self.url)
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
@@ -67,7 +67,10 @@ class OutOfStockTestCase(TestCase):
         self.assertEqual(report.user, self.user)
         self.assertEqual(report.menu_item, self.menu)
         self.assertEqual(report.count, 2)
+        self.assertTrue(report1.is_active)
 
+        report1.refresh_from_db()
+        self.assertFalse(report1.is_active)
         self.menu.refresh_from_db()
         self.assertFalse(self.menu.in_stock)
 

@@ -19,7 +19,7 @@ from django.utils.translation import ugettext_lazy as _
 from django_resized import ResizedImageField
 
 from web.analytics.managers import BusinessLocationMenuUpdateRequestQuerySet
-from web.businesses.querysets import MenuItemQuerySet
+from web.businesses.querysets import MenuItemQuerySet, ReportOutOfStockQuerySet
 from web.search.models import Strain
 from web.system.models import ReviewAbstract
 from web.users.models import User
@@ -449,6 +449,9 @@ class BusinessLocationMenuItem(models.Model):
 
     objects = MenuItemQuerySet.as_manager()
 
+    def __str__(self):
+        return '{}: {}'.format(self.business_location, self.strain)
+
     @property
     def is_indoor(self):
         return self.growing_method in (self.INDOOR_SOIL, self.INDOOR_HYDRO, self.INDOOR_COCO)
@@ -496,11 +499,15 @@ class BusinessLocationMenuUpdateRequest(models.Model):
 @python_2_unicode_compatible
 class ReportOutOfStock(models.Model):
     user = models.ForeignKey(User)
-    menu_item = models.ForeignKey(BusinessLocationMenuItem)
+    menu_item = models.ForeignKey(BusinessLocationMenuItem, related_name='reports')
     count = models.SmallIntegerField(default=1)
     start_timer = models.DateTimeField(default=datetime.now)
+    is_active = models.BooleanField(default=True, editable=False)
+
     created = models.DateTimeField(auto_now_add=True)
     modified = models.DateTimeField(auto_now=True)
+
+    objects = ReportOutOfStockQuerySet.as_manager()
 
     class Meta:
         ordering = ('menu_item', '-start_timer')

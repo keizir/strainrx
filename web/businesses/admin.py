@@ -314,6 +314,7 @@ class GrowerDispensaryPartnershipAdmin(admin.ModelAdmin):
 
 
 admin.site.register(BusinessLocationMenuUpdateRequest)
+admin.site.register(BusinessLocationMenuItem)
 
 
 @admin.register(ReportOutOfStock)
@@ -323,14 +324,16 @@ class ReportOutOfStockAdmin(admin.ModelAdmin):
     readonly_fields = ('count',)
 
     def business_location(self, instance):
-        return instance.menu_item.business_location.name
+        return instance.menu_item.business_location.location_name
 
     def strain(self, instance):
         return instance.menu_item.strain.name
 
     def countdown(self, instance):
         delta = timezone.now() - instance.start_timer
-        if instance.count == 2 and delta.days < settings.PERIOD_BLOCK_MENU_ITEM_OUT_OF_STOCK:
-            return timezone.timedelta(days=settings.PERIOD_BLOCK_MENU_ITEM_OUT_OF_STOCK) - delta.days
+        if not instance.is_active:
+            return
+        if instance.count >= 2 and delta.days < settings.PERIOD_BLOCK_MENU_ITEM_OUT_OF_STOCK:
+            return timezone.timedelta(days=settings.PERIOD_BLOCK_MENU_ITEM_OUT_OF_STOCK) - delta
         elif instance.count == 1 and delta.days < settings.PERIOD_OUT_OF_STOCK:
-            return timezone.timedelta(days=settings.PERIOD_OUT_OF_STOCK) - delta.days
+            return timezone.timedelta(days=settings.PERIOD_OUT_OF_STOCK) - delta

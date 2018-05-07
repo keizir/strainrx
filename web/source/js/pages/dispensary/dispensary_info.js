@@ -326,7 +326,7 @@ W.pages.dispensary.DispensaryInfo = Class.extend({
         var that = this;
         $.when(this.getMenuItemsDeferred(), this.getReviewsDeferred())
             .done(function (menu_response, reviews_response) {
-                that.menu_items = menu_response && menu_response[0]['menu'];
+                that.menu_items = menu_response && menu_response[0];
                 that.reviews = reviews_response && reviews_response[0]['reviews'];
 
                 that.preFormatReviews();
@@ -373,12 +373,7 @@ W.pages.dispensary.DispensaryInfo = Class.extend({
         $('.btn-request').on('click', this.onBtnRequestClick.bind(this));
         $('.menu-item-header .match').on('click', this.showMatchInfoDialog.bind(this));
         $('.out-of-stock')
-            .on('click', this.showOutOfStockDialog.bind(this))
-            .tooltip({
-              content: function () {
-                  return $(this).prop('title');
-              }
-            });
+            .on('click', this.showOutOfStockDialog.bind(this));
     },
 
     postUpdateRequest: function postUpdateRequest(url) {
@@ -670,7 +665,6 @@ W.pages.dispensary.DispensaryInfo = Class.extend({
             that.postUpdateRequest(url).always(function() {
                 $requestBtn.attr('disabled', true);
                 $requestBtn.attr('title', 'You have recently report dispensary');
-                $requestBtn.tooltip();
                 that.showOutOfStockOkDialog();
             });
         }, '.cancel');
@@ -727,9 +721,6 @@ var Dialog = function Dialog(dialogSelector, btnSelector, props, onConfirm, btnC
             $(this).css('max-width', '450px');
             $(this).css('min-height', 'auto');
             $('.srx-dialog').css('min-height', 'auto');
-        },
-        close: function() {
-            $('.out-of-stock').tooltip( "close" );
         }
     };
 

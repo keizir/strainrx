@@ -213,20 +213,30 @@ W.pages.business.BusinessMenu = Class.extend({
             menuItem = this.popMenuItem(menuItemVariety, menuItemId);
 
         menuItem.in_stock = $checkbox.is(':checked');
-        menuItem.price_gram = this.formatPriceValue(menuItem.price_gram);
-        menuItem.price_eighth = this.formatPriceValue(menuItem.price_eighth);
-        menuItem.price_quarter = this.formatPriceValue(menuItem.price_quarter);
-        menuItem.price_half = this.formatPriceValue(menuItem.price_half);
-
         this.updateAvailability(menuItem);
     },
 
     updateAvailability: function updateAvailability(menuItem) {
+        var that = this;
+
         $.ajax({
             method: 'PUT',
             url: '/api/v1/businesses/{0}/locations/{1}/menu'.format(this.ui.$businessId.val(), this.ui.$locations.val()),
             dataType: 'json',
-            data: JSON.stringify({'menu_item': menuItem})
+            data: JSON.stringify({'menu_item': menuItem}),
+            success: function (menuItem) {
+                if (menuItem) {
+                    var variety = menuItem.strain_variety,
+                        existing = that.popMenuItem(variety, menuItem.id);
+
+                    if (existing !== null) {
+                        that.deleteMenuItem(variety, menuItem.id);
+                    }
+
+                    that.pushMenuItem(variety, menuItem);
+                    that.reRenderVarietyMenu(variety);
+                }
+            }
         });
     },
 

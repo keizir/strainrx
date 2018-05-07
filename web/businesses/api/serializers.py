@@ -149,12 +149,13 @@ class BusinessLocationMenuItemSerializer(serializers.ModelSerializer):
     url = serializers.ReadOnlyField(source='strain.get_absolute_url')
     strain_name = serializers.ReadOnlyField(source='strain.name')
     strain_variety = serializers.ReadOnlyField(source='strain.variety')
+    report_count = serializers.ReadOnlyField(required=False)
 
     class Meta:
         model = BusinessLocationMenuItem
         list_serializer = BusinessLocationMenuItemListSerializer
         fields = ('id', 'strain_id', 'strain_name', 'strain_variety', 'price_gram',
-                  'price_eighth', 'price_quarter', 'price_half', 'in_stock', 'url')
+                  'price_eighth', 'price_quarter', 'price_half', 'in_stock', 'url', 'report_count')
 
     def __init__(self, instance=None, **kwargs):
         if instance and kwargs.get('data') and kwargs['data'].get('menu_item'):

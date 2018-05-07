@@ -235,9 +235,12 @@ class BusinessLocationMenuView(mixins.DestroyModelMixin,
     serializer_class = BusinessLocationMenuItemSerializer
 
     def get_queryset(self):
-        return BusinessLocationMenuItem.objects \
+        queryset = BusinessLocationMenuItem.objects \
             .filter(business_location__id=self.kwargs['business_location_id'], removed_date=None) \
             .order_by('strain__name')
+        if self.request.GET.get('ddp'):
+            return queryset.filter(in_stock=True)
+        return queryset.reports()
 
     def get_object(self):
         """
@@ -253,17 +256,6 @@ class BusinessLocationMenuView(mixins.DestroyModelMixin,
 
         return get_object_or_404(BusinessLocationMenuItem,
                                  business_location=self.kwargs['business_location_id'], **kwargs)
-
-    def is_out_of_stock_reports(self, menu):
-        """
-        Check if menu item was reported as out of stock two times
-        :param menu: BusinessLocationMenuItem instance
-        :return: boolean
-        """
-        return ReportOutOfStock.objects.filter(
-            menu_item=menu, count=2,
-            start_timer__gte=timezone.now() - timezone.timedelta(
-                days=settings.PERIOD_BLOCK_MENU_ITEM_OUT_OF_STOCK)).exists()
 
     def dispatch(self, request, *args, **kwargs):
         self.location = get_object_or_404(BusinessLocation, pk=self.kwargs['business_location_id'])
@@ -289,7 +281,7 @@ class BusinessLocationMenuView(mixins.DestroyModelMixin,
 
     def perform_update(self, serializer):
         in_stock = serializer.validated_data.get('in_stock')
-        if in_stock and self.is_out_of_stock_reports(serializer.instance):
+        if in_stock and ReportOutOfStock.objects.is_out_of_stock_reports(serializer.instance):
             # If menu item was reported as out of stock mark in_stock parameter as False
             in_stock = False
         serializer.save(removed_date=None, in_stock=in_stock)
@@ -339,18 +331,21 @@ class BusinessLocationReportOutOfStockView(CreateAPIView):
         menu = self.get_object()
         reports = ReportOutOfStock.objects.filter(
             menu_item=menu,
-            start_timer__gte=timezone.now() - timezone.timedelta(days=settings.PERIOD_OUT_OF_STOCK)).count()
+            start_timer__gte=timezone.now() - timezone.timedelta(days=settings.PERIOD_OUT_OF_STOCK))
+        report_count = len(reports)
+
+        if report_count:
+            menu.in_stock = False
+            menu.save()
+
+            reports.update(is_active=False)
 
         ReportOutOfStock.objects.create(
             user=self.request.user,
             menu_item=menu,
-            count=reports + 1
+            count=report_count + 1
         )
-        EmailService().send_report_out_of_stock(menu, is_second=reports == 1)
-
-        if reports:
-            menu.in_stock = False
-            menu.save()
+        EmailService().send_report_out_of_stock(menu, is_second=report_count == 1)
         return Response(status=status.HTTP_201_CREATED)
 
 
