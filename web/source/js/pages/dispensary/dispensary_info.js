@@ -222,15 +222,15 @@ W.pages.dispensary.DispensaryInfo = Class.extend({
             var $el = $(this);
             if ($el.hasClass('active')) {
                 that.favoriteLocation({like: false}, function () {
-                    $el.addClass('fa-heart-o');
-                    $el.removeClass('fa-heart');
+                    $el.addClass('favorite-icon');
+                    $el.removeClass('fa fa-heart fa-2x');
                     $el.removeClass('heart-active');
                     $el.removeClass('active');
                 });
             } else {
                 that.favoriteLocation({like: true}, function () {
-                    $el.removeClass('fa-heart-o');
-                    $el.addClass('fa-heart');
+                    $el.removeClass('favorite-icon');
+                    $el.addClass('fa fa-heart fa-2x');
                     $el.addClass('heart-active');
                     $el.addClass('active');
                 });

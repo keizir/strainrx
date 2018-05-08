@@ -368,8 +368,8 @@ W.pages.strain.StrainDetailPage = Class.extend({
         $strainLike.mouseenter(function () {
             var $el = $(this);
             if (!$el.hasClass('active')) {
-                $el.removeClass('fa-heart-o');
-                $el.addClass('fa-heart');
+                $el.removeClass('favorite-icon');
+                $el.addClass('fa fa-heart fa-2x');
                 $el.addClass('heart-active');
             }
         });
@@ -377,8 +377,8 @@ W.pages.strain.StrainDetailPage = Class.extend({
         $strainLike.mouseleave(function () {
             var $el = $(this);
             if (!$el.hasClass('active')) {
-                $el.addClass('fa-heart-o');
-                $el.removeClass('fa-heart');
+                $el.addClass('favorite-icon');
+                $el.removeClass('fa fa-heart fa-2x');
                 $el.removeClass('heart-active');
             }
         });
@@ -394,8 +394,8 @@ W.pages.strain.StrainDetailPage = Class.extend({
                 that.likeStrain({
                     like: false
                 }, function () {
-                    $el.addClass('fa-heart-o');
-                    $el.removeClass('fa-heart');
+                    $el.addClass('favorite-icon');
+                    $el.removeClass('fa fa-heart fa-2x');
                     $el.removeClass('heart-active');
                     $el.removeClass('active');
                 });
@@ -403,8 +403,8 @@ W.pages.strain.StrainDetailPage = Class.extend({
                 that.likeStrain({
                     like: true
                 }, function () {
-                    $el.removeClass('fa-heart-o');
-                    $el.addClass('fa-heart');
+                    $el.removeClass('favorite-icon');
+                    $el.addClass('fa fa-heart fa-2x');
                     $el.addClass('heart-active');
                     $el.addClass('active');
                 });
