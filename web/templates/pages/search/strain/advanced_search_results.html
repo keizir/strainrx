@@ -37,7 +37,8 @@
   <script type="text/javascript">
       new W.pages.AdvancedSearchResultsPage({
           {% if request.user.is_authenticated %}'currentUserId': '{{ request.user.id }}',{% endif %}
-          'isEmailVerified': '{{ request.user.is_email_verified }}' === 'True'
+          'isEmailVerified': '{{ request.user.is_email_verified }}' === 'True',
+          'terpenesAbbreviation': '{{ terpenes_abbreviation|safe }}'
       });
   </script>
 
@@ -103,7 +104,7 @@
         <% if (q && q.length) { %>
           <div class="search-result-subtitle">
             We could not find a match for
-            <i class="fa fa-angle-double-left"></i><b>${ q }</b><i class="fa fa-angle-double-right"></i>
+            <b>"${ q }"</b>
           </div>
         <% } else { %>
           <div class="search-result-subtitle">No Results Found</div>
@@ -152,11 +153,22 @@
           <div class="strain-cannabinoids"><b>
             <% _.forEach(strain.cannabinoids, function(value, key) { %>
             <% if (value) { %>
-            <span><%- value %>% <%- key.toUpperCase() %></span>
+            <span class="cannabinoid-item"><%- value %>% <%- key.toUpperCase() %></span>
             <% } %>
             <% }); %>
           </b></div>
         <% } %>
+
+        <% if (strain.terpenes) { %>
+          <div class="strain-terpenes">
+            <% _.forEach(strain.terpenes, function(value, key) { %>
+              <% if (searchParams.indexOf(key) != -1) { %>
+              <span class="terpene circle <%- key %>"><%- terpenesAbbreviation[key] %></span>
+              <% } %>
+            <% }); %>
+          </div>
+        <% } %>
+
         <div class="strain-price">
           <% if ( strain.price_gram || strain.max_price_gram ) { %>
             <% if ( strain.price_gram != strain.max_price_gram && strain.price_gram && strain.max_price_gram ) { %>
@@ -166,19 +178,19 @@
             <% } %>
           <% } %>
 
-          <% if ( strain.price_eighth || strain.price_max_eighth ) { %>
-            <% if ( strain.price_eighth != strain.price_max_eighth && strain.price_eighth && strain.price_max_eighth ) { %>
-              ${ price_format(strain.price_eighth) } - ${ price_format(strain.price_max_eighth) }/8th
+          <% if ( strain.price_eighth || strain.max_price_eighth ) { %>
+            <% if ( strain.price_eighth != strain.max_price_eighth && strain.price_eighth && strain.max_price_eighth ) { %>
+              ${ price_format(strain.price_eighth) } - ${ price_format(strain.max_price_eighth) }/8th
             <% } else { %>
-              ${ price_format(strain.price_eighth || strain.price_max_eighth) }/8th
+              ${ price_format(strain.price_eighth || strain.max_price_eighth) }/8th
             <% } %>
           <% } %>
 
-          <% if ( strain.price_quarter || strain.price_max_quarter ) { %>
-            <% if ( strain.price_quarter != strain.price_max_quarter && strain.price_quarter && strain.price_max_quarter ) { %>
-              ${ price_format(strain.price_quarter) } - ${ price_format(strain.price_max_quarter) }/Q
+          <% if ( strain.price_quarter || strain.max_price_quarter ) { %>
+            <% if ( strain.price_quarter != strain.max_price_quarter && strain.price_quarter && strain.max_price_quarter ) { %>
+              ${ price_format(strain.price_quarter) } - ${ price_format(strain.max_price_quarter) }/Q
             <% } else { %>
-              ${ price_format(strain.price_quarter || strain.price_max_quarter) }/Q
+              ${ price_format(strain.price_quarter || strain.max_price_quarter) }/Q
             <% } %>
           <% } %>
         </div>

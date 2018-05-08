@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 from __future__ import absolute_import, unicode_literals
 
+import json
 from urllib.parse import urlparse
 
 from django.core.urlresolvers import reverse, resolve, Resolver404
@@ -38,6 +39,7 @@ class StrainAdvancedSearchResultView(TemplateView):
         context = super().get_context_data(**kwargs)
         context['search_url'] = reverse('search:search') if self.request.GET.get('q') else \
             reverse('search:advanced_search')
+        context['terpenes_abbreviation'] = json.dumps(StrainSearchSerializer.TERPENES_ABBREVIATION)
         return context
 
 

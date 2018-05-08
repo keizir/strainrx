@@ -19,6 +19,7 @@ from django.utils.translation import ugettext_lazy as _
 from django_resized import ResizedImageField
 
 from web.analytics.managers import BusinessLocationMenuUpdateRequestQuerySet
+from web.businesses.querysets import MenuItemQuerySet
 from web.search.models import Strain
 from web.system.models import ReviewAbstract
 from web.users.models import User
@@ -155,7 +156,7 @@ class BusinessLocation(models.Model):
     CATEGORY_CHOICES = (
         ('dispensary', 'Dispensary'),
         ('delivery', 'Delivery'),
-        ('grow_house', 'Grow House'),
+        ('grow_house', 'Cultivator'),
     )
 
     DEFAULT_IMAGE_URL = '{base}images/default-location-image.jpeg'.format(base=settings.STATIC_URL)
@@ -290,7 +291,7 @@ class BusinessLocation(models.Model):
         if self.dispensary:
             types.append('dispensary')
         if self.grow_house:
-            types.append('grow house')
+            types.append('cultivator')
         if self.delivery:
             types.append('delivery')
 
@@ -388,7 +389,7 @@ class BusinessLocation(models.Model):
     def clean(self):
         if not any((self.delivery, self.dispensary, self.grow_house)):
             raise ValidationError('Business Location needs to be one of the '
-                                  'following: delivery, dispensary or grow house.')
+                                  'following: delivery, dispensary or cultivator.')
 
     def __str__(self):
         return self.location_name
@@ -445,6 +446,8 @@ class BusinessLocationMenuItem(models.Model):
     nutrient_base = models.IntegerField(choices=NUTRIENT_BASE_CHOICES, default=SYNTHETIC)
 
     removed_date = models.DateTimeField(blank=True, null=True)
+
+    objects = MenuItemQuerySet.as_manager()
 
     @property
     def is_indoor(self):

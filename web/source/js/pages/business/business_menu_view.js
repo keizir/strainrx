@@ -7,8 +7,8 @@ W.pages.business.BusinessMenuView = function () {
     var BusinessMenu = W.pages.business.BusinessMenu;
 
     return {
-        init: function () {
-            new BusinessMenu();
+        init: function (options) {
+            new BusinessMenu(options);
         }
     };
 }();

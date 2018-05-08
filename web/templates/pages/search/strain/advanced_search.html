@@ -10,6 +10,14 @@
   <link href="{% static 'css/pages/search/strain/advanced_search.css' %}" rel="stylesheet">
 {% endblock %}
 
+{% block javascript %}
+  {{ block.super }}
+  <script src="{% static 'js/pages/search/strain/advanced_search_results.js' %}"></script>
+  <script type="text/javascript">
+      new W.pages.AdvancedSearchFormPage();
+  </script>
+{% endblock %}
+
 {% block content %}
   <div class="container">
     <div class="strain-search-wrapper">

@@ -709,3 +709,13 @@
         }
     }
 }
+
+@media (max-width: $screen-xs-max) {
+    .locations-list-container {
+        .locations-wrapper {
+            .location-item {
+                width: 98%;
+            }
+        }
+    }
+}

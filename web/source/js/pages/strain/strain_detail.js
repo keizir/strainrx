@@ -12,7 +12,8 @@ W.pages.strain.StrainDetailPage = Class.extend({
     images: [],
 
     ui: {
-        $strainId: $('.strain-id')
+        $strainId: $('.strain-id'),
+        $locationControl: '.location-controls'
     },
 
     templates: {
@@ -20,11 +21,12 @@ W.pages.strain.StrainDetailPage = Class.extend({
     },
 
     priceSort: 'asc',
+    locationBlocked: undefined,
 
-    init: function init() {
+    init: function init(options) {
         var that = this;
         this.name = 'StrainDetailPage';
-
+        this.authenticated = options.authenticated || false;
 
         $(window).on('resize', _.debounce(function () {
             that.recalculateSimilarStrainsSectionWidth();
@@ -55,6 +57,7 @@ W.pages.strain.StrainDetailPage = Class.extend({
                 }
             });
         });
+        that.checkGeolocationPermission();
 
         W.subscribe.apply(this);
     },
@@ -96,6 +99,29 @@ W.pages.strain.StrainDetailPage = Class.extend({
                 review.created_date = '{0}/{1}/{2}'.format(month, day, year);
             });
         }
+    },
+
+    checkGeolocationPermission: function handlePermission(success) {
+        var that  = this;
+        if (this.authenticated) {
+            that.locationBlocked = false;
+            if (success) {
+                success()
+            }
+            return;
+        }
+
+        navigator.permissions.query({name: 'geolocation'}).then(function (result) {
+            if (result.state === 'granted') {
+                that.locationBlocked = false
+            } else if (result.state === 'prompt' || result.state === 'denied') {
+                that.locationBlocked = true
+            }
+
+            if (success) {
+                success()
+            }
+        });
     },
 
     renderStrainDetails: function renderStrainDetails() {
@@ -726,41 +752,48 @@ W.pages.strain.StrainDetailPage = Class.extend({
         $menuExpander.on('click', function () {
             $menuLocations.toggleClass('hidden');
             $menuFilter.toggleClass('expanded');
+            that.checkGeolocationPermission(function () {
+                that.getDispensaries(function (dispensaries) {
+                    $menuLocations.html(menuTemplate({
+                        dispensaries: dispensaries || [],
+                        renderLocation: that.templates.expandedLocation,
+                        formatDistance: that.formatDistance,
+                        formatPrice: that.formatPrice,
+                        strain_id: strainId,
+                        from_search: fromSearch,
+                        locationBlocked: that.locationBlocked
+                    }));
 
-            that.getDispensaries(function (dispensaries) {
-                $menuLocations.html(menuTemplate({
-                    dispensaries: dispensaries,
-                    renderLocation: that.templates.expandedLocation,
-                    formatDistance: that.formatDistance,
-                    formatPrice: that.formatPrice,
-                    strain_id: strainId,
-                    from_search: fromSearch
-                }));
+                    $('.price-sort').on('click', function () {
+                        $('.prices-wrapper').toggleClass('hidden');
+                    });
 
-                $('.price-sort').on('click', function () {
-                    $('.prices-wrapper').toggleClass('hidden');
-                });
+                    $('.prices-wrapper').mouseleave(function () {
+                        $(this).addClass('hidden');
+                    });
 
-                $('.prices-wrapper').mouseleave(function () {
-                    $(this).addClass('hidden');
-                });
+                    $('.price').on('click', function () {
+                        $('.prices-wrapper').addClass('hidden');
+                        var priceType = $(this).attr('id');
+                        that.sortByPrice(priceType, false);
+                    });
 
-                $('.price').on('click', function () {
-                    $('.prices-wrapper').addClass('hidden');
-                    var priceType = $(this).attr('id');
-                    that.sortByPrice(priceType, false);
-                });
+                    $('.dispensary-rating').each(function () {
+                        var $this = $(this);
+                        if ($this.text() !== 'Not Rated') {
+                            that.initLocationRating($this, $this.text());
+                        }
+                    });
 
-                $('.dispensary-rating').each(function () {
-                    var $this = $(this);
-                    if ($this.text() !== 'Not Rated') {
-                        that.initLocationRating($this, $this.text());
+                    if ((that.locations && that.locations.length) || that.locationBlocked) {
+                        $(that.ui.$locationControl).removeClass('disabled')
                     }
+                    that.initSortActions();
                 });
-
-                that.initSortActions();
             });
         });
+
+        $menuExpander.trigger('click');
     },
 
     initLocationRating: function initLocationRating($el, rating) {
@@ -781,8 +814,11 @@ W.pages.strain.StrainDetailPage = Class.extend({
 
     getDispensaries: function getDispensaries(success) {
         var that = this;
+
         if (this.locations) {
             success(this.locations);
+        } else if (this.locationBlocked) {
+            success();
         } else {
             $.ajax({
                 method: 'GET',

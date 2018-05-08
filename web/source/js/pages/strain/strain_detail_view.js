@@ -7,8 +7,8 @@ W.pages.strain.StrainDetailView = function () {
     var StrainDetailPage = W.pages.strain.StrainDetailPage;
 
     return {
-        init: function () {
-            new StrainDetailPage();
+        init: function (options) {
+            new StrainDetailPage(options);
         }
     };
 }();

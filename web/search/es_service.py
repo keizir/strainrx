@@ -805,6 +805,7 @@ class SearchElasticService(BaseElasticService):
                 'image_url': strain_image.image.url if strain_image and strain_image.image else None,
                 'cup_winner': source.get('cup_winner'),
                 'cannabinoids': source.get('cannabinoids'),
+                'terpenes': source.get('terpenes'),
                 'distance': distance,
                 'price_gram': gram if isinstance(gram, float) else None,
                 'max_price_gram': max_gram if isinstance(max_gram, float) else None,

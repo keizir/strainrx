@@ -105,9 +105,14 @@ class StrainSearchSerializer(serializers.ModelSerializer):
         }
     }
 
-    CANNABINOIDS = ['thc', 'thca', 'thcv', 'cbd', 'cbg', 'cbn', 'cbc']
+    CANNABINOIDS = ['thc', 'thca', 'thcv', 'cbd', 'cbg', 'cbn', 'cbc', 'cbda']
     TERPENES = ['humulene', 'pinene', 'linalool', 'caryophyllene', 'myrcene', 'terpinolene', 'ocimene', 'limonene',
                 'camphene', 'terpineol', 'phellandrene', 'carene', 'pulegone', 'sabinene', 'geraniol', 'valencene']
+    TERPENES_ABBREVIATION = {
+        'humulene': 'H', 'pinene': 'P', 'linalool': 'L', 'caryophyllene': 'Cr', 'myrcene': 'M', 'terpinolene': 'T',
+        'ocimene': 'O', 'limonene': 'Le', 'camphene': 'C', 'terpineol': 'Ti', 'phellandrene': 'Ph', 'carene': 'Ce',
+        'pulegone': 'Pu', 'sabinene': 'S', 'geraniol': 'G', 'valencene': 'Va'
+    }
 
     q = serializers.CharField(required=False)
     page = serializers.IntegerField(required=False, default=1)
@@ -119,20 +124,22 @@ class StrainSearchSerializer(serializers.ModelSerializer):
     is_indoor = serializers.BooleanField(default=False, required=False)
     is_clean = serializers.BooleanField(default=False, required=False)
     # cannabinoids
-    thc_from = serializers.IntegerField(allow_null=True, required=False)
-    thc_to = serializers.IntegerField(allow_null=True, required=False)
-    thca_from = serializers.IntegerField(allow_null=True, required=False)
-    thca_to = serializers.IntegerField(allow_null=True, required=False)
-    thcv_from = serializers.IntegerField(allow_null=True, required=False)
-    thcv_to = serializers.IntegerField(allow_null=True, required=False)
-    cbd_from = serializers.IntegerField(allow_null=True, required=False)
-    cbd_to = serializers.IntegerField(allow_null=True, required=False)
-    cbg_from = serializers.IntegerField(allow_null=True, required=False)
-    cbg_to = serializers.IntegerField(allow_null=True, required=False)
-    cbn_from = serializers.IntegerField(allow_null=True, required=False)
-    cbn_to = serializers.IntegerField(allow_null=True, required=False)
-    cbc_from = serializers.IntegerField(allow_null=True, required=False)
-    cbc_to = serializers.IntegerField(allow_null=True, required=False)
+    thc_from = serializers.FloatField(allow_null=True, required=False)
+    thc_to = serializers.FloatField(allow_null=True, required=False)
+    thca_from = serializers.FloatField(allow_null=True, required=False)
+    thca_to = serializers.FloatField(allow_null=True, required=False)
+    thcv_from = serializers.FloatField(allow_null=True, required=False)
+    thcv_to = serializers.FloatField(allow_null=True, required=False)
+    cbd_from = serializers.FloatField(allow_null=True, required=False)
+    cbd_to = serializers.FloatField(allow_null=True, required=False)
+    cbg_from = serializers.FloatField(allow_null=True, required=False)
+    cbg_to = serializers.FloatField(allow_null=True, required=False)
+    cbn_from = serializers.FloatField(allow_null=True, required=False)
+    cbn_to = serializers.FloatField(allow_null=True, required=False)
+    cbc_from = serializers.FloatField(allow_null=True, required=False)
+    cbc_to = serializers.FloatField(allow_null=True, required=False)
+    cbda_from = serializers.FloatField(allow_null=True, required=False)
+    cbda_to = serializers.FloatField(allow_null=True, required=False)
 
     # terpenes
     humulene = serializers.BooleanField(default=False, required=False)
@@ -153,12 +160,16 @@ class StrainSearchSerializer(serializers.ModelSerializer):
     valencene = serializers.BooleanField(default=False, required=False)
 
     default_style = {'template_pack': 'pages/search/strain/inlines/'}
+    skip_error_fields = ('thc_from', 'thc_to', 'thca_from', 'thca_to', 'cbc_to', 'page', 'size', 'cbn_to',
+                         'thcv_from', 'thcv_to', 'cbd_from', 'cbd_to', 'cbg_from', 'cbg_to', 'cbn_from', 'cbc_from',
+                         'cbda_from', 'cbda_to')
 
     class Meta:
         model = Strain
         fields = ('variety', 'cup_winner', 'is_indoor', 'is_clean', 'thc_from', 'thc_to', 'thca_from', 'thca_to',
                   'thcv_from', 'thcv_to', 'cbd_from', 'cbd_to', 'cbg_from', 'cbg_to', 'cbn_from', 'cbn_to', 'cbc_from',
-                  'cbc_to', 'humulene', 'pinene', 'linalool', 'caryophyllene', 'myrcene', 'terpinolene', 'ocimene',
+                  'cbc_to', 'cbda_from', 'cbda_to',
+                  'humulene', 'pinene', 'linalool', 'caryophyllene', 'myrcene', 'terpinolene', 'ocimene',
                   'limonene', 'camphene', 'terpineol', 'phellandrene', 'carene', 'pulegone', 'sabinene', 'geraniol',
                   'valencene', 'q', 'page', 'size', 'start_from', 'sort')
 
@@ -168,10 +179,9 @@ class StrainSearchSerializer(serializers.ModelSerializer):
         except ValidationError as e:
             errors = e.detail
             data = data.copy()
-            if errors.pop('page', None):
-                data.pop('page')
-            if errors.pop('size', None):
-                data.pop('size')
+            for field in self.skip_error_fields:
+                if errors.pop(field, None):
+                    data.pop(field)
             if errors.pop('sort', None):
                 sort = data.pop('sort', [])
                 data.setlist('sort', [item for item in sort if item in self.SORT_OPTIONS])
@@ -187,4 +197,7 @@ class StrainSearchSerializer(serializers.ModelSerializer):
 
     def to_representation(self, instance):
         ret = super().to_representation(instance)
-        return {key: value for key, value in ret.items() if value}
+        data = {key: value for key, value in ret.items() if value is not None}
+        data['cannabinoids'] = self.CANNABINOIDS
+        data['terpenes'] = self.TERPENES
+        return data

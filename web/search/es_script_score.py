@@ -33,8 +33,7 @@ ADVANCED_SEARCH_SCORE = """
             if (params.containsKey(cannabinoidsArray[i] + '_to')){
                 cannabinoid_max = params[cannabinoidsArray[i] + '_to'];
             }
-    
-            if (cannabinoid_min > 0 || cannabinoid_max < 100){
+            if (cannabinoid_min >= 0 || cannabinoid_max <= 100){
                 total += 100;
             
                 if (cannabinoid > cannabinoid_max){
@@ -55,12 +54,12 @@ ADVANCED_SEARCH_SCORE = """
     }
 
     for (int i = 0; i < varietyArray.length; ++i){
-        if (doc['variety'].value == varietyArray[i]) {
+        if (params._source.variety == varietyArray[i]) {
             total += 20;
         }
     }
 
-    if (doc['cup_winner'].value && params.containsKey("cup_winner")){
+    if (doc['cup_winner'].value && params.containsKey("cup_winner") && params.cup_winner){
         total += 10;
     }
     

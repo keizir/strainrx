@@ -12,7 +12,8 @@ W.common.Rating = {
                 spacing: options.spacing || '1px',
                 normalFill: '#aaa8a8', // $grey-light
                 ratedFill: '#6bc331', // $avocado-green
-                starWidth: options.starWidth || '16px'
+                starWidth: options.starWidth || '16px',
+                starSvg: options.starSvg || null
             });
         }
     }

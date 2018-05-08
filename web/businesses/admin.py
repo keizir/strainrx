@@ -13,13 +13,25 @@ from web.businesses.models import Business, BusinessLocation, FeaturedBusinessLo
     BusinessLocationMenuItem, BusinessLocationMenuUpdateRequest
 
 
-class PaymentAdmin(admin.TabularInline):
+class PaymentInline(admin.TabularInline):
     extra = 0
     model = Payment
     ordering = ('-date',)
 
 
-class MenuAdmin(admin.TabularInline):
+class BusinessLocationInline(admin.TabularInline):
+    extra = 0
+    model = BusinessLocation
+    fields = ('location_name', 'location_email', 'dispensary', 'delivery', 'grow_house', 'delivery_radius',
+              'phone', 'verified', 'removed_date')
+    show_change_link = True
+    view_on_site = False
+
+    def has_add_permission(self, request, obj=None):
+        return False
+
+
+class MenuInline(admin.TabularInline):
     extra = 0
     model = BusinessLocationMenuItem
 
@@ -56,7 +68,7 @@ class BusinessAdmin(admin.ModelAdmin):
     list_filter = ('account_type', 'is_active', 'is_searchable')
     search_fields = ('name',)
     readonly_fields = ('last_payment_date', 'last_payment_amount')
-    inlines = (PaymentAdmin,)
+    inlines = (PaymentInline, BusinessLocationInline)
     actions = [enable_business_search, disable_business_search]
 
 
@@ -163,10 +175,6 @@ class FeaturedBusinessLocationAdmin(admin.ModelAdmin):
     search_fields = ('business_location', 'zip_code')
     actions = [stop_featuring]
 
-    def has_delete_permission(self, request, obj=None):
-        # Disable delete
-        return False
-
 
 class FeaturedBusinessLocationInline(admin.TabularInline):
     extra = 0
@@ -207,20 +215,6 @@ class BusinessLocationAdmin(admin.ModelAdmin):
     def form_url(self, instance):
         return mark_safe('<a target="_blank" href="{url}">{url}</a>'.format(url=instance.url))
 
-    def get_actions(self, request):
-        # Disable delete
-        actions = super(BusinessLocationAdmin, self).get_actions(request)
-        #del actions['delete_selected']
-        return actions
-
-    def has_delete_permission(self, request, obj=None):
-        # Disable delete
-        return False
-
-    def get_queryset(self, request):
-        objects_all = BusinessLocation.objects.all()
-        return objects_all
-
     list_display = ['business', 'location_name', 'dispensary', 'delivery', 'grow_house',
                     'created_date', 'removed_date', 'owner_email_verified']
     readonly_fields = ['category', 'slug_name', 'primary', 'form_url']
@@ -228,7 +222,7 @@ class BusinessLocationAdmin(admin.ModelAdmin):
     list_filter = [OwnerEmailVerifiedFilter, ActivityFilter, 'dispensary', 'delivery', 'grow_house']
     ordering = ['location_name']
     actions = [activate_selected_locations, deactivate_selected_locations, verify_email_for_selected_locations]
-    inlines = (BusinessLocationMenuUpdateInline, FeaturedBusinessLocationInline, MenuAdmin)
+    inlines = (BusinessLocationMenuUpdateInline, FeaturedBusinessLocationInline, MenuInline)
 
     @staticmethod
     def owner_email_verified(obj):

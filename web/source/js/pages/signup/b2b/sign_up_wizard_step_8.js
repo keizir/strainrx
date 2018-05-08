@@ -18,6 +18,16 @@ W.pages.b2b.SignUpWizardStep8 = W.common.WizardStep.extend({
         $('.check').on('click', function () {
             $('.error-message').text('');
         });
+
+        $('.terms-link').on('click', function (e) {
+            e.preventDefault();
+            W.common.Dialog($('.terms-dialog'));
+        });
+
+        $('.policy-link').on('click', function (e) {
+            e.preventDefault();
+            W.common.Dialog($('.privacy-dialog'));
+        });
     },
 
     renderHTML: function () {
@@ -32,13 +42,22 @@ W.pages.b2b.SignUpWizardStep8 = W.common.WizardStep.extend({
             return false;
         }
 
+        var isTermsChecked = $('input[name="terms"]').is(':checked');
+        if (!isTermsChecked) {
+            $('.error-message').text('Agreement is required');
+            return false;
+        }
+
         return true;
     },
 
     submit: function submit() {
-        var data = {certified_legal_compliance: $('input[name="cert"]').is(":checked")};
+        var data = {
+            certified_legal_compliance: $('input[name="cert"]').is(":checked"),
+            terms: $('input[name="terms"]').is(":checked")
+        };
         $.publish('update_step_data', {step: this.step, data: data});
-        $.publish('show_step', {step: 9});
+        $.publish('submit_form', this.model.getData());
     }
 
 });

@@ -2,7 +2,7 @@
 
 <script type="x/srx-template" id="strain_detail_available_locations">
     <div class="locations-area popup-container">
-        <% if (dispensaries.length >0) { %>
+        <% if (dispensaries.length > 0) { %>
         <div class="locations-area-header">
             <div class="column col-1">
                 <div class="col-name">Store</div>
@@ -35,8 +35,10 @@
             }) %>
             <% }) %>
         </div>
+        <% } else if (locationBlocked) { %>
+          <div class="message">Enable location to locate this strain</div>
         <% } else { %>
-        <div class="message">No Locations Found</div>
+          <div class="message">No Locations Found</div>
         <% } %>
     </div>
 </script>

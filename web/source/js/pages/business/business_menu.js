@@ -18,7 +18,8 @@ W.pages.business.BusinessMenu = Class.extend({
         $hybrids: $('.hybrid-region')
     },
 
-    init: function init() {
+    init: function init(options) {
+        this.is_strains = options.is_strains;
         this.initStrainLookupField();
         this.retrieveMenu(this.ui.$locations.val());
         this.changeLocation();
@@ -69,6 +70,7 @@ W.pages.business.BusinessMenu = Class.extend({
             $menuRegion.html(menuTemplate({
                 menuTitle: menuTitle,
                 menuItems: menuItems,
+                is_strains: this.is_strains,
                 renderStrain: _.template($('#menu-item-template').html())
             }));
             $menuRegion.removeClass('hidden');
@@ -129,7 +131,7 @@ W.pages.business.BusinessMenu = Class.extend({
                 price_eighth: that.getPriceValue(priceEighth),
                 price_quarter: that.getPriceValue(priceQuarter),
                 price_half: that.getPriceValue(priceHalf),
-                in_stock: true
+                in_stock: !that.is_strains
             };
 
             $.ajax({

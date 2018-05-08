@@ -127,3 +127,18 @@ def remove_permanently(sender, instance, **kwargs):
             url=reverse('businesses:dispensary_info',
                         args=(location.state, location.city_slug, location.slug_name))
         )
+
+
+@receiver(post_delete, sender=BusinessLocation)
+def remove_business_location_permanently(sender, instance, **kwargs):
+    """
+    Add record to PermanentlyRemoved model for the location
+    Update ES index
+    """
+    BusinessLocationESService().delete_business_location(instance.id)
+
+    PermanentlyRemoved.objects.create(
+        status=status.HTTP_410_GONE,
+        url=reverse('businesses:dispensary_info',
+                    args=(instance.state, instance.city_slug, instance.slug_name))
+    )
