@@ -67,4 +67,9 @@ urlpatterns = [
         view=authorized_for_signup(views.UserSignUpWizardView.as_view()),
         name='signup'
     ),
+    url(
+        regex=r'^impersonate/(?P<uid>.+)/$',
+        view=views.ImpersonateView.as_view(),
+        name='impersonate-start'
+    ),
 ]

@@ -91,11 +91,11 @@ MIDDLEWARE_CLASSES = (
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
-    'web.middleware.middleware.AuthenticationMiddleware',
+    'web.common.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'web.middleware.middleware.TimezoneMiddleware',
-    'impersonate.middleware.ImpersonateMiddleware',
+    'web.common.middleware.TimezoneMiddleware',
+    'web.common.middleware.ImpersonateMiddleware',
 )
 
 CORS_ORIGIN_WHITELIST = (
@@ -257,7 +257,7 @@ WSGI_APPLICATION = 'config.wsgi.application'
 # )
 
 AUTHENTICATION_BACKENDS = (
-    'web.auth.email_auth.EmailBackend',
+    'web.common.email_auth.EmailBackend',
 )
 
 # Some really nice defaults

@@ -5,6 +5,8 @@ from django import forms
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin as AuthUserAdmin
 from django.contrib.auth.forms import UserChangeForm, UserCreationForm
+from django.core.urlresolvers import reverse
+from django.utils.html import format_html
 from impersonate.admin import UserAdminImpersonateMixin
 from import_export.admin import ExportActionModelAdmin
 from import_export.formats import base_formats
@@ -57,6 +59,16 @@ class MyUserAdmin(UserAdminImpersonateMixin, AuthUserAdmin, ExportActionModelAdm
         'type'
     )
     open_new_window = True
+
+    def impersonate_user(self, obj):
+        target = ''
+        if self.open_new_window:
+            target = ' target="_blank"'
+        return format_html(
+            '<a href="{}"{}>Impersonate</a>',
+            reverse('users:impersonate-start', args=[obj.id]),
+            target,
+        )
 
 
 admin.site.register(UserLocation)
