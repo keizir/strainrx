@@ -19,7 +19,7 @@ from django.utils.translation import ugettext_lazy as _
 from django_resized import ResizedImageField
 
 from web.analytics.managers import BusinessLocationMenuUpdateRequestQuerySet
-from web.businesses.querysets import MenuItemQuerySet, ReportOutOfStockQuerySet
+from web.businesses.querysets import MenuItemQuerySet, ReportOutOfStockQuerySet, UserFavoriteLocationQuerySet
 from web.search.models import Strain
 from web.system.models import ReviewAbstract
 from web.users.models import User
@@ -537,6 +537,14 @@ class UserFavoriteLocation(models.Model):
     location = models.ForeignKey(BusinessLocation, on_delete=models.CASCADE)
     created_by = models.ForeignKey(User, on_delete=models.DO_NOTHING)
     created_date = models.DateTimeField(auto_now=True)
+
+    objects = UserFavoriteLocationQuerySet.as_manager()
+
+    class Meta:
+        ordering = ('-created_date',)
+
+    def __str__(self):
+        return '{}: {}'.format(self.location, self.created_by)
 
 
 @python_2_unicode_compatible

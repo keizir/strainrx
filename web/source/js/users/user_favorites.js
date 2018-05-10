@@ -18,11 +18,16 @@ W.users.FavoritesPage = Class.extend({
         $deliveries: $('.deliveries-tab')
     },
 
+    urls: {
+        favorites: '/api/v1/users/{0}/favorites/{1}/',
+        delete: '/api/v1/users/{0}/favorites/{1}/{2}'
+    },
+
     init: function () {
         var that = this;
         this.retrieveStrainFavorites(function (favorites) {
             that.renderStrainFavorites(favorites);
-            that.removeStrainFavorite();
+            that.removeFavorite();
         });
         this.initSubTabs();
     },
@@ -31,21 +36,33 @@ W.users.FavoritesPage = Class.extend({
         var that = this;
         $.ajax({
             method: 'GET',
-            url: '/api/v1/users/{0}/favorites/strain'.format(that.ui.$userId.val()),
+            url: this.urls.favorites.format(that.ui.$userId.val(), 'strain'),
             success: function (data) {
-                if (data.favorites) {
-                    success(data.favorites);
-                }
+                success(data);
             }
         });
     },
 
     retrieveDispensariesFavorites: function retrieveDispensariesFavorites(success) {
-        success(); // TODO retrieve
+        var that = this;
+        $.ajax({
+            method: 'GET',
+            url: this.urls.favorites.format(that.ui.$userId.val(), 'dispensary'),
+            success: function (data) {
+                success(data);
+            }
+        });
     },
 
     retrieveDeliveriesFavorites: function retrieveDeliveriesFavorites(success) {
-        success(); // TODO retrieve
+        var that = this;
+        $.ajax({
+            method: 'GET',
+            url: this.urls.favorites.format(that.ui.$userId.val(), 'delivery'),
+            success: function (data) {
+                success(data);
+            }
+        });
     },
 
     renderStrainFavorites: function renderStrainFavorites(favorites) {
@@ -71,25 +88,40 @@ W.users.FavoritesPage = Class.extend({
         }
     },
 
-    removeStrainFavorite: function removeStrainFavorite() {
+    removeFavorite: function removeFavorite() {
         var that = this;
-        $('.removable').on('click', function () {
+        $('.favorite').on('click', '.removable', function () {
+            var $this = $(this);
+
             $.ajax({
                 method: 'DELETE',
-                url: '/api/v1/users/{0}/favorites/strain/{1}'.format(that.ui.$userId.val(), $(this).prop('id')),
+                url: that.urls.delete.format(that.ui.$userId.val(), $this.attr('data-type'), $this.prop('id')),
                 success: function () {
-                    window.location.reload();
+                    $this.parents('.favorite').remove();
                 }
             });
         });
     },
 
-    renderDispensariesFavorites: function renderDispensariesFavorites(favorites) {
-        this.regions.$favorites.html('No Dispensaries Added'); // TODO render
-    },
+    renderDispensariesFavorites: function renderDispensariesFavorites(favorites, delivery) {
+        var that = this,
+            template = _.template($('#user_favorite_dispensary_template').html());
 
-    renderDeliveriesFavorites: function renderDeliveriesFavorites(favorites) {
-        this.regions.$favorites.html('No Deliveries Added'); // TODO render
+        this.regions.$favorites.html('');
+
+        if (favorites && favorites.length === 0) {
+            if (delivery){
+                this.regions.$favorites.html('No Dispensaries Added');
+            } else {
+                this.regions.$favorites.html('No Deliveries Added');
+            }
+        }
+
+        $.each(favorites, function (index, favorite) {
+            that.preformatFavorite(favorite);
+            that.regions.$favorites.append(template({'favorite': favorite}));
+            that.initRating($('.overall-rating-{0}'.format(favorite.id)), favorite.strain_overall_rating);
+        });
     },
 
     preformatFavorite: function preformatFavorite(review) {
@@ -109,6 +141,7 @@ W.users.FavoritesPage = Class.extend({
             $(this).addClass('active');
             that.retrieveStrainFavorites(function (favorites) {
                 that.renderStrainFavorites(favorites);
+                that.removeFavorite();
             });
         });
 
@@ -117,6 +150,7 @@ W.users.FavoritesPage = Class.extend({
             $(this).addClass('active');
             that.retrieveDispensariesFavorites(function (favorites) {
                 that.renderDispensariesFavorites(favorites);
+                that.removeFavorite();
             });
         });
 
@@ -124,7 +158,8 @@ W.users.FavoritesPage = Class.extend({
             $('.sub-tab').removeClass('active');
             $(this).addClass('active');
             that.retrieveDeliveriesFavorites(function (favorites) {
-                that.renderDeliveriesFavorites(favorites);
+                that.renderDispensariesFavorites(favorites, true);
+                that.removeFavorite();
             });
         });
     }

@@ -1,7 +1,7 @@
 from rest_framework import serializers
 
 from web.businesses.models import phone_number_validator, LocationReview, GrowerDispensaryPartnership, \
-    BusinessLocationMenuItem
+    BusinessLocationMenuItem, UserFavoriteLocation
 from web.search.api.services import StrainDetailsService
 
 
@@ -183,3 +183,24 @@ class GrowerDispensaryPartnershipSerializer(serializers.ModelSerializer):
     class Meta:
         model = GrowerDispensaryPartnership
         fields = ('id', 'dispensary', 'dispensary_id', 'grower', 'grower_id')
+
+
+class UserFavoriteLocationSerializer(serializers.ModelSerializer):
+    name = serializers.ReadOnlyField(source='location.location_name')
+    image = serializers.SerializerMethodField()
+    street1 = serializers.ReadOnlyField(source='location.street1')
+    city = serializers.ReadOnlyField(source='location.city')
+    state = serializers.ReadOnlyField(source='location.state')
+    zip_code = serializers.ReadOnlyField(source='location.zip_code')
+    phone = serializers.ReadOnlyField(source='location.phone')
+    email = serializers.ReadOnlyField(source='location.location_email')
+    url = serializers.ReadOnlyField(source='location.get_absolute_url')
+
+    class Meta:
+        model = UserFavoriteLocation
+        fields = ('id', 'name', 'image', 'street1', 'city', 'state', 'zip_code',
+                  'phone', 'email', 'created_date', 'url')
+
+    def get_image(self, instance):
+        if instance.location.image:
+            return instance.location.image.url

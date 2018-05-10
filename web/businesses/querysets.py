@@ -37,3 +37,9 @@ class ReportOutOfStockQuerySet(models.QuerySet):
             menu_item=menu, count=2, is_active=True,
             start_timer__gte=timezone.now() - timezone.timedelta(
                 days=settings.PERIOD_BLOCK_MENU_ITEM_OUT_OF_STOCK)).exists()
+
+
+class UserFavoriteLocationQuerySet(models.QuerySet):
+
+    def get_user_favorites(self, user):
+        return self.filter(created_by=user).order_by('-created_date')
