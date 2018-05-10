@@ -706,19 +706,9 @@ class SearchElasticService(BaseElasticService):
         )
 
         must_query = []
-        nested_filter = []
         for field in ('is_clean', 'is_indoor'):
             if lookup_query.get(field):
-                nested_filter.append({"term": {'locations.{}'.format(field): lookup_query[field]}})
-
-        if nested_filter:
-            must_query.append({
-                "nested": {
-                    "path": "locations",
-                    "query": {
-                        "bool": {"must": nested_filter}
-                    }}
-            })
+                must_query.append({"term": {field: lookup_query[field]}})
 
         if lookup_query.get('variety'):
             must_query.append({"terms": {'variety': lookup_query['variety']}})
@@ -756,8 +746,7 @@ class SearchElasticService(BaseElasticService):
             sort_query.append(
                 StrainSearchSerializer.SORT_FIELDS[item](
                     lat=location and location.lat or 0, lon=location and location.lng or 0,
-                    proximity=proximity, is_clean=lookup_query.get('is_clean'),
-                    is_indoor=lookup_query.get('is_indoor'))
+                    proximity=proximity)
             )
 
         query = {

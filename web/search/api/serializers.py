@@ -87,7 +87,7 @@ class StrainSearchSerializer(serializers.ModelSerializer):
         NAME: lambda **kwargs: {'name.raw': {
             "order": 'asc',
             "nested_path": "locations",
-            "nested_filter": {"bool": {'must': advanced_search_nested_location_filter(**kwargs)}}
+            "nested_filter": {"bool": {'must': advanced_search_nested_location_filter()}}
         }},
         MAX_PRICE_GRAM: lambda **kwargs: {
             'locations.price_gram': advanced_search_sort(subquery={"order": 'desc'}, **kwargs)

@@ -67,17 +67,12 @@ ADVANCED_SEARCH_SCORE = """
 """
 
 
-def advanced_search_nested_location_filter(**kwargs):
-    nested_filter = [{"term": {"locations.in_stock": True}}]
-    if kwargs.get('is_indoor'):
-        nested_filter.append({'term': {'locations.is_indoor': True}})
-    if kwargs.get('is_clean'):
-        nested_filter.append({'term': {'locations.is_clean': True}})
-    return nested_filter
+def advanced_search_nested_location_filter():
+    return [{"term": {"locations.in_stock": True}}]
 
 
 def advanced_search_sort(**kwargs):
-    nested_filter = advanced_search_nested_location_filter(**kwargs)
+    nested_filter = advanced_search_nested_location_filter()
     should_query = [
         {"script": {
             "script": {

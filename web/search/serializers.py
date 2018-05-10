@@ -16,7 +16,8 @@ class StrainESSerializer(serializers.ModelSerializer):
         fields = ('id', 'name', 'strain_slug', 'variety', 'category',
                   'effects', 'benefits', 'side_effects', 'flavor', 'about',
                   'removed_date', 'removed_by_id', 'you_may_also_like_exclude',
-                  'name_suggest', 'terpenes', 'cannabinoids', 'cup_winner', 'locations')
+                  'name_suggest', 'terpenes', 'cannabinoids', 'cup_winner',
+                  'is_indoor', 'is_clean', 'locations')
 
     def get_name_suggest(self, instance):
         input_variants = [instance.name]
