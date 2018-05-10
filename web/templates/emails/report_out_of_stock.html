@@ -1,0 +1,31 @@
+{% extends "emails/base.html" %}
+{% load staticfiles i18n %}
+
+{% block css %}
+    {{ block.super }}
+    <style>
+        p {
+            margin: 20px;
+            text-align: left;
+        }
+    </style>
+{% endblock %}
+
+{% block content %}
+    <tr>
+        <td>
+            <p>Hello <b>{{ name }},</b></p>
+            <p>
+              This is an automatically generated email to inform you that someone has reported that you have sold out of {{ strain }}. Please update your menu on StrainRx. If a second report about this strain is filed within a week, you will be unable to relist {{ strain }} in your menu for a period of {{ days_count }} days.
+            </p>
+            <p>
+              Thank you very much!
+            </p>
+            <p>
+                Regards,<br>
+                The StrainRx Team<br>
+                <a href="mailto:support@strainrx.co">support@strainrx.co</a>
+            </p>
+        </td>
+    </tr>
+{% endblock %}

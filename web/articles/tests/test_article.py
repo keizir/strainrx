@@ -102,7 +102,7 @@ class ArticleTestCase(APITestCase):
         self.category.parent.save()
 
         self.assertEqual(PermanentlyRemoved.objects.count(), 2)
-        item = PermanentlyRemoved.objects.last()
+        item = PermanentlyRemoved.objects.first()
         self.assertEqual(item.url, '/{}/{}/{}/'.format(
             self.category.parent.slug, self.category.slug, self.article.slug))
 
@@ -111,7 +111,7 @@ class ArticleTestCase(APITestCase):
         self.category.parent.parent.slug = 'test'
         self.category.parent.parent.save()
         self.assertEqual(PermanentlyRemoved.objects.count(), 3)
-        item = PermanentlyRemoved.objects.last()
+        item = PermanentlyRemoved.objects.first()
         self.assertEqual(item.url, '/{}/{}/{}/{}/'.format(
             old_slug, self.category.parent.slug, self.category.slug, self.article.slug))
 

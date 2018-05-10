@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 import json
 import logging
-from datetime import datetime
 
 from boto.s3.connection import S3Connection, Bucket, Key
 from django.conf import settings
@@ -9,10 +8,13 @@ from django.contrib.auth import authenticate, login
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.core.exceptions import ValidationError, ObjectDoesNotExist
 from django.db.models.query import Q
+from django.http import Http404
+from django.utils import timezone
 from django.utils.crypto import get_random_string
 
-from rest_framework import permissions
+from rest_framework import permissions, mixins
 from rest_framework import status
+from rest_framework.generics import CreateAPIView, get_object_or_404, ListCreateAPIView
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
@@ -22,7 +24,7 @@ from web.businesses.api.services import BusinessSignUpService, BusinessLocationS
     get_location_rating, FeaturedBusinessLocationService
 from web.businesses.emails import EmailService
 from web.businesses.models import Business, BusinessLocation, BusinessLocationMenuItem, LocationReview, \
-    UserFavoriteLocation, State, City, BusinessLocationMenuUpdateRequest
+    UserFavoriteLocation, State, City, BusinessLocationMenuUpdateRequest, ReportOutOfStock
 from web.businesses.serializers import BusinessSerializer, BusinessLocationSerializer
 from web.businesses.utils import NamePaginator
 from web.search.api.services import StrainDetailsService
@@ -226,85 +228,67 @@ class BusinessLocationView(APIView):
         return Response({}, status=status.HTTP_200_OK)
 
 
-class BusinessLocationMenuView(APIView):
+class BusinessLocationMenuView(mixins.DestroyModelMixin,
+                               mixins.UpdateModelMixin,
+                               ListCreateAPIView):
     permission_classes = (BusinessLocationAccountOwnerOrStaff,)
+    serializer_class = BusinessLocationMenuItemSerializer
 
-    def get(self, request, business_id, business_location_id):
-        menu_items_raw = BusinessLocationMenuItem.objects \
-            .filter(business_location__id=business_location_id, removed_date=None) \
+    def get_queryset(self):
+        queryset = BusinessLocationMenuItem.objects \
+            .filter(business_location__id=self.kwargs['business_location_id'], removed_date=None) \
             .order_by('strain__name')
+        if self.request.GET.get('ddp'):
+            return queryset.filter(in_stock=True)
+        return queryset.reports()
 
-        menu_items = []
-        for mi in menu_items_raw:
-            menu_items.append(self.build_menu_item(mi))
+    def get_object(self):
+        """
+        Get Menu item id by pk or by strain id
+        :return: BusinessLocationMenuItem instance
+        """
+        if isinstance(self.request.data.get('menu_item'), dict):
+            kwargs = {'pk': self.request.data['menu_item'].get('id')}
+        elif self.request.data.get('menu_item_id'):
+            kwargs = {'pk': self.request.data['menu_item_id']}
+        else:
+            kwargs = {'strain': self.request.data.get('strain_id')}
 
-        if request.GET.get('ddp') and request.user.is_authenticated():
-            strain_ids = []
-            for mi in menu_items:
-                strain_ids.append(mi.get('strain_id'))
+        return get_object_or_404(BusinessLocationMenuItem,
+                                 business_location=self.kwargs['business_location_id'], **kwargs)
 
-            scores = StrainDetailsService().calculate_srx_scores(strain_ids, request.user)
-            if len(scores) > 0:
-                for mi in menu_items:
-                    mi['match_score'] = scores.get(mi.get('strain_id'))
+    def dispatch(self, request, *args, **kwargs):
+        self.location = get_object_or_404(BusinessLocation, pk=self.kwargs['business_location_id'])
+        return super().dispatch(request, *args, **kwargs)
 
-        return Response({'menu': menu_items}, status=status.HTTP_200_OK)
-
-    def post(self, request, business_id, business_location_id):
-        serializer = BusinessLocationMenuItemSerializer(data=request.data)
-        serializer.is_valid(raise_exception=True)
-        data = serializer.validated_data
-
-        strain = Strain.objects.get(pk=data.get('strain_id'))
-        location = BusinessLocation.objects.get(pk=business_location_id)
-
+    def post(self, request, *args, **kwargs):
         try:
-            menu_item = BusinessLocationMenuItem.objects.get(business_location=location, strain=strain)
-            menu_item.in_stock = data.get('in_stock')
-            menu_item.price_gram = data.get('price_gram')
-            menu_item.price_eighth = data.get('price_eighth')
-            menu_item.price_quarter = data.get('price_quarter')
-            menu_item.price_half = data.get('price_half')
-            menu_item.removed_date = None
-        except BusinessLocationMenuItem.DoesNotExist:
-            menu_item = BusinessLocationMenuItem(business_location=location, strain=strain,
-                                                 in_stock=data.get('in_stock'),
-                                                 price_gram=data.get('price_gram'),
-                                                 price_eighth=data.get('price_eighth'),
-                                                 price_quarter=data.get('price_quarter'),
-                                                 price_half=data.get('price_half'))
+            return self.update(request, *args, **kwargs)
+        except Http404:
+            return super().post(request, *args, **kwargs)
 
-        menu_item.save()
+    def put(self, request, *args, **kwargs):
+        return self.update(request, *args, **kwargs)
 
-        return Response(self.build_menu_item(menu_item), status=status.HTTP_200_OK)
+    def patch(self, request, *args, **kwargs):
+        return self.partial_update(request, *args, **kwargs)
 
-    def put(self, request, business_id, business_location_id):
-        menu_item = request.data.get('menu_item')
-        item = BusinessLocationMenuItem.objects.get(pk=menu_item.get('id'))
-        item.in_stock = menu_item.get('in_stock')
-        item.save()
-        return Response({}, status=status.HTTP_200_OK)
+    def delete(self, request, *args, **kwargs):
+        return self.destroy(request, *args, **kwargs)
 
-    def delete(self, request, business_id, business_location_id):
-        menu_item_id = request.data.get('menu_item_id')
-        item = BusinessLocationMenuItem.objects.get(pk=menu_item_id)
-        item.removed_date = datetime.now()
-        item.save()
-        return Response({}, status=status.HTTP_200_OK)
+    def perform_create(self, serializer):
+        serializer.save(business_location=self.location)
 
-    def build_menu_item(self, menu_item):
-        return {
-            'id': menu_item.id,
-            'strain_id': menu_item.strain.id,
-            'strain_name': menu_item.strain.name,
-            'strain_variety': menu_item.strain.variety,
-            'price_gram': menu_item.price_gram,
-            'price_eighth': menu_item.price_eighth,
-            'price_quarter': menu_item.price_quarter,
-            'price_half': menu_item.price_half,
-            'in_stock': menu_item.in_stock,
-            'url': menu_item.strain.get_absolute_url(),
-        }
+    def perform_update(self, serializer):
+        in_stock = serializer.validated_data.get('in_stock')
+        if in_stock and ReportOutOfStock.objects.is_out_of_stock_reports(serializer.instance):
+            # If menu item was reported as out of stock mark in_stock parameter as False
+            in_stock = False
+        serializer.save(removed_date=None, in_stock=in_stock)
+
+    def perform_destroy(self, instance):
+        instance.removed_date = timezone.now()
+        instance.save()
 
 
 class BusinessLocationMenuUpdateRequestDetailView(APIView):
@@ -332,6 +316,36 @@ class BusinessLocationMenuUpdateRequestDetailView(APIView):
 
         EmailService().send_menu_update_request_email(update_request)
 
+        return Response(status=status.HTTP_201_CREATED)
+
+
+class BusinessLocationReportOutOfStockView(CreateAPIView):
+    permission_classes = (permissions.IsAuthenticated,)
+
+    def get_object(self):
+        return get_object_or_404(
+            BusinessLocationMenuItem.objects.select_related('business_location__business', 'strain'),
+            id=self.kwargs['menu_item_id'])
+
+    def create(self, request, *args, **kwargs):
+        menu = self.get_object()
+        reports = ReportOutOfStock.objects.filter(
+            menu_item=menu,
+            start_timer__gte=timezone.now() - timezone.timedelta(days=settings.PERIOD_OUT_OF_STOCK))
+        report_count = len(reports)
+
+        if report_count:
+            menu.in_stock = False
+            menu.save()
+
+            reports.update(is_active=False)
+
+        ReportOutOfStock.objects.create(
+            user=self.request.user,
+            menu_item=menu,
+            count=report_count + 1
+        )
+        EmailService().send_report_out_of_stock(menu, is_second=report_count == 1)
         return Response(status=status.HTTP_201_CREATED)
 
 

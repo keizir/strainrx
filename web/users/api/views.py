@@ -12,15 +12,18 @@ from django.contrib.auth import authenticate, login
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.core.exceptions import ValidationError
 from django.core.validators import EmailValidator
+from django.db.models import Prefetch
 from rest_framework import permissions
 from rest_framework import status
 from rest_framework.exceptions import ValidationError as RestFrameworkValidationError
 from rest_framework.response import Response
 from rest_framework.views import APIView
-from rest_framework.generics import UpdateAPIView
+from rest_framework.generics import UpdateAPIView, ListAPIView, DestroyAPIView
 
+from web.businesses.api.serializers import UserFavoriteLocationSerializer
+from web.businesses.models import UserFavoriteLocation
 from web.users.login import pre_login
-from web.search.api.serializers import SearchCriteriaSerializer
+from web.search.api.serializers import SearchCriteriaSerializer, UserFavoriteStrainSerializer
 from web.search.models import UserSearch, StrainReview, StrainImage, UserFavoriteStrain
 from web.search.services import build_strain_rating
 from web.users import validators
@@ -408,37 +411,43 @@ class StrainRatingView(LoginRequiredMixin, APIView):
         return Response({'reviews': ratings}, status=status.HTTP_200_OK)
 
 
-class UserFavoritesView(LoginRequiredMixin, APIView):
-    permission_classes = (UserAccountOwner,)
+class UserFavoritesView(LoginRequiredMixin, ListAPIView):
+    permission_classes = (permissions.IsAuthenticated, UserAccountOwner)
+    serializer_class = UserFavoriteStrainSerializer
+    location_serializer_class = UserFavoriteLocationSerializer
 
-    def get(self, request, user_id, favorite_type, favorite_id):
-        if 'strain' == favorite_type:
-            favorites_raw = UserFavoriteStrain.objects.filter(created_by__id=user_id).order_by('-created_date')
-            favorites = []
-            for r in favorites_raw:
-                images = StrainImage.objects.filter(strain=r.strain, is_approved=True)
-                img = images[0].image.url if len(images) > 0 and images[0].image and images[0].image.url else None
-                favorites.append({
-                    'id': r.id,
-                    'strain_id': r.strain.id,
-                    'strain_name': r.strain.name,
-                    'strain_slug': r.strain.strain_slug,
-                    'strain_variety': r.strain.variety,
-                    'strain_image': img,
-                    'strain_overall_rating': build_strain_rating(r.strain),
-                    'created_date': r.created_date
-                })
-            return Response({'favorites': favorites}, status=status.HTTP_200_OK)
+    def get_serializer_class(self):
+        if self.kwargs['favorite_type'] in ('dispensary', 'delivery'):
+            return self.location_serializer_class
+        return super().get_serializer_class()
 
-        return Response({}, status=status.HTTP_400_BAD_REQUEST)
+    def get_queryset(self):
+        if 'strain' == self.kwargs['favorite_type']:
+            return UserFavoriteStrain.objects \
+                .filter(created_by__id=self.kwargs['user_id'])\
+                .prefetch_related(
+                    Prefetch('strain__images',
+                             queryset=StrainImage.objects.filter(is_approved=True), to_attr='strain_images'))\
+                .order_by('-created_date')
+        if 'dispensary' == self.kwargs['favorite_type']:
+            return UserFavoriteLocation.objects\
+                .get_user_favorites(self.kwargs['user_id']) \
+                .filter(location__dispensary=True)
+        if 'delivery' == self.kwargs['favorite_type']:
+            return UserFavoriteLocation.objects\
+                .get_user_favorites(self.kwargs['user_id']) \
+                .filter(location__delivery=True)
+        return UserFavoriteStrain.objects.none()
 
-    def delete(self, request, user_id, favorite_type, favorite_id):
-        if 'strain' == favorite_type:
-            favorite = UserFavoriteStrain.objects.get(pk=favorite_id)
-            favorite.delete()
-            return Response({}, status=status.HTTP_200_OK)
 
-        return Response({}, status=status.HTTP_400_BAD_REQUEST)
+class UserFavoritesDeleteView(LoginRequiredMixin, DestroyAPIView):
+    permission_classes = (permissions.IsAuthenticated, UserAccountOwner)
+    lookup_url_kwarg = 'favorite_id'
+
+    def get_queryset(self):
+        if 'strain' == self.kwargs['favorite_type']:
+            return UserFavoriteStrain.objects.filter(created_by__id=self.kwargs['user_id'])
+        return UserFavoriteLocation.objects.get_user_favorites(self.kwargs['user_id'])
 
 
 class UserGeoLocationView(LoginRequiredMixin, APIView):

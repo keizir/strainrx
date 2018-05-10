@@ -97,7 +97,7 @@ class StrainDetailsService:
 
         if latest_user_search:
             data = SearchElasticService().query_strain_srx_score(latest_user_search.to_search_criteria(),
-                                                                 strain_ids=strain_ids)
+                                                                 strain_ids=strain_ids, result_filter='all')
             scores = {}
             strains = data.get('list')
 

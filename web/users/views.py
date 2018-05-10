@@ -5,8 +5,9 @@ from django.conf import settings
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.core.urlresolvers import reverse
 from django.utils import timezone
-from django.views.generic import DetailView, ListView, RedirectView, UpdateView
+from django.views.generic import DetailView, ListView, RedirectView, UpdateView, View
 from django.views.generic import TemplateView, FormView
+from impersonate.views import stop_impersonate
 
 from web.search.models import UserSearch
 from web.users.api.serializers import UserDetailSerializer
@@ -105,7 +106,7 @@ class UserUpdateView(LoginRequiredMixin, UpdateView):
         return reverse('users:detail',
                        kwargs={'id': self.request.user.username})
 
-    def get_object(self):
+    def get_object(self, queryset=None):
         # Only get the User record for the user making the request
         return User.objects.get(pk=self.request.user.id)
 
@@ -156,3 +157,18 @@ class ConfirmEmailView(TemplateView):
         else:
             context['redirect_url'] = reverse('home')
         return context
+
+
+class ImpersonateView(RedirectView):
+    """
+    Remove the impersonation object from the session
+    and ideally return the user to the original path
+    they were on. Then redirect to impersonation start view
+    """
+
+    def get_redirect_url(self, *args, **kwargs):
+        return reverse('impersonate-start', args=(self.kwargs['uid'],))
+
+    def get(self, request, *args, **kwargs):
+        stop_impersonate(request)
+        return super().get(request, *args, **kwargs)

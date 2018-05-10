@@ -156,10 +156,11 @@ class SearchElasticService(BaseElasticService):
                     }
                 }
 
-        bool_menu_items = {"must_not": {"exists": {"field": "menu_items.removed_date"}}}
+        bool_menu_items = {"must_not": [{"exists": {"field": "menu_items.removed_date"}}],
+                           'must': [{"term": {"menu_items.in_stock": True}}]}
 
         if strain_id:
-            bool_menu_items["must"] = {"match": {"menu_items.strain_id": strain_id}}
+            bool_menu_items["must"].append({"match": {"menu_items.strain_id": strain_id}})
 
         must_query = [{"nested": {"path": "menu_items", "query": {"bool": bool_menu_items}}}]
 
@@ -176,9 +177,13 @@ class SearchElasticService(BaseElasticService):
             sort_query.append({order_field: {"order": order_dir}})
 
         if order_field.startswith('menu_items'):
-            order_field_bool = {"must_not": {"exists": {"field": "menu_items.removed_date"}}}
+            order_field_bool = {
+                "must_not": [{"exists": {"field": "menu_items.removed_date"}}],
+                'must': [{"term": {"menu_items.in_stock": True}}]
+            }
+
             if strain_id:
-                order_field_bool["must"] = {"match": {"menu_items.strain_id": strain_id}}
+                order_field_bool["must"].append({"match": {"menu_items.strain_id": strain_id}})
             sort_query.append({order_field: {"order": order_dir, "nested_path": "menu_items",
                                              "nested_filter": {"bool": order_field_bool}}})
 

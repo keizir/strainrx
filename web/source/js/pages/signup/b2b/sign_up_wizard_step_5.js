@@ -20,8 +20,7 @@ W.pages.b2b.SignUpWizardStep5 = W.common.WizardStep.extend({
         return this.$template({
             buildAddressDisplayName: this.buildAddressDisplayName,
             data: stepData,
-            phone: stepData && stepData.phone,
-            ext: stepData && stepData.ext
+            phone: stepData && stepData.phone
         });
     },
 
@@ -96,8 +95,7 @@ W.pages.b2b.SignUpWizardStep5 = W.common.WizardStep.extend({
 
     validate: function validate() {
         var address = $('input[name="address"]').val(),
-            phoneNumber = $('input[name="phone"]').val(),
-            phoneExt = $('input[name="ext"]').val();
+            phoneNumber = $('input[name="phone"]').val();
 
         function validateLength(value, fieldDisplayName) {
             if (!value || value.trim().length === 0) {
@@ -122,11 +120,6 @@ W.pages.b2b.SignUpWizardStep5 = W.common.WizardStep.extend({
             return false;
         }
 
-        if (phoneExt && !W.common.Constants.regex.onlyNumeric.test(phoneExt)) {
-            $('.error-message').text('Extension must contain only numbers');
-            return false;
-        }
-
         return true;
     },
 
@@ -134,7 +127,6 @@ W.pages.b2b.SignUpWizardStep5 = W.common.WizardStep.extend({
         var that = this;
 
         this.stepData['phone'] = $('input[name="phone"]').val().trim();
-        this.stepData['ext'] = $('input[name="ext"]').val();
 
         $.publish('update_step_data', {step: that.step, data: this.stepData});
         $.publish('show_step', {step: 6});
