@@ -1093,6 +1093,19 @@
         font-weight: normal;
         background: none;
     }
+
+    ::placeholder { /* Chrome, Firefox, Opera, Safari 10.1+ */
+        color: $grey-light;
+        opacity: 1; /* Firefox */
+    }
+
+    :-ms-input-placeholder { /* Internet Explorer 10-11 */
+        color: $grey-light;
+    }
+
+    ::-ms-input-placeholder { /* Microsoft Edge */
+        color: $grey-light;
+    }
 }
 
 @media (min-width: $screen-xl-min) {

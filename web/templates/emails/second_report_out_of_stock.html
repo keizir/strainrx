@@ -16,10 +16,10 @@
         <td>
             <p>Hello <b>{{ name }},</b></p>
             <p>
-              This is an automatically generated email to inform you that someone has reported that you have sold out of {{ strain }} second time during this week. You will be unable to relist {{ strain }} in your menu for a period of {{ days_count }} days.
+              This is an automatically generated email. Someone has reported that you sold out of {{ strain }} and it will no longer be displayed in your menu. You may add it back when it becomes available.
             </p>
             <p>
-              Thank you very much!
+              <a href="{{ login_url }}">Log in</a> to begin managing your menu, or <a href="{{ claim_url }}">claim your listing</a> if you haven't already and begin communicating with your customers on StrainRx.
             </p>
             <p>
                 Regards,<br>
