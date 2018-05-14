@@ -16,6 +16,10 @@ W.pages.strain.StrainDetailPage = Class.extend({
         $locationControl: '.location-controls'
     },
 
+    urls: {
+        locationAutocomplete: '/api/v1/businesses/location/lookup/'
+    },
+
     templates: {
         expandedLocation: _.template($('#strain_detail_available_location').html())
     },
@@ -27,10 +31,6 @@ W.pages.strain.StrainDetailPage = Class.extend({
         var that = this;
         this.name = 'StrainDetailPage';
         this.authenticated = options.authenticated || false;
-
-        $(window).on('resize', _.debounce(function () {
-            that.recalculateSimilarStrainsSectionWidth();
-        }, 250));
 
         that.retrieveFlavors(function (flavors) {
             that.flavorsData = flavors;
@@ -137,7 +137,7 @@ W.pages.strain.StrainDetailPage = Class.extend({
             var words = strainName.split(' '),
                 abbreviation = '';
 
-            if (words && words.length == 1) {
+            if (words && words.length === 1) {
                 abbreviation = words[0].substr(0, 2);
             } else {
                 for (var i = 0; i < words.length; i++) {
@@ -163,6 +163,7 @@ W.pages.strain.StrainDetailPage = Class.extend({
         this.uploadPhotoListener();
         this.buildLocationsMenu();
         this.showRateStrainDialog();
+        this.addReviewMention();
         this.submitStrainReview();
         this.showAllReviews();
 
@@ -292,40 +293,6 @@ W.pages.strain.StrainDetailPage = Class.extend({
         });
     },
 
-    recalculateSimilarStrainsSectionWidth: function recalculateSimilarStrainsSectionWidth() {
-        var $parent = $('.similar-strains-wrapper'),
-            $parentWidth = $parent.outerWidth(true),
-            $parentFirstHidden = $('.similar-wrapper.similar-hidden', $parent).first();
-
-        while (this.getVisibleSimilarWidth($parent) > $parentWidth) {
-            var last = $('.similar-wrapper.similar-visible', $parent).last();
-            last.addClass('similar-hidden');
-            last.removeClass('similar-visible');
-            last.css('visibility', 'hidden');
-            last.css('position', 'absolute');
-        }
-
-        var padding = parseInt($('.similar-wrapper.similar-visible', $parent).first().css('padding'), 10),
-            newTotalWidth = this.getVisibleSimilarWidth($parent) + $parentFirstHidden.outerWidth(true) + (3 * padding);
-
-        if ($parentFirstHidden && $parentWidth > newTotalWidth) {
-            $parentFirstHidden.removeClass('similar-hidden');
-            $parentFirstHidden.addClass('similar-visible');
-            $parentFirstHidden.css('visibility', 'visible');
-            $parentFirstHidden.css('position', 'relative');
-        }
-    },
-
-    getVisibleSimilarWidth: function getVisibleSimilarWidth($parent) {
-        var totalVisibleSimilarWidth = 0;
-        $.each($parent.find('.similar-wrapper.similar-visible'), function () {
-            var $el = $(this),
-                padding = parseInt($el.css('padding'), 10);
-            totalVisibleSimilarWidth += (2 * padding) + $el.outerWidth(true);
-        });
-        return totalVisibleSimilarWidth;
-    },
-
     initRatings: function initRatings() {
         var that = this,
             $strainRatingStars = $('.strain-rating-stars'),
@@ -343,16 +310,7 @@ W.pages.strain.StrainDetailPage = Class.extend({
         W.common.Rating.readOnly($ratingSelector, {rating: rating !== 'Not Rated' ? rating : 0});
     },
 
-    changeReviewText: function changeReviewText($review) {
-        var reviewHeight = $review.height(),
-            reviewText = $review.text(),
-            fontSize = parseInt($review.css('font-size'), 10);
-
-        if (reviewHeight / fontSize >= 2) {
-            reviewText = reviewText.substr(0, 150) + '... <span class="expander">Review full review</span>';
-            $review.html(reviewText);
-        }
-    },
+    changeReviewText: function changeReviewText($review) {},
 
     expandReviewText: function expandReviewText() {
         $('.expander').on('click', function () {
@@ -942,33 +900,56 @@ W.pages.strain.StrainDetailPage = Class.extend({
         });
     },
 
+    addReviewMention: function () {
+      var that = this;
+      $('textarea.mention').mentionsInput({
+          elastic: false,
+          minChars: 1,
+          showAvatars: false,
+          onDataRequest: function (mode, query, callback) {
+            var self = this;
+            $.ajax({
+                method: 'GET',
+                url: that.urls.locationAutocomplete + '?q={0}'.format(query),
+                success: function (data) {
+                    callback.call(self, data);
+                }
+            })
+          }
+      });
+    },
+
     submitStrainReview: function submitStrainReview() {
         var that = this;
         $('.rate-strain-form').on('submit', function (e) {
             e.preventDefault();
             var rating = $('.rate-stars').rateYo('rating'),
-                review = $('.rate-review').val() || '';
+                review;
 
-            if (rating === 0) {
-                $('.error-message').text('Rating is required');
-                return;
-            }
+            $('textarea.mention').mentionsInput('val', function(text) {
+                review = text || '';
 
-            $('.loader').removeClass('hidden');
-            $('.btn-review-submit').addClass('hidden');
-
-            $.ajax({
-                type: 'POST',
-                url: '/api/v1/search/strain/{0}/rate'.format(that.ui.$strainId.val()),
-                data: JSON.stringify({rating: rating, review: review}),
-                success: function () {
-                    $('.loader').addClass('hidden');
-                    $('.btn-review-submit').removeClass('hidden');
-                    $('.rate-stars').rateYo('rating', 0);
-                    $('.review').val('');
-                    $('.rate-strain-dialog').dialog('close');
-                    window.location.reload();
+                if (rating === 0) {
+                    $('.error-message').text('Rating is required');
+                    return;
                 }
+
+                $('.loader').removeClass('hidden');
+                $('.btn-review-submit').addClass('hidden');
+
+                $.ajax({
+                    type: 'POST',
+                    url: '/api/v1/search/strain/{0}/rate'.format(that.ui.$strainId.val()),
+                    data: JSON.stringify({rating: rating, review: review}),
+                    success: function () {
+                        $('.loader').addClass('hidden');
+                        $('.btn-review-submit').removeClass('hidden');
+                        $('.rate-stars').rateYo('rating', 0);
+                        $('.review').val('');
+                        $('.rate-strain-dialog').dialog('close');
+                        window.location.reload();
+                    }
+                });
             });
         });
     },

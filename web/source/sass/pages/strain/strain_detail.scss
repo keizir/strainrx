@@ -569,17 +569,6 @@
             float: right;
             margin: 1.5em auto;
 
-
-            .popularity-wrapper {
-                display: flex;
-                flex-direction: column;
-                width: auto;
-                justify-content: center;
-                align-items: center;
-                margin-top: 10px;
-                line-height: 30px;
-            }
-
             .popularity-wrapper .title {
                 font-size: 1.5em;
             }
@@ -756,8 +745,8 @@
                     .display {
                         display: block;
                         height: auto;
-                        max-height: 2.1em;
-                        line-height: 1em;
+                        //max-height: 2.1em;
+                        line-height: 1.3em;
                         overflow: hidden;
 
                         .expander {
@@ -1095,6 +1084,14 @@
                 cursor: pointer;
             }
         }
+    }
+}
+
+
+.mentions-input-box {
+    .mentions > div > strong {
+        font-weight: normal;
+        background: none;
     }
 }
 

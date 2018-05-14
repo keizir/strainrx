@@ -5,6 +5,8 @@ from django.core.exceptions import ValidationError
 from django.db import models
 from django.utils import timezone
 from django.utils.encoding import python_2_unicode_compatible
+from django.utils.html import conditional_escape
+from markdown2 import Markdown
 from rest_framework import status
 
 from .managers import SystemPropertyQuerySet
@@ -23,6 +25,14 @@ class ReviewAbstract(models.Model):
 
     class Meta:
         abstract = True
+
+    def save(self, force_insert=False, force_update=False, using=None, update_fields=None):
+        if self.review and not self.pk:
+            markdown = Markdown()
+            # Replace redundant characters from pattern @[text](href:link) to correspond markdown2 format [text](link)
+            self.review = markdown.convert(conditional_escape(self.review.replace('@[', '[').replace('(href:', '(')))
+
+        super().save(force_insert, force_update, using, update_fields)
 
     def __str__(self):
         return '{} {}'.format(self.created_by, self.created_date)

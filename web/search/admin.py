@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 from django import forms
 from django.contrib import admin
+from django.db import models
 from django.contrib.admin import SimpleListFilter
 from tinymce.widgets import TinyMCE
 
@@ -104,6 +105,9 @@ class StrainReviewAdmin(admin.ModelAdmin):
     list_filter = ['rating', 'review_approved', 'created_date', 'last_modified_date']
     ordering = ['-created_date']
     actions = [approve_selected_ratings]
+    formfield_overrides = {
+        models.CharField: {'widget': forms.Textarea},
+    }
 
 
 def get_client_ip(request):

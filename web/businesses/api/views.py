@@ -23,6 +23,7 @@ from web.businesses.api.serializers import *
 from web.businesses.api.services import BusinessSignUpService, BusinessLocationService, get_open_closed, \
     get_location_rating, FeaturedBusinessLocationService
 from web.businesses.emails import EmailService
+from web.businesses.es_service import BusinessLocationESService
 from web.businesses.models import Business, BusinessLocation, BusinessLocationMenuItem, LocationReview, \
     UserFavoriteLocation, State, City, BusinessLocationMenuUpdateRequest, ReportOutOfStock
 from web.businesses.serializers import BusinessSerializer, BusinessLocationSerializer
@@ -483,3 +484,12 @@ class GrowerDispensaryPartnershipDetailView(APIView):
     def delete(self, request, business_id, business_location_id, partnership_id):
         GrowerDispensaryPartnership.objects.filter(id=partnership_id).delete()
         return Response({}, status=status.HTTP_200_OK)
+
+
+class LocationLookupView(APIView):
+    permission_classes = (permissions.IsAuthenticated,)
+
+    def get(self, request):
+        query = request.GET.get('q')
+        result = BusinessLocationESService().lookup_location(query)
+        return Response(result, status=status.HTTP_200_OK)

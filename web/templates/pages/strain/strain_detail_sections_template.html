@@ -155,22 +155,8 @@
         </div>
         <div class="strain-info-wrapper">
             <div class="popularity-wrapper">
-
-              <%= model.lighting %>
-
-              <% if (model.is_clean > 0) { %>
-                <img class="height-70" src="{% static 'images/search/clean.png' %}">
-              <% } %>
-              <%= model.nutrient_base %>
-
-              <% if (model.is_indoor > 0) { %>
-                <img class="height-70" src="{% static 'images/search/indoor.png' %}">
-              <% } %>
-              <%= model.growing_method %>
-
-              <% if (model.cup_winner > 0) { %>
-                <img class="height-70" src="{% static 'images/search/cup.png' %}">
-              <% } %>
+               <span class="title">Popularity</span>
+               <h1>A</h1>
 
             </div>
             <% if (model.strain_srx_score > 0) { %>
