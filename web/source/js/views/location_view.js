@@ -5,7 +5,8 @@ W.ns('W.views');
 W.views.LocationView = W.views.BaseLocationView.extend({
 
     ui: {
-        locationField: $('.your-location-value')
+        locationField: $('.your-location-value'),
+        $locationForm: $('#location-form')
     },
 
     init: function (options) {
@@ -19,6 +20,10 @@ W.views.LocationView = W.views.BaseLocationView.extend({
 
         this.preFillUserLocation();
         this.onChangeLocation();
+
+        this.ui.$locationForm.submit(function () {
+            return false;
+        })
     },
 
     updateTimezone: function updateTimezone(GoogleLocations, address, success) {

@@ -244,6 +244,15 @@ fieldset {
     content: '';
 }
 
+.favorite-icon {
+    background: url(../../images/heart.ico) no-repeat;
+    background-size: 1.7em 1.5em;
+    display: inline-block;
+    width: 1.7em;
+    height: 1.5em;
+    content: '';
+}
+
 .strain-lookup-field {
     position: relative;
 
@@ -455,5 +464,14 @@ fieldset {
 
     .container {
         max-width: $screen-xxl-min - 20;
+    }
+}
+
+@media (max-width: $screen-xs-max) {
+
+    .favorite-icon {
+        background-size: 1em 0.9em;
+        width: 1em;
+        height: 0.9em;
     }
 }

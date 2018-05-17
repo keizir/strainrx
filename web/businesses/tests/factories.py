@@ -1,6 +1,9 @@
+import random
+
 import factory.faker
 
-from web.businesses.models import Business, BusinessLocation
+from web.businesses.models import Business, BusinessLocation, BusinessLocationMenuItem
+from web.search.tests.factories import StrainFactory
 from web.users.tests.factories import BusinessUserFactory
 
 
@@ -43,3 +46,17 @@ class BusinessLocationFactory(factory.django.DjangoModelFactory):
     zip_code = '12365'
     lat = 0
     lng = 0
+
+
+class BusinessLocationMenuItemFactory(factory.django.DjangoModelFactory):
+
+    class Meta:
+        model = BusinessLocationMenuItem
+
+    business_location = factory.SubFactory(BusinessLocationFactory)
+    strain = factory.SubFactory(StrainFactory)
+    price_gram = factory.LazyAttribute(lambda x: random.randint(1, 50))
+    price_eighth = factory.LazyAttribute(lambda x: random.randint(1, 50))
+    price_quarter = factory.LazyAttribute(lambda x: random.randint(1, 50))
+    price_half = factory.LazyAttribute(lambda x: random.randint(1, 50))
+    in_stock = True

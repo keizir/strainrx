@@ -19,7 +19,7 @@ from django.utils.translation import ugettext_lazy as _
 from django_resized import ResizedImageField
 
 from web.analytics.managers import BusinessLocationMenuUpdateRequestQuerySet
-from web.businesses.querysets import MenuItemQuerySet
+from web.businesses.querysets import MenuItemQuerySet, ReportOutOfStockQuerySet, UserFavoriteLocationQuerySet
 from web.search.models import Strain
 from web.system.models import ReviewAbstract
 from web.users.models import User
@@ -27,7 +27,7 @@ from web.users.models import User
 
 @python_2_unicode_compatible
 class State(models.Model):
-    abbreviation = models.CharField(max_length=2, blank=False, null=False, db_index=True)
+    abbreviation = models.CharField(max_length=4, blank=False, null=False, db_index=True)
     full_name = models.CharField(max_length=100, blank=True, null=True)
     description = models.TextField(blank=True, null=True,
                                    help_text='This will be used on /dispensaries page as a state description')
@@ -401,36 +401,6 @@ def exist_by_slug_name(location_slug_name):
 
 @python_2_unicode_compatible
 class BusinessLocationMenuItem(models.Model):
-
-    INDOOR_SOIL, INDOOR_HYDRO, INDOOR_COCO, OUTDOOR, GREENHOUSE, AQUAPONICS = range(1, 7)
-
-    GROWING_METHOD_CHOICES = (
-        (INDOOR_SOIL, 'Indoor Soil'),
-        (INDOOR_HYDRO, 'Indoor Hydro'),
-        (INDOOR_COCO, 'Indoor Coco'),
-        (OUTDOOR, 'Outdoor'),
-        (GREENHOUSE, 'Greenhouse'),
-        (AQUAPONICS, 'Aquaponics'),
-    )
-
-    NATURAL, HID, LED, DOUBLE_ENDED, HALOGEN = range(1, 6)
-
-    LIGHTING_CHOICES = (
-        (NATURAL, 'Natural Light Schedule'),
-        (HID, 'HID'),
-        (LED, 'LED'),
-        (DOUBLE_ENDED, 'Double Ended'),
-        (HALOGEN, 'Halogen'),
-    )
-
-    SYNTHETIC, ORGANIC, BLENDED = range(1, 4)
-
-    NUTRIENT_BASE_CHOICES = (
-        (SYNTHETIC, 'Synthetic Nutrients'),
-        (ORGANIC, 'Organic Nutrients'),
-        (BLENDED, 'Blended Nutrients'),
-    )
-
     business_location = models.ForeignKey(BusinessLocation, on_delete=models.CASCADE)
     strain = models.ForeignKey(Strain, on_delete=models.CASCADE, related_name='menu_items')
 
@@ -441,21 +411,12 @@ class BusinessLocationMenuItem(models.Model):
 
     in_stock = models.BooleanField(default=True)
 
-    growing_method = models.IntegerField(choices=GROWING_METHOD_CHOICES, default=INDOOR_SOIL)
-    lighting = models.IntegerField(choices=LIGHTING_CHOICES, default=NATURAL)
-    nutrient_base = models.IntegerField(choices=NUTRIENT_BASE_CHOICES, default=SYNTHETIC)
-
     removed_date = models.DateTimeField(blank=True, null=True)
 
     objects = MenuItemQuerySet.as_manager()
 
-    @property
-    def is_indoor(self):
-        return self.growing_method in (self.INDOOR_SOIL, self.INDOOR_HYDRO, self.INDOOR_COCO)
-
-    @property
-    def is_clean(self):
-        return self.nutrient_base == self.ORGANIC
+    def __str__(self):
+        return '{}: {}'.format(self.business_location, self.strain)
 
 
 @python_2_unicode_compatible
@@ -494,6 +455,26 @@ class BusinessLocationMenuUpdateRequest(models.Model):
 
 
 @python_2_unicode_compatible
+class ReportOutOfStock(models.Model):
+    user = models.ForeignKey(User)
+    menu_item = models.ForeignKey(BusinessLocationMenuItem, related_name='reports')
+    count = models.SmallIntegerField(default=1)
+    start_timer = models.DateTimeField(default=datetime.now)
+    is_active = models.BooleanField(default=True, editable=False)
+
+    created = models.DateTimeField(auto_now_add=True)
+    modified = models.DateTimeField(auto_now=True)
+
+    objects = ReportOutOfStockQuerySet.as_manager()
+
+    class Meta:
+        ordering = ('menu_item', '-start_timer')
+
+    def __str__(self):
+        return '{} - {} - {}'.format(self.start_timer, self.user, self.menu_item)
+
+
+@python_2_unicode_compatible
 class GrowerDispensaryPartnership(models.Model):
     grower = models.ForeignKey(BusinessLocation, related_name='dispensary_partnerships', on_delete=models.CASCADE)
     dispensary = models.ForeignKey(BusinessLocation, related_name='grower_partnerships', on_delete=models.CASCADE)
@@ -514,6 +495,14 @@ class UserFavoriteLocation(models.Model):
     location = models.ForeignKey(BusinessLocation, on_delete=models.CASCADE)
     created_by = models.ForeignKey(User, on_delete=models.DO_NOTHING)
     created_date = models.DateTimeField(auto_now=True)
+
+    objects = UserFavoriteLocationQuerySet.as_manager()
+
+    class Meta:
+        ordering = ('-created_date',)
+
+    def __str__(self):
+        return '{}: {}'.format(self.location, self.created_by)
 
 
 @python_2_unicode_compatible

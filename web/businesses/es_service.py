@@ -195,3 +195,54 @@ class BusinessLocationESService(BaseElasticService):
         resp = self._request(method, url, data=None)
 
         return resp
+
+    def lookup_location(self, lookup_query):
+        method = self.METHODS.get('POST')
+        url = '{base}{index}/{type}/_search'.format(
+            base=self.BASE_ELASTIC_URL,
+            index=self.URLS.get('BUSINESS_LOCATION'),
+            type=es_mappings.TYPES.get('business_location')
+        )
+
+        query = {
+            "_source": ["business_location_id", "urls.dispensary", "location_name"],
+            "query": {
+                "bool": {
+                    "should": [
+                        {"match": {'dispensary': True}},
+                        {"match": {'delivery': True}},
+                    ],
+                    "must_not": {
+                        "exists": {"field": "removed_date"}
+                    },
+                    "minimum_should_match": '0<80%'
+                }
+            },
+            "suggest": {
+                "name_suggestion": {
+                    "text": lookup_query,
+                    "completion": {
+                        "field": "location_name_suggest",
+                        "size": 10,
+                        "fuzzy": {
+                            "fuzziness": 1
+                        }
+                    }
+                }
+            }
+        }
+
+        es_response = self._request(method, url, data=json.dumps(query))
+        suggests = es_response.get('suggest', {}).get('name_suggestion', [])
+        payloads = []
+
+        if len(suggests) > 0:
+            suggestion = suggests[0]
+            for option in suggestion.get('options'):
+                source = option.get('_source')
+                payloads.append({
+                    'id': source['urls'].get('dispensary'),
+                    'name': source['location_name'],
+                    'type': 'href'
+                })
+        return payloads

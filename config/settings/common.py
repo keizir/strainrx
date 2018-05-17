@@ -91,11 +91,11 @@ MIDDLEWARE_CLASSES = (
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
-    'web.middleware.middleware.AuthenticationMiddleware',
+    'web.common.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'web.middleware.middleware.TimezoneMiddleware',
-    'impersonate.middleware.ImpersonateMiddleware',
+    'web.common.middleware.TimezoneMiddleware',
+    'web.common.middleware.ImpersonateMiddleware',
 )
 
 CORS_ORIGIN_WHITELIST = (
@@ -257,7 +257,7 @@ WSGI_APPLICATION = 'config.wsgi.application'
 # )
 
 AUTHENTICATION_BACKENDS = (
-    'web.auth.email_auth.EmailBackend',
+    'web.common.email_auth.EmailBackend',
 )
 
 # Some really nice defaults
@@ -498,3 +498,7 @@ TEXT_ADDITIONAL_ATTRIBUTES = ('*', 'placeholder')
 # END CMS SETTINGS
 
 FB_PROFILE_URL = 'https://www.facebook.com/StrainRx/'
+
+PERIOD_OUT_OF_STOCK = env.int('PERIOD_OUT_OF_STOCK', 7)  # Period in days from first report as out of stock
+# Period in days when menu item marks as out of stock after second report
+PERIOD_BLOCK_MENU_ITEM_OUT_OF_STOCK = env.int('PERIOD_BLOCK_MENU_ITEM_OUT_OF_STOCK', 10)

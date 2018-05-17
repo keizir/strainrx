@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 from django import forms
 from django.contrib import admin
+from django.db import models
 from django.contrib.admin import SimpleListFilter
 from tinymce.widgets import TinyMCE
 
@@ -78,15 +79,6 @@ class StrainImageInline(admin.TabularInline):
 @admin.register(Strain)
 class StrainAdmin(admin.ModelAdmin):
     form = StrainAdminForm
-    readonly_fields = ('id',)
-    fieldsets = (
-        ('Info', {'fields': ('id', 'name', 'common_name', 'strain_slug')}),
-        ('Social', {'fields': ('meta_desc', 'meta_keywords', 'social_image')}),
-        ('Type', {'fields': ('variety', 'category')}),
-        ('Effects', {'fields': ('cup_winner', 'effects', 'benefits', 'side_effects', 'flavor',
-                                'terpenes', 'cannabinoids', 'quick_picks')}),
-        ('Additional', {'fields': ('about', 'origins', 'you_may_also_like_exclude')}),
-    )
     inlines = (StrainImageInline,)
     list_display = ('name', 'category', 'variety', 'removed_date')
     search_fields = ('name', 'category', 'variety')
@@ -113,6 +105,9 @@ class StrainReviewAdmin(admin.ModelAdmin):
     list_filter = ['rating', 'review_approved', 'created_date', 'last_modified_date']
     ordering = ['-created_date']
     actions = [approve_selected_ratings]
+    formfield_overrides = {
+        models.CharField: {'widget': forms.Textarea},
+    }
 
 
 def get_client_ip(request):

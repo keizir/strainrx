@@ -65,6 +65,7 @@ django-static-sitemaps==4.2.1
 django-tinymce==2.6.0
 django-cors-headers==2.0.1
 python-dateutil==2.6.0
+markdown2==2.3.5
 
 # cms dependencies
 django-cms==3.4.4

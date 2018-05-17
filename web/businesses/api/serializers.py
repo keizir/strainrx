@@ -1,6 +1,8 @@
 from rest_framework import serializers
 
-from web.businesses.models import phone_number_validator, LocationReview, GrowerDispensaryPartnership
+from web.businesses.models import phone_number_validator, LocationReview, GrowerDispensaryPartnership, \
+    BusinessLocationMenuItem, UserFavoriteLocation
+from web.search.api.services import StrainDetailsService
 
 
 class BusinessSignUpSerializer(serializers.Serializer):
@@ -21,7 +23,6 @@ class BusinessSignUpSerializer(serializers.Serializer):
     state = serializers.CharField()
     zip_code = serializers.CharField()
     phone = serializers.CharField()
-    ext = serializers.CharField(allow_blank=True, allow_null=True)
 
     lat = serializers.FloatField(allow_null=True)
     lng = serializers.FloatField(allow_null=True)
@@ -126,21 +127,45 @@ class BusinessLocationDetailSerializer(serializers.Serializer):
         pass
 
 
-class BusinessLocationMenuItemSerializer(serializers.Serializer):
-    strain_id = serializers.IntegerField()
+class BusinessLocationMenuItemListSerializer(serializers.ListSerializer):
 
-    price_gram = serializers.FloatField(allow_null=True, required=False)
-    price_eighth = serializers.FloatField(allow_null=True, required=False)
-    price_quarter = serializers.FloatField(allow_null=True, required=False)
-    price_half = serializers.FloatField(allow_null=True, required=False)
+    def to_representation(self, data):
+        ret = super().to_representation(data)
+        request = self.context['view'].request
 
-    in_stock = serializers.BooleanField(default=True)
+        if request.GET.get('ddp') and request.user.is_authenticated():
+            strain_ids = [mi.get('strain_id') for mi in ret]
 
-    def update(self, instance, validated_data):
-        pass
+            scores = StrainDetailsService().calculate_srx_scores(strain_ids, request.user)
+            if len(scores) > 0:
+                for mi in ret:
+                    mi['match_score'] = scores.get(mi.get('strain_id'))
+        return ret
 
-    def create(self, validated_data):
-        pass
+
+class BusinessLocationMenuItemSerializer(serializers.ModelSerializer):
+    strain_id = serializers.IntegerField(required=False)
+    url = serializers.ReadOnlyField(source='strain.get_absolute_url')
+    strain_name = serializers.ReadOnlyField(source='strain.name')
+    strain_variety = serializers.ReadOnlyField(source='strain.variety')
+    report_count = serializers.ReadOnlyField(required=False)
+
+    class Meta:
+        model = BusinessLocationMenuItem
+        list_serializer_class = BusinessLocationMenuItemListSerializer
+        fields = ('id', 'strain_id', 'strain_name', 'strain_variety', 'price_gram',
+                  'price_eighth', 'price_quarter', 'price_half', 'in_stock', 'url', 'report_count')
+
+    def __init__(self, instance=None, **kwargs):
+        if instance and kwargs.get('data') and kwargs['data'].get('menu_item'):
+            kwargs['data'] = kwargs['data']['menu_item']
+        super().__init__(instance, **kwargs)
+
+    def validate(self, attrs):
+        attrs = super().validate(attrs)
+        if not self.instance and not attrs.get('strain_id'):
+            raise serializers.ValidationError({'strain_id': 'This field is required.'})
+        return attrs
 
 
 class LocationReviewFormSerializer(serializers.ModelSerializer):
@@ -158,3 +183,24 @@ class GrowerDispensaryPartnershipSerializer(serializers.ModelSerializer):
     class Meta:
         model = GrowerDispensaryPartnership
         fields = ('id', 'dispensary', 'dispensary_id', 'grower', 'grower_id')
+
+
+class UserFavoriteLocationSerializer(serializers.ModelSerializer):
+    name = serializers.ReadOnlyField(source='location.location_name')
+    image = serializers.SerializerMethodField()
+    street1 = serializers.ReadOnlyField(source='location.street1')
+    city = serializers.ReadOnlyField(source='location.city')
+    state = serializers.ReadOnlyField(source='location.state')
+    zip_code = serializers.ReadOnlyField(source='location.zip_code')
+    phone = serializers.ReadOnlyField(source='location.phone')
+    email = serializers.ReadOnlyField(source='location.location_email')
+    url = serializers.ReadOnlyField(source='location.get_absolute_url')
+
+    class Meta:
+        model = UserFavoriteLocation
+        fields = ('id', 'name', 'image', 'street1', 'city', 'state', 'zip_code',
+                  'phone', 'email', 'created_date', 'url')
+
+    def get_image(self, instance):
+        if instance.location.image:
+            return instance.location.image.url

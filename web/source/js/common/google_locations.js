@@ -15,16 +15,20 @@ W.Common.GoogleLocations = W.views.BaseLocationView.extend({
     },
 
     initGoogleAutocomplete: function initGoogleAutocomplete(onPlaceChange, onEnterKey, onLocationRemove) {
-        var that = this;
+        var that = this,
+            onLocationRemoveFunction = function () {
+                if (that.$input.value && that.onLocationRemove) {
+                    that.onLocationRemove(that.$input);
+                }
+            };
 
         this.onPlaceChange = onPlaceChange;
         this.onEnterKey = onEnterKey;
         this.onLocationRemove = onLocationRemove;
 
-        google.maps.event.addDomListener(this.$input, 'keydown', function (e) {
-            if (e.keyCode === 13) {
-                e.preventDefault();
+         onLocationRemoveFunction();
 
+         google.maps.event.addListener(that.autocomplete, 'place_changed', function () {
                 var place = that.autocomplete.getPlace();
                 if (!place || !place.address_components) {
                     var firstResult, $pacs,
@@ -36,25 +40,20 @@ W.Common.GoogleLocations = W.views.BaseLocationView.extend({
                     } else {
                         firstResult = $('.pac-container .pac-item:first').text();
                     }
-
                     geoCoder.geocode({"address": firstResult}, function (results, status) {
                         if (that.onEnterKey) {
                             that.onEnterKey(results, status, that.$input);
                         }
                     });
+                } else {
+                    that.onPlaceChange(that.autocomplete, that.$input);
                 }
-            }
-        });
 
-        this.autocomplete.addListener('place_changed', function () {
-            that.onPlaceChange(that.autocomplete, that.$input);
+                onLocationRemoveFunction();
         });
 
         $(this.$input).on('change paste keyup', function (e) {
-            e.preventDefault();
-            if ($(this).val() && that.onLocationRemove) {
-                that.onLocationRemove(that.$input);
-            }
+            onLocationRemoveFunction();
         });
     },
 

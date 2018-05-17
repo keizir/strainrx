@@ -28,6 +28,7 @@
 
 {% block css %}
     {{ block.super }}
+    <link href="{% static 'css/vendor/jquery.mentionsInput.css' %}" rel="stylesheet">
     <link href="{% static 'css/pages/strain/strain_detail.css' %}" rel="stylesheet">
 {% endblock %}
 
@@ -56,6 +57,7 @@
 
 {% block javascript %}
     {{ block.super }}
+    <script src="{% static 'js/vendor/jquery.mentionsInput.js' %}" type='text/javascript'></script>
     <script src="{% static 'js/common/model.js' %}"></script>
     <script src="{% static 'js/pages/strain/strain_detail.js' %}"></script>
     <script src="{% static 'js/pages/strain/strain_detail_review_dialog.js' %}"></script>
@@ -118,7 +120,8 @@
             <div class="form-field-group review-textarea-group">
                 <div class="form-field">
                     <label for="review">Write a review <span>(optional)</span></label>
-                    <textarea class="rate-review" id="review"></textarea>
+                    <textarea class="rate-review mention" id="review" maxlength="400"
+                              placeholder="Type the @ symbol followed by the name of a business to include it in your review."></textarea>
                 </div>
             </div>
             <span class="error-message"></span>

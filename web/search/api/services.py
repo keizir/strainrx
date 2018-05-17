@@ -37,7 +37,13 @@ class StrainDetailsService:
             'strain_reviews': reviews,
             'strain_srx_score': strain_srx_score,
             'favorite': favorite,
-            'is_rated': is_rated
+            'is_rated': is_rated,
+            'lighting': strain.get_lighting_display(),
+            'is_clean': strain.is_clean,
+            'nutrient_base': strain.get_nutrient_base_display(),
+            'is_indoor': strain.is_indoor,
+            'growing_method': strain.get_growing_method_display(),
+            'cup_winner': strain.cup_winner
         }
 
     @staticmethod
@@ -97,7 +103,7 @@ class StrainDetailsService:
 
         if latest_user_search:
             data = SearchElasticService().query_strain_srx_score(latest_user_search.to_search_criteria(),
-                                                                 strain_ids=strain_ids)
+                                                                 strain_ids=strain_ids, result_filter='all')
             scores = {}
             strains = data.get('list')
 

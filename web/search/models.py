@@ -41,6 +41,34 @@ class Strain(models.Model):
         ('oil', 'Oil'),
         ('wax', 'Wax'),
     )
+    INDOOR_SOIL, INDOOR_HYDRO, INDOOR_COCO, OUTDOOR, GREENHOUSE, AQUAPONICS = range(1, 7)
+
+    GROWING_METHOD_CHOICES = (
+        (INDOOR_SOIL, 'Indoor Soil'),
+        (INDOOR_HYDRO, 'Indoor Hydro'),
+        (INDOOR_COCO, 'Indoor Coco'),
+        (OUTDOOR, 'Outdoor'),
+        (GREENHOUSE, 'Greenhouse'),
+        (AQUAPONICS, 'Aquaponics'),
+    )
+
+    NATURAL, HID, LED, DOUBLE_ENDED, HALOGEN = range(1, 6)
+
+    LIGHTING_CHOICES = (
+        (NATURAL, 'Natural Light Schedule'),
+        (HID, 'HID'),
+        (LED, 'LED'),
+        (DOUBLE_ENDED, 'Double Ended'),
+        (HALOGEN, 'Halogen'),
+    )
+
+    SYNTHETIC, ORGANIC, BLENDED = range(1, 4)
+
+    NUTRIENT_BASE_CHOICES = (
+        (SYNTHETIC, 'Synthetic Nutrients'),
+        (ORGANIC, 'Organic Nutrients'),
+        (BLENDED, 'Blended Nutrients'),
+    )
 
     def validate_image(self):
         file_size = self.file.size
@@ -109,6 +137,9 @@ class Strain(models.Model):
     meta_keywords = models.CharField(max_length=3072, blank=True)
 
     cup_winner = models.BooleanField(default=False)
+    growing_method = models.IntegerField(choices=GROWING_METHOD_CHOICES, default=INDOOR_SOIL, blank=True, null=True)
+    lighting = models.IntegerField(choices=LIGHTING_CHOICES, default=NATURAL, blank=True, null=True)
+    nutrient_base = models.IntegerField(choices=NUTRIENT_BASE_CHOICES, default=SYNTHETIC, blank=True, null=True)
 
     class Meta:
         unique_together = (("name", "category"),)
@@ -148,6 +179,14 @@ class Strain(models.Model):
 
     def __str__(self):
         return '{0} - {1}'.format(self.name, self.category)
+
+    @property
+    def is_indoor(self):
+        return self.growing_method in (self.INDOOR_SOIL, self.INDOOR_HYDRO, self.INDOOR_COCO)
+
+    @property
+    def is_clean(self):
+        return self.nutrient_base == self.ORGANIC
 
 
 def upload_image_to(instance, filename):

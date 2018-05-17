@@ -154,6 +154,8 @@ strain_mapping = {
         },
         "about": {"type": "string"},
         "origins": {"type": "string"},
+        "is_clean": {"type": "boolean"},
+        "is_indoor": {"type": "boolean"},
         "name_suggest": {
             "type": "completion",
             "analyzer": "name_analyzer",
@@ -175,9 +177,7 @@ strain_mapping = {
                 "price_eighth": {"type": "float"},
                 "price_quarter": {"type": "float"},
                 "price_half": {"type": "float"},
-                "in_stock": {"type": "boolean"},
-                "is_clean": {"type": "boolean"},
-                "is_indoor": {"type": "boolean"},
+                "in_stock": {"type": "boolean"}
             }
         }
     }

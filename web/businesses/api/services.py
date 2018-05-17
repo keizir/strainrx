@@ -93,7 +93,6 @@ class BusinessSignUpService:
             state=data.get('state'),
             zip_code=data.get('zip_code'),
             phone=data.get('phone'),
-            ext=data.get('ext'),
             lat=data.get('lat'),
             lng=data.get('lng'),
             location_raw=data.get('location_raw'),

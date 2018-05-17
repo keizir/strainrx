@@ -2,7 +2,8 @@ from rest_framework import serializers
 from rest_framework.exceptions import ValidationError
 
 from web.search.es_script_score import advanced_search_sort, advanced_search_nested_location_filter
-from web.search.models import Strain, StrainReview, StrainRating, StrainImage
+from web.search.models import Strain, StrainReview, StrainRating, StrainImage, UserFavoriteStrain
+from web.search.services import build_strain_rating
 
 
 class SearchCriteriaSerializer(serializers.Serializer):
@@ -86,7 +87,7 @@ class StrainSearchSerializer(serializers.ModelSerializer):
         NAME: lambda **kwargs: {'name.raw': {
             "order": 'asc',
             "nested_path": "locations",
-            "nested_filter": {"bool": {'must': advanced_search_nested_location_filter(**kwargs)}}
+            "nested_filter": {"bool": {'must': advanced_search_nested_location_filter()}}
         }},
         MAX_PRICE_GRAM: lambda **kwargs: {
             'locations.price_gram': advanced_search_sort(subquery={"order": 'desc'}, **kwargs)
@@ -201,3 +202,25 @@ class StrainSearchSerializer(serializers.ModelSerializer):
         data['cannabinoids'] = self.CANNABINOIDS
         data['terpenes'] = self.TERPENES
         return data
+
+
+class UserFavoriteStrainSerializer(serializers.ModelSerializer):
+    strain_id = serializers.ReadOnlyField(source='strain.id')
+    strain_name = serializers.ReadOnlyField(source='strain.name')
+    strain_slug = serializers.ReadOnlyField(source='strain.slug')
+    strain_variety = serializers.ReadOnlyField(source='strain.variety')
+    strain_image = serializers.SerializerMethodField()
+    strain_overall_rating = serializers.SerializerMethodField()
+
+    class Meta:
+        model = UserFavoriteStrain
+        fields = ('id', 'strain_id', 'strain_name', 'strain_slug', 'strain_variety',
+                  'strain_image', 'strain_overall_rating', 'created_date')
+
+    def get_strain_image(self, instance):
+        strain_images = getattr(instance, 'strain_images', None)
+        if strain_images:
+            return strain_images[0].image.url
+
+    def get_strain_overall_rating(self, instance):
+        return build_strain_rating(instance.strain)

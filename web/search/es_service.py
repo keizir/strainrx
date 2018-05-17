@@ -156,10 +156,11 @@ class SearchElasticService(BaseElasticService):
                     }
                 }
 
-        bool_menu_items = {"must_not": {"exists": {"field": "menu_items.removed_date"}}}
+        bool_menu_items = {"must_not": [{"exists": {"field": "menu_items.removed_date"}}],
+                           'must': [{"term": {"menu_items.in_stock": True}}]}
 
         if strain_id:
-            bool_menu_items["must"] = {"match": {"menu_items.strain_id": strain_id}}
+            bool_menu_items["must"].append({"match": {"menu_items.strain_id": strain_id}})
 
         must_query = [{"nested": {"path": "menu_items", "query": {"bool": bool_menu_items}}}]
 
@@ -176,9 +177,13 @@ class SearchElasticService(BaseElasticService):
             sort_query.append({order_field: {"order": order_dir}})
 
         if order_field.startswith('menu_items'):
-            order_field_bool = {"must_not": {"exists": {"field": "menu_items.removed_date"}}}
+            order_field_bool = {
+                "must_not": [{"exists": {"field": "menu_items.removed_date"}}],
+                'must': [{"term": {"menu_items.in_stock": True}}]
+            }
+
             if strain_id:
-                order_field_bool["must"] = {"match": {"menu_items.strain_id": strain_id}}
+                order_field_bool["must"].append({"match": {"menu_items.strain_id": strain_id}})
             sort_query.append({order_field: {"order": order_dir, "nested_path": "menu_items",
                                              "nested_filter": {"bool": order_field_bool}}})
 
@@ -701,19 +706,9 @@ class SearchElasticService(BaseElasticService):
         )
 
         must_query = []
-        nested_filter = []
         for field in ('is_clean', 'is_indoor'):
             if lookup_query.get(field):
-                nested_filter.append({"term": {'locations.{}'.format(field): lookup_query[field]}})
-
-        if nested_filter:
-            must_query.append({
-                "nested": {
-                    "path": "locations",
-                    "query": {
-                        "bool": {"must": nested_filter}
-                    }}
-            })
+                must_query.append({"term": {field: lookup_query[field]}})
 
         if lookup_query.get('variety'):
             must_query.append({"terms": {'variety': lookup_query['variety']}})
@@ -751,8 +746,7 @@ class SearchElasticService(BaseElasticService):
             sort_query.append(
                 StrainSearchSerializer.SORT_FIELDS[item](
                     lat=location and location.lat or 0, lon=location and location.lng or 0,
-                    proximity=proximity, is_clean=lookup_query.get('is_clean'),
-                    is_indoor=lookup_query.get('is_indoor'))
+                    proximity=proximity)
             )
 
         query = {

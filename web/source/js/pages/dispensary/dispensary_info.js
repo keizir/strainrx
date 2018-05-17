@@ -15,7 +15,8 @@ W.pages.dispensary.DispensaryInfo = Class.extend({
         location: '/api/v1/businesses/{0}/locations/{1}?ddp=true',
         menu: '/api/v1/businesses/{0}/locations/{1}/menu?ddp=true',
         review: '/api/v1/businesses/{0}/locations/{1}/reviews',
-        menuUpdateRequest: '/api/v1/businesses/{0}/locations/{1}/menu-update-requests'
+        menuUpdateRequest: '/api/v1/businesses/{0}/locations/{1}/menu-update-requests',
+        reportOutOfStock: '/api/v1/businesses/{0}/menu_item/{1}/report-out-of-stock'
     },
 
     ui: {
@@ -94,7 +95,7 @@ W.pages.dispensary.DispensaryInfo = Class.extend({
         W.common.Rating.readOnly($avgPrice, {
             rating: $avgPrice.text(), spacing: '-5px',
             starWidth: '20px',
-            starSvg: '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 288 512"><path d="M209.2 233.4l-108-31.6C88.7 198.2 80 186.5 80 173.5c0-16.3 13.2-29.5 29.5-29.5h66.3c12.2 0 24.2 3.7 34.2 10.5 6.1 4.1 14.3 3.1 19.5-2l34.8-34c7.1-6.9 6.1-18.4-1.8-24.5C238 74.8 207.4 64.1 176 64V16c0-8.8-7.2-16-16-16h-32c-8.8 0-16 7.2-16 16v48h-2.5C45.8 64-5.4 118.7.5 183.6c4.2 46.1 39.4 83.6 83.8 96.6l102.5 30c12.5 3.7 21.2 15.3 21.2 28.3 0 16.3-13.2 29.5-29.5 29.5h-66.3C100 368 88 364.3 78 357.5c-6.1-4.1-14.3-3.1-19.5 2l-34.8 34c-7.1 6.9-6.1 18.4 1.8 24.5 24.5 19.2 55.1 29.9 86.5 30v48c0 8.8 7.2 16 16 16h32c8.8 0 16-7.2 16-16v-48.2c46.6-.9 90.3-28.6 105.7-72.7 21.5-61.6-14.6-124.8-72.5-141.7z"/></svg>'
+            starSvg: '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 288 512"><path d="M209.2 233.4l-108-31.6C88.7 198.2 80 186.5 80 173.5c0-16.3 13.2-29.5 29.5-29.5h66.3c12.2 0 24.2 3.7 34.2 10.5 6.1 4.1 14.3 3.1 19.5-2l34.8-34c7.1-6.9 6.1-18.4-1.8-24.5C238 74.8 207.4 64.1 176 64V16c0-8.8-7.2-16-16-16h-32c-8.8 0-16 7.2-16 16v48h-2.5C45.8 64-5.4 118.7.5 183.6c4.2 46.1 39.4 83.6 83.8 96.6l102.5 30c12.5 3.7 21.2 15.3 21.2 28.3 0 16.3-13.2 29.5-29.5 29.5h-66.3C100 368 88 364.3 78 357.5c-6.1-4.1-14.3-3.1-19.5 2l-34.8 34c-7.1 6.9-6.1 18.4 1.8 24.5 24.5 19.2 55.1 29.9 86.5 30v48c0 8.8 7.2 16 16 16h32c8.8 0 16-7.2 16-16v-48.2c46.6-.9 90.3-28.6 105.7-72.7 21.5-61.6-14.6-124.8-72.5-141.7z"/></svg>' // dollar sign
         });
 
         this.clickRateLink();
@@ -221,15 +222,15 @@ W.pages.dispensary.DispensaryInfo = Class.extend({
             var $el = $(this);
             if ($el.hasClass('active')) {
                 that.favoriteLocation({like: false}, function () {
-                    $el.addClass('fa-heart-o');
-                    $el.removeClass('fa-heart');
+                    $el.addClass('favorite-icon');
+                    $el.removeClass('fa fa-heart fa-2x');
                     $el.removeClass('heart-active');
                     $el.removeClass('active');
                 });
             } else {
                 that.favoriteLocation({like: true}, function () {
-                    $el.removeClass('fa-heart-o');
-                    $el.addClass('fa-heart');
+                    $el.removeClass('favorite-icon');
+                    $el.addClass('fa fa-heart fa-2x');
                     $el.addClass('heart-active');
                     $el.addClass('active');
                 });
@@ -283,7 +284,7 @@ W.pages.dispensary.DispensaryInfo = Class.extend({
     clickPlaceOrderBtn: function clickPlaceOrderBtn() {
         var that = this,
             $btn = $('.btn-place-order');
-        if ($btn && $btn.length != 0) {
+        if ($btn && $btn.length !== 0) {
             $btn.on('click', function () {
                 that.showPhoneDialog();
             });
@@ -302,14 +303,14 @@ W.pages.dispensary.DispensaryInfo = Class.extend({
 
     clickGetDirectionsBtn: function clickGetDirectionsBtn() {
         var that = this, $btn = $('.btn-get-directions'), q;
-        if ($btn && $btn.length != 0) {
+        if ($btn && $btn.length !== 0) {
             $btn.on('click', function () {
                 q = W.common.Format.formatAddress(that.location);
                 
                 W.track({
                     event: "DISP_GETDIR",
                     entity_id: that.ui.$businessId.val()
-                })
+                });
 
                 if (q) {
                     setTimeout(function(){
@@ -325,7 +326,7 @@ W.pages.dispensary.DispensaryInfo = Class.extend({
         var that = this;
         $.when(this.getMenuItemsDeferred(), this.getReviewsDeferred())
             .done(function (menu_response, reviews_response) {
-                that.menu_items = menu_response && menu_response[0]['menu'];
+                that.menu_items = menu_response && menu_response[0];
                 that.reviews = reviews_response && reviews_response[0]['reviews'];
 
                 that.preFormatReviews();
@@ -347,7 +348,8 @@ W.pages.dispensary.DispensaryInfo = Class.extend({
                     formatScore: that.formatScore,
                     getStrainUrl: that.getStrainUrl,
                     reviews: reviewToShow,
-                    deals: []
+                    deals: [],
+                    is_authenticated: AUTHENTICATED
                 }));
 
                 that.postShowContent();
@@ -370,6 +372,8 @@ W.pages.dispensary.DispensaryInfo = Class.extend({
 
         $('.btn-request').on('click', this.onBtnRequestClick.bind(this));
         $('.menu-item-header .match').on('click', this.showMatchInfoDialog.bind(this));
+        $('.out-of-stock')
+            .on('click', this.showOutOfStockDialog.bind(this));
     },
 
     postUpdateRequest: function postUpdateRequest(url) {
@@ -455,7 +459,7 @@ W.pages.dispensary.DispensaryInfo = Class.extend({
     },
 
     showAllReviews: function showAllReviews() {
-        var that = this, reviews;
+        var that = this;
 
         $('.all-reviews-link-wrapper a').on('click', function (e) {
             e.preventDefault();
@@ -648,6 +652,30 @@ W.pages.dispensary.DispensaryInfo = Class.extend({
         });
     },
 
+    showOutOfStockDialog: function (event) {
+        if (!this.isAuthenticated) {
+            return false;
+        }
+        var $requestBtn = $(event.target).parents('.out-of-stock'),
+            url = this.urls.reportOutOfStock.format(this.ui.$businessId.val(), $requestBtn.attr('data-menu-id')),
+            that = this;
+
+        that.closeDialog();
+        that.dialog = Dialog('#out-of-stock-dialog', '#btn-report-out-of-stock', {title: 'Report out of stock'}, function () {
+            that.postUpdateRequest(url).always(function() {
+                $requestBtn.attr('disabled', true);
+                $requestBtn.attr('title', 'You have recently report dispensary');
+                that.showOutOfStockOkDialog();
+            });
+        }, '.cancel');
+    },
+
+    showOutOfStockOkDialog: function showMenuUpdateRequestOkDialog() {
+        this.closeDialog();
+        this.dialog = Dialog('#menu-update-request-ok-dialog', '#menu-update-request-ok-dialog #btn-close',
+            {title: 'Report out of stock'}, this.closeDialog.bind(this));
+    },
+
     showMenuUpdateRequestOkDialog: function showMenuUpdateRequestOkDialog() {
         this.closeDialog();
         this.dialog = MenuUpdateRequestOkDialog(this.closeDialog.bind(this));
@@ -666,7 +694,7 @@ W.pages.dispensary.DispensaryInfo = Class.extend({
 });
 
 
-var Dialog = function Dialog(dialogSelector, btnSelector, props, onConfirm) {
+var Dialog = function Dialog(dialogSelector, btnSelector, props, onConfirm, btnCancel) {
     var $dialog = $(dialogSelector),
         width = 'auto',
         defaultProps;
@@ -700,7 +728,13 @@ var Dialog = function Dialog(dialogSelector, btnSelector, props, onConfirm) {
 
     $(btnSelector).off('click');
     $(btnSelector).on('click', onConfirm);
-
+    if (btnCancel) {
+        $dialog.find(btnCancel)
+            .off('click')
+            .on('click', function () {
+                $dialog.dialog('close');
+            });
+    }
     $(':focus').blur();
     $dialog.focus();
 

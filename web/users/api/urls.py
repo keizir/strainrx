@@ -39,9 +39,14 @@ urlpatterns = [
         name='strain_reviews'
     ),
     url(
-        regex=r'^(?P<user_id>\d+)/favorites/(?P<favorite_type>\w+)/(?P<favorite_id>\d+)?$',
+        regex=r'^(?P<user_id>\d+)/favorites/(?P<favorite_type>(strain|delivery|dispensary))/$',
         view=UserFavoritesView.as_view(),
         name='strain_favorites'
+    ),
+    url(
+        regex=r'^(?P<user_id>\d+)/favorites/(?P<favorite_type>(strain|delivery|dispensary))/(?P<favorite_id>\d+)/$',
+        view=UserFavoritesDeleteView.as_view(),
+        name='strain_favorites_delete'
     ),
     url(
         regex=r'^(?P<user_id>\d+)/geo_locations$',

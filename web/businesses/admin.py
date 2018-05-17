@@ -1,8 +1,10 @@
 # -*- coding: utf-8 -*-
 from django import forms
+from django.conf import settings
 from django.contrib import admin
 from django.contrib.admin import SimpleListFilter
 from django.contrib.admin.widgets import AdminTimeWidget
+from django.utils import timezone
 from django.utils.safestring import mark_safe
 from tinymce.widgets import TinyMCE
 
@@ -10,7 +12,7 @@ from web.businesses.api.services import BusinessLocationService
 from web.businesses.es_service import BusinessLocationESService
 from web.businesses.models import Business, BusinessLocation, FeaturedBusinessLocation, \
     LocationReview, State, City, Payment, GrowerDispensaryPartnership, BusinessLocationMenuUpdate, \
-    BusinessLocationMenuItem, BusinessLocationMenuUpdateRequest
+    BusinessLocationMenuItem, BusinessLocationMenuUpdateRequest, ReportOutOfStock
 
 
 class PaymentInline(admin.TabularInline):
@@ -312,3 +314,26 @@ class GrowerDispensaryPartnershipAdmin(admin.ModelAdmin):
 
 
 admin.site.register(BusinessLocationMenuUpdateRequest)
+admin.site.register(BusinessLocationMenuItem)
+
+
+@admin.register(ReportOutOfStock)
+class ReportOutOfStockAdmin(admin.ModelAdmin):
+    list_display = ('business_location', 'strain', 'user', 'start_timer', 'countdown', 'count')
+    list_select_related = ('menu_item__business_location', 'menu_item__strain')
+    readonly_fields = ('count',)
+
+    def business_location(self, instance):
+        return instance.menu_item.business_location.location_name
+
+    def strain(self, instance):
+        return instance.menu_item.strain.name
+
+    def countdown(self, instance):
+        delta = timezone.now() - instance.start_timer
+        if not instance.is_active:
+            return
+        if instance.count >= 2 and delta.days < settings.PERIOD_BLOCK_MENU_ITEM_OUT_OF_STOCK:
+            return timezone.timedelta(days=settings.PERIOD_BLOCK_MENU_ITEM_OUT_OF_STOCK) - delta
+        elif instance.count == 1 and delta.days < settings.PERIOD_OUT_OF_STOCK:
+            return timezone.timedelta(days=settings.PERIOD_OUT_OF_STOCK) - delta

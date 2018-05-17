@@ -53,6 +53,24 @@
                 .strain-rating {
                     padding: 0;
                 }
+
+                .dispensary-type {
+                    font-size: 12px;
+                    line-height: 1.3em;
+
+                    .dispensary-detail {
+                        margin-top: 5px;
+                        line-height: 1.3em;
+                    }
+                }
+            }
+
+            .dispensary-detail {
+                font-size: 12px;
+
+                * {
+                    display: inline-block;
+                }
             }
         }
 

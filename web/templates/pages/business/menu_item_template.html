@@ -28,15 +28,12 @@
         <div class="menu-item half">--</div>
         <% } %>
 
-        <div class="menu-item in-stock">
+        <div class="menu-item in-stock" <% if (item.report_count >= 1) { %>title='This item is blocked by user "out of stock reports"'<% } %>>
             <label>
-                <% if (item.in_stock) { %>
-                <input type="checkbox" class="in-stock-value" id="<%= item.id %>"
-                       variety="<%= item.strain_variety %>" checked>
-                <% } else { %>
-                <input type="checkbox" class="in-stock-value" id="<%= item.id %>"
-                       variety="<%= item.strain_variety %>">
-                <% } %>
+              <input type="checkbox" class="in-stock-value" id="<%= item.id %>"
+                     variety="<%= item.strain_variety %>"
+                     <% if (item.in_stock) { %>checked<% } %>
+                     <% if (item.report_count >= 1) { %>disabled<% } %> >
                 <span class="check"></span>
             </label>
         </div>
