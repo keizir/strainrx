@@ -176,7 +176,7 @@ class DispensariesInfoView(TemplateView):
             active=True
         ).order_by('abbreviation').distinct('abbreviation')
 
-        user_location = self.request.user.geo_location
+        user_location = self.request.user.get_location()
         if user_location:
             location = {
                 'latitude': user_location.lat,
