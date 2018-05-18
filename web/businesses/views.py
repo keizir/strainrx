@@ -176,11 +176,15 @@ class DispensariesInfoView(TemplateView):
             active=True
         ).order_by('abbreviation').distinct('abbreviation')
 
-        location = {
-            'latitude': self.request.user.geo_location.lat,
-            'longitude': self.request.user.geo_location.lng,
-            'zip_code': self.request.user.geo_location.zipcode,
-        }
+        user_location = self.request.user.geo_location
+        if user_location:
+            location = {
+                'latitude': user_location.lat,
+                'longitude': user_location.lng,
+                'zip_code': user_location.zipcode
+            }
+        else:
+            location = {}
 
         context['default_image_url'] = BusinessLocation.DEFAULT_IMAGE_URL
         context['featured'] = FeaturedBusinessLocationService().get_list(**location)
