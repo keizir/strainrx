@@ -244,7 +244,8 @@ class FeaturedBusinessLocationService:
         latitude = kwargs.get('latitude')
 
         if longitude is not None and latitude is not None:
-            return qs.distance(Point(longitude, latitude)).order_by('distance')[:100]
+            return qs.distance(Point(longitude, latitude))\
+                     .order_by('distance')[:kwargs['result_len']]
 
         return []
 

@@ -176,15 +176,13 @@ class DispensariesInfoView(TemplateView):
             active=True
         ).order_by('abbreviation').distinct('abbreviation')
 
-        if self.request.user.is_authenticated():
-            try:
-                location = {
-                    'latitude': self.request.user.geo_location.lat,
-                    'longitude': self.request.user.geo_location.lng,
-                    'zip_code': self.request.user.geo_location.zipcode,
-                }
-            except ObjectDoesNotExist:
-                location = {}
+        user_location = self.request.user.get_location()
+        if user_location:
+            location = {
+                'latitude': user_location.lat,
+                'longitude': user_location.lng,
+                'zip_code': user_location.zipcode
+            }
         else:
             location = {}
 
