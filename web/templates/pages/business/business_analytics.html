@@ -19,58 +19,59 @@
     </div>
 
     <div id="overall-section">
-        <div class="header-label">Overall Statistics</div>
-        <table>
+        <div class="header-label margin-top-40">Overall Statistics</div>
+        <table class="margin-top-40">
+          <thead>
             <tr>
-                <td></td>
-                <td>Page Views</td>
-                <td>Calls</td>
-                <td>Directions</td>
-                <td>Update Requests</td>
-                <td>Out of Stock</td>
-                <td>Featured</td>
+                <th scope="col"></th>
+                <th scope="col">Page Views</th>
+                <th scope="col">Calls</th>
+                <th scope="col">Directions</th>
+                <th scope="col">Update Requests</th>
+                <th scope="col">Out of Stock</th>
+                <th scope="col">Featured</th>
             </tr>
+          </thead>
             <tr>
-                <td><b>Total</b></td>
-                <td><b>{{ total_page_views }}</b></td>
-                <td><b>{{ total_calls }}</b></td>
-                <td><b>{{ total_directions }}</b></td>                   
-                <td><b>{{ total_update_request }}</b></td>
-                <td><b>{{ total_out_of_stock }}</b></td>
-                <td><b>{{ total_featured }}</b></td>
+                <td data-label="Total"><b>Total</b></td>
+                <td data-label="Page Views"><b>{{ total_page_views }}</b></td>
+                <td data-label="Calls"><b>{{ total_calls }}</b></td>
+                <td data-label="Directions"><b>{{ total_directions }}</b></td>
+                <td data-label="Update Requests"><b>{{ total_update_request }}</b></td>
+                <td data-label="Out of Stock"><b>{{ total_out_of_stock }}</b></td>
+                <td data-label="Featured"><b>{{ total_featured }}</b></td>
             </tr>
         </table>
-
     </div>
 
     <div id="biz-lookup-section">
-        <div class="header-label">Business Look Ups</div>
+        <div class="header-label margin-top-40">Business Look Ups</div>
 
         <div id="biz-lookup-chart"></div>
         <div id="biz-lookup-action-chart"></div>
     </div>
 
     <div id="search-section">
-        <div class="header-label">Search</div>
+        <div class="header-label margin-top-40">Search Statistic</div>
 
         <div id="search-chart"></div>
     </div>
 
     <div id="featured-section">
-        <div class="header-label">Featured Listing</div>
+        <div class="header-label margin-top-40">Featured Listing</div>
 
         <div id="impression-chart"></div>
         <div id="view-chart"></div>
     </div>
 
     <div id="update-request-section">
-        <div class="header-label">Update Requests</div>
+        <div class="header-label margin-top-40">Update Requests</div>
 
         <div id="update-request-chart"></div>
     </div>
 
-    <div id="out-of-stock-section">
-        <div class="header-label">Out of Stock Reports</div>
+    <div id="out-of-stock-section" class="margin-bottom-40">
+        <div class="header-label margin-top-40">Out of Stock Reports</div>
 
         <div id="out-of-stock-chart"></div>
     </div>
