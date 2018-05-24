@@ -28,6 +28,7 @@
                 <td>Directions</td>
                 <td>Update Requests</td>
                 <td>Out of Stock</td>
+                <td>Featured</td>
             </tr>
             <tr>
                 <td><b>Total</b></td>
@@ -36,6 +37,7 @@
                 <td><b>{{ total_directions }}</b></td>                   
                 <td><b>{{ total_update_request }}</b></td>
                 <td><b>{{ total_out_of_stock }}</b></td>
+                <td><b>{{ total_featured }}</b></td>
             </tr>
         </table>
 
@@ -52,6 +54,13 @@
         <div class="header-label">Search</div>
 
         <div id="search-chart"></div>
+    </div>
+
+    <div id="featured-section">
+        <div class="header-label">Featured Listing</div>
+
+        <div id="impression-chart"></div>
+        <div id="view-chart"></div>
     </div>
 
     <div id="update-request-section">
@@ -83,5 +92,7 @@
         W.Analytics.drawSearchChart({{ chart_search|safe }});
         W.Analytics.drawUpdateRequestChart({{ chart_update_request_data|safe }});
         W.Analytics.drawOutOfStockChart({{ chart_out_of_stock|safe }});
+        W.Analytics.drawFeaturedImpression({{ chart_featured_impression|safe }});
+        W.Analytics.drawFeaturedView({{ chart_featured_view|safe }});
     </script>
 {% endblock %}

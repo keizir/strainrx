@@ -60,7 +60,14 @@ select {
             width: 50%;
             float: left;
         }
-    }    
+    }
+
+    #featured-section {
+        #impression-chart, #view-chart {
+            width: 50%;
+            float: left;
+        }
+    }
 }
 
 #reportrange {

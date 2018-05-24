@@ -404,6 +404,8 @@ class BusinessAnalyticsView(BusinessDetailMixin, FormView):
             .events(from_date, to_date, business_id, Event.DISP_GETDIR).count()
         context['total_update_request'] = update_request_data.count()
         context['total_out_of_stock'] = out_of_stock.count()
+        context['total_featured'] = Event.objects.events(from_date, to_date, business_id,
+                                                         [Event.FEATURED_CLICK, Event.FEATURED_DISP]).count()
 
         # lookup event data
         context['chart_lookup'] = Event.objects.events(from_date, to_date, business_id,
@@ -411,12 +413,19 @@ class BusinessAnalyticsView(BusinessDetailMixin, FormView):
         context['chart_lookup_action'] = Event.objects\
             .events(from_date, to_date, business_id, (Event.DISP_CALL, Event.DISP_GETDIR))\
             .group_by_date()
-
         # search event data
         context['chart_search'] = Event.objects.events(
             from_date, to_date, business_id, Event.VIEW_DISP_AVAIL_AT).group_by_date()
         context['chart_update_request_data'] = update_request_data.group_by_day()
         context['chart_out_of_stock'] = out_of_stock.group_by_day()
+        # impressions - total times a dispensary page was seen
+        context['chart_featured_impression'] = Event.objects\
+            .events(from_date, to_date, business_id, Event.FEATURED_DISP)\
+            .group_by_date()
+        # views - total times when user clicks on dispensary in featured list
+        context['chart_featured_view'] = Event.objects\
+            .events(from_date, to_date, business_id, Event.FEATURED_CLICK)\
+            .group_by_date()
 
         context['business'] = business
         context['tab'] = 'analytics'

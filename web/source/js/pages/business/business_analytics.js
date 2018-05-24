@@ -158,6 +158,27 @@ W.pages.business.Analytics = Class.extend({
             'Shows out of stock reports count',
             'Reports'
         )
+    },
+
+    drawFeaturedImpression: function(data){
+        this.drawCharts(
+            data,
+            'impression-chart',
+            'Featured Dispensary Page Impressions',
+            'Shows total times when Dispensary was seen in featured dispensaries list',
+            'Impressions'
+        )
+    },
+
+    drawFeaturedView: function(data){
+        this.drawCharts(
+            data,
+            'view-chart',
+            'Dispensary Page Views using featured dispensaries',
+            'Shows total times when Dispensary was viewed from featured dispensaries list',
+            'Views',
+            '#c42525'
+        )
     }
 
 });
