@@ -34,7 +34,7 @@ class SearchTestCase(APITestCase):
         review = StrainReview.objects.first()
         self.assertEqual(StrainReview.objects.count(), 1)
         self.assertEqual(review.rating, self.data['rating'])
-        self.assertEqual(review.review, self.data['review'])
+        self.assertEqual(review.review, '<p>{}</p>\n'.format(self.data['review']))
         self.assertFalse(review.review_approved)
 
     @patch.object(BaseElasticService, '_request', return_value=SUCCESS_RESPONSE)

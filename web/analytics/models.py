@@ -15,6 +15,8 @@ class Event(models.Model):
     VIEW_DISP_AVAIL_AT = 'VIEW_DISP_AVAIL_AT'
     VIEW_DISP = 'VIEW_DISP'
     DISP_GETDIR = 'DISP_GETDIR'
+    FEATURED_DISP = 'FEATURED_DISP'
+    FEATURED_CLICK = 'FEATURED_CLICK'
 
     event = models.CharField(max_length=24, blank=False, null=False, db_index=True)
     entity_id = models.IntegerField(blank=False, null=False)

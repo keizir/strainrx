@@ -1,15 +1,14 @@
 # -*- coding: utf-8 -*-
 from __future__ import absolute_import, unicode_literals
 
+import urllib.parse
 from datetime import datetime
 
-import pytz
 from django.contrib.staticfiles.templatetags.staticfiles import static
-from django.core.exceptions import ObjectDoesNotExist
 from django.core.urlresolvers import reverse
 from django.http import Http404
 from django.shortcuts import get_object_or_404
-from django.views.generic import RedirectView, TemplateView, FormView
+from django.views.generic import RedirectView, TemplateView, FormView, DetailView
 
 from web.analytics.models import Event
 from web.analytics.service import Analytics
@@ -118,26 +117,25 @@ class BusinessLocationsView(BusinessDetailMixin, TemplateView):
         return context
 
 
-class DispensaryInfoView(TemplateView):
+class DispensaryInfoView(DetailView):
     template_name = 'pages/dispensary/dispensary_info.html'
+    context_object_name = 'location'
+
+    def get_object(self, queryset=None):
+        return get_object_or_404(BusinessLocation, state_fk__abbreviation__iexact=self.kwargs.get('state').lower(),
+                                 city_fk__full_name_slug__iexact=self.kwargs.get('city_slug').lower(),
+                                 slug_name__iexact=self.kwargs.get('slug_name').lower(),
+                                 removed_date=None)
 
     def get_context_data(self, **kwargs):
-        try:
-            location = BusinessLocation.objects.get(state_fk__abbreviation__iexact=kwargs.get('state').lower(),
-                                                    city_fk__full_name_slug__iexact=kwargs.get('city_slug').lower(),
-                                                    slug_name__iexact=kwargs.get('slug_name').lower(),
-                                                    removed_date=None)
-        except BusinessLocation.DoesNotExist:
-            raise Http404
-
         context = super(DispensaryInfoView, self).get_context_data(**kwargs)
+        location = self.get_object()
         context['business_id'] = location.business.id
         context['business_name'] = location.business.name
         context['location_id'] = location.id
         context['strain_id'] = self.request.GET.get('strain_id')
         context['active_state'] = location.state_fk
         context['active_city'] = location.city_fk
-        context['location'] = location
         context['meta_desc'] = location.meta_desc
         context['social_image'] = location.social_image.url if location.social_image else "https://s3.amazonaws.com/srx-prod/static/images/logo_hr.b6cd6d08fabe.png"
 
@@ -151,11 +149,16 @@ class DispensaryInfoView(TemplateView):
         (context['can_request_menu_update'],
          context['can_request_menu_update_reason']) = can_request_menu_update, can_request_menu_update_reason
 
-        # if this came from Available At on SDP, change event name
-        event = Event.VIEW_DISP
-
+        # if this came from Available At on SDP
         if self.request.GET.get('available_at'):
             event = Event.VIEW_DISP_AVAIL_AT
+        # if user came from dispensaries featured list
+        elif 'HTTP_REFERER'in self.request.META and \
+                urllib.parse.urlparse(self.request.META['HTTP_REFERER']).path == \
+                reverse('businesses:dispensaries_list'):
+            event = Event.FEATURED_CLICK
+        else:
+            event = Event.VIEW_DISP
 
         Analytics.track(
             event=event,
@@ -186,8 +189,20 @@ class DispensariesInfoView(TemplateView):
         else:
             location = {}
 
+        featured = FeaturedBusinessLocationService().get_list(**location)
+
+        # Create events for analytics
+        Event.objects.bulk_create([
+            Analytics.track(
+                event=Event.FEATURED_DISP,
+                user=self.request.user,
+                entity_id=featured_location.business_id,
+                commit=False
+            ) for featured_location in featured]
+        )
+
         context['default_image_url'] = BusinessLocation.DEFAULT_IMAGE_URL
-        context['featured'] = FeaturedBusinessLocationService().get_list(**location)
+        context['featured'] = featured
         context['location_update'] = True
 
         context['location_type'] = 'dispensary'

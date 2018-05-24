@@ -1,25 +1,26 @@
 from web.analytics.models import Event
-from web.users.models import User
 
-class Analytics():
+
+class Analytics(object):
     @staticmethod
-    def track(event=None, user=None, entity_id=None, properties={}):
+    def track(event=None, user=None, entity_id=None, properties=None, commit=True):
         ev = Event()
 
         ev.event = event
 
-        if user is not None and user.id != None:
+        if user is not None and user.id is not None:
             ev.user = user
 
         if entity_id is not None:
             ev.entity_id = entity_id
 
-        if properties is not None:
-            ev.properties = properties
+        ev.properties = properties or {}
 
         print("TRACKING....", ev)
         print(event)
         print(properties)
 
-        ev.save()
+        if commit:
+            ev.save()
 
+        return ev
