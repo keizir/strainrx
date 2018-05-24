@@ -17,7 +17,7 @@ from web.businesses.api.services import FeaturedBusinessLocationService
 from web.businesses.emails import EmailService
 from web.businesses.forms import ClaimForm, AnalyticsFilterForm
 from web.businesses.mixins import BusinessDetailMixin
-from web.businesses.models import Business, BusinessLocation
+from web.businesses.models import Business, BusinessLocation, ReportOutOfStock
 from web.businesses.models import State, City, BusinessLocationMenuUpdateRequest
 from web.businesses.utils import NamePaginator
 from web.search.services import get_strains_and_images_for_location
@@ -370,28 +370,38 @@ class BusinessAnalyticsView(BusinessDetailMixin, FormView):
         form = context['form']
         from_date = form.cleaned_data['from_date']
         to_date = form.cleaned_data['to_date']
-
-        # lookup event data
-        business_lookups_data = Event.objects.events(
-            from_date, to_date, self.kwargs.get('business_id'), Event.DISP_LOOKUP)
-
-        # search event data
-        search_data = Event.objects.events(
-            from_date, to_date, self.kwargs.get('business_id'), Event.VIEW_DISP_AVAIL_AT)
+        business_id = self.kwargs.get('business_id')
 
         # update request data
-        update_request_data = BusinessLocationMenuUpdateRequest.objects.events(
-            from_date, to_date, self.kwargs.get('business_id'))
+        update_request_data = BusinessLocationMenuUpdateRequest.objects\
+            .events(from_date, to_date, business_id)
 
-        context["total_page_views"] = Event.objects.filter(
-            entity_id=kwargs.get('business_id'),
-            event__in=[Event.VIEW_DISP, Event.VIEW_DISP_AVAIL_AT, Event.DISP_LOOKUP]).count()
-        context["total_calls"] = Event.objects.filter(entity_id=kwargs.get('business_id'), event=Event.DISP_CALL).count()
-        context["total_directions"] = Event.objects.filter(
-            entity_id=kwargs.get('business_id'), event=Event.DISP_GETDIR).count()
-        context['chart_biz_lookup'] = business_lookups_data
-        context['chart_search'] = search_data
-        context['chart_update_request_data'] = update_request_data
+        # out of stock
+        out_of_stock = ReportOutOfStock.objects\
+            .events(from_date, to_date, business_id)
+
+        context["total_page_views"] = Event.objects\
+            .events(from_date, to_date, business_id, [Event.VIEW_DISP, Event.VIEW_DISP_AVAIL_AT, Event.DISP_LOOKUP]) \
+            .count()
+        context["total_calls"] = Event.objects\
+            .events(from_date, to_date, business_id, Event.DISP_CALL).count()
+        context["total_directions"] = Event.objects\
+            .events(from_date, to_date, business_id, Event.DISP_GETDIR).count()
+        context['total_update_request'] = update_request_data.count()
+        context['total_out_of_stock'] = out_of_stock.count()
+
+        # lookup event data
+        context['chart_lookup'] = Event.objects.events(from_date, to_date, business_id,
+                                                       Event.DISP_LOOKUP).group_by_date()
+        context['chart_lookup_action'] = Event.objects\
+            .events(from_date, to_date, business_id, (Event.DISP_CALL, Event.DISP_GETDIR))\
+            .group_by_date()
+
+        # search event data
+        context['chart_search'] = Event.objects.events(
+            from_date, to_date, business_id, Event.VIEW_DISP_AVAIL_AT).group_by_date()
+        context['chart_update_request_data'] = update_request_data.group_by_day()
+        context['chart_out_of_stock'] = out_of_stock.group_by_day()
 
         context['business'] = business
         context['tab'] = 'analytics'

@@ -3,7 +3,7 @@ from django.db import models
 from django.utils import timezone
 from django.utils.encoding import python_2_unicode_compatible
 
-from web.analytics.managers import EventQuerySet
+from web.analytics.querysets import EventQuerySet
 from web.users.models import User
 from web.users.models import User
 

@@ -27,23 +27,26 @@
                 <td>Calls</td>
                 <td>Directions</td>
                 <td>Update Requests</td>
+                <td>Out of Stock</td>
             </tr>
             <tr>
                 <td><b>Total</b></td>
                 <td><b>{{ total_page_views }}</b></td>
                 <td><b>{{ total_calls }}</b></td>
                 <td><b>{{ total_directions }}</b></td>                   
-                <td><b>{{ chart_update_request_data|length }}</b></td>
+                <td><b>{{ total_update_request }}</b></td>
+                <td><b>{{ total_out_of_stock }}</b></td>
             </tr>
         </table>
 
     </div>
 
     <div id="biz-lookup-section">
-        <div class="header-label">Business Lookups</div>
+        <div class="header-label">Business Look Ups</div>
 
         <div id="biz-lookup-chart"></div>
-    </div>    
+        <div id="biz-lookup-action-chart"></div>
+    </div>
 
     <div id="search-section">
         <div class="header-label">Search</div>
@@ -55,6 +58,12 @@
         <div class="header-label">Update Requests</div>
 
         <div id="update-request-chart"></div>
+    </div>
+
+    <div id="out-of-stock-section">
+        <div class="header-label">Out of Stock Reports</div>
+
+        <div id="out-of-stock-chart"></div>
     </div>
 
 </div>
@@ -69,8 +78,10 @@
     <script src="{% static 'js/pages/business/business_analytics.js' %}"></script>
     <script type="text/javascript">
         W.Analytics = new W.pages.business.Analytics();
-        W.Analytics.drawBizLookupChart({{ chart_biz_lookup|safe }});
+        W.Analytics.drawBizLookupChart({{ chart_lookup|safe }});
+        W.Analytics.drawLookupActionChart({{ chart_lookup_action|safe }});
         W.Analytics.drawSearchChart({{ chart_search|safe }});
         W.Analytics.drawUpdateRequestChart({{ chart_update_request_data|safe }});
+        W.Analytics.drawOutOfStockChart({{ chart_out_of_stock|safe }});
     </script>
 {% endblock %}

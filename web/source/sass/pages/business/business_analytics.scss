@@ -55,6 +55,11 @@ select {
 
     #biz-lookup-section {
         margin: 1em 0 1em 0;
+
+        #biz-lookup-chart, #biz-lookup-action-chart {
+            width: 50%;
+            float: left;
+        }
     }    
 }
 

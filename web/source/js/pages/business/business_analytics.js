@@ -70,96 +70,13 @@ W.pages.business.Analytics = Class.extend({
         return range
     },
 
-    drawBizLookupChart: function(data){
-        Highcharts.chart('biz-lookup-chart', {
+    drawCharts: function(data, selector, title, subtitle, yAxisTitle, color) {
+      Highcharts.chart(selector, {
             title: {
-                text: 'Dispensary Page Views using Business Lookup'
+                text: title
             },
             subtitle: {
-                text: 'Shows how many people viewed your dispensary page from our dispensary lookup tool'
-            },
-            xAxis: {
-                type:"category",
-                labels: {
-                   rotation: 20
-                } 
-            },
-            yAxis: {
-                title: {
-                    text: 'Views'
-                },
-                tickInterval: 1                
-            },
-            series: [{
-                name: 'Views',
-                data: this.parseData(data || [])
-            }],
-            responsive: {
-                rules: [{
-                    condition: {
-                        maxWidth: 500
-                    },
-                    chartOptions: {
-                        legend: {
-                            layout: 'horizontal',
-                            align: 'center',
-                            verticalAlign: 'bottom'
-                        }
-                    }
-                }]
-            }
-
-        });        
-    },
-    drawSearchChart: function(data){
-        Highcharts.chart('search-chart', {
-            title: {
-                text: 'Dispensary Page Views using Available At'
-            },
-            subtitle: {
-                text: 'Shows how many people viewed your dispensary page from using our Available At feature on Strain pages'
-            },
-            xAxis: {
-                type:"category",
-                labels: {
-                   rotation: 20,
-                }
-            },
-            yAxis: {
-                title: {
-                    text: 'Views'
-                },
-                tickInterval: 1
-            },
-            series: [{
-                name: 'Views',
-                data: this.parseData(data || [])
-            }],
-            responsive: {
-                rules: [{
-                    condition: {
-                        maxWidth: 500
-                    },
-                    chartOptions: {
-                        legend: {
-                            layout: 'horizontal',
-                            align: 'center',
-                            verticalAlign: 'bottom'
-                        }
-                    }
-                }]
-            }
-
-        });        
-    },
-
-    drawUpdateRequestChart: function(data){
-        Highcharts.chart('update-request-chart', {
-            title: {
-                text: 'Update Requests'
-            },
-            subtitle: {
-                text: 'Shows update requests count'
+                text: subtitle
             },
             xAxis: {
                 type:"category",
@@ -169,13 +86,14 @@ W.pages.business.Analytics = Class.extend({
             },
             yAxis: {
                 title: {
-                    text: 'Views'
+                    text: yAxisTitle || 'Views'
                 },
                 tickInterval: 1
             },
             series: [{
-                name: 'Views',
-                data: this.parseData(data || [])
+                name: yAxisTitle || 'Views',
+                data: this.parseData(data || []),
+                color: color || '#2f7ed8'
             }],
             responsive: {
                 rules: [{
@@ -193,6 +111,53 @@ W.pages.business.Analytics = Class.extend({
             }
 
         });
+    },
+
+    drawBizLookupChart: function(data){
+        this.drawCharts(
+            data,
+            'biz-lookup-chart',
+            'Dispensary Page Views using Business Lookup',
+            'Shows how many people viewed your dispensary page from our dispensary lookup tool'
+        );
+    },
+    drawLookupActionChart: function(data){
+        this.drawCharts(
+            data,
+            'biz-lookup-action-chart',
+            'Dispensary Page Action using Business Lookup',
+            'Shows how many people make calls or get directions from your dispensary page',
+            'Actions',
+            '#c42525'
+        );
+    },
+    drawSearchChart: function(data){
+        this.drawCharts(
+            data,
+            'search-chart',
+            'Dispensary Page Views using Available At',
+            'Shows how many people viewed your dispensary page from using our Available At feature on Strain pages'
+        )
+    },
+
+    drawUpdateRequestChart: function(data){
+        this.drawCharts(
+            data,
+            'update-request-chart',
+            'Update Requests',
+            'Shows update requests count',
+            'Requests'
+        )
+    },
+
+    drawOutOfStockChart: function(data){
+        this.drawCharts(
+            data,
+            'out-of-stock-chart',
+            'Out of Stock Reports',
+            'Shows out of stock reports count',
+            'Reports'
+        )
     }
 
 });
