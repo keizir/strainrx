@@ -53,16 +53,28 @@ select {
         }
     }
 
-    #biz-lookup-section {
-        margin: 1em 0 1em 0;
-    }    
+    #featured-section, #biz-lookup-section {
+        display: flex;
+        flex-flow: row wrap;
+        text-align: left;
+
+        .header-label {
+            flex: 1 100%;
+            line-height: 2em;
+        }
+        #impression-chart, #view-chart,
+        #biz-lookup-chart, #biz-lookup-action-chart{
+            width: 50%;
+        }
+    }
 }
 
 #reportrange {
     background: #fff;
     cursor: pointer;
     padding: 7px 15px;
-    border: 1px solid #ccc;
+    border-bottom: 1px solid #ccc;
+    margin-top: -1em;
 }
 
 .daterangepicker.dropdown-menu {
@@ -148,6 +160,56 @@ select {
             }
 
         }
+
+        #featured-section, #biz-lookup-section {
+            #impression-chart, #view-chart,
+            #biz-lookup-chart, #biz-lookup-action-chart{
+                width: 100%;
+            }
+        }
+
+      #overall-section table {
+        border: none;
+
+        thead {
+          border: none;
+          clip: rect(0 0 0 0);
+          height: 1px;
+          margin: -1px;
+          overflow: hidden;
+          padding: 0;
+          position: absolute;
+          width: 1px;
+        }
+
+        tr {
+          display: block;
+        }
+
+        td {
+          border-right: none;
+          border-left: none;
+          border-top: none;
+
+          display: block;
+          font-size: .8em;
+          text-align: right;
+        }
+
+        td::before {
+          content: attr(data-label);
+          float: left;
+          font-weight: bold;
+        }
+
+        td:last-child {
+          border-bottom: 0;
+        }
+
+        td:first-child b {
+          visibility: hidden;
+        }
+      }
     }
 }
 

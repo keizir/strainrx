@@ -11,14 +11,14 @@ from django.db.models.query import Q
 from django.http import Http404
 from django.utils import timezone
 from django.utils.crypto import get_random_string
-
 from rest_framework import permissions, mixins
 from rest_framework import status
 from rest_framework.generics import CreateAPIView, get_object_or_404, ListCreateAPIView
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
-from web.businesses.api.permissions import BusinessAccountOwner, BusinessLocationAccountOwnerOrStaff, AllowAnyGetOperation
+from web.businesses.api.permissions import BusinessAccountOwner, BusinessLocationAccountOwnerOrStaff, \
+    AllowAnyGetOperation
 from web.businesses.api.serializers import *
 from web.businesses.api.services import BusinessSignUpService, BusinessLocationService, get_open_closed, \
     get_location_rating, FeaturedBusinessLocationService
@@ -29,9 +29,7 @@ from web.businesses.models import Business, BusinessLocation, BusinessLocationMe
 from web.businesses.serializers import BusinessSerializer, BusinessLocationSerializer
 from web.businesses.utils import NamePaginator
 from web.search.api.services import StrainDetailsService
-from web.search.models import Strain
 from web.users.api.serializers import UserSerializer
-
 
 logger = logging.getLogger(__name__)
 
@@ -346,6 +344,7 @@ class BusinessLocationReportOutOfStockView(CreateAPIView):
             menu_item=menu,
             count=report_count + 1
         )
+        # Send event to business location
         EmailService().send_report_out_of_stock(menu, is_second=report_count == 1)
         return Response(status=status.HTTP_201_CREATED)
 
