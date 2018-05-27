@@ -137,9 +137,9 @@ class Strain(models.Model):
     meta_keywords = models.CharField(max_length=3072, blank=True)
 
     cup_winner = models.BooleanField(default=False)
-    growing_method = models.IntegerField(choices=GROWING_METHOD_CHOICES, default=INDOOR_SOIL, blank=True, null=True)
-    lighting = models.IntegerField(choices=LIGHTING_CHOICES, default=NATURAL, blank=True, null=True)
-    nutrient_base = models.IntegerField(choices=NUTRIENT_BASE_CHOICES, default=SYNTHETIC, blank=True, null=True)
+    growing_method = models.IntegerField(choices=GROWING_METHOD_CHOICES, blank=True, null=True)
+    lighting = models.IntegerField(choices=LIGHTING_CHOICES, blank=True, null=True)
+    nutrient_base = models.IntegerField(choices=NUTRIENT_BASE_CHOICES, blank=True, null=True)
 
     class Meta:
         unique_together = (("name", "category"),)

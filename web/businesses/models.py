@@ -18,8 +18,8 @@ from django.utils.encoding import python_2_unicode_compatible
 from django.utils.translation import ugettext_lazy as _
 from django_resized import ResizedImageField
 
-from web.analytics.managers import BusinessLocationMenuUpdateRequestQuerySet
-from web.businesses.querysets import MenuItemQuerySet, ReportOutOfStockQuerySet, UserFavoriteLocationQuerySet
+from web.businesses.querysets import MenuItemQuerySet, ReportOutOfStockQuerySet, UserFavoriteLocationQuerySet, \
+    BusinessLocationMenuUpdateRequestQuerySet
 from web.search.models import Strain
 from web.system.models import ReviewAbstract
 from web.users.models import User

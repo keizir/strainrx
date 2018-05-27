@@ -13,7 +13,8 @@ class EventFactory(factory.django.DjangoModelFactory):
         model = Event
 
     event = factory.LazyAttribute(lambda x: random.choice([
-        Event.DISP_LOOKUP, Event.DISP_CALL, Event.VIEW_DISP_AVAIL_AT, Event.VIEW_DISP, Event.DISP_GETDIR]))
+        Event.DISP_LOOKUP, Event.DISP_CALL, Event.VIEW_DISP_AVAIL_AT, Event.VIEW_DISP, Event.DISP_GETDIR,
+        Event.FEATURED_DISP, Event.FEATURED_CLICK]))
     entity_id = factory.LazyAttribute(lambda x: BusinessFactory().pk)
     user = factory.SubFactory(BusinessUserFactory)
     event_date = factory.LazyAttribute(lambda x: timezone.now() - timezone.timedelta(days=random.randint(0, 365)))
