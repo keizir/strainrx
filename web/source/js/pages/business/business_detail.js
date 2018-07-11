@@ -12,7 +12,8 @@ W.pages.business.BusinessDetail = Class.extend({
         $hoursFieldGroup: $('.hours-field-group'),
         $dispensary: $('#dispensary'),
         $delivery: $('#delivery'),
-        $grow_house: $('#grow_house')
+        $grow_house: $('#grow_house'),
+        $businessTypes: $('#dispensary, #delivery, #grow_house')
     },
 
     init: function init() {
@@ -38,6 +39,8 @@ W.pages.business.BusinessDetail = Class.extend({
         this.clickUpdateBusinessInfo();
         this.changeLocation();
         this.changeBusinessType();
+        // trigger checking if Operation Hours should be displayed
+        this.ui.$businessTypes.trigger('change');
 
         var $input = $('input'),
             $selectTimezone = $('select[name="timezone"]'),
@@ -121,7 +124,7 @@ W.pages.business.BusinessDetail = Class.extend({
     changeBusinessType: function () {
         var that = this;
 
-        $('#dispensary, #delivery, #grow_house').change(function () {
+        that.ui.$businessTypes.change(function () {
             if (that.ui.$grow_house && !that.ui.$delivery.is(':checked') && !that.ui.$dispensary.is(':checked')) {
                 that.ui.$hoursFieldGroup.addClass('hidden');
             } else {
