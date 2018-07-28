@@ -224,15 +224,15 @@ for (e in params.userEffects.entrySet()) {
 
     if (userE == strainE) {
         if (strainE == 3) {
-            effectBonus = 0.3f;
+            effectBonus = 0.15f;
         }
 
         if (strainE == 4) {
-            effectBonus = 0.5f;
+            effectBonus = 0.25f;
         }
 
         if (strainE == 5) {
-            effectBonus = 1.0f;
+            effectBonus = 0.5f;
         }
     }
 
@@ -277,15 +277,15 @@ for (b in params.userBenefits.entrySet()) {
 
     if (userB == strainB) {
         if (strainB == 3) {
-            benefitBonus = 0.3f;
+            benefitBonus = 0.15f;
         }
 
         if (strainB == 4) {
-            benefitBonus = 0.5f;
+            benefitBonus = 0.25f;
         }
 
         if (strainB == 5) {
-            benefitBonus = 1.0f;
+            benefitBonus = 0.5f;
         }
     }
 
@@ -310,7 +310,7 @@ def tp = effectPoints + negEffectPoints + benefitPoints;
 return ((float) tp / (float) psa) * 100;​
 """
 
-SRX_RECOMMENDATION_SCORE = "def psa=params.effectSum+params.benefitSum;def benefitPoints=0.0f;def effectPoints=0.0f;def negEffectPoints=0.0f;for(e in params.userEffects.entrySet()){def strainE=(float)params._source['effects'][e.getKey()];def userE=(float)e.getValue();def effectBonus=0.0f;def dist=strainE-userE;def npe=0.0f;if(dist>0){npe=-0.01f;}else{if(dist==0){npe=0.0f;}if(dist<0&&dist>=-1){npe=-0.14f*userE;}if(dist<-1&&dist>=-2){npe=-0.33f*userE;}if(dist<-2&&dist>=-3){npe=-0.51f*userE;}if(dist<-3&&dist>=-4){npe=-0.8f*userE;}if(dist<-4&&dist>=-5){npe=-1.0f*userE;}}if(userE==strainE){if(strainE==3){effectBonus=0.3f;}if(strainE==4){effectBonus=0.5f;}if(strainE==5){effectBonus=1.0f;}}effectPoints+=effectBonus+userE+npe;}for(b in params.userBenefits.entrySet()){def strainB=(float)params._source['benefits'][b.getKey()];def userB=(float)b.getValue();def benefitBonus=0.0f;def dist=strainB-userB;def npb=0.0f;if(dist>0){npb=-0.01f;}else{if(dist==0){npb=0.0f;}if(dist<0&&dist>=-1){npb=-0.14f*userB;}if(dist<-1&&dist>=-2){npb=-0.33f*userB;}if(dist<-2&&dist>=-3){npb=-0.51f*userB;}if(dist<-3&&dist>=-4){npb=-0.8f*userB;}if(dist<-4&&dist>=-5){npb=-1.0f*userB;}}if(userB==strainB){if(strainB==3){benefitBonus=0.3f;}if(strainB==4){benefitBonus=0.5f;}if(strainB==5){benefitBonus=1.0f;}}benefitPoints+=benefitBonus+userB+npb;}for(ne in params.userNegEffects.entrySet()){def strainNE=(float)params._source['side_effects'][ne.getKey()];def userNE=(float)ne.getValue();def negPoints=0.0f;if(userNE==0||strainNE==0){negPoints=0.0f;}else{negPoints=(float)((Math.pow(userNE-strainNE,2))*-1)/(float)psa;}negEffectPoints+=negPoints;}def tp=effectPoints+negEffectPoints+benefitPoints;return((float)tp/(float)psa)*100;"
+SRX_RECOMMENDATION_SCORE = "def psa=params.effectSum+params.benefitSum;def benefitPoints=0.0f;def effectPoints=0.0f;def negEffectPoints=0.0f;for(e in params.userEffects.entrySet()){def strainE=(float)params._source['effects'][e.getKey()];def userE=(float)e.getValue();def effectBonus=0.0f;def dist=strainE-userE;def npe=0.0f;if(dist>0){npe=-0.01f;}else{if(dist==0){npe=0.0f;}if(dist<0&&dist>=-1){npe=-0.14f*userE;}if(dist<-1&&dist>=-2){npe=-0.33f*userE;}if(dist<-2&&dist>=-3){npe=-0.51f*userE;}if(dist<-3&&dist>=-4){npe=-0.8f*userE;}if(dist<-4&&dist>=-5){npe=-1.0f*userE;}}if(userE==strainE){if(strainE==3){effectBonus=0.15f;}if(strainE==4){effectBonus=0.25f;}if(strainE==5){effectBonus=0.5f;}}effectPoints+=effectBonus+userE+npe;}for(b in params.userBenefits.entrySet()){def strainB=(float)params._source['benefits'][b.getKey()];def userB=(float)b.getValue();def benefitBonus=0.0f;def dist=strainB-userB;def npb=0.0f;if(dist>0){npb=-0.01f;}else{if(dist==0){npb=0.0f;}if(dist<0&&dist>=-1){npb=-0.14f*userB;}if(dist<-1&&dist>=-2){npb=-0.33f*userB;}if(dist<-2&&dist>=-3){npb=-0.51f*userB;}if(dist<-3&&dist>=-4){npb=-0.8f*userB;}if(dist<-4&&dist>=-5){npb=-1.0f*userB;}}if(userB==strainB){if(strainB==3){benefitBonus=0.15f;}if(strainB==4){benefitBonus=0.25f;}if(strainB==5){benefitBonus=0.5f;}}benefitPoints+=benefitBonus+userB+npb;}for(ne in params.userNegEffects.entrySet()){def strainNE=(float)params._source['side_effects'][ne.getKey()];def userNE=(float)ne.getValue();def negPoints=0.0f;if(userNE==0||strainNE==0){negPoints=0.0f;}else{negPoints=(float)((Math.pow(userNE-strainNE,2))*-1)/(float)psa;}negEffectPoints+=negPoints;}def tp=effectPoints+negEffectPoints+benefitPoints;return((float)tp/(float)psa)*100;"
 
 CHECK_DELIVERY_RADIUS = """
     def delivery_radius = doc['delivery_radius'].value ?: 0; 
