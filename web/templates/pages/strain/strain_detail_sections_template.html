@@ -5,7 +5,7 @@
         <div class="detail-header">
             <% if (model.from_search) { %>
             <div class="back-to-search-wrapper">
-                <a href="{% url 'search:strain_results' %}" class="search-link">
+                <a href="{% url 'search:strain_results' %}#<%= model.strain.strain_slug %>" class="search-link">
                     <i class="fa fa-arrow-left" aria-hidden="true"></i>back to search results</a>
             </div>
             <% } else if (model.from_advanced_search) { %>

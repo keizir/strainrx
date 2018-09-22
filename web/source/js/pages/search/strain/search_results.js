@@ -152,6 +152,10 @@ W.pages.StrainSearchResultsPage = Class.extend({
                         that.clickLocations($('.deliveries-{0}'.format(position)), position, false);
                     }
 
+                    if (window.location.hash && $(window.location.hash).length) {
+                      $(window.location.hash).get(0).scrollIntoView(true);
+                    }
+
                     that.ui.$loadingIcon.removeClass('rotating');
                     that.scrollPage += 1;
                 }
