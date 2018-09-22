@@ -11,7 +11,7 @@ class BusinessLocationSitemap(Sitemap):
     protocol = 'https'
 
     def items(self):
-        return BusinessLocation.objects.filter(removed_date=None)
+        return BusinessLocation.objects.filter(removed_date=None).select_related('state_fk', 'city_fk')
 
     def lastmod(self, obj):
         return datetime.now()
