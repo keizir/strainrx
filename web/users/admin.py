@@ -13,7 +13,7 @@ from import_export.formats import base_formats
 from rangefilter.filter import DateRangeFilter
 
 from web.users.resources import UserResource
-from .models import User, UserLocation
+from .models import User, UserLocation, UserSetting
 
 
 class MyUserChangeForm(UserChangeForm):
@@ -69,6 +69,12 @@ class MyUserAdmin(UserAdminImpersonateMixin, AuthUserAdmin, ExportActionModelAdm
             reverse('users:impersonate-start', args=[obj.id]),
             target,
         )
+
+
+@admin.register(UserSetting)
+class UserSettingAdmin(admin.ModelAdmin):
+    search_fields = ('user__email',)
+    list_display = ('user', 'last_modified_date', 'setting_name')
 
 
 admin.site.register(UserLocation)

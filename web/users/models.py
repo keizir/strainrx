@@ -133,10 +133,13 @@ class UserSetting(models.Model):
     class Meta:
         unique_together = (("user", "setting_name"),)
 
-    user = models.ForeignKey(User, on_delete=models.DO_NOTHING)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
     setting_name = models.CharField(max_length=100)
     setting_value = JSONField(max_length=4096, default={})
     last_modified_date = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return '{0} - {1}'.format(self.user, self.last_modified_date)
 
     @staticmethod
     def create_for_user(user, user_settings):
@@ -150,7 +153,7 @@ class UserSetting(models.Model):
 
 @python_2_unicode_compatible
 class UserLocation(models.Model):
-    user = models.OneToOneField(User, on_delete=models.DO_NOTHING, related_name='geo_location')
+    user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='geo_location')
 
     street1 = models.CharField(_('Street'), blank=True, null=True, max_length=100)
     city = models.CharField(_('City'), blank=True, null=True, max_length=100)
