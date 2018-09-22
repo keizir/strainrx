@@ -55,6 +55,7 @@ THIRD_PARTY_APPS = (
     'corsheaders',
     'rangefilter',
     'impersonate',
+    'django_json_widget',
 )
 
 # Apps specific for this project go here.

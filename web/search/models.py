@@ -107,7 +107,8 @@ class Strain(models.Model):
                                 "pine": 0, "pineapple": 0, "plum": 0, "pungent": 0, "rose": 0,
                                 "sage": 0, "skunk": 0, "spicy-herbal": 0, "strawberry": 0, "sweet": 0,
                                 "tar": 0, "tea": 0, "tobacco": 0, "tree-fruit": 0, "tropical": 0,
-                                "vanilla": 0, "violet": 0, "woody": 0})
+                                "vanilla": 0, "violet": 0, "woody": 0, "banana": 0, "cherry": 0, "chocolate": 0,
+                                "sour": 0})
     # if new terpene is added we need to update StrainSearchSerializer
     terpenes = JSONField(default={"humulene": 0, "pinene": 0, "linalool": 0, "caryophyllene": 0, "myrcene": 0,
                                   "terpinolene": 0, "ocimene": 0, "limonene": 0, "camphene": 0, "terpineol": 0,
