@@ -2,11 +2,11 @@
 from django import forms
 from django.contrib import admin
 from django.contrib.admin import SimpleListFilter
-from django_json_widget.widgets import JSONEditorWidget
 from tinymce.widgets import TinyMCE
 
 from web.businesses.es_service import BusinessLocationESService
 from web.businesses.models import BusinessLocationMenuItem
+from web.common.widgets import JSONEditorWidget
 from web.search.models import *
 
 
