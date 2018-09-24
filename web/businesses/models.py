@@ -128,7 +128,7 @@ class Business(models.Model):
     users = models.ManyToManyField(User, related_name='businesses')
 
     # User who created the Business. Also included in [users] field
-    created_by = models.ForeignKey(User, on_delete=models.DO_NOTHING, related_name='business_created_by')
+    created_by = models.ForeignKey(User, on_delete=models.CASCADE, related_name='business_created_by')
     created_date = models.DateTimeField(auto_now_add=True)
     trial_period_start_date = models.DateTimeField(blank=True, null=True)
     is_active = models.BooleanField(default=True)
@@ -493,7 +493,7 @@ class FeaturedBusinessLocation(models.Model):
 @python_2_unicode_compatible
 class UserFavoriteLocation(models.Model):
     location = models.ForeignKey(BusinessLocation, on_delete=models.CASCADE)
-    created_by = models.ForeignKey(User, on_delete=models.DO_NOTHING)
+    created_by = models.ForeignKey(User, on_delete=models.CASCADE)
     created_date = models.DateTimeField(auto_now=True)
 
     objects = UserFavoriteLocationQuerySet.as_manager()
@@ -513,6 +513,6 @@ class LocationReview(ReviewAbstract):
 @python_2_unicode_compatible
 class Payment(models.Model):
     amount = models.PositiveIntegerField()
-    business = models.ForeignKey(Business, on_delete=models.DO_NOTHING, related_name='payments')
+    business = models.ForeignKey(Business, on_delete=models.CASCADE, related_name='payments')
     date = models.DateField()
     description = models.TextField(default='', blank=True)

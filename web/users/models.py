@@ -123,7 +123,7 @@ class CustomAnonymousUser(AnonymousUser):
 
 @python_2_unicode_compatible
 class PwResetLink(models.Model):
-    user = models.OneToOneField(User, on_delete=models.DO_NOTHING, primary_key=True)
+    user = models.OneToOneField(User, on_delete=models.CASCADE, primary_key=True)
     token = models.CharField(max_length=100)
     last_modified_date = models.DateTimeField(auto_now=True)
 

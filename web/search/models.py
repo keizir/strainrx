@@ -274,7 +274,7 @@ class Flavor(models.Model):
 
 @python_2_unicode_compatible
 class UserSearch(models.Model):
-    user = models.ForeignKey(User, on_delete=models.DO_NOTHING)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
 
     varieties = JSONField(max_length=250)
     effects = JSONField(max_length=1000)
