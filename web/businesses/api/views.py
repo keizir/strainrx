@@ -77,7 +77,7 @@ class BusinessImageView(LoginRequiredMixin, APIView):
     permission_classes = (BusinessAccountOwner,)
 
     def post(self, request, business_id):
-        business = Business.objects.get(pk=business_id)
+        business = get_object_or_404(Business, pk=business_id)
 
         if business.image and business.image.url:
             conn = S3Connection(settings.AWS_ACCESS_KEY_ID, settings.AWS_SECRET_ACCESS_KEY)
@@ -98,7 +98,7 @@ class BusinessLocationImageView(LoginRequiredMixin, APIView):
     permission_classes = (BusinessLocationAccountOwnerOrStaff,)
 
     def post(self, request, business_id, business_location_id):
-        location = BusinessLocation.objects.get(pk=business_location_id)
+        location = get_object_or_404(BusinessLocation, pk=business_location_id)
 
         if location.image and location.image.url:
             conn = S3Connection(settings.AWS_ACCESS_KEY_ID, settings.AWS_SECRET_ACCESS_KEY)
@@ -128,7 +128,7 @@ class BusinessLocationReviewView(APIView):
         return Response({'reviews': reviews}, status=status.HTTP_200_OK)
 
     def post(self, request, business_id, business_location_id):
-        location = BusinessLocation.objects.get(pk=business_location_id)
+        location = get_object_or_404(BusinessLocation, pk=business_location_id)
         serializer = LocationReviewFormSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
 
@@ -149,7 +149,7 @@ class BusinessLocationFavoriteView(LoginRequiredMixin, APIView):
 
         if add_to_favorites and len(favorite_location) == 0:
             favorite_location = UserFavoriteLocation(
-                location=BusinessLocation.objects.get(id=business_location_id),
+                location=get_object_or_404(BusinessLocation, id=business_location_id),
                 created_by=request.user
             )
             favorite_location.save()
@@ -169,6 +169,9 @@ class ResendConfirmationEmailView(LoginRequiredMixin, APIView):
 class BusinessLocationView(APIView):
     permission_classes = (BusinessLocationAccountOwnerOrStaff,)
 
+    def get_object(self, business_location_id):
+        return get_object_or_404(BusinessLocation, pk=business_location_id)
+
     def get(self, request, business_id, business_location_id):
         if business_location_id == '0':
             locations_raw = BusinessLocation.objects.filter(business__id=business_id, removed_date=None).order_by('id')
@@ -180,7 +183,7 @@ class BusinessLocationView(APIView):
 
             return Response({'locations': locations}, status=status.HTTP_200_OK)
 
-        location = BusinessLocation.objects.get(pk=business_location_id)
+        location = self.get_object(business_location_id)
         serializer = BusinessLocationSerializer(location)
         d = {'location': serializer.data}
 
@@ -202,7 +205,7 @@ class BusinessLocationView(APIView):
         return Response(d, status=status.HTTP_200_OK)
 
     def post(self, request, business_id, business_location_id):
-        existing_location = BusinessLocation.objects.get(pk=business_location_id)
+        existing_location = self.get_object(business_location_id)
         serializer = BusinessLocationDetailSerializer(existing_location, data=request.data, partial=True)
         serializer.is_valid(raise_exception=True)
         serializer.update(existing_location, serializer.validated_data)
@@ -295,8 +298,8 @@ class BusinessLocationMenuUpdateRequestDetailView(APIView):
 
     def post(self, request, business_id, business_location_id):
         try:
-            business_location = BusinessLocation.objects.get(id=business_location_id,
-                                                             business_id=business_id)
+            business_location = get_object_or_404(BusinessLocation, id=business_location_id,
+                                                  business_id=business_id)
         except BusinessLocation.DoesNotExist:
             return Response(status=status.HTTP_404_NOT_FOUND)
 

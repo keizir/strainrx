@@ -145,6 +145,11 @@ W.common.EligibleDialog = function (options) {
             return;
         }
 
+        if (/bot|google|baidu|bing|msn|duckduckbot|teoma|slurp|yandex|crawler|spider|robot|crawling/i
+          .test(navigator.userAgent)) {
+            return;
+        }
+
         var $dialog = $('#eligible-dialog'),
             $backdrop = $('.dialog-backdrop'),
             $checkbox = $dialog.find('input'),

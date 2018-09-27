@@ -1,12 +1,12 @@
 # -*- coding: utf-8 -*-
 from django import forms
 from django.contrib import admin
-from django.db import models
 from django.contrib.admin import SimpleListFilter
 from tinymce.widgets import TinyMCE
 
 from web.businesses.es_service import BusinessLocationESService
 from web.businesses.models import BusinessLocationMenuItem
+from web.common.widgets import JSONEditorWidget
 from web.search.models import *
 
 
@@ -49,6 +49,14 @@ class StrainAdminForm(forms.ModelForm):
     about = forms.CharField(widget=TinyMCE(attrs={'cols': 80, 'rows': 20}), required=False)
     common_name = forms.CharField(required=False)
 
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        if not self.instance.pk:
+            # Update default flavors with new from Flavor model
+            flavor = {item: 0 for item in Flavor.objects.values_list('data_name', flat=True)}
+            flavor.update(self.fields['flavor'].initial)
+            self.initial['flavor'] = flavor
+
 
 class StrainRemovedFilter(SimpleListFilter):
     title = 'Removed'
@@ -85,6 +93,9 @@ class StrainAdmin(admin.ModelAdmin):
     list_filter = (StrainRemovedFilter, 'category', 'variety', 'name')
     ordering = ('name',)
     actions = (activate_selected_strains, deactivate_selected_strains)
+    formfield_overrides = {
+        JSONField: {'widget': JSONEditorWidget},
+    }
 
 
 def approve_selected_ratings(modeladmin, request, queryset):
