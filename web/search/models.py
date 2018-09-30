@@ -70,6 +70,25 @@ class Strain(models.Model):
         (BLENDED, 'Blended Nutrients'),
     )
 
+    GROWING_METHODS = {
+        SYNTHETIC: 'synthetic',
+        ORGANIC: 'organic',
+        BLENDED: 'blended',
+
+        NATURAL: 'natural',
+        HID: 'hid',
+        LED: 'led',
+        DOUBLE_ENDED: 'double_ended',
+        HALOGEN: 'halogen',
+
+        INDOOR_SOIL: 'indoor_soil',
+        INDOOR_HYDRO: 'indoor_hydro',
+        INDOOR_COCO: 'indoor_coco',
+        OUTDOOR: 'outdoor',
+        GREENHOUSE: 'greenhouse',
+        AQUAPONICS: 'aquaponics'
+    }
+
     def validate_image(self):
         file_size = self.file.size
         megabyte_limit = settings.MAX_IMAGE_SIZE

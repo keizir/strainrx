@@ -59,7 +59,8 @@
               <% } %>
 
               <% if (model.is_clean) { %>
-              <i class="clean"><img src="{% static 'images/search/clean.png' %}"></i>
+              <i class="clean" title="<%= model.nutrient_base %>"><img
+                      src="{% static 'images/search/clean.png' %}"></i>
               <% } %>
             </div>
             <% } %>
@@ -114,7 +115,7 @@
             <% } %>
 
             <% if (model.is_clean) { %>
-            <i class="clean"><img src="{% static 'images/search/clean.png' %}"></i>
+            <i class="clean" title="<%= model.nutrient_base %>"><img src="{% static 'images/search/clean.png' %}"></i>
             <% } %>
           </div>
           <% } %>
@@ -351,6 +352,39 @@
                 <span class="title">Flavors</span>
             </span>
       <span class="flavors-region"></span>
+    </div>
+  </div>
+
+  <div class="detail-section">
+    <div class="strain-growing-section">
+      <span class="section-header">
+          <span class="title">Growing Methods</span>
+      </span>
+      <div class="growing-region">
+        <% if (model.growing_method) { %>
+        <div class="growing-wrapper">
+          <div class="text-left flavor-name">Soil</div>
+          <div class="flavor"><img src="{% static 'images/grow/' %}<%= model.growing_method_slug %>.svg"></div>
+          <span class="flavor-name"><%= model.growing_method %></span>
+        </div>
+        <% } %>
+
+        <% if (model.lighting) { %>
+        <div class="growing-wrapper">
+          <div class="text-left flavor-name">Lighting</div>
+          <div class="flavor"><img src="{% static 'images/grow/' %}<%= model.lighting_slug %>.svg"></div>
+          <span class="flavor-name"><%= model.lighting %></span>
+        </div>
+        <% } %>
+
+        <% if (model.nutrient_base) { %>
+        <div class="growing-wrapper">
+          <div class="text-left flavor-name">Nutrients</div>
+          <div class="flavor"><img src="{% static 'images/grow/' %}<%= model.nutrient_base_slug %>.svg"></div>
+          <span class="flavor-name"><%= model.nutrient_base %></span>
+        </div>
+        <% } %>
+      </div>
     </div>
   </div>
 </script>

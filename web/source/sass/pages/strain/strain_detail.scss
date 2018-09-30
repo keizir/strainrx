@@ -256,7 +256,7 @@
 
       .strain-name {
         color: $green-atlantis;
-        display: inline-block;
+        display: inline;
         font-size: 2em;
         margin: 0;
         font-weight: normal;
@@ -280,7 +280,7 @@
           margin-right: 1.5em;
 
           img {
-            height: 4.5em;
+            height: 5em;
           }
         }
 
@@ -304,7 +304,7 @@
           display: inline-block;
           max-width: calc(56% - 1em);
           min-width: calc(25% - 1em);
-          margin-right: 1em;
+          margin-right: 3em;
         }
 
         .recommendation-btn {
@@ -853,27 +853,53 @@
     vertical-align: top;
   }
 
-  .strain-flavors-section .flavor-wrapper {
-    display: inline-block;
-    width: 32%;
-    height: 10em;
-    border: 1px solid $grey-light;
-    margin-right: -1px;
-    text-align: center;
+  .strain-flavors-section, .strain-growing-section {
+    .flavor-wrapper, .growing-wrapper {
+      display: inline-block;
+      width: 32%;
+      height: 10em;
+      border: 1px solid $grey-light;
+      margin-right: -1px;
+      text-align: center;
+    }
+
+    .flavor-wrapper .flavor {
+      margin-top: 2em;
+    }
+
+    .flavor-wrapper .flavor-name {
+      margin-top: 1em;
+      display: block;
+    }
+
+    .flavor-wrapper img {
+      height: 4.5em;
+      width: 4.5em;
+    }
   }
 
-  .strain-flavors-section .flavor-wrapper .flavor {
-    margin-top: 2em;
-  }
+  .strain-growing-section {
+    .text-left {
+      text-align: left;
+    }
+    .growing-wrapper {
+      height: 8em;
+      min-width: 10em;
+      width: auto;
+      padding: 0.5em;
 
-  .strain-flavors-section .flavor-wrapper .flavor-name {
-    margin-top: 1em;
-    display: block;
-  }
+      img {
+        width: 3.7em;
+      }
 
-  .strain-flavors-section .flavor-wrapper img {
-    height: 4.5em;
-    width: 4.5em;
+      .flavor-name {
+        font-size: 0.8em;
+      }
+
+      .flavor {
+        padding: 0.5em;
+      }
+    }
   }
 }
 
@@ -1304,6 +1330,10 @@
         right: 6%;
         font-size: 3em;
       }
+
+      .strain-data-detail .strain-data-left {
+        max-width: none;
+      }
     }
 
     .second-row .photo-controls {
@@ -1437,6 +1467,12 @@
       display: block;
       width: 100%;
       margin-top: 2em;
+    }
+
+    .strain-growing-section {
+      .growing-wrapper {
+        min-width: 29%;
+      }
     }
   }
 
