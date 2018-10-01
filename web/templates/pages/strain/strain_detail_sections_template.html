@@ -355,6 +355,7 @@
     </div>
   </div>
 
+  <% if (model.growing_method || model.lighting || model.nutrient_base) { %>
   <div class="detail-section">
     <div class="strain-growing-section">
       <span class="section-header">
@@ -387,4 +388,5 @@
       </div>
     </div>
   </div>
+  <% } %>
 </script>
