@@ -487,38 +487,10 @@ W.pages.strain.StrainDetailPage = Class.extend({
     },
 
     populateSideEffects: function populateSideEffects() {
-        var that = this,
-            review = this.model.get('user_strain_review'),
+        var review = this.model.get('user_strain_review'),
             userCriteria = this.model.get('user_criteria') || {},
             effects = review ? review.side_effects : this.model.get('strain').side_effects,
-            toDisplay = this.buildEffectsToDisplay(effects, userCriteria.side_effects, this.sideEffectNames),
-            missingStrainSideEffects = [];
-
-        if (userCriteria && userCriteria.side_effects && userCriteria.side_effects !== 'skipped') {
-            $.each(userCriteria.side_effects, function (i, e) {
-                var existsInStrain = _.filter(toDisplay, function (strainEffect) {
-                    return strainEffect.initialName === e.name;
-                });
-
-                if (existsInStrain.length === 0) {
-                    missingStrainSideEffects.push(e);
-                }
-            });
-        }
-
-        if (missingStrainSideEffects.length > 0) {
-            $.each(missingStrainSideEffects, function (i, e) {
-                if (e.value > 0) {
-                    toDisplay.push({
-                        name: that.sideEffectNames[e.name],
-                        value: e.value,
-                        userCriteriaValue: e.value,
-                        initialName: e.name,
-                        missing: true
-                    });
-                }
-            })
-        }
+            toDisplay = this.buildEffectsToDisplay(effects, userCriteria.side_effects, this.sideEffectNames);
 
         $('.side-effects-region').append(this.sideEffectHtml(toDisplay));
     },
@@ -588,7 +560,7 @@ W.pages.strain.StrainDetailPage = Class.extend({
                 var strainValue = (effect.value >= 6 ? effect.value - 5 : effect.value) * 0.2 * 100;
                 fillHtml = effect.userCriteriaValue > (effect.value >= 6 ? effect.value - 5 : effect.value) ?
                     fillHtml.format('user-fill', 'width: {0}%; left: {1}%'.format(fillWidth - strainValue, strainValue), tearHtml) :
-                    fillHtml.format('user-fill', 'width: {0}%'.format(fillWidth), tearHtml);
+                    fillHtml.format('user-fill user-fill-background', 'width: {0}%'.format(fillWidth), tearHtml);
             }
         } else {
             fillHtml = '';
