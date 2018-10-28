@@ -419,15 +419,20 @@
         width: 100%;
     }
 
+    .search-form-wrapper .form-actions {
+        margin: 0;
+    }
+
     .search-form-wrapper .strain-check {
-        display: block;
-        width: 14em;
+        width: 8em;
         margin: 1em auto;
+        position: relative;
     }
 
     .search-form-wrapper .strain-check .type-info {
-        bottom: 4.7em;
-        left: 5.4em;
+        bottom: 5.6em;
+        left: 3.4em;
+        font-size: 0.8em;
     }
 
     .search-form-wrapper .strain-check .type-info .fa-2x {

@@ -30,10 +30,6 @@ W.pages.search.strain.SearchWizardStep3 = W.pages.search.strain.SearchWizardStep
         }
     },
 
-    renderHTML: function renderHTML() {
-        return this.$template(this.renderData);
-    },
-
     submit: function submit() {
         var that = this;
         this.showDialogOrProceed(this.selectedBenefits, function () {

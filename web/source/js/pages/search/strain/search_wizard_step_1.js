@@ -70,6 +70,7 @@ W.pages.search.strain.SearchWizardStep1 = W.pages.search.strain.SearchWizardStep
     },
 
     renderHTML: function renderHTML() {
+        this.scrollTop();
         return this.$template({previousSearchData: this.model.get(this.step)});
     },
 
