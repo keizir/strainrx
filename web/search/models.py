@@ -141,6 +141,10 @@ class Strain(models.Model):
     cannabinoids = JSONField(default={"THC": 0, "THCA": 0, "THCV": 0, "CBD": 0, "CBG": 0, "CBN": 0,
                                       "CBC": 0, "CBDA": 0})
 
+    high_cbd = models.BooleanField(
+        default=False, help_text='If strain has a CBD concentration of over 5% thrn it\'s high cbd, this field for'
+                                 ' manual control to check this box automatically')
+
     about = models.TextField(_('Description'), null=True, blank=True)
     origins = models.ManyToManyField('self', symmetrical=False, blank=True)
 
@@ -207,6 +211,13 @@ class Strain(models.Model):
     @property
     def is_clean(self):
         return self.nutrient_base == self.ORGANIC
+
+    @property
+    def is_high_cbd(self):
+        """
+        Strain that has a CBD concentration of over 5%
+        """
+        return self.high_cbd or self.cannabinoids.get('CBD', 0) > 5
 
 
 def upload_image_to(instance, filename):

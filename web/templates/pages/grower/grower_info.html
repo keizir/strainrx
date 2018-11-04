@@ -127,7 +127,23 @@
                                 {{ strain.name }}
                             {% endif %}
                             </a>
+                            <div class="icons">
+                              {% if strain.is_clean %}
+                                <div class="is_clean">
+                                  <img src="{% static 'images/search/clean-80x81.png' %}" title="Fully Organic">
+                                </div>
+                              {% endif %}
+                              {% if strain.cup_winner %}
+                                <div class="is_cup_winner">
+                                  <img src="{% static 'images/search/cup-80x81.png' %}" title="Cup Winner">
+                                </div>
+                              {% endif %}
+                            </div>
+
                             <div>{{ strain.variety }}</div>
+                            {% if strain.is_high_cbd %}
+                                <div class="has_high_cbd">high CBD</div>
+                            {% endif %}
                         </div>
                     </div>
                 </div>
@@ -222,15 +238,31 @@
                         <img src="{{ image_url }}" class="grower-strain-image"/>
                     </a>
                     <div class="details">
-                        <div>
+                        <div class="">
                             <a href="{{ strain.url }}">
                                 {% if strain.common_name %}
                                     {{ strain.common_name }}
                                 {% else %}
                                     {{ strain.name }}
                                 {% endif %}
+                                <div class="icons">
+                                  {% if strain.is_clean %}
+                                    <div class="is_clean">
+                                      <img src="{% static 'images/search/clean-80x81.png' %}" title="Fully Organic">
+                                    </div>
+                                  {% endif %}
+                                  {% if strain.cup_winner %}
+                                    <div class="is_cup_winner">
+                                      <img src="{% static 'images/search/cup-80x81.png' %}" title="Cup Winner">
+                                    </div>
+                                  {% endif %}
+                                </div>
                             </a>
+
                             <div>{{ strain.variety }}</div>
+                            {% if strain.is_high_cbd %}
+                                <div class="has_high_cbd">high <b>CBD</b></div>
+                            {% endif %}
                         </div>
                     </div>
                 </div>
