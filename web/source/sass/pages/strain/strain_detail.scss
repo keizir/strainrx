@@ -443,9 +443,13 @@
           left: 0;
           top: 0;
           height: 2em;
-          // this pattern was generated with http://www.patternify.com/
-          background: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAQAAAAECAYAAACp8Z5+AAAAH0lEQVQYV2NkQAX/GZH4/xkYGBhhAmAOSBJEwDkgAQCCrgQEjpMcPgAAAABJRU5ErkJggg==) repeat;
+          background: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAQAAAAECAYAAACp8Z5+AAAAIklEQVQYV2NkQAK3rS3/M8L4II7q0eOMYAEYB8RmROaABACxvQ5TLDlcxgAAAABJRU5ErkJggg==) repeat;
           z-index: 1;
+
+          &.user-fill-background {
+              // this pattern was generated with http://www.patternify.com/
+              background: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAQAAAAECAYAAACp8Z5+AAAAH0lEQVQYV2NkQAX/GZH4/xkYGBhhAmAOSBJEwDkgAQCCrgQEjpMcPgAAAABJRU5ErkJggg==) repeat;
+          }
         }
 
         .tear {
