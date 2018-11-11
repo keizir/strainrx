@@ -167,17 +167,50 @@
     </div>
     <div class="strain-info-wrapper">
       <div class="popularity-wrapper">
-        <span class="title">Popularity</span>
-        <h1>A</h1>
-
+        <div class="title"><b>CANNABIS CONTENTS</b></div>
+        <div class="primary-cannabinoids">
+          <b>Primary Cannabinoids</b>
+          <span class="content">
+            <span><i>THC</i> <b><%= model.strain.cannabinoids.THC %>%</b></span>
+            <span><i>CBD</i> <b><%= model.strain.cannabinoids.CBD %>%</b></span>
+          </span>
+        </div>
+        <div class="secondary-cannabinoids-section">
+          <div class="secondary-cannabinoids-title">
+            <span class="title"><b>Secondary Cannabinoids</b></span>
+            <span class="title"><b>Terpenes</b></span>
+          </div>
+          <div class="secondary-cannabinoids">
+            <div class="content">
+            <% for (key in model.strain.cannabinoids) { %>
+              <% if (key.toUpperCase() != "THC" && key.toUpperCase() != "CBD") { %>
+                <div class="item">
+                  <span><i><%= key.toUpperCase() %></i></span>
+                  <span><b><%= model.strain.cannabinoids[key] %>%</b></span>
+                </div>
+              <% } %>
+            <% } %>
+            </div>
+          </div>
+          <div class="terpenes">
+            <div class="content">
+            <% for (key in model.strain.terpenes) { %>
+                <div class="item">
+                  <span><i><%= key %></i></span>
+                  <span><b><% if (model.strain.terpenes[key]) { %> Yes&nbsp;<% } else { %> N/A <% } %></b></span>
+                </div>
+            <% } %>
+            </div>
+          </div>
+        </div>
       </div>
-      <% if (model.strain_srx_score > 0) { %>
-      <div class="match-score-wrapper">
-        <span class="title">Match Score</span>
-        <span class="score-value"><%= model.strain_srx_score %></span>
-        <span class="percent-sign">%</span>
-      </div>
-      <% } %>
+{#      <% if (model.strain_srx_score > 0) { %>#}
+{#      <div class="match-score-wrapper">#}
+{#        <span class="title">Match Score</span>#}
+{#        <span class="score-value"><%= model.strain_srx_score %></span>#}
+{#        <span class="percent-sign">%</span>#}
+{#      </div>#}
+{#      <% } %>#}
     </div>
   </div>
   <% if (model.strain.about) { %>

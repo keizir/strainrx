@@ -36,7 +36,7 @@ class SearchCriteriaSerializer(serializers.Serializer):
 class StrainDetailSerializer(serializers.ModelSerializer):
     class Meta:
         model = Strain
-        fields = ('name', 'strain_slug', 'variety', 'category',
+        fields = ('name', 'strain_slug', 'variety', 'category', 'cannabinoids', 'terpenes',
                   'effects', 'benefits', 'side_effects', 'flavor', 'about', 'variety_image')
 
 
