@@ -8,5 +8,6 @@ module.exports = _.assign({
     baseSrc: config.sourceDirectory.replace(/(\.|\/)/g, '') + '/js/',
     vendorSrc: config.sourceDirectory + '/js/vendor/**/*.*',
     vendorDest: config.publicDirectory + '/js/vendor',
-    dest: config.publicDirectory + '/js'
+    dest: config.publicDirectory + '/js',
+    node_modules: config.nodeModules
 }, config);

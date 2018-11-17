@@ -226,7 +226,6 @@ STATICSITEMAPS_ROOT_SITEMAP = 'config.urls.sitemaps'
 # See: https://docs.djangoproject.com/en/dev/ref/contrib/staticfiles/#std:setting-STATICFILES_DIRS
 STATICFILES_DIRS = (
     str(APPS_DIR.path('static')),
-    str(ROOT_DIR.path('node_modules')),
 )
 
 # See: https://docs.djangoproject.com/en/dev/ref/contrib/staticfiles/#staticfiles-finders

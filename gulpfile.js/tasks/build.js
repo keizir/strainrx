@@ -12,5 +12,5 @@ gulp.task('build', function (cb) {
         console.log('\n\n running PROD tasks...\n\n');
     }
 
-    gulpSequence(['clean'], ['sass', 'images', 'fonts', 'javascript', 'css:vendor', 'js:vendor'], cb);
+    gulpSequence(['clean'], ['sass', 'images', 'fonts', 'javascript', 'copy:libs', 'css:vendor', 'js:vendor'], cb);
 });
