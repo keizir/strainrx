@@ -358,10 +358,9 @@
       }
 
       .breadcrumbs {
-        margin: 0 auto;
+        margin: 0.5em auto;
         display: flex;
         justify-content: space-between;
-        padding-left: 0.5em;
 
         ol {
           display: inline;
@@ -519,7 +518,7 @@
         display: block;
         position: absolute;
         right: 0;
-        top: -1.5em;
+        top: -2.5em;
         text-align: center;
 
         .title {
