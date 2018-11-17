@@ -84,6 +84,16 @@
                         </span>
             <% } %>
           </div>
+
+          <% if (model.strain_srx_score > 0) { %>
+          <div class="match-score-wrapper top">
+            <span class="title">Match Score</span>
+            <span class="score-value"><%= model.strain_srx_score %></span>
+            <span class="percent-sign">%</span>
+          </div>
+          <% } %>
+
+
           <div class="breadcrumbs">
             <ol>
               <li>
@@ -106,6 +116,16 @@
               </li>
               <li class="active">${ model.strain.name }</li>
             </ol>
+
+            <div class="location-controls disabled">
+              <div class="filter-menu">
+                <div class="active-link popup-container">
+                  <span><strong>AVAILABLE</strong> at these locations</span>
+                  <i class="fa fa-caret-down" aria-hidden="true"></i>
+                </div>
+                <div class="locations hidden"></div>
+              </div>
+            </div>
           </div>
 
           <% if (model.cup_winner || model.is_clean) { %>
@@ -126,18 +146,9 @@
         <div class="photo-controls">
           <% if (is_authenticated) { %>
           <span>
-                        <a href="#" class="add-photo-link">+ Add Photo</a>
-                    </span>
+              <a href="#" class="add-photo-link">+ Add Photo</a>
+          </span>
           <% } %>
-        </div>
-        <div class="location-controls disabled">
-          <div class="filter-menu">
-            <div class="active-link popup-container">
-              <span><strong>AVAILABLE</strong> at these locations</span>
-              <i class="fa fa-caret-down" aria-hidden="true"></i>
-            </div>
-            <div class="locations hidden"></div>
-          </div>
         </div>
       </div>
     </div>
@@ -176,11 +187,10 @@
           </span>
         </div>
         <div class="secondary-cannabinoids-section">
-          <div class="secondary-cannabinoids-title">
-            <span class="title"><b>Secondary Cannabinoids</b></span>
-            <span class="title"><b>Terpenes</b></span>
-          </div>
           <div class="secondary-cannabinoids">
+            <div class="secondary-cannabinoids-title title">
+              <b>Secondary Cannabinoids</b>
+            </div>
             <div class="content">
             <% for (key in model.strain.cannabinoids) { %>
               <% if (key.toUpperCase() != "THC" && key.toUpperCase() != "CBD") { %>
@@ -193,6 +203,9 @@
             </div>
           </div>
           <div class="terpenes">
+            <div class="secondary-cannabinoids-title title">
+              <b> <br/> Terpenes <br/></b>
+            </div>
             <div class="content">
             <% for (key in model.strain.terpenes) { %>
                 <div class="item">
@@ -204,13 +217,13 @@
           </div>
         </div>
       </div>
-{#      <% if (model.strain_srx_score > 0) { %>#}
-{#      <div class="match-score-wrapper">#}
-{#        <span class="title">Match Score</span>#}
-{#        <span class="score-value"><%= model.strain_srx_score %></span>#}
-{#        <span class="percent-sign">%</span>#}
-{#      </div>#}
-{#      <% } %>#}
+      <% if (model.strain_srx_score > 0) { %>
+      <div class="match-score-wrapper">
+        <span class="title">Match Score</span>
+        <span class="score-value"><%= model.strain_srx_score %></span>
+        <span class="percent-sign">%</span>
+      </div>
+      <% } %>
     </div>
   </div>
   <% if (model.strain.about) { %>
