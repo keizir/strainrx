@@ -501,12 +501,12 @@
       .effects-wrapper {
         .effect {
           .user-fill {
+            background: none;
+          }
+
+          .strain-fill {
             // this pattern was generated with http://www.patternify.com/
             background: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAQAAAAECAYAAACp8Z5+AAAAIklEQVQYV2NkQAK3rS3/M8L4II7q0eOMYAEYB8RmROaABACxvQ5TLDlcxgAAAABJRU5ErkJggg==) repeat;
-
-            &.user-fill-background {
-              background-color: rgba(255, 0, 0, 0.2);
-            }
           }
         }
       }

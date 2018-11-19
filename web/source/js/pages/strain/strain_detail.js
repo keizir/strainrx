@@ -576,6 +576,29 @@ W.pages.strain.StrainDetailPage = Class.extend({
         return fillHtml;
     },
 
+    userCriteriaSideEffectFillHtml: function (effect) {
+       // If user choose negative effect which is bigger than strain has,
+       // we mark the line as red as much as the strain has the negative effect.
+       // Sometimes the marker will go beyond the negative effect value.
+       // if the strain has negative effect that's higher than the marker, we put the marker in.
+       // In this case, we highlight the full effect in red, which means it goes past the marker.
+
+        var fillWidth = (effect.userCriteriaValue >= 6 ? effect.userCriteriaValue - 5 : effect.userCriteriaValue) * 0.2 * 100, // 1 point should take 20% of parent width
+            fillHtml = '<span class="{0}" style="{1}">{2}</span>',
+            tearHtml = '<div class="tear"><span class="tear-value">{0}</span></div>'.format(effect.userCriteriaValue);
+
+        if (fillWidth > 0) {
+            if (effect.missing) {
+                fillHtml = ''
+            } else {
+                fillHtml = fillHtml.format('user-fill', 'width: {0}%'.format(fillWidth), tearHtml);
+            }
+        } else {
+            fillHtml = '';
+        }
+        return fillHtml;
+    },
+
     sideEffectFillHtml: function sideEffectFillHtml(effect) {
         var fillWidth = (effect.value >= 6 ? effect.value - 5 : effect.value) * 0.2 * 100, // 1 point should take 20% of parent width
             fillHtml = '<span class="{0}" style="width: {1}%"></span>';
@@ -583,7 +606,7 @@ W.pages.strain.StrainDetailPage = Class.extend({
         if (effect.missing) {
             fillHtml = fillHtml.format('', fillWidth);
         } else {
-            fillHtml = fillHtml.format('fill', fillWidth);
+            fillHtml = fillHtml.format(effect.userCriteriaValue ? 'fill strain-fill' : 'fill', fillWidth);
         }
 
         return fillHtml;
@@ -594,7 +617,7 @@ W.pages.strain.StrainDetailPage = Class.extend({
         return template({
             'effects': toDisplay,
             'sideEffectFillHtml': this.sideEffectFillHtml,
-            'userCriteriaFillHtml': this.userCriteriaFillHtml
+            'userCriteriaFillHtml': this.userCriteriaSideEffectFillHtml
         });
     },
 
