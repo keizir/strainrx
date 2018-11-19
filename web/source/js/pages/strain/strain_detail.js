@@ -111,17 +111,24 @@ W.pages.strain.StrainDetailPage = Class.extend({
             return;
         }
 
+      if (navigator.permissions && navigator.permissions.query) {
         navigator.permissions.query({name: 'geolocation'}).then(function (result) {
-            if (result.state === 'granted') {
-                that.locationBlocked = false
-            } else if (result.state === 'prompt' || result.state === 'denied') {
-                that.locationBlocked = true
-            }
+          if (result.state === 'granted') {
+            that.locationBlocked = false
+          } else if (result.state === 'prompt' || result.state === 'denied') {
+            that.locationBlocked = true
+          }
 
-            if (success) {
-                success()
-            }
+          if (success) {
+            success()
+          }
         });
+      } else if (navigator.geolocation) {
+          that.locationBlocked = false;
+          if (success) {
+            success()
+          }
+      }
     },
 
     renderStrainDetails: function renderStrainDetails() {
