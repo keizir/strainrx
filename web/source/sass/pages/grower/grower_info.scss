@@ -72,24 +72,15 @@
                     margin: 0.3em 0.3em 0.3em 0;
 
                     img {
-                        width: 3em;
+                        width: 2.1em;
                     }
                 }
 
-                .is_cup_winner {
-                    box-shadow: 0px 15px 39px rgba(138, 110, 0, 0.9);
-                    -moz-box-shadow: 0px 15px 39px rgba(138, 110, 0, 0.9);
-                    -webkit-box-shadow: 0px 15px 39px rgba(138, 110, 0, 0.9);
-                    -o-box-shadow: 0px 15px 39px rgba(138, 110, 0, 0.9);
-                }
-
                 .is_clean {
-                    box-shadow: 0px 15px 39px rgba(0, 74, 0, 0.5);
-                    -moz-box-shadow: 0px 15px 39px rgba(0, 74, 0, 0.5);
-                    -webkit-box-shadow: 0px 15px 39px rgba(0, 74, 0, 0.5);
-                    -o-box-shadow: 0px 15px 39px rgba(0, 74, 0, 0.5);
+                    margin-right: 0;
                 }
             }
+
             .has_high_cbd {
                 background-color: #a6cf42;
                 border-radius: 10px;

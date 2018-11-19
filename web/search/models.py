@@ -70,17 +70,21 @@ class Strain(models.Model):
         (BLENDED, 'Blended Nutrients'),
     )
 
-    GROWING_METHODS = {
+    NUTRIENT_BASE_METHODS = {
         SYNTHETIC: 'synthetic',
         ORGANIC: 'organic',
         BLENDED: 'blended',
+    }
 
+    LIGHTING_METHODS = {
         NATURAL: 'natural',
         HID: 'hid',
         LED: 'led',
         DOUBLE_ENDED: 'double_ended',
         HALOGEN: 'halogen',
+    }
 
+    GROWING_METHODS = {
         INDOOR_SOIL: 'indoor_soil',
         INDOOR_HYDRO: 'indoor_hydro',
         INDOOR_COCO: 'indoor_coco',
