@@ -706,7 +706,7 @@ class SearchElasticService(BaseElasticService):
         )
 
         must_query = []
-        for field in ('is_clean', 'is_indoor'):
+        for field in ('is_clean', 'is_indoor', 'cup_winner'):
             if lookup_query.get(field):
                 must_query.append({"term": {field: lookup_query[field]}})
 
