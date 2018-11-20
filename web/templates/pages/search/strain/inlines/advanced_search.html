@@ -30,15 +30,24 @@
     <div class="form-field-group variety">
       <div class="form-field">
         {% render_field form.is_clean style=form.default_style %}
-        <label for="is_clean"><img class="height-70" title="Fully Organic" src="{% static 'images/search/clean.png' %}"></label>
+        <span class="variety-wrapper">
+          <label for="is_clean"><img title="Fully Organic" src="{% static 'images/search/clean.png' %}"></label>
+          <span class="variety-title">Fully Organic</span>
+        </span>
       </div>
       <div class="form-field">
         {% render_field form.is_indoor style=form.default_style %}
-        <label for="is_indoor"><img class="height-70" title="Indoor" src="{% static 'images/grow/indoor.png' %}"></label>
+        <span class="variety-wrapper">
+          <label for="is_indoor"><img title="Indoor" src="{% static 'images/grow/indoor.png' %}"></label>
+          <span class="variety-title">Indoor</span>
+        </span>
       </div>
       <div class="form-field">
         {% render_field form.cup_winner style=form.default_style %}
-        <label for="cup_winner"><img class="height-70" title="Cup Winner" src="{% static 'images/search/cup.png' %}"></label>
+        <span class="variety-wrapper">
+          <label for="cup_winner"><img title="Award Winner" src="{% static 'images/search/cup.png' %}"></label>
+          <span class="variety-title">Award Winner</span>
+        </span>
       </div>
     </div>
   </div>

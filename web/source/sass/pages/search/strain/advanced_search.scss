@@ -291,8 +291,8 @@ body {
           flex-direction: column;
           justify-content: center;
           align-items: center;
+          flex-wrap: wrap;
         }
-
       }
 
       .variety-title {
@@ -592,6 +592,9 @@ body {
       }
     }
     .search-form {
+      .form-field-group .form-field .variety-wrapper {
+        max-width: 6em;
+      }
 
       .cannabinoids,
       .terpenes {
