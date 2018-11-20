@@ -116,16 +116,6 @@
               </li>
               <li class="active">${ model.strain.name }</li>
             </ol>
-
-            <div class="location-controls disabled">
-              <div class="filter-menu">
-                <div class="active-link popup-container">
-                  <span><strong>AVAILABLE</strong> at these locations</span>
-                  <i class="fa fa-caret-down" aria-hidden="true"></i>
-                </div>
-                <div class="locations hidden"></div>
-              </div>
-            </div>
           </div>
 
           <% if (model.cup_winner || model.is_clean) { %>
@@ -150,6 +140,17 @@
           </span>
           <% } %>
         </div>
+
+        <div class="location-controls disabled">
+          <div class="filter-menu">
+            <div class="active-link popup-container">
+              <span><strong>AVAILABLE</strong> at these locations</span>
+              <i class="fa fa-caret-down" aria-hidden="true"></i>
+            </div>
+            <div class="locations hidden"></div>
+          </div>
+        </div>
+
       </div>
     </div>
   </div>

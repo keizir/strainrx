@@ -42,10 +42,10 @@
       width: 45%;
     }
 
-    .location-controls {
+    .second-row .location-controls {
       display: inline-block;
       text-align: right;
-      margin-top: -1em;
+      width: 54%;
 
       .filter-menu {
         .active-link {
@@ -207,7 +207,7 @@
       }
     }
 
-    .location-controls.disabled {
+    .second-row .location-controls.disabled {
       .active-link {
         background-color: $grey-light;
       }
@@ -360,12 +360,6 @@
 
       .breadcrumbs {
         margin: 0.5em auto;
-        display: flex;
-        justify-content: space-between;
-
-        ol {
-          display: inline;
-        }
       }
     }
 
@@ -522,16 +516,8 @@
         top: -2.5em;
         text-align: center;
 
-        .title {
-          font-size: 1em;
-        }
-
-        .score-value, .percent-sign {
-          font-size: 2.2em;
-        }
-
-        .percent-sign {
-          top: 0;
+        .score-value {
+          font-size: 4em;
         }
       }
 
@@ -674,7 +660,7 @@
         .title {
           font-size: 1.2em;
           border-bottom: 0.2em solid $black;
-          padding: 0.7em 0;
+          padding-bottom: 0.7em;
         }
 
         .primary-cannabinoids {
@@ -1305,30 +1291,6 @@
         }
       }
     }
-    .detail-section {
-      .strain-data {
-        .strain-data-detail {
-          .recommendation-btn {
-            max-width: 20em;
-          }
-        }
-      }
-    }
-  }
-}
-
-@media (max-width: $screen-xl-max) {
-
-  .strain-detail-wrapper {
-    .detail-section {
-      .strain-data {
-        .strain-data-detail {
-          .recommendation-btn {
-            max-width: 13em;
-          }
-        }
-      }
-    }
   }
 }
 
@@ -1338,6 +1300,10 @@
       .second-row {
         .photo-controls {
           width: 50%;
+        }
+
+        .location-controls {
+          width: 49%;
         }
       }
 
@@ -1392,16 +1358,6 @@
         }
       }
 
-      .breadcrumbs {
-        margin: 1em auto;
-      }
-
-      .location-controls {
-        position: absolute;
-        bottom: -2.5em;
-        right: 0;
-      }
-
       .strain-winner {
         display: none;
 
@@ -1422,18 +1378,6 @@
 
 @media (max-width: $screen-sm-min) {
   .strain-detail-wrapper .detail-section {
-    .second-row {
-      margin-top: -2em;
-      margin-bottom: 3em;
-    }
-
-    .strain-data {
-      .location-controls {
-        bottom: 1em;
-        margin: 0;
-      }
-    }
-
     .strain-info-wrapper {
       .popularity-wrapper .title {
         font-size: 1em;
@@ -1510,7 +1454,7 @@
     }
 
     .strain-data {
-      margin: 1em 0 4em;
+      margin-top: 1em;
 
       .strain-variety-name {
         top: 1.3em;
@@ -1552,16 +1496,26 @@
       }
     }
 
+    .second-row {
+        margin: 2em 0;
+        display: flex;
+        justify-content: space-between;
+        flex-wrap: nowrap;
+        align-items: flex-end;
+    }
+
     .second-row .photo-controls {
       display: block;
       text-align: left;
       width: 100%;
+      flex: 1 4 auto;
     }
 
-    .location-controls {
+    .second-row .location-controls {
       display: block;
       text-align: left;
-      margin-top: 1em;
+      width: 100%;
+      flex: 1 2 auto;
     }
 
     .strain-photo-wrapper {
@@ -1686,7 +1640,7 @@
     }
   }
 
-  .strain-detail-wrapper .detail-section .location-controls {
+  .strain-detail-wrapper .detail-section .second-row .location-controls {
     .filter-menu {
       .menu-expander {
         margin-left: 0.5em;
