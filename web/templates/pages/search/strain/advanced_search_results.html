@@ -121,6 +121,7 @@
   <script type="x/srx-template" id="strain-item-template">
     <div class="result-item">
       <div class="item-image">
+        <a href="/strains/${ strain.variety }/${ strain.strain_slug }/?${ searchParams }">
         <% if (strain.image_url) { %>
           <img class="strain-logo" src="${ strain.image_url }" alt="${ strain.name } Strain Image">
         <% } else { %>
@@ -129,6 +130,7 @@
         <% if (strain.is_clean) { %>
           <img class="clean-logo" src="{% static 'images/search/clean.png' %}">
         <% } %>
+        </a>
         <% if (distance) { %>
           <span class="item-location"><i class="fa fa-map-marker"></i> ${ distance } Miles away</span>
         <% } else { %>

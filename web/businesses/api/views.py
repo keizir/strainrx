@@ -456,7 +456,7 @@ class GrowerDispensaryPartnershipListView(APIView):
         else:
             f = Q(dispensary_id=dispensary_filter)
 
-        partnerships = partnerships.filter(f)
+        partnerships = partnerships.filter(f).order_by('dispensary__location_name')
 
         return Response(
             {'partnerships': [GrowerDispensaryPartnershipSerializer(x).data for x in partnerships]},

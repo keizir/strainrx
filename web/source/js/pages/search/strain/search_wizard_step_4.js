@@ -26,6 +26,7 @@ W.pages.search.strain.SearchWizardStep4 = W.pages.search.strain.SearchWizardStep
     },
 
     renderHTML: function renderHTML() {
+        this.scrollTop();
         return this.$template({
             side_effects: this.renderData.side_effects,
             isEnabled: this.isEnabled.bind(this)

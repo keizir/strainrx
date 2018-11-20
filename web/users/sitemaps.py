@@ -22,7 +22,7 @@ class StaticViewSitemap(Sitemap):
     protocol = 'https'
 
     def items(self):
-        return ['home', 'about']
+        return ['home', 'about', 'businesses:claim_options', 'businesses:claim_form']
 
     def location(self, item):
         return reverse(item)

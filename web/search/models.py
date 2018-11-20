@@ -70,6 +70,29 @@ class Strain(models.Model):
         (BLENDED, 'Blended Nutrients'),
     )
 
+    NUTRIENT_BASE_METHODS = {
+        SYNTHETIC: 'synthetic',
+        ORGANIC: 'organic',
+        BLENDED: 'blended',
+    }
+
+    LIGHTING_METHODS = {
+        NATURAL: 'natural',
+        HID: 'hid',
+        LED: 'led',
+        DOUBLE_ENDED: 'double_ended',
+        HALOGEN: 'halogen',
+    }
+
+    GROWING_METHODS = {
+        INDOOR_SOIL: 'indoor_soil',
+        INDOOR_HYDRO: 'indoor_hydro',
+        INDOOR_COCO: 'indoor_coco',
+        OUTDOOR: 'outdoor',
+        GREENHOUSE: 'greenhouse',
+        AQUAPONICS: 'aquaponics'
+    }
+
     def validate_image(self):
         file_size = self.file.size
         megabyte_limit = settings.MAX_IMAGE_SIZE
@@ -121,6 +144,10 @@ class Strain(models.Model):
     # if new cannabinoid is added we need to update StrainSearchSerializer and to es mapping
     cannabinoids = JSONField(default={"THC": 0, "THCA": 0, "THCV": 0, "CBD": 0, "CBG": 0, "CBN": 0,
                                       "CBC": 0, "CBDA": 0})
+
+    high_cbd = models.BooleanField(
+        default=False, help_text='If strain has a CBD concentration of over 5% thrn it\'s high cbd, this field for'
+                                 ' manual control to check this box automatically')
 
     about = models.TextField(_('Description'), null=True, blank=True)
     origins = models.ManyToManyField('self', symmetrical=False, blank=True)
@@ -188,6 +215,13 @@ class Strain(models.Model):
     @property
     def is_clean(self):
         return self.nutrient_base == self.ORGANIC
+
+    @property
+    def is_high_cbd(self):
+        """
+        Strain that has a CBD concentration of over 5%
+        """
+        return self.high_cbd or self.cannabinoids.get('CBD', 0) > 5
 
 
 def upload_image_to(instance, filename):

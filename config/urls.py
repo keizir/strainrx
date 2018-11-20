@@ -10,7 +10,8 @@ from django.views import defaults as default_views
 from django.views.generic import TemplateView
 
 from web.articles.sitemaps import ArticleSitemap
-from web.businesses.sitemaps import BusinessLocationSitemap, DispensariesRootSitemap, StateRootSitemap, CityRootSitemap
+from web.businesses.sitemaps import BusinessLocationSitemap, DispensariesRootSitemap, StateRootSitemap, \
+    CityRootSitemap, GrowHouseSitemap, GrowHouseCityRootSitemap, GrowHouseStateRootSitemap
 from web.search.sitemaps import StrainRootSitemap
 from web.users.sitemaps import StrainSitemap, StaticViewSitemap
 
@@ -21,6 +22,9 @@ sitemaps = {
     'dispensaries_root': DispensariesRootSitemap,
     'dispensaries_state_root': StateRootSitemap,
     'dispensaries_city_root': CityRootSitemap,
+    'growers': GrowHouseSitemap,
+    'growers_state_root': GrowHouseStateRootSitemap,
+    'growers_city_root': GrowHouseCityRootSitemap,
     'articles': ArticleSitemap,
     'static': StaticViewSitemap,
 }

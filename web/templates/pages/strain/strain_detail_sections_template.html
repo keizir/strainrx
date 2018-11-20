@@ -1,57 +1,72 @@
 {% load staticfiles i18n %}
 
 <script type="x/srx-template" id="strain_details_page">
-    <div class="detail-section strain-header-section">
-        <div class="detail-header">
-            <% if (model.from_search) { %>
-            <div class="back-to-search-wrapper">
-                <a href="{% url 'search:strain_results' %}" class="search-link">
-                    <i class="fa fa-arrow-left" aria-hidden="true"></i>back to search results</a>
-            </div>
-            <% } else if (model.from_advanced_search) { %>
-            <div class="back-to-search-wrapper">
-                <a href="{% url 'search:advanced_search_result' %}<%= model.from_advanced_search %>" class="search-link">
-                    <i class="fa fa-arrow-left" aria-hidden="true"></i>back to search results</a>
-            </div>
-            <% } %>
-            {% if from_location %}
-            <div class="back-to-search-wrapper">
-                <a href="{{ from_location }}" class="search-link">
-                    <i class="fa fa-arrow-left" aria-hidden="true"></i>back to dispensary</a>
-            </div>
-            {% endif %}
-            <div class="row">
-                <span class="strain-data <% if (is_authenticated) { %>with-recommendation<% } %>">
-                  <div class="strain-data-detail">
-                    <div class="strain-data-left">
-                        <img class="strain-variety" src="<%= model.strain.variety_image %>"/>
-                        <div class="strain-variety-name"><%= model.strain.variety %></div>
-                        <h1 class="strain-name"><%= model.strain.name %></h1>
-                        <% if (is_authenticated) { %>
-                            <span class="strain-like-wrapper">
+  <div class="detail-section strain-header-section">
+    <div class="detail-header">
+      <% if (model.from_search) { %>
+      <div class="back-to-search-wrapper">
+        <a href="{% url 'search:strain_results' %}" class="search-link">
+          <i class="fa fa-arrow-left" aria-hidden="true"></i>back to search results</a>
+      </div>
+      <% } else if (model.from_advanced_search) { %>
+      <div class="back-to-search-wrapper">
+        <a href="{% url 'search:advanced_search_result' %}<%= model.from_advanced_search %>" class="search-link">
+          <i class="fa fa-arrow-left" aria-hidden="true"></i>back to search results</a>
+      </div>
+      <% } %>
+      {% if from_location %}
+        <div class="back-to-search-wrapper">
+          <a href="{{ from_location }}" class="search-link">
+            <i class="fa fa-arrow-left" aria-hidden="true"></i>back to dispensary</a>
+        </div>
+      {% endif %}
+      <div class="row">
+        <div class="strain-data <% if (is_authenticated) { %>with-recommendation<% } %>">
+          <div class="strain-data-detail">
+            <div class="strain-data-left">
+              <img class="strain-variety" src="<%= model.strain.variety_image %>"/>
+              <div class="strain-variety-name"><%= model.strain.variety %></div>
+              <h1 class="strain-name"><%= model.strain.name %></h1>
+              <% if (is_authenticated) { %>
+              <span class="strain-like-wrapper">
                                 <% if (model.favorite) { %>
-                                    <i class="strain-like heart-active active fa fa-heart fa-2x" aria-hidden="true"></i>
+                                    <i class="strain-like heart-active active fa fa-heart fa-2x"
+                                       aria-hidden="true"></i>
                                 <% } else { %>
                                     <i class="strain-like favorite-icon" aria-hidden="true"></i>
                                 <% } %>
                             </span>
-                        <% } %>
-                        <div class="rating-row">
-                            <span class="strain-rating-stars"><%= model.strain_rating %></span>
-                            <% if (model.is_rated) { %>
-                              <span class="strain-rating">(<%= model.strain_rating %>)</span>
-                            <% } %>
-                            <% if (is_authenticated && !model.is_rated) { %>
-                            <span class="separator"></span>
-                            <span class="rate-link"><a href="#">Rate</a></span>
-                            <% } else if (!is_authenticated) { %>
-                              <span class="separator"></span>
-                              <a href="{% url 'account_login' %}?next={{ request.path }}">Sign in to</a> rate</a>
-                            <% } %>
-                        </div>
-                    </div>
-                    <% if (!is_authenticated) { %>
-                        <span class="recommendation-btn">
+              <% } %>
+              <div class="rating-row">
+                <span class="strain-rating-stars"><%= model.strain_rating %></span>
+                <% if (model.is_rated) { %>
+                <span class="strain-rating">(<%= model.strain_rating %>)</span>
+                <% } %>
+                <% if (is_authenticated && !model.is_rated) { %>
+                <span class="separator"></span>
+                <span class="rate-link"><a href="#">Rate</a></span>
+                <% } else if (!is_authenticated) { %>
+                <span class="separator"></span>
+                <a href="{% url 'account_login' %}?next={{ request.path }}">Sign in to</a> rate</a>
+                <% } %>
+              </div>
+            </div>
+
+            <% if (model.cup_winner || model.is_clean) { %>
+            <div class="strain-winner">
+              <% if (model.cup_winner) { %>
+              <i class="cup-winner"><img src="{% static 'images/search/cup.png' %}"></i>
+              <% } %>
+
+              <% if (model.is_clean) { %>
+              <i class="clean" title="<%= model.nutrient_base %>"><img
+                      src="{% static 'images/search/clean.png' %}"></i>
+              <% } %>
+            </div>
+            <% } %>
+
+            <% if (!is_authenticated) { %>
+            <span class="recommendation-btn">
                             <div class="recommendation-btn-icon">
                               <a href="{% url 'search:strain_wizard' %}" class="recommendation-link">
                                 <i class="fa fa-search"></i>
@@ -60,124 +75,168 @@
                             <div class="recommendation-btn-content">
                                 <div class="recommendation-btn-line">
                                   <a href="{% url 'search:strain_wizard' %}" class="recommendation-link">
-                                    Find out if <span class="recommendation-btn-strain-name"><%= model.strain.name %></span>
+                                    Find out if <span
+                                          class="recommendation-btn-strain-name"><%= model.strain.name %></span>
                                     is right for you. <u>Click here.</u>
                                   </a>
                                 </div>
                             </div>
                         </span>
-                    <% } %>
-                  </div>
-                     <div class="breadcrumbs">
-                        <ol>
-                            <li>
-                                <a href="{% url 'home' %}">Home</a>
-                                <span class="arrow">></span>
-                            </li>
-                            <li>
-                                <a href="{% url 'search:strains_root' %}">Strains</a>
-                                <span class="arrow">></span>
-                            </li>
-                            <li>
-                                <% if (model.strain.variety === 'sativa') { %>
-                                <a href="{% url 'search:strains_sativa_root' %}">Sativa</a>
-                                <% } else if (model.strain.variety === 'indica') { %>
-                                <a href="{% url 'search:strains_indica_root' %}">Indica</a>
-                                <% } else if (model.strain.variety === 'hybrid') { %>
-                                <a href="{% url 'search:strains_hybrid_root' %}">Hybrid</a>
-                                <% } %>
-                                <span class="arrow">></span>
-                            </li>
-                            <li class="active">${ model.strain.name }</li>
-                        </ol>
-                    </div>
-                </div>
-                <div class="social-icons">
-                    <span class="social-fb">
-                        <a href="${model.share_urls.facebook}" target="_blank">
-                            <i class="fa fa-facebook-square fa-2x" aria-hidden="true"></i>
-                        </a>
-                    </span>
-                    <span class="social-google">
-                        <a href="${model.share_urls.google}" target="_blank">
-                            <i class="fa fa-google-plus-square fa-2x" aria-hidden="true"></i>
-                        </a>
-                    </span>
-                    <span class="social-twitter">
-                        <a href="${model.share_urls.twitter}" target="_blank">
-                            <i class="fa fa-twitter-square fa-2x" aria-hidden="true"></i>
-                        </a>
-                    </span>
-                </div>
-            </div>
-            <div class="row second-row">
-                <div class="photo-controls">
-                    <% if (is_authenticated) { %>
-                    <span>
-                        <a href="#" class="add-photo-link">+ Add Photo</a>
-                    </span>
-                    <% } %>
-                </div>
-                <div class="location-controls disabled">
-                    <div class="filter-menu">
-                        <div class="active-link popup-container">
-                            <span><strong>AVAILABLE</strong> at these locations</span>
-                            <i class="fa fa-caret-down" aria-hidden="true"></i>
-                        </div>
-                        <div class="locations hidden"></div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-    <div class="detail-section info-image-section">
-        <div class="strain-photo-wrapper">
-            <div class="main-image">
-                <img src="{% static 'images/weed_small.jpg' %}" alt="Strain Image" class="hidden"/>
-            </div>
-            <div class="image-carousel hidden">
-                <div class="carousel-arrow arrow-up">
-                    <img class="up" src="{% static 'images/arrow-up.png' %}" alt="Up">
-                </div>
-                <div class="carousel-images-wrapper"></div>
-                <div class="carousel-arrow arrow-down">
-                    <img class="down" src="{% static 'images/arrow-down.png' %}" alt="Down">
-                </div>
-
-                <div class="carousel-arrow arrow-left">
-                  <i class="fa fa-chevron-left" aria-hidden="true"></i>
-                </div>
-                <div class="carousel-arrow arrow-right">
-                  <i class="fa fa-chevron-right" aria-hidden="true"></i>
-                </div>
-            </div>
-            <div class="loader"></div>
-        </div>
-        <div class="strain-info-wrapper">
-            <div class="popularity-wrapper">
-               <span class="title">Popularity</span>
-               <h1>A</h1>
-
-            </div>
-            <% if (model.strain_srx_score > 0) { %>
-            <div class="match-score-wrapper">
-                <span class="title">Match Score</span>
-                <span class="score-value"><%= model.strain_srx_score %></span>
-                <span class="percent-sign">%</span>
-            </div>
             <% } %>
+          </div>
+
+          <% if (model.strain_srx_score > 0) { %>
+          <div class="match-score-wrapper top">
+            <span class="title">Match Score</span>
+            <span class="score-value"><%= model.strain_srx_score %></span>
+            <span class="percent-sign">%</span>
+          </div>
+          <% } %>
+
+
+          <div class="breadcrumbs">
+            <ol>
+              <li>
+                <a href="{% url 'home' %}">Home</a>
+                <span class="arrow">></span>
+              </li>
+              <li>
+                <a href="{% url 'search:strains_root' %}">Strains</a>
+                <span class="arrow">></span>
+              </li>
+              <li>
+                <% if (model.strain.variety === 'sativa') { %>
+                <a href="{% url 'search:strains_sativa_root' %}">Sativa</a>
+                <% } else if (model.strain.variety === 'indica') { %>
+                <a href="{% url 'search:strains_indica_root' %}">Indica</a>
+                <% } else if (model.strain.variety === 'hybrid') { %>
+                <a href="{% url 'search:strains_hybrid_root' %}">Hybrid</a>
+                <% } %>
+                <span class="arrow">></span>
+              </li>
+              <li class="active">${ model.strain.name }</li>
+            </ol>
+          </div>
+
+          <% if (model.cup_winner || model.is_clean) { %>
+          <div class="strain-winner small">
+            <% if (model.cup_winner) { %>
+            <i class="cup-winner"><img src="{% static 'images/search/cup.png' %}"></i>
+            <% } %>
+
+            <% if (model.is_clean) { %>
+            <i class="clean" title="<%= model.nutrient_base %>"><img src="{% static 'images/search/clean.png' %}"></i>
+            <% } %>
+          </div>
+          <% } %>
+
         </div>
-    </div>
-    <% if (model.strain.about) { %>
-    <div class="detail-section">
-        <div class="strain-about">
-            <span class="section-header">Description</span>
-            <span class="about"><%= model.strain.about %></span>
+      </div>
+      <div class="row second-row">
+        <div class="photo-controls">
+          <% if (is_authenticated) { %>
+          <span>
+              <a href="#" class="add-photo-link">+ Add Photo</a>
+          </span>
+          <% } %>
         </div>
+
+        <div class="location-controls disabled">
+          <div class="filter-menu">
+            <div class="active-link popup-container">
+              <span><strong>AVAILABLE</strong> at these locations</span>
+              <i class="fa fa-caret-down" aria-hidden="true"></i>
+            </div>
+            <div class="locations hidden"></div>
+          </div>
+        </div>
+
+      </div>
     </div>
-    <% } %>
-    <div class="detail-section">
-        <div class="strain-effects">
+  </div>
+  <div class="detail-section info-image-section">
+    <div class="strain-photo-wrapper">
+      <div class="main-image">
+        <img src="{% static 'images/weed_small.jpg' %}" alt="Strain Image" class="hidden"/>
+      </div>
+      <div class="image-carousel hidden">
+        <div class="carousel-arrow arrow-up">
+          <img class="up" src="{% static 'images/arrow-up.png' %}" alt="Up">
+        </div>
+        <div class="carousel-images-wrapper"></div>
+        <div class="carousel-arrow arrow-down">
+          <img class="down" src="{% static 'images/arrow-down.png' %}" alt="Down">
+        </div>
+
+        <div class="carousel-arrow arrow-left">
+          <i class="fa fa-chevron-left" aria-hidden="true"></i>
+        </div>
+        <div class="carousel-arrow arrow-right">
+          <i class="fa fa-chevron-right" aria-hidden="true"></i>
+        </div>
+      </div>
+      <div class="loader"></div>
+    </div>
+    <div class="strain-info-wrapper">
+      <div class="popularity-wrapper">
+        <div class="title"><b>CANNABIS CONTENTS</b></div>
+        <div class="primary-cannabinoids">
+          <b>Primary Cannabinoids</b>
+          <span class="content">
+            <span><i>THC</i> <b><%= model.strain.cannabinoids.THC %>%</b></span>
+            <span><i>CBD</i> <b><%= model.strain.cannabinoids.CBD %>%</b></span>
+          </span>
+        </div>
+        <div class="secondary-cannabinoids-section">
+          <div class="secondary-cannabinoids">
+            <div class="secondary-cannabinoids-title title">
+              <b>Secondary Cannabinoids</b>
+            </div>
+            <div class="content">
+            <% for (key in model.strain.cannabinoids) { %>
+              <% if (key.toUpperCase() != "THC" && key.toUpperCase() != "CBD") { %>
+                <div class="item">
+                  <span><i><%= key.toUpperCase() %></i></span>
+                  <span><b><%= model.strain.cannabinoids[key] %>%</b></span>
+                </div>
+              <% } %>
+            <% } %>
+            </div>
+          </div>
+          <div class="terpenes">
+            <div class="secondary-cannabinoids-title title">
+              <b> <br/> Terpenes <br/></b>
+            </div>
+            <div class="content">
+            <% for (key in model.strain.terpenes) { %>
+                <div class="item">
+                  <span><i><%= key %></i></span>
+                  <span><b><% if (model.strain.terpenes[key]) { %> Yes&nbsp;<% } else { %> N/A <% } %></b></span>
+                </div>
+            <% } %>
+            </div>
+          </div>
+        </div>
+      </div>
+      <% if (model.strain_srx_score > 0) { %>
+      <div class="match-score-wrapper">
+        <span class="title">Match Score</span>
+        <span class="score-value"><%= model.strain_srx_score %></span>
+        <span class="percent-sign">%</span>
+      </div>
+      <% } %>
+    </div>
+  </div>
+  <% if (model.strain.about) { %>
+  <div class="detail-section">
+    <div class="strain-about">
+      <span class="section-header">Description</span>
+      <span class="about"><%= model.strain.about %></span>
+    </div>
+  </div>
+  <% } %>
+  <div class="detail-section">
+    <div class="strain-effects">
             <span class="section-header">
                 <span class="title">Positive Effects</span>
                 <% if (is_authenticated) { %>
@@ -196,11 +255,11 @@
                 </span>
                 <% } %>
             </span>
-            <span class="effects-region"></span>
-        </div>
+      <span class="effects-region"></span>
     </div>
-    <div class="detail-section">
-        <div class="strain-benefits">
+  </div>
+  <div class="detail-section">
+    <div class="strain-benefits">
             <span class="section-header">
                 <span class="title">Medical Benefits</span>
                 <% if (is_authenticated) { %>
@@ -219,11 +278,11 @@
                 </span>
                 <% } %>
             </span>
-            <span class="benefits-region"></span>
-        </div>
+      <span class="benefits-region"></span>
     </div>
-    <div class="detail-section">
-        <div class="strain-side-effects">
+  </div>
+  <div class="detail-section">
+    <div class="strain-side-effects">
             <span class="section-header">
                 <span class="title">Negative Effects</span>
                 <% if (is_authenticated) { %>
@@ -242,87 +301,122 @@
                 </span>
                 <% } %>
             </span>
-            <span class="side-effects-region"></span>
-        </div>
+      <span class="side-effects-region"></span>
     </div>
-    <div class="detail-section">
-        <div class="strain-similar">
+  </div>
+  <div class="detail-section">
+    <div class="strain-similar">
             <span class="section-header">
                 <span class="title">You may also like</span>
             </span>
-            <div class="also-like-strains-wrapper">
-                <div class="similar-strains-wrapper"></div>
-            </div>
-        </div>
+      <div class="also-like-strains-wrapper">
+        <div class="similar-strains-wrapper"></div>
+      </div>
     </div>
-    <% if (model.strain_reviews && model.strain_reviews.length > 0) { %>
-    <div class="detail-section">
-        <div class="strain-reviews">
+  </div>
+  <% if (model.strain_reviews && model.strain_reviews.length > 0) { %>
+  <div class="detail-section">
+    <div class="strain-reviews">
             <span class="section-header">
                 <span class="title"><%= model.strain.name %> Reviews</span>
                 <span class="all-reviews-link-wrapper"><a href="#">View All Reviews</a></span>
             </span>
-            <div class="reviews-wrapper">
-                <% $.each(model.strain_reviews, function(i, review) { %>
-                <div class="review-wrapper">
-                    <div class="user-info">
-                        <div class="user-image">
-                            <% if (review.created_by_image) { %>
-                            <span class="image" style="background-image: url('${ review.created_by_image }');"></span>
-                            <% } else { %>
-                            <span class="default-image">
+      <div class="reviews-wrapper">
+        <% $.each(model.strain_reviews, function(i, review) { %>
+        <div class="review-wrapper">
+          <div class="user-info">
+            <div class="user-image">
+              <% if (review.created_by_image) { %>
+              <span class="image" style="background-image: url('${ review.created_by_image }');"></span>
+              <% } else { %>
+              <span class="default-image">
                                 <span><%= review.created_by_name.charAt(0) %></span>
                             </span>
-                            <% } %>
-                        </div>
-                    </div>
-                    <div class="review">
-                        <div class="review-header">
-                            <span class="user-name"><%= review.created_by_name %></span>
-                            <span class="rating rating-<%= review.id %>"><%= review.rating %></span>
-                            <span class="created-date"><%= review.created_date %></span>
-                        </div>
-                        <div class="review-text">
-                            <span class="display display-text-<%= review.id %>"><%= review.review %></span>
-                            <span class="full hidden"><%= review.review %></span>
-                        </div>
-                    </div>
-                </div>
-                <% }); %>
+              <% } %>
             </div>
-            <div class="all-reviews-link-wrapper"><a href="#">View All Reviews</a></div>
+          </div>
+          <div class="review">
+            <div class="review-header">
+              <span class="user-name"><%= review.created_by_name %></span>
+              <span class="rating rating-<%= review.id %>"><%= review.rating %></span>
+              <span class="created-date"><%= review.created_date %></span>
+            </div>
+            <div class="review-text">
+              <span class="display display-text-<%= review.id %>"><%= review.review %></span>
+              <span class="full hidden"><%= review.review %></span>
+            </div>
+          </div>
         </div>
+        <% }); %>
+      </div>
+      <div class="all-reviews-link-wrapper"><a href="#">View All Reviews</a></div>
     </div>
-    <% } %>
-    <div class="detail-section">
-        <% if (model.strain_origins && model.strain_origins.length > 0) { %>
-        <div class="strain-lineage-section">
+  </div>
+  <% } %>
+  <div class="detail-section">
+    <% if (model.strain_origins && model.strain_origins.length > 0) { %>
+    <div class="strain-lineage-section">
             <span class="section-header">
                 <span class="title">Lineage</span>
             </span>
-            <div class="lineage-region">
-                <% $.each(model.strain_origins, function(i, origin) { %>
-                    <% if (i === 0 || i % 2) { %>
-                        <div class="lineage-column <% if (i === 0) { %>tall<% } %>">
-                    <% } %>
-                        <a href="/strains/<%= origin.variety %>/<%= origin.strain_slug %>">
-                            <div class="lineage-wrapper">
-                                <span class="abbreviation"><%= abbreviateStrainName(origin.name)%></span>
-                                <span class="name"><%= origin.name %></span>
-                            </div>
-                        </a>
-                    <% if (i === 0 || i % 2 === 0 || i === model.strain_origins.length - 1) { %>
-                        </div>
-                    <% } %>
-                <% }); %>
+      <div class="lineage-region">
+        <% $.each(model.strain_origins, function(i, origin) { %>
+        <% if (i === 0 || i % 2) { %>
+        <div class="lineage-column <% if (i === 0) { %>tall<% } %>">
+          <% } %>
+          <a href="/strains/<%= origin.variety %>/<%= origin.strain_slug %>">
+            <div class="lineage-wrapper">
+              <span class="abbreviation"><%= abbreviateStrainName(origin.name)%></span>
+              <span class="name"><%= origin.name %></span>
             </div>
+          </a>
+          <% if (i === 0 || i % 2 === 0 || i === model.strain_origins.length - 1) { %>
         </div>
         <% } %>
-        <div class="strain-flavors-section">
+        <% }); %>
+      </div>
+    </div>
+    <% } %>
+    <div class="strain-flavors-section">
             <span class="section-header">
                 <span class="title">Flavors</span>
             </span>
-            <span class="flavors-region"></span>
-        </div>
+      <span class="flavors-region"></span>
     </div>
+  </div>
+
+  <% if (model.growing_method || model.lighting || model.nutrient_base) { %>
+  <div class="detail-section">
+    <div class="strain-growing-section">
+      <span class="section-header">
+          <span class="title">Growing Methods</span>
+      </span>
+      <div class="growing-region">
+        <% if (model.growing_method) { %>
+        <div class="growing-wrapper">
+          <div class="text-left flavor-name">Soil</div>
+          <div class="flavor"><img src="{% static 'images/grow/' %}<%= model.growing_method_slug %>.svg"></div>
+          <span class="flavor-name"><%= model.growing_method %></span>
+        </div>
+        <% } %>
+
+        <% if (model.lighting) { %>
+        <div class="growing-wrapper">
+          <div class="text-left flavor-name">Lighting</div>
+          <div class="flavor"><img src="{% static 'images/grow/' %}<%= model.lighting_slug %>.svg"></div>
+          <span class="flavor-name"><%= model.lighting %></span>
+        </div>
+        <% } %>
+
+        <% if (model.nutrient_base) { %>
+        <div class="growing-wrapper">
+          <div class="text-left flavor-name">Nutrients</div>
+          <div class="flavor"><img src="{% static 'images/grow/' %}<%= model.nutrient_base_slug %>.svg"></div>
+          <span class="flavor-name"><%= model.nutrient_base %></span>
+        </div>
+        <% } %>
+      </div>
+    </div>
+  </div>
+  <% } %>
 </script>

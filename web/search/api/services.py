@@ -38,10 +38,13 @@ class StrainDetailsService:
             'strain_srx_score': strain_srx_score,
             'favorite': favorite,
             'is_rated': is_rated,
+            'lighting_slug': Strain.LIGHTING_METHODS.get(strain.lighting),
             'lighting': strain.get_lighting_display(),
             'is_clean': strain.is_clean,
+            'nutrient_base_slug': Strain.NUTRIENT_BASE_METHODS.get(strain.nutrient_base),
             'nutrient_base': strain.get_nutrient_base_display(),
             'is_indoor': strain.is_indoor,
+            'growing_method_slug': Strain.GROWING_METHODS.get(strain.growing_method),
             'growing_method': strain.get_growing_method_display(),
             'cup_winner': strain.cup_winner
         }

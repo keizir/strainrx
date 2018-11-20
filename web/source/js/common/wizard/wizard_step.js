@@ -33,7 +33,8 @@ W.common.WizardStep = Class.extend({
     },
 
     renderHTML: function renderHTML() {
-        throw new Error('Child class must implement renderHTML.');
+      this.scrollTop();
+      return this.$template(this.renderData);
     },
 
     validate: function validate() {
@@ -42,6 +43,12 @@ W.common.WizardStep = Class.extend({
 
     submit: function submit() {
         throw new Error('Child class must implement submit.');
+    },
+
+    scrollTop: function () {
+      if(window.innerWidth <= 479) {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      }
     }
 
 });

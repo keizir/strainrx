@@ -13,7 +13,9 @@ def build_strain_rating(strain):
 
 def get_strains_and_images_for_location(location):
     urls = []
-    strains = Strain.objects.filter(menu_items__business_location=location).order_by('name')
+    strains = Strain.objects.filter(
+        menu_items__business_location=location,
+        menu_items__removed_date=None).order_by('name')
     strains = strains.prefetch_related(Prefetch('images', queryset=StrainImage.objects.filter(is_approved=True)))
 
     for strain in strains:

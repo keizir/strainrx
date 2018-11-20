@@ -16,6 +16,7 @@ function checkDev() {
 
 config.publicDirectory = './web/static';
 config.sourceDirectory = './web/source';
+config.nodeModules = './node_modules';
 config.prod = checkProd();
 config.stage = checkStage();
 config.dev = checkDev();

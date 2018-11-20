@@ -25,10 +25,6 @@ W.pages.search.strain.SearchWizardStep2 = W.pages.search.strain.SearchWizardStep
         this.clickRemoveEffect(this.selectedEffects)
     },
 
-    renderHTML: function renderHTML() {
-        return this.$template(this.renderData);
-    },
-
     submit: function submit() {
         var that = this;
         this.showDialogOrProceed(this.selectedEffects, function () {
