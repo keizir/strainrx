@@ -395,7 +395,7 @@
         <% if (model.growing_method) { %>
         <div class="growing-wrapper">
           <div class="text-left flavor-name">Soil</div>
-          <div class="flavor"><img src="{% static 'images/grow/' %}<%= model.growing_method_slug %>.svg"></div>
+          <div class="flavor"><img src="{% static 'images/grow/' %}<%= model.growing_method_slug %>.png"></div>
           <span class="flavor-name"><%= model.growing_method %></span>
         </div>
         <% } %>
@@ -403,7 +403,7 @@
         <% if (model.lighting) { %>
         <div class="growing-wrapper">
           <div class="text-left flavor-name">Lighting</div>
-          <div class="flavor"><img src="{% static 'images/grow/' %}<%= model.lighting_slug %>.svg"></div>
+          <div class="flavor"><img src="{% static 'images/grow/' %}<%= model.lighting_slug %>.png"></div>
           <span class="flavor-name"><%= model.lighting %></span>
         </div>
         <% } %>
@@ -411,7 +411,7 @@
         <% if (model.nutrient_base) { %>
         <div class="growing-wrapper">
           <div class="text-left flavor-name">Nutrients</div>
-          <div class="flavor"><img src="{% static 'images/grow/' %}<%= model.nutrient_base_slug %>.svg"></div>
+          <div class="flavor"><img src="{% static 'images/grow/' %}<%= model.nutrient_base_slug %>.png"></div>
           <span class="flavor-name"><%= model.nutrient_base %></span>
         </div>
         <% } %>

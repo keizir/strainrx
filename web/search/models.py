@@ -72,7 +72,7 @@ class Strain(models.Model):
 
     NUTRIENT_BASE_METHODS = {
         SYNTHETIC: 'synthetic',
-        ORGANIC: 'organic',
+        ORGANIC: 'fully-organic',
         BLENDED: 'blended',
     }
 

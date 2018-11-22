@@ -36,6 +36,7 @@
   <script src="{% static 'js/pages/search/strain/advanced_search_results.js' %}"></script>
   <script type="text/javascript">
       new W.pages.AdvancedSearchResultsPage({
+          'isAuthenticated': '{{ request.user.is_authenticated }}' === 'True',
           {% if request.user.is_authenticated %}'currentUserId': '{{ request.user.id }}',{% endif %}
           'isEmailVerified': '{{ request.user.is_email_verified }}' === 'True',
           'terpenesAbbreviation': '{{ terpenes_abbreviation|safe }}'
@@ -121,7 +122,9 @@
   <script type="x/srx-template" id="strain-item-template">
     <div class="result-item">
       <div class="item-image">
+        <% if (isAuthenticated) { %>
         <a href="/strains/${ strain.variety }/${ strain.strain_slug }/?${ searchParams }">
+        <% } %>
         <% if (strain.image_url) { %>
           <img class="strain-logo" src="${ strain.image_url }" alt="${ strain.name } Strain Image">
         <% } else { %>
@@ -130,7 +133,9 @@
         <% if (strain.is_clean) { %>
           <img class="clean-logo" src="{% static 'images/search/clean.png' %}">
         <% } %>
+        <% if (isAuthenticated) { %>
         </a>
+        <% } %>
         <% if (distance) { %>
           <span class="item-location"><i class="fa fa-map-marker"></i> ${ distance } Miles away</span>
         <% } else { %>

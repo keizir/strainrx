@@ -660,7 +660,7 @@
         .title {
           font-size: 1.2em;
           border-bottom: 0.2em solid $black;
-          padding-bottom: 0.7em;
+          padding: 0.7em 0;
         }
 
         .primary-cannabinoids {
@@ -1392,10 +1392,6 @@
       }
 
       .match-score-wrapper {
-        .title {
-          display: block;
-          font-size: 1em;
-        }
 
         .score-value {
           font-size: 3.5em;
