@@ -63,6 +63,7 @@ W.pages.AdvancedSearchResultsPage = Class.extend({
     init: function (options) {
         var that = this;
         this.name = 'AdvancedSearchResultsPage';
+        this.isAuthenticated = options.isAuthenticated;
         this.isEmailVerified = options.isEmailVerified;
         this.currentUserId = options.currentUserId;
         this.search = new URLSearchParams(window.location.search);
@@ -234,6 +235,7 @@ W.pages.AdvancedSearchResultsPage = Class.extend({
             compiled = _.template($('#strain-item-template').html());
 
         return compiled({
+            'isAuthenticated': that.isAuthenticated,
             'obfuscated': !Boolean(that.currentUserId) || !that.isEmailVerified,
             'position': position,
             'strain': item,
