@@ -69,8 +69,6 @@ W.pages.AdvancedSearchResultsPage = Class.extend({
         this.search = new URLSearchParams(window.location.search);
         this.terpenesAbbreviation = JSON.parse(options.terpenesAbbreviation);
 
-        console.log(this.isAuthenticated)
-
         this.getSearchResults(function () {
             that.buildResultsFilterMenu();
             if (!that.currentUserId) {
