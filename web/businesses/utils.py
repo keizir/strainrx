@@ -1,3 +1,4 @@
+import re
 import string
 
 from django.core.paginator import InvalidPage
@@ -20,7 +21,7 @@ class NamePaginator(object):
             else:
                 obj_str = str(obj)
 
-            letter = str.upper(obj_str[0])
+            letter = str.upper(re.sub('[^a-zA-Z]+', '', obj_str)[0])
 
             if letter not in chunks:
                 chunks[letter] = []

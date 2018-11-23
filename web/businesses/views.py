@@ -349,7 +349,7 @@ class GrowerInfoView(TemplateView):
             ('organic', 'Organic', 'images/grow/organic.png'),
             ('pesticide_free', 'Pesticide Free Method', 'images/grow/pesticide_free.png'),
             ('indoor', 'Indoor', 'images/grow/indoor.png'),
-            ('outdoor', 'Outdoor', 'images/grow/indoor.png'),
+            ('outdoor', 'Outdoor', 'images/grow/outdoor.png'),
         )
         context['grow_details'] = [(name, static(url)) for (key, name, url)
                                    in grow_details
