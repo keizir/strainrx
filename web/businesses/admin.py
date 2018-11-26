@@ -134,7 +134,7 @@ class BusinessLocationAdminForm(forms.ModelForm):
 
         self.fields['location_email'].required = True
         self.fields['phone'].required = True
-        self.fields['location_field'].required = True
+        self.fields['location_field'].required = False
 
 
 class OwnerEmailVerifiedFilter(SimpleListFilter):

@@ -418,15 +418,14 @@
         }
       }
 
+      .effect-name.missing-name {
+        color: $light-red;
+      }
+
       .effect.missing-effect {
         .user-fill {
           // this pattern was generated with http://www.patternify.com/
-          //background: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAQAAAAECAYAAACp8Z5+AAAAIklEQVQYV2NkQAK3rS3/M8L4II7q0eOMYAEYB8RmROaABACxvQ5TLDlcxgAAAABJRU5ErkJggg==) repeat;
-          background: none;
-        }
-
-        .tear {
-          display: none;
+          background: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAQAAAAECAYAAACp8Z5+AAAAIklEQVQYV2NkQAK3rS3/M8L4II7q0eOMYAEYB8RmROaABACxvQ5TLDlcxgAAAABJRU5ErkJggg==) repeat;
         }
       }
 
