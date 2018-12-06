@@ -1,8 +1,6 @@
 #!/bin/bash
 
 DEPLOY_ENV="$DJANGO_SETTINGS_MODULE"
-DEPLOY_BRANCH="master"
-
 
 while true; do
     read -p "Deploy to ${DEPLOY_ENV}?" yn
@@ -12,7 +10,7 @@ while true; do
         * ) echo "Yes or No please.";;
     esac
 done
-echo "deploying ${DEPLOY_ENV}"
+echo "deploying ${DEPLOY_ENV} ${DEPLOY_BRANCH}"
 
 
 # pull changes, install dependencies, and build assets
@@ -37,6 +35,7 @@ if pgrep "gunicorn" > /dev/null
 then
     sudo systemctl stop gunicorn_srx_web.service
 fi
-sudo systemctl start gunicorn_srx_web.service
+sudo systemctl enable gunicorn_srx_web.service
+sudo systemctl restart gunicorn_srx_web.service
 
 echo "deploy complete"
