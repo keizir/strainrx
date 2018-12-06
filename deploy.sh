@@ -35,6 +35,9 @@ if pgrep "gunicorn" > /dev/null
 then
     sudo systemctl stop gunicorn_srx_web.service
 fi
+
+sudo chown srx_web:webapps -R /webapps/srx_web/*
+
 sudo systemctl enable gunicorn_srx_web.service
 sudo systemctl restart gunicorn_srx_web.service
 
