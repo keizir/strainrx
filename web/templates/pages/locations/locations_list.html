@@ -52,23 +52,7 @@
     </div>
     <div class="locations-list-container container">
         <h2>Cannabis {{ location_type_plural|capfirst }}</h2>
-        <div class="social-icons">
-            <span class="social-fb">
-                <a href="#" class="facebook-share-link" target="_blank">
-                    <i class="fa fa-facebook-square" aria-hidden="true"></i>
-                </a>
-            </span>
-            <span class="social-google">
-                <a href="#" class="google-share-link" target="_blank">
-                    <i class="fa fa-google-plus-square" aria-hidden="true"></i>
-                </a>
-            </span>
-            <span class="social-twitter">
-                <a href="#" class="twitter-share-link" target="_blank">
-                    <i class="fa fa-twitter-square" aria-hidden="true"></i>
-                </a>
-            </span>
-        </div>
+        {% include 'pages/common/social_icons.html' %}
         <div class="breadcrumbs">
             <ol>
                 <li>

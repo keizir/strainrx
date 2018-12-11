@@ -18,13 +18,13 @@
 
 
     {% block meta_social %}
-        <meta property="og:url" content="https://strainrx.co" />
+        <meta property="og:url" content="{{ request.build_absolute_uri }}" />
         <meta property="og:type" content="website" />
-        <meta property="og:title" content="StrainRx" />
-        <meta property="og:description" content="StrainRx" />
-        <meta property="fb:app_id" content="" />
+        <meta property="og:title" content="Cannabis Intelligence Platform - StrainRx" />
+        <meta property="og:description" content="StrainRx is a tool to identify and locate cannabis strains with optimal effects and benefits, based on a user's personal preference and need." />
+        <meta property="og:image" content="{% static 'images/logo_hr.png' %}" />
 
-        <meta property="og:image" content="https://s3.amazonaws.com/srx-prod/static/images/logo_hr.b6cd6d08fabe.png" />
+        <meta property="fb:app_id" content="" />
         <meta name="twitter:card" content="summary_large_image">
         <meta name="twitter:site" content="@strainrx">
         <meta name="twitter:title" content="StrainRX">
