@@ -424,6 +424,15 @@ class BusinessLocationMenuItem(models.Model):
 
 
 @python_2_unicode_compatible
+class BusinessLocationGrownStrainItem(models.Model):
+    business_location = models.ForeignKey(BusinessLocation, on_delete=models.CASCADE, related_name='grown_strains')
+    strain = models.ForeignKey(Strain, on_delete=models.CASCADE, related_name='grown_items')
+
+    def __str__(self):
+        return '{}: {}'.format(self.business_location, self.strain)
+
+
+@python_2_unicode_compatible
 class BusinessLocationMenuUpdate(models.Model):
     business_location = models.ForeignKey(BusinessLocation, related_name='menu_updates', on_delete=models.CASCADE)
     date = models.DateField()

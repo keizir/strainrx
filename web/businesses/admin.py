@@ -12,7 +12,7 @@ from web.businesses.api.services import BusinessLocationService
 from web.businesses.es_service import BusinessLocationESService
 from web.businesses.models import Business, BusinessLocation, FeaturedBusinessLocation, \
     LocationReview, State, City, Payment, GrowerDispensaryPartnership, BusinessLocationMenuUpdate, \
-    BusinessLocationMenuItem, BusinessLocationMenuUpdateRequest, ReportOutOfStock
+    BusinessLocationMenuItem, BusinessLocationMenuUpdateRequest, ReportOutOfStock, BusinessLocationGrownStrainItem
 
 
 class PaymentInline(admin.TabularInline):
@@ -36,6 +36,11 @@ class BusinessLocationInline(admin.TabularInline):
 class MenuInline(admin.TabularInline):
     extra = 0
     model = BusinessLocationMenuItem
+
+
+class GrownStrainInline(admin.TabularInline):
+    extra = 0
+    model = BusinessLocationGrownStrainItem
 
 
 def enable_business_search(modeladmin, request, queryset):
@@ -224,7 +229,7 @@ class BusinessLocationAdmin(admin.ModelAdmin):
     list_filter = [OwnerEmailVerifiedFilter, ActivityFilter, 'dispensary', 'delivery', 'grow_house']
     ordering = ['location_name']
     actions = [activate_selected_locations, deactivate_selected_locations, verify_email_for_selected_locations]
-    inlines = (BusinessLocationMenuUpdateInline, FeaturedBusinessLocationInline, MenuInline)
+    inlines = (BusinessLocationMenuUpdateInline, FeaturedBusinessLocationInline, MenuInline, GrownStrainInline)
 
     @staticmethod
     def owner_email_verified(obj):
@@ -315,6 +320,7 @@ class GrowerDispensaryPartnershipAdmin(admin.ModelAdmin):
 
 admin.site.register(BusinessLocationMenuUpdateRequest)
 admin.site.register(BusinessLocationMenuItem)
+admin.site.register(BusinessLocationGrownStrainItem)
 
 
 @admin.register(ReportOutOfStock)
