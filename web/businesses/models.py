@@ -253,7 +253,11 @@ class BusinessLocation(models.Model):
 
     @property
     def url(self):
-        return reverse('businesses:dispensary_info',
+        if self.dispensary or self.delivery:
+            return reverse('businesses:dispensary_info',
+                           kwargs={'state': self.state_fk.abbreviation.lower(), 'city_slug': self.city_fk.full_name_slug,
+                                   'slug_name': self.slug_name})
+        return reverse('businesses:grower_info',
                        kwargs={'state': self.state_fk.abbreviation.lower(), 'city_slug': self.city_fk.full_name_slug,
                                'slug_name': self.slug_name})
 
