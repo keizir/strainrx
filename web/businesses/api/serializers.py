@@ -1,7 +1,7 @@
 from rest_framework import serializers
 
 from web.businesses.models import phone_number_validator, LocationReview, GrowerDispensaryPartnership, \
-    BusinessLocationMenuItem, UserFavoriteLocation
+    BusinessLocationMenuItem, UserFavoriteLocation, BusinessLocationGrownStrainItem
 from web.search.api.services import StrainDetailsService
 
 
@@ -166,6 +166,20 @@ class BusinessLocationMenuItemSerializer(serializers.ModelSerializer):
         if not self.instance and not attrs.get('strain_id'):
             raise serializers.ValidationError({'strain_id': 'This field is required.'})
         return attrs
+
+
+class BusinessLocationGrownStrainItemSerializer(serializers.ModelSerializer):
+    url = serializers.ReadOnlyField(source='strain.get_absolute_url')
+    strain_name = serializers.ReadOnlyField(source='strain.name')
+    strain_variety = serializers.ReadOnlyField(source='strain.variety')
+
+    class Meta:
+        model = BusinessLocationGrownStrainItem
+        fields = ('id', 'strain', 'strain_name', 'strain_variety', 'url')
+
+    def create(self, validated_data):
+        validated_data['business_location'] = self.context['view'].location
+        return BusinessLocationGrownStrainItem.objects.get_or_create(**validated_data)[0]
 
 
 class LocationReviewFormSerializer(serializers.ModelSerializer):

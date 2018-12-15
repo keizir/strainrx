@@ -1,7 +1,12 @@
 # -*- coding: utf-8 -*-
-from django.conf.urls import url
+from django.conf.urls import url, include
+from rest_framework.routers import DefaultRouter
 
 from web.businesses.api.views import *
+from web.businesses.api.viewsets import GrownStrainViewSet
+
+router = DefaultRouter()
+router.register(r'grown-strain', GrownStrainViewSet, base_name='grown_strain')
 
 urlpatterns = [
     url(
@@ -18,6 +23,10 @@ urlpatterns = [
         regex=r'^(?P<business_id>[0-9]+)/locations/(?P<business_location_id>[0-9]+)/menu$',
         view=BusinessLocationMenuView.as_view(),
         name='business_location_menu'
+    ),
+    url(
+        regex=r'^(?P<business_id>[0-9]+)/locations/(?P<business_location_id>[0-9]+)/',
+        view=include(router.urls, namespace='business_location')
     ),
     url(
         regex=r'^(?P<business_id>[0-9]+)/locations/(?P<business_location_id>[0-9]+)/image$',

@@ -1,8 +1,9 @@
 import random
 
 import factory.faker
+from django.db.models.signals import post_save
 
-from web.businesses.models import Business, BusinessLocation, BusinessLocationMenuItem
+from web.businesses.models import Business, BusinessLocation, BusinessLocationMenuItem, BusinessLocationGrownStrainItem
 from web.search.tests.factories import StrainFactory
 from web.users.tests.factories import BusinessUserFactory
 
@@ -34,6 +35,7 @@ class BusinessFactory(factory.django.DjangoModelFactory):
                 self.users.add(user)
 
 
+@factory.django.mute_signals(post_save)
 class BusinessLocationFactory(factory.django.DjangoModelFactory):
     class Meta:
         model = BusinessLocation
@@ -60,3 +62,12 @@ class BusinessLocationMenuItemFactory(factory.django.DjangoModelFactory):
     price_quarter = factory.LazyAttribute(lambda x: random.randint(1, 50))
     price_half = factory.LazyAttribute(lambda x: random.randint(1, 50))
     in_stock = True
+
+
+class BusinessLocationGrownStrainItemFactory(factory.django.DjangoModelFactory):
+
+    class Meta:
+        model = BusinessLocationGrownStrainItem
+
+    business_location = factory.SubFactory(BusinessLocationFactory)
+    strain = factory.SubFactory(StrainFactory)
