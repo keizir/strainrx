@@ -69,10 +69,10 @@ class StrainDetailView(TemplateView):
         except Strain.DoesNotExist:
             raise Http404
 
+        context['strain'] = strain
         context['strain_id'] = strain.id
         context['strain_name'] = strain.name
         context['strain_variety'] = strain.variety
-        context['social_desc'] = strain.meta_desc
         context['social_image'] = strain.social_image.url if strain.social_image else "https://s3.amazonaws.com/srx-prod/static/images/logo_hr.b6cd6d08fabe.png"
         context['from_location'] = self.get_previous_location_url()
 

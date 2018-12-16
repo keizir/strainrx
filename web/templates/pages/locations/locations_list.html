@@ -11,11 +11,9 @@
     <link href="{% static 'css/common/location_lookup_widget.css' %}" rel="stylesheet">
 {% endblock %}
 
-{% block meta %}
-    {{ block.super }}
-    <meta name="Description"
-          content="Marijuana {{ location_type_plural }} near you. Find the best rated, compare prices, or find local deals.">
-{% endblock %}
+{% block meta_description %}
+  Marijuana {{ location_type_plural }} near you. Find the best rated, compare prices, or find local deals.
+{% endblock meta_description %}
 
 {% block content %}
     <div class="location-row-01">

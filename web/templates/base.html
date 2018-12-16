@@ -1,35 +1,42 @@
 {% load staticfiles i18n %}
 {% load auth_template_tags %}
+{% load page_meta_tags %}
+{% load cache %}
 
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <title>{% block title %}Strains Web{% endblock title %} - StrainRx</title>
+    {% cache 86400 page_meta request.path %}
+      {% seo as page_meta %}
+      {% static 'images/logo_hr.png' as logo %}
+    {% endcache %}
+
+    <title>{% if page_meta.meta_title %}{{ page_meta.meta_title }}{% else %}{% block title %}Strains Web{% endblock title %}{% endif %} - StrainRx</title>
 
     {% block meta %}
         <meta charset="utf-8">
         <meta http-equiv="x-ua-compatible" content="ie=edge">
         <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
         <meta name="author" content="strainrx.co">
-        <link rel="canonical" href="{% canonical_url request %}">
+        <link rel="canonical" href="{{ request.build_absolute_uri }}">
+
+        <meta name="keywords" content="{% block meta_keywords %}{{ page_meta.meta_keywords }}{% endblock meta_keywords %}">
+        <meta name="description" content="{% if page_meta.meta_desc %}{{ page_meta.meta_desc }}{% else %}{% block meta_description %}StrainRx is the premiere online source for strain intelligence. We help cannabis users find the perfect strain that's ideally suited for their needs."{% endblock meta_description %}{% endif %}">
     {% endblock %}
 
-    <meta name="keywords" content="{% block meta_keywords %}{% endblock meta_keywords %}">
-
-
     {% block meta_social %}
-        <meta property="og:url" content="{{ request.build_absolute_uri }}" />
-        <meta property="og:type" content="website" />
-        <meta property="og:title" content="Cannabis Intelligence Platform - StrainRx" />
-        <meta property="og:description" content="StrainRx is a tool to identify and locate cannabis strains with optimal effects and benefits, based on a user's personal preference and need." />
-        <meta property="og:image" content="{% static 'images/logo_hr.png' %}" />
+      <meta property="og:url" content="{{ request.build_absolute_uri }}" />
+      <meta property="og:type" content="{{ page_meta.og_type|default:"website" }}" />
+      <meta property="og:title" content="{{ page_meta.og_title|default:"Cannabis Intelligence Platform - StrainRx" }}" />
+      <meta property="og:description" content="{{ page_meta.og_description|default:"StrainRx is a tool to identify and locate cannabis strains with optimal effects and benefits, based on a user's personal preference and need." }}" />
+      <meta property="og:image" content="{% if page_meta.social_image %}{{ page_meta.social_image.url }}{% else %}{{ logo }}{% endif %}" />
 
-        <meta property="fb:app_id" content="" />
-        <meta name="twitter:card" content="summary_large_image">
-        <meta name="twitter:site" content="@strainrx">
-        <meta name="twitter:title" content="StrainRX">
-        <meta name="twitter:description" content="StrainRx">
-        <meta name="twitter:image" content="https://s3.amazonaws.com/srx-prod/static/images/logo_hr.b6cd6d08fabe.png">
+      <meta property="fb:app_id" content="{{ page_meta.fb_app_id }}" />
+      <meta name="twitter:card" content="{{ page_meta.twitter_card|default:"summary_large_image" }}">
+      <meta name="twitter:author" content="{{ page_meta.twitter_author }}">
+      <meta name="twitter:site" content="{{ page_meta.twitter_site|default:"@strainrx" }}">
+
+      {{ page_meta.meta_tags|safe }}
     {% endblock %}
 
     <link rel="shortcut icon" href="{% static 'images/favicon.png' %}" type="image/png">

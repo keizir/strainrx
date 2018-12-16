@@ -6,11 +6,9 @@
     Marijuana {{ location_type_plural|capfirst }} in {{ active_city.full_name }} - Find Closest & Best Rated
 {% endblock %}
 
-{% block meta %}
-    {{ block.super }}
-    <meta name="Description"
-          content="Find local marijuana {{ location_type_plural }} in {{ active_city.full_name }} - see the menus, ratings and reviews. We make it easy to find the medicine you need.">
-{% endblock %}
+{% block meta_description %}
+    Find local marijuana {{ location_type_plural }} in {{ active_city.full_name }} - see the menus, ratings and reviews. We make it easy to find the medicine you need.
+{% endblock meta_description %}
 
 {% block css %}
     {{ block.super }}

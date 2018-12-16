@@ -17,7 +17,7 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='strain',
             name='image',
-            field=django_resized.forms.ResizedImageField(blank=True, help_text='Maximum file size allowed is 10Mb', max_length=255, upload_to=web.search.models.upload_to, validators=[web.search.models.validate_image]),
+            field=django_resized.forms.ResizedImageField(blank=True, help_text='Maximum file size allowed is 10Mb', max_length=255, upload_to=web.common.models.upload_to, validators=[web.common.models.validate_image]),
         ),
         migrations.AddField(
             model_name='strain',

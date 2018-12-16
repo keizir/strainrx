@@ -2,26 +2,26 @@
 
 {% load staticfiles i18n %}
 
-{% block title %}{{ location.location_name }} Dispensary in {{ active_city.full_name }}, {{ location.street1 }}{% endblock %}
+{% block title %}{% if location.meta_title %}{{ location.meta_title }}{% else %}{{ location.location_name }} Dispensary in {{ active_city.full_name }}, {{ location.street1 }}{% endif %}{% endblock %}
 
-{% block meta %}
-    {{ block.super }}
-    <meta name="Description"
-          content="StrainRx brings you the most up to date menu and the latest deals from {{ location.location_name }} in {{ active_city.full_name }}.">
-{% endblock %}
+{% block meta_keywords %}{{ location.meta_keywords }}{% endblock meta_keywords %}
+
+{% block meta_description %}{% if location.meta_desc %}{{ location.meta_desc }}{% else %}StrainRx brings you the most up to date menu and the latest deals from {{ location.location_name }} in {{ active_city.full_name }}.{% endif %}{% endblock meta_description %}
 
 {% block meta_social %}
     <meta property="og:url" content="{{ request.build_absolute_uri }}" />
-    <meta property="og:type" content="article" />
-    <meta property="og:title" content="{{ business_name }}" />
-    <meta property="og:description" content="{{ meta_desc }}" />
-    <meta property="og:image" content="{{ social_image }}" />
+    <meta property="og:type" content="{{ location.og_type|default:"article" }}" />
+    <meta property="og:title" content="{{ location.og_title|default:business_name }}" />
+    <meta property="og:description" content="{{ location.og_description|default:meta_desc }}" />
+    <meta property="og:image" content="{{ location.social_image|default:social_image }}" />
 
-    <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:site" content="http://strainrx.co">
-    <meta name="twitter:title" content="{{ business.name }}">
-    <meta name="twitter:description" content="{{ meta_desc }}">
-    <meta name="twitter:image" content="{{ social_image }}">
+    <meta property="fb:app_id" content="{{ location.fb_app_id }}" />
+
+    <meta name="twitter:card" content="{{ location.twitter_card|default:"summary_large_image" }}">
+    <meta name="twitter:site" content="{{ location.twitter_site|default:"@strainrx" }}">
+    <meta name="twitter:author" content="{{ location.twitter_author }}">
+
+    {{ location.meta_tags|safe }}
 {% endblock %}
 
 {% block css %}

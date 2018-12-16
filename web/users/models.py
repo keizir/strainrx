@@ -6,7 +6,6 @@ import urllib.parse
 from uuid import uuid4
 
 import pytz
-from django.conf import settings
 from django.contrib.auth.models import AbstractUser
 from django.contrib.auth.models import AnonymousUser
 from django.contrib.postgres.fields import JSONField

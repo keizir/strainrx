@@ -11,13 +11,9 @@
     {% endif %} - Find Closest & Best Rated
 {% endblock %}
 
-{% block meta %}
-    {{ block.super }}
-    <meta name="Description"
-          content="Discover marijuana {{ location_type_plural }} in
-
-                  {% if active_state.full_name %}{{ active_state.full_name }}{% else %}{{ active_state.abbreviation }}{% endif %} - find the nearest, highest rated and recommended locations.">
-{% endblock %}
+{% block meta_description %}
+  Discover marijuana {{ location_type_plural }} in {% if active_state.full_name %}{{ active_state.full_name }}{% else %}{{ active_state.abbreviation }}{% endif %} - find the nearest, highest rated and recommended locations.
+{% endblock meta_description %}
 
 {% block css %}
     {{ block.super }}

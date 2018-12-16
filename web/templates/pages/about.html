@@ -3,11 +3,7 @@
 
 {% block title %}About StrainRx{% endblock %}
 
-{% block meta %}
-    {{ block.super }}
-    <meta name="Description"
-          content="StrainRx is a source of strain information for cannabis users to identify and locate the medicine is optimal for their particular needs.">
-{% endblock %}
+{% block meta_description %}{{ page_meta.meta_desc|default:"StrainRx is a source of strain information for cannabis users to identify and locate the medicine is optimal for their particular needs." }}{% endblock meta_description %}
 
 {% block css %}
     {{ block.super }}
