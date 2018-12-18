@@ -39,6 +39,7 @@
 {% endblock %}
 
 {% block content %}
+{% static 'images/weed_small.jpg' as default_image %}
 
 <div class="container grower-detail">
     <div class="breadcrumbs">
@@ -113,7 +114,8 @@
                 <div class="filter" data-filter="hybrid"><u>Hybrid</u></div>
             </div>
             <div class="content">
-            {% for strain, image_url in menu %}
+            {% for strain in menu %}
+              {% with image_url=strain.strain_images.0.image.url|default:default_image %}
                 <div class="strain" data-variety="{{ strain.variety }}">
                     <a class="image" href="{{ strain.url }}">
                         <img src="{{ image_url }}" />
@@ -147,10 +149,12 @@
                         </div>
                     </div>
                 </div>
+              {% endwith %}
+            {% empty %}
+              <div class="strain-placeholder">
+                  None found
+              </div>
             {% endfor %}
-                <div class="strain-placeholder" style="{% if menu %}display: none;{% endif %}">
-                    None found
-                </div>
             </div>
         </div>
         <div class="section contact">
@@ -232,7 +236,8 @@
                 </div>
             </div>
             <div class="content">
-            {% for strain, image_url in menu %}
+            {% for strain in menu %}
+              {% with image_url=strain.strain_images.0.image.url|default:default_image %}
                 <div class="strain {% if forloop.counter|divisibleby:4 %}rightmost{% endif %}" data-variety="{{ strain.variety }}">
                     <a class="image" href="{{ strain.url }}">
                         <img src="{{ image_url }}" class="grower-strain-image"/>
@@ -266,10 +271,13 @@
                         </div>
                     </div>
                 </div>
+              {% endwith %}
+            {% empty %}
+              <div class="strain-placeholder">
+                None found
+              </div>
             {% endfor %}
-                <div class="strain-placeholder" style="{% if menu %}display: none;{% endif %}">
-                    None found
-                </div>
+
             </div>
         </div>
         <div class="details-row">
