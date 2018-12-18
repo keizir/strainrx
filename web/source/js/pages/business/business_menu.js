@@ -20,6 +20,9 @@ W.pages.business.BusinessMenu = Class.extend({
 
     init: function init(options) {
         this.is_strains = options.is_strains;
+        this.baseUrl = this.is_strains ?
+          '/api/v1/businesses/{0}/locations/{1}/grown-strain/' : '/api/v1/businesses/{0}/locations/{1}/menu';
+
         this.initStrainLookupField();
         this.retrieveMenu(this.ui.$locations.val());
         this.changeLocation();
@@ -46,7 +49,7 @@ W.pages.business.BusinessMenu = Class.extend({
         var that = this;
         $.ajax({
             method: 'GET',
-            url: '/api/v1/businesses/{0}/locations/{1}/menu'.format(this.ui.$businessId.val(), locationId),
+            url: that.baseUrl.format(this.ui.$businessId.val(), locationId),
             success: function (data) {
                 if (data) {
                     $.each(data, function (i, item) {
@@ -127,6 +130,7 @@ W.pages.business.BusinessMenu = Class.extend({
 
             menuItem = {
                 strain_id: strainId,
+                strain: strainId,
                 price_gram: that.getPriceValue(priceGram),
                 price_eighth: that.getPriceValue(priceEighth),
                 price_quarter: that.getPriceValue(priceQuarter),
@@ -136,7 +140,7 @@ W.pages.business.BusinessMenu = Class.extend({
 
             $.ajax({
                 method: 'POST',
-                url: '/api/v1/businesses/{0}/locations/{1}/menu'.format(that.ui.$businessId.val(), that.ui.$locations.val()),
+                url: that.baseUrl.format(that.ui.$businessId.val(), that.ui.$locations.val()),
                 dataType: 'json',
                 data: JSON.stringify(menuItem),
                 success: function (menuItem) {
@@ -183,13 +187,16 @@ W.pages.business.BusinessMenu = Class.extend({
             var $btn = $(this),
                 menuItemId = $btn.attr('id'),
                 menuItemVariety = $btn.attr('variety'),
-                $removeItemDialog = $('.remove-item-dialog');
+                $removeItemDialog = $('.remove-item-dialog'),
+                deleteUrl;
 
             $removeItemDialog.find('.btn-remove').on('click', function () {
                 $removeItemDialog.dialog('close');
+                deleteUrl = that.is_strains ? that.baseUrl + menuItemId + '/' : that.baseUrl;
+
                 $.ajax({
                     method: 'DELETE',
-                    url: '/api/v1/businesses/{0}/locations/{1}/menu'.format(that.ui.$businessId.val(), that.ui.$locations.val()),
+                    url: deleteUrl.format(that.ui.$businessId.val(), that.ui.$locations.val()),
                     dataType: 'json',
                     data: JSON.stringify({'menu_item_id': menuItemId}),
                     success: function () {
@@ -221,7 +228,7 @@ W.pages.business.BusinessMenu = Class.extend({
 
         $.ajax({
             method: 'PUT',
-            url: '/api/v1/businesses/{0}/locations/{1}/menu'.format(this.ui.$businessId.val(), this.ui.$locations.val()),
+            url: this.baseUrl.format(this.ui.$businessId.val(), this.ui.$locations.val()),
             dataType: 'json',
             data: JSON.stringify({'menu_item': menuItem}),
             success: function (menuItem) {

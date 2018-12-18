@@ -253,7 +253,11 @@ class BusinessLocation(models.Model):
 
     @property
     def url(self):
-        return reverse('businesses:dispensary_info',
+        if self.dispensary or self.delivery:
+            return reverse('businesses:dispensary_info',
+                           kwargs={'state': self.state_fk.abbreviation.lower(), 'city_slug': self.city_fk.full_name_slug,
+                                   'slug_name': self.slug_name})
+        return reverse('businesses:grower_info',
                        kwargs={'state': self.state_fk.abbreviation.lower(), 'city_slug': self.city_fk.full_name_slug,
                                'slug_name': self.slug_name})
 
@@ -414,6 +418,15 @@ class BusinessLocationMenuItem(models.Model):
     removed_date = models.DateTimeField(blank=True, null=True)
 
     objects = MenuItemQuerySet.as_manager()
+
+    def __str__(self):
+        return '{}: {}'.format(self.business_location, self.strain)
+
+
+@python_2_unicode_compatible
+class BusinessLocationGrownStrainItem(models.Model):
+    business_location = models.ForeignKey(BusinessLocation, on_delete=models.CASCADE, related_name='grown_strains')
+    strain = models.ForeignKey(Strain, on_delete=models.CASCADE, related_name='grown_items')
 
     def __str__(self):
         return '{}: {}'.format(self.business_location, self.strain)

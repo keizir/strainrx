@@ -646,7 +646,9 @@ class SearchElasticService(BaseElasticService):
             "query": {
                 "bool": {
                     "must": {
-                        "match": {"name": lookup_query}
+                        "regexp": {
+                            "name": '{}.*'.format(lookup_query)
+                        }
                     },
                     "must_not": [
                         {"match": {"name.exact": lookup_query}},
