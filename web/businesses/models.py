@@ -233,6 +233,7 @@ class BusinessLocation(MetaDataAbstract):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.original_location = {field: getattr(self, field) for field in self.STRAIN_INDEX_FIELDS}
+        self.original_location_name = self.location_name
 
     @property
     def url(self):
@@ -348,7 +349,7 @@ class BusinessLocation(MetaDataAbstract):
         return self.business.is_searchable
 
     def save(self, *args, **kwargs):
-        if self.pk is None and not self.slug_name:
+        if (self.pk is None and not self.slug_name) or (self.pk and self.original_location_name != self.location_name):
             # determine a category
             self.category = 'dispensary' if self.dispensary else 'delivery' if self.delivery else 'dispensary'
 
@@ -365,6 +366,7 @@ class BusinessLocation(MetaDataAbstract):
                     if not exist_by_slug_name(new_slug_name):
                         self.slug_name = new_slug_name
                         break
+            self.original_location_name = self.location_name
 
         if self.city:
             self.city_slug = slugify(self.city)
