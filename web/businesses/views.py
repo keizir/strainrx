@@ -6,7 +6,7 @@ from datetime import datetime
 
 from django.contrib.staticfiles.templatetags.staticfiles import static
 from django.core.urlresolvers import reverse
-from django.db.models import Q
+from django.db.models import Q, Prefetch
 from django.http import Http404
 from django.shortcuts import get_object_or_404
 from django.views.generic import RedirectView, TemplateView, FormView, DetailView
@@ -20,7 +20,7 @@ from web.businesses.mixins import BusinessDetailMixin
 from web.businesses.models import Business, BusinessLocation, ReportOutOfStock
 from web.businesses.models import State, City, BusinessLocationMenuUpdateRequest
 from web.businesses.utils import NamePaginator
-from web.search.services import get_strains_and_images_for_location
+from web.search.models import StrainImage, Strain
 from web.users.models import User
 
 
@@ -345,8 +345,14 @@ class GrowerInfoView(TemplateView):
 
         context = super().get_context_data(**kwargs)
         context['grower'] = grower
-        menu = get_strains_and_images_for_location(grower)
 
+        menu = Strain.objects\
+            .filter(grown_items__business_location=grower)\
+            .order_by('name')\
+            .prefetch_related(Prefetch(
+                'images',
+                queryset=StrainImage.objects.filter(is_approved=True).only('image').order_by('-is_primary'),
+                to_attr='strain_images'))
         context['menu'] = menu
 
         grow_details = (
