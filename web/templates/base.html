@@ -6,11 +6,8 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    {% cache 86400 page_meta request.path %}
-      {% seo as page_meta %}
-      {% static 'images/logo_hr.png' as logo %}
-    {% endcache %}
-
+    {% seo as page_meta %}
+    {% static 'images/logo_hr.png' as logo %}
     <title>{% if page_meta.meta_title %}{{ page_meta.meta_title }}{% else %}{% block title %}Strains Web{% endblock title %}{% endif %} - StrainRx</title>
 
     {% block meta %}

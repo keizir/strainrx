@@ -1,4 +1,6 @@
 from django import template
+from django.core.cache import cache
+from django.core.cache.utils import make_template_fragment_key
 
 from web.system.models import TopPageMetaData
 
@@ -13,7 +15,12 @@ def seo_meta_data(context, *args, **kwargs):
     Usage::
         {% seo as page_meta %}
     """
+    key = make_template_fragment_key('page_meta', [context['request'].path])
+    if cache.get(key):
+        return cache.get(key)
     try:
-        return TopPageMetaData.objects.get(path=context['request'].path)
+        meta_data = TopPageMetaData.objects.get(path=context['request'].path)
+        cache.set(key, meta_data, 60 * 60 * 24)
+        return meta_data
     except TopPageMetaData.DoesNotExist:
         return
