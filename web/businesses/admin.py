@@ -204,19 +204,23 @@ class BusinessLocationAdmin(admin.ModelAdmin):
     form = BusinessLocationAdminForm
 
     fieldsets = (
-        ('Info',
-         {'fields': ('business', 'verified', 'form_url', 'removed_date', 'location_name', 'manager_name', 'location_email', 'phone', 'ext', 'about',), }),
-        ('Social',
-         {'fields': ('meta_desc', 'meta_keywords', 'social_image'), }),
+        ('Info', {'fields': (
+         'business', 'verified', 'form_url', 'removed_date', 'location_name', 'manager_name', 'location_email',
+         'phone', 'ext', 'about',), }),
+        ('Social', {
+            'classes': ('collapse',),
+            'fields': (
+              'meta_title', 'meta_desc', 'meta_keywords', 'social_image', 'og_type', 'og_title',
+              'og_description', 'fb_app_id', 'twitter_card', 'twitter_author', 'twitter_site', 'meta_tags'),
+        }),
         ('Type',
          {'fields': ('dispensary', 'grow_house', 'delivery', 'delivery_radius', 'grow_details'), }),
         ('Location',
          {'fields': ('location_field', 'street1', 'city', 'state', 'zip_code', 'lat', 'lng', 'location_raw',), }),
-        ('Working Hours',
-         {'fields': ('mon_open', 'mon_close', 'tue_open', 'tue_close', 'wed_open', 'wed_close', 'thu_open', 'thu_close',
-                     'fri_open', 'fri_close', 'sat_open', 'sat_close', 'sun_open', 'sun_close',), }),
-        ('Menu',
-         {'fields': ('menu_updated_date',)}),
+        ('Working Hours', {'fields': (
+            'mon_open', 'mon_close', 'tue_open', 'tue_close', 'wed_open', 'wed_close', 'thu_open', 'thu_close',
+            'fri_open', 'fri_close', 'sat_open', 'sat_close', 'sun_open', 'sun_close',), }),
+        ('Menu', {'fields': ('menu_updated_date',)}),
     )
 
     def form_url(self, instance):

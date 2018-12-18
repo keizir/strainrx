@@ -3,26 +3,29 @@
 {% load staticfiles i18n %}
 {% load search_template_tags %}
 
-{% block title %}{{ strain_name }} Cannabis Strain Information{% endblock %}
+{% block title %}{% if strain.meta_title %}{{ strain.meta_title }}{% else %}{{ strain_name }} Cannabis Strain Information{% endif %}{% endblock %}
 
-{% block meta %}
-    {{ block.super }}
-    <meta name="Description"
-          content="Everything you need to know about the {{ strain_name }} {{ strain_variety }} strain: medical benefits, negative & positive effects and where to get it in your area.">
-{% endblock %}
+{% block meta_keywords %}{{ strain.meta_keywords }}{% endblock meta_keywords %}
+
+{% block meta_description %}
+  {% if strain.meta_desc %}{{ strain.meta_desc }}{% else %}
+  Everything you need to know about the {{ strain_name }} {{ strain_variety }} strain: medical benefits, negative & positive effects and where to get it in your area.{% endif %}
+{% endblock meta_description %}
 
 {% block meta_social %}
     <meta property="og:url" content="{{ request.build_absolute_uri }}" />
-    <meta property="og:type" content="article" />
-    <meta property="og:title" content="{{ strain_name }} {{ strain_variety }} strain" />
-    <meta property="og:description" content="{{ social_desc }}" />
-    <meta property="og:image" content="{{ social_image }}" />
+    <meta property="og:type" content="{{ strain.og_type|default:"article" }}" />
+    <meta property="og:title" content="{% if strain.og_title %}{{ strain.og_title }}{% else %}{{ strain_name }} {{ strain_variety }} strain{% endif %}" />
+    <meta property="og:description" content="{{ strain.og_description|default:strain.meta_desc }}" />
+    <meta property="og:image" content="{{ strain.social_image|default:social_image }}" />
 
-    <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:site" content="http://strainrx.co">
-    <meta name="twitter:title" content="{{ strain_name }} {{ strain_variety }} strain">
-    <meta name="twitter:description" content="{{ social_desc }}">
-    <meta name="twitter:image" content="{{ social_image }}">
+    <meta property="fb:app_id" content="{{ strain.fb_app_id }}" />
+
+    <meta name="twitter:card" content="{{ strain.twitter_card|default:"summary_large_image" }}">
+    <meta name="twitter:site" content="{{ strain.twitter_site|default:"@strainrx" }}">
+    <meta name="twitter:author" content="{{ strain.twitter_author }}">
+
+    {{ strain.meta_tags|safe }}
 {% endblock %}
 
 

@@ -2,35 +2,26 @@
 
 {% load staticfiles i18n %}
 
-{% block title %}{{ grower.location_name }} Cultivator in {{ grower.city_fk.full_name }}, {{ grower.street1 }}{% endblock %}
+{% block title %}{% if grower.meta_title %}{{ grower.meta_title }}{% else %}{{ grower.location_name }} Cultivator in {{ grower.city_fk.full_name }}, {{ grower.street1 }}{% endif %}{% endblock %}
 
-{% block meta %}
-    {{ block.super }}
-    <meta name="Description"
-          content="StrainRx brings you the most up to date menu and the latest deals from {{ grower.location_name }} in {{ grower.city_fk.full_name }}."
-          xmlns="http://www.w3.org/1999/html">
-{% endblock %}
+{% block meta_keywords %}{{ grower.meta_keywords }}{% endblock meta_keywords %}
+
+{% block meta_description %}{% if grower.meta_desc %}{{ grower.meta_desc }}{% else %}StrainRx brings you the most up to date menu and the latest deals from {{ grower.location_name }} in {{ grower.city_fk.full_name }}.{% endif %}{% endblock meta_description %}
 
 {% block meta_social %}
     <meta property="og:url" content="{{ request.build_absolute_uri }}" />
-    <meta property="og:type" content="article" />
-    <meta property="og:title" content="{{ grower.business.name }}" />
-    <meta property="og:description" content="{{ grower.meta_desc }}" />
-    {% if grower.social_image %}
-        <meta name="og:image" content="{{ grower.social_image.url }}">
-    {% else %}
-        <meta name="og:image" content="{% static 'images/logo_hr.png' %}">
-    {% endif %}
+    <meta property="og:type" content="{{ grower.og_type|default:"article" }}" />
+    <meta property="og:title" content="{{ grower.og_title|default:grower.business.name }}" />
+    <meta property="og:description" content="{{ grower.og_description|default:grower.meta_desc }}" />
+    <meta property="og:image" content="{{ grower.social_image|default:logo }}" />
 
-    <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:site" content="http://strainrx.co">
-    <meta name="twitter:title" content="{{ grower.business.name }}">
-    <meta name="twitter:description" content="{{ grower.meta_desc }}">
-    {% if grower.social_image %}
-        <meta name="twitter:image" content="{{ grower.social_image.url }}">
-    {% else %}
-        <meta name="twitter:image" content="{% static 'images/logo_hr.png' %}">
-    {% endif %}
+    <meta property="fb:app_id" content="{{ grower.fb_app_id }}" />
+
+    <meta name="twitter:card" content="{{ grower.twitter_card|default:"summary_large_image" }}">
+    <meta name="twitter:site" content="{{ grower.twitter_site|default:"@strainrx" }}">
+    <meta name="twitter:author" content="{{ grower.twitter_author }}">
+
+    {{ grower.meta_tags|safe }}
 {% endblock %}
 
 {% block css %}

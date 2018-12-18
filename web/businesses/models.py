@@ -16,10 +16,10 @@ from django.db.models.query import Q
 from django.template.defaultfilters import slugify
 from django.utils.encoding import python_2_unicode_compatible
 from django.utils.translation import ugettext_lazy as _
-from django_resized import ResizedImageField
 
 from web.businesses.querysets import MenuItemQuerySet, ReportOutOfStockQuerySet, UserFavoriteLocationQuerySet, \
     BusinessLocationMenuUpdateRequestQuerySet
+from web.common.models import MetaDataAbstract
 from web.search.models import Strain
 from web.system.models import ReviewAbstract
 from web.users.models import User
@@ -143,13 +143,8 @@ class Business(models.Model):
         return self.name
 
 
-def upload_to(instance, filename):
-    path = 'articles/{0}_{1}'.format(uuid4(), filename)
-    return path
-
-
 @python_2_unicode_compatible
-class BusinessLocation(models.Model):
+class BusinessLocation(MetaDataAbstract):
     class Meta:
         unique_together = (("state_fk", "city_fk", "slug_name"),)
 
@@ -233,23 +228,12 @@ class BusinessLocation(models.Model):
     sun_open = models.TimeField(blank=True, null=True)
     sun_close = models.TimeField(blank=True, null=True)
 
-    # social fields
-    meta_desc = models.CharField(max_length=3072, blank=True)
-    meta_keywords = models.CharField(max_length=3072, blank=True)
-
     objects = GeoManager()
-
-    def validate_image(self):
-        file_size = self.file.size
-        megabyte_limit = settings.MAX_IMAGE_SIZE
-        if file_size > megabyte_limit:
-            raise ValidationError("Max file size is %sMB" % str(megabyte_limit))
-
-    social_image = ResizedImageField(max_length=255, blank=True, help_text='Maximum file size allowed is 10Mb', validators=[validate_image], quality=75, size=[1024, 1024], upload_to=upload_to)
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.original_location = {field: getattr(self, field) for field in self.STRAIN_INDEX_FIELDS}
+        self.original_location_name = self.location_name
 
     @property
     def url(self):
@@ -365,7 +349,7 @@ class BusinessLocation(models.Model):
         return self.business.is_searchable
 
     def save(self, *args, **kwargs):
-        if self.pk is None and not self.slug_name:
+        if (self.pk is None and not self.slug_name) or (self.pk and self.original_location_name != self.location_name):
             # determine a category
             self.category = 'dispensary' if self.dispensary else 'delivery' if self.delivery else 'dispensary'
 
@@ -382,6 +366,7 @@ class BusinessLocation(models.Model):
                     if not exist_by_slug_name(new_slug_name):
                         self.slug_name = new_slug_name
                         break
+            self.original_location_name = self.location_name
 
         if self.city:
             self.city_slug = slugify(self.city)

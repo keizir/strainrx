@@ -1,14 +1,18 @@
 from __future__ import unicode_literals, absolute_import
 
 from django.conf import settings
+from django.core.cache import cache
+from django.core.cache.utils import make_template_fragment_key
 from django.core.exceptions import ValidationError
 from django.db import models
 from django.utils import timezone
 from django.utils.encoding import python_2_unicode_compatible
 from django.utils.html import conditional_escape
+from django.utils.translation import ugettext_lazy as _
 from markdown2 import Markdown
 from rest_framework import status
 
+from web.common.models import MetaDataAbstract
 from .managers import SystemPropertyQuerySet
 
 
@@ -77,3 +81,20 @@ class PermanentlyRemoved(models.Model):
     def clean(self):
         if self.status == status.HTTP_301_MOVED_PERMANENTLY and not self.redirect_url:
             raise ValidationError({'redirect_url': 'This field is required.'})
+
+
+class TopPageMetaData(MetaDataAbstract):
+    path = models.CharField(
+        verbose_name=_('Path'), max_length=200, unique=True, db_index=True,
+        help_text=_('This should be an absolute path, excluding the domain '
+                    'name. Example: \'/foo/bar/\'.'))
+
+    class Meta:
+        verbose_name = _('SEO metadata')
+        verbose_name_plural = _('SEO metadata')
+        ordering = ('path',)
+
+    def save(self, *args, **kwargs):
+        super().save(*args, **kwargs)
+        # Invalidate cache after changing meta data
+        cache.delete(make_template_fragment_key('page_meta', [self.path]))

@@ -97,6 +97,23 @@ class StrainAdmin(admin.ModelAdmin):
         JSONField: {'widget': JSONEditorWidget},
     }
 
+    fieldsets = (
+        ('', {
+            'fields': (
+                'name', 'common_name', 'strain_slug', 'variety', 'category', 'effects', 'benefits',
+                'side_effects', 'flavor', 'terpenes', 'quick_picks', 'cannabinoids', 'high_cbd', 'about',
+                'origins', 'you_may_also_like_exclude', 'cup_winner', 'growing_method', 'lighting', 'nutrient_base'
+            )
+        }),
+        ('Social', {
+            'classes': ('collapse',),
+            'fields': (
+                'meta_title', 'meta_desc', 'meta_keywords', 'social_image', 'og_type', 'og_title',
+                'og_description', 'fb_app_id', 'twitter_card', 'twitter_author', 'twitter_site', 'meta_tags'
+            ),
+        }),
+    )
+
 
 def approve_selected_ratings(modeladmin, request, queryset):
     for rating in queryset:

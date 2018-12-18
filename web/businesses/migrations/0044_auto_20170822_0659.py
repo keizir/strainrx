@@ -27,6 +27,6 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='businesslocation',
             name='social_image',
-            field=django_resized.forms.ResizedImageField(blank=True, help_text='Maximum file size allowed is 10Mb', max_length=255, upload_to=web.businesses.models.upload_to, validators=[web.businesses.models.BusinessLocation.validate_image]),
+            field=django_resized.forms.ResizedImageField(blank=True, help_text='Maximum file size allowed is 10Mb', max_length=255, upload_to=web.common.models.upload_to, validators=[web.common.models.validate_image]),
         ),
     ]
