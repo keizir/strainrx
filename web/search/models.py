@@ -13,20 +13,15 @@ from django.db import models
 from django.template.defaultfilters import slugify
 from django.utils.encoding import python_2_unicode_compatible
 from django.utils.translation import ugettext_lazy as _
-from django_resized import ResizedImageField
 
+from web.common.models import MetaDataAbstract
 from web.search.querysets import UserSearchQuerySet
 from web.system.models import ReviewAbstract
 from web.users.models import User
 
 
-def upload_to(instance, filename):
-    path = 'articles/{0}_{1}'.format(uuid4(), filename)
-    return path
-
-
 @python_2_unicode_compatible
-class Strain(models.Model):
+class Strain(MetaDataAbstract):
 
     VARIETY_CHOICES = (
         ('sativa', 'Sativa'),
@@ -93,12 +88,6 @@ class Strain(models.Model):
         AQUAPONICS: 'aquaponics'
     }
 
-    def validate_image(self):
-        file_size = self.file.size
-        megabyte_limit = settings.MAX_IMAGE_SIZE
-        if file_size > megabyte_limit:
-            raise ValidationError("Max file size is %sMB" % str(megabyte_limit))
-
     internal_id = models.CharField(max_length=10, null=True, blank=True)
     name = models.CharField(max_length=255)
     common_name = models.CharField(max_length=255, null=True, blank=True)
@@ -156,13 +145,6 @@ class Strain(models.Model):
     removed_date = models.DateTimeField(blank=True, null=True)
 
     you_may_also_like_exclude = models.BooleanField(default=False)
-
-    # social fields
-    social_image = ResizedImageField(max_length=255, blank=True,
-                                     help_text='Maximum file size allowed is 10Mb', validators=[validate_image],
-                                     quality=75, size=[1024, 1024], upload_to=upload_to)
-    meta_desc = models.CharField(max_length=3072, blank=True)
-    meta_keywords = models.CharField(max_length=3072, blank=True)
 
     cup_winner = models.BooleanField(default=False)
     growing_method = models.IntegerField(choices=GROWING_METHOD_CHOICES, blank=True, null=True)

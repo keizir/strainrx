@@ -27,8 +27,3 @@ def google_maps_api_key():
 @register.simple_tag
 def get_profile():
     return settings.PROFILE
-
-
-@register.simple_tag
-def canonical_url(request):
-    return '{0}{1}'.format(settings.HOST, request.path)

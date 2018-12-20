@@ -11,22 +11,9 @@ from django.utils.text import slugify
 from django_resized import ResizedImageField
 from djangocms_text_ckeditor.fields import HTMLField
 
+from web.common.models import MetaDataAbstract, validate_image, upload_to
+
 logger = logging.getLogger(__name__)
-
-
-def upload_to(instance, filename):
-    path = 'articles/{0}_{1}'.format(uuid4(), filename)
-    return path
-
-
-def validate_image(field_file_obj):
-    try:
-        file_size = field_file_obj.file.size
-        megabyte_limit = settings.MAX_IMAGE_SIZE
-        if file_size > megabyte_limit:
-            raise ValidationError('Max file size is {}MB'.format(megabyte_limit))
-    except OSError:
-        raise ValidationError('File does not exists.')
 
 
 class Category(models.Model):
@@ -54,11 +41,9 @@ class Category(models.Model):
         return self.slug
 
 
-class Article(models.Model):
+class Article(MetaDataAbstract):
     title = models.CharField(max_length=1024, unique=True, blank=False)
     summary = models.CharField(max_length=3072, blank=True)
-    meta_desc = models.CharField(max_length=3072, blank=True)
-    meta_keywords = models.CharField(max_length=3072, blank=True)
     text = HTMLField(blank=True)
     is_sponsored = models.BooleanField(default=False)
     featured = models.IntegerField(blank=True, null=True)

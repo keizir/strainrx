@@ -12,7 +12,7 @@ from web.businesses.api.services import BusinessLocationService
 from web.businesses.es_service import BusinessLocationESService
 from web.businesses.models import Business, BusinessLocation, FeaturedBusinessLocation, \
     LocationReview, State, City, Payment, GrowerDispensaryPartnership, BusinessLocationMenuUpdate, \
-    BusinessLocationMenuItem, BusinessLocationMenuUpdateRequest, ReportOutOfStock
+    BusinessLocationMenuItem, BusinessLocationMenuUpdateRequest, ReportOutOfStock, BusinessLocationGrownStrainItem
 
 
 class PaymentInline(admin.TabularInline):
@@ -36,6 +36,11 @@ class BusinessLocationInline(admin.TabularInline):
 class MenuInline(admin.TabularInline):
     extra = 0
     model = BusinessLocationMenuItem
+
+
+class GrownStrainInline(admin.TabularInline):
+    extra = 0
+    model = BusinessLocationGrownStrainItem
 
 
 def enable_business_search(modeladmin, request, queryset):
@@ -199,19 +204,23 @@ class BusinessLocationAdmin(admin.ModelAdmin):
     form = BusinessLocationAdminForm
 
     fieldsets = (
-        ('Info',
-         {'fields': ('business', 'verified', 'form_url', 'removed_date', 'location_name', 'manager_name', 'location_email', 'phone', 'ext', 'about',), }),
-        ('Social',
-         {'fields': ('meta_desc', 'meta_keywords', 'social_image'), }),
+        ('Info', {'fields': (
+         'business', 'verified', 'form_url', 'removed_date', 'location_name', 'manager_name', 'location_email',
+         'phone', 'ext', 'about',), }),
+        ('Social', {
+            'classes': ('collapse',),
+            'fields': (
+              'meta_title', 'meta_desc', 'meta_keywords', 'social_image', 'og_type', 'og_title',
+              'og_description', 'fb_app_id', 'twitter_card', 'twitter_author', 'twitter_site', 'meta_tags'),
+        }),
         ('Type',
          {'fields': ('dispensary', 'grow_house', 'delivery', 'delivery_radius', 'grow_details'), }),
         ('Location',
          {'fields': ('location_field', 'street1', 'city', 'state', 'zip_code', 'lat', 'lng', 'location_raw',), }),
-        ('Working Hours',
-         {'fields': ('mon_open', 'mon_close', 'tue_open', 'tue_close', 'wed_open', 'wed_close', 'thu_open', 'thu_close',
-                     'fri_open', 'fri_close', 'sat_open', 'sat_close', 'sun_open', 'sun_close',), }),
-        ('Menu',
-         {'fields': ('menu_updated_date',)}),
+        ('Working Hours', {'fields': (
+            'mon_open', 'mon_close', 'tue_open', 'tue_close', 'wed_open', 'wed_close', 'thu_open', 'thu_close',
+            'fri_open', 'fri_close', 'sat_open', 'sat_close', 'sun_open', 'sun_close',), }),
+        ('Menu', {'fields': ('menu_updated_date',)}),
     )
 
     def form_url(self, instance):
@@ -224,7 +233,7 @@ class BusinessLocationAdmin(admin.ModelAdmin):
     list_filter = [OwnerEmailVerifiedFilter, ActivityFilter, 'dispensary', 'delivery', 'grow_house']
     ordering = ['location_name']
     actions = [activate_selected_locations, deactivate_selected_locations, verify_email_for_selected_locations]
-    inlines = (BusinessLocationMenuUpdateInline, FeaturedBusinessLocationInline, MenuInline)
+    inlines = (BusinessLocationMenuUpdateInline, FeaturedBusinessLocationInline, MenuInline, GrownStrainInline)
 
     @staticmethod
     def owner_email_verified(obj):
@@ -315,6 +324,7 @@ class GrowerDispensaryPartnershipAdmin(admin.ModelAdmin):
 
 admin.site.register(BusinessLocationMenuUpdateRequest)
 admin.site.register(BusinessLocationMenuItem)
+admin.site.register(BusinessLocationGrownStrainItem)
 
 
 @admin.register(ReportOutOfStock)

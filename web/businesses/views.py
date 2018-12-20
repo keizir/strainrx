@@ -6,6 +6,7 @@ from datetime import datetime
 
 from django.contrib.staticfiles.templatetags.staticfiles import static
 from django.core.urlresolvers import reverse
+from django.db.models import Q, Prefetch
 from django.http import Http404
 from django.shortcuts import get_object_or_404
 from django.views.generic import RedirectView, TemplateView, FormView, DetailView
@@ -19,7 +20,7 @@ from web.businesses.mixins import BusinessDetailMixin
 from web.businesses.models import Business, BusinessLocation, ReportOutOfStock
 from web.businesses.models import State, City, BusinessLocationMenuUpdateRequest
 from web.businesses.utils import NamePaginator
-from web.search.services import get_strains_and_images_for_location
+from web.search.models import StrainImage, Strain
 from web.users.models import User
 
 
@@ -120,12 +121,15 @@ class BusinessLocationsView(BusinessDetailMixin, TemplateView):
 class DispensaryInfoView(DetailView):
     template_name = 'pages/dispensary/dispensary_info.html'
     context_object_name = 'location'
+    slug_field = 'slug_name'
+    slug_url_kwarg = 'slug_name'
 
-    def get_object(self, queryset=None):
-        return get_object_or_404(BusinessLocation, state_fk__abbreviation__iexact=self.kwargs.get('state').lower(),
-                                 city_fk__full_name_slug__iexact=self.kwargs.get('city_slug').lower(),
-                                 slug_name__iexact=self.kwargs.get('slug_name').lower(),
-                                 removed_date=None)
+    def get_queryset(self):
+        return BusinessLocation.objects.filter(
+            Q(state_fk__abbreviation__iexact=self.kwargs.get('state').lower(),
+              city_fk__full_name_slug__iexact=self.kwargs.get('city_slug').lower(), removed_date=None) &
+            Q(Q(dispensary=True) | Q(delivery=True))
+        )
 
     def get_context_data(self, **kwargs):
         context = super(DispensaryInfoView, self).get_context_data(**kwargs)
@@ -341,8 +345,14 @@ class GrowerInfoView(TemplateView):
 
         context = super().get_context_data(**kwargs)
         context['grower'] = grower
-        menu = get_strains_and_images_for_location(grower)
 
+        menu = Strain.objects\
+            .filter(grown_items__business_location=grower)\
+            .order_by('name')\
+            .prefetch_related(Prefetch(
+                'images',
+                queryset=StrainImage.objects.filter(is_approved=True).only('image').order_by('-is_primary'),
+                to_attr='strain_images'))
         context['menu'] = menu
 
         grow_details = (

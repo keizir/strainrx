@@ -11,13 +11,9 @@
     {% endif %} - Find Closest & Best Rated
 {% endblock %}
 
-{% block meta %}
-    {{ block.super }}
-    <meta name="Description"
-          content="Discover marijuana {{ location_type_plural }} in
-
-                  {% if active_state.full_name %}{{ active_state.full_name }}{% else %}{{ active_state.abbreviation }}{% endif %} - find the nearest, highest rated and recommended locations.">
-{% endblock %}
+{% block meta_description %}
+  Discover marijuana {{ location_type_plural }} in {% if active_state.full_name %}{{ active_state.full_name }}{% else %}{{ active_state.abbreviation }}{% endif %} - find the nearest, highest rated and recommended locations.
+{% endblock meta_description %}
 
 {% block css %}
     {{ block.super }}
@@ -34,23 +30,7 @@
                     {{ active_state.abbreviation }}
                 {% endif %} {{ location_type_plural|capfirst }}
             </h1>
-            <div class="social-icons">
-                <span class="social-fb">
-                    <a href="#" class="facebook-share-link" target="_blank">
-                        <i class="fa fa-facebook-square" aria-hidden="true"></i>
-                    </a>
-                </span>
-                <span class="social-google">
-                    <a href="#" class="google-share-link" target="_blank">
-                        <i class="fa fa-google-plus-square" aria-hidden="true"></i>
-                    </a>
-                </span>
-                <span class="social-twitter">
-                    <a href="#" class="twitter-share-link" target="_blank">
-                        <i class="fa fa-twitter-square" aria-hidden="true"></i>
-                    </a>
-                </span>
-            </div>
+            {% include 'pages/common/social_icons.html' %}
         </div>
         <div class="breadcrumbs">
             <ol>

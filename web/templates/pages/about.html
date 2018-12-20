@@ -3,11 +3,7 @@
 
 {% block title %}About StrainRx{% endblock %}
 
-{% block meta %}
-    {{ block.super }}
-    <meta name="Description"
-          content="StrainRx is a source of strain information for cannabis users to identify and locate the medicine is optimal for their particular needs.">
-{% endblock %}
+{% block meta_description %}{{ page_meta.meta_desc|default:"StrainRx is a source of strain information for cannabis users to identify and locate the medicine is optimal for their particular needs." }}{% endblock meta_description %}
 
 {% block css %}
     {{ block.super }}
@@ -18,23 +14,7 @@
     <div class="container about-wrapper">
         <div class="about-header">
             <h1>About StrainRx</h1>
-            <div class="social-icons">
-                <span class="social-fb">
-                    <a href="#" class="facebook-share-link" target="_blank">
-                        <i class="fa fa-facebook-square" aria-hidden="true"></i>
-                    </a>
-                </span>
-                <span class="social-google">
-                    <a href="#" class="google-share-link" target="_blank">
-                        <i class="fa fa-google-plus-square" aria-hidden="true"></i>
-                    </a>
-                </span>
-                <span class="social-twitter">
-                    <a href="#" class="twitter-share-link" target="_blank">
-                        <i class="fa fa-twitter-square" aria-hidden="true"></i>
-                    </a>
-                </span>
-            </div>
+            {% include 'pages/common/social_icons.html' %}
         </div>
         <div class="about-section">
           <p>StrainRx is a patent-pending technology platform with the mission of providing trustworthy and educational information on cannabis. It’s meant to help medical marijuana patients unlock the plant’s therapeutic benefits as well as to enable recreational users to create experiences they desire. </p>

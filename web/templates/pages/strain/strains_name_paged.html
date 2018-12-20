@@ -8,9 +8,6 @@
 {% block meta %}
     {{ block.super }}
 
-    <meta name="Description"
-          content="See all {{ variety|title }} cannabis strains beginning with the letter '{{ current_letter|title }}'">
-
     {% if prev_letter %}
         <link rel="prev" href="{% strain_letter_page_url variety prev_letter %}">
     {% endif %}
@@ -18,6 +15,10 @@
         <link rel="next" href="{% strain_letter_page_url variety next_letter %}">
     {% endif %}
 {% endblock %}
+
+{% block meta_description %}
+  See all {{ variety|title }} cannabis strains beginning with the letter '{{ current_letter|title }}'
+{% endblock meta_description %}
 
 {% block css %}
     {{ block.super }}
@@ -27,23 +28,8 @@
 {% block content %}
     <div class="strains-root-container container">
         <h1>{{ variety|title }} Strains Starting With the Letter "{{ current_letter|title }}"</h1>
-        <div class="social-icons">
-            <span class="social-fb">
-                <a href="#" class="facebook-share-link" target="_blank">
-                    <i class="fa fa-facebook-square" aria-hidden="true"></i>
-                </a>
-            </span>
-            <span class="social-google">
-                <a href="#" class="google-share-link" target="_blank">
-                    <i class="fa fa-google-plus-square" aria-hidden="true"></i>
-                </a>
-            </span>
-            <span class="social-twitter">
-                <a href="#" class="twitter-share-link" target="_blank">
-                    <i class="fa fa-twitter-square" aria-hidden="true"></i>
-                </a>
-            </span>
-        </div>
+        {% include 'pages/common/social_icons.html' %}
+
         <div class="breadcrumbs">
             <ol>
                 <li>

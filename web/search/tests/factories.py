@@ -1,10 +1,12 @@
 import random
 
 import factory.faker
+from django.db.models.signals import post_save
 
 from web.search.models import Strain
 
 
+@factory.django.mute_signals(post_save)
 class StrainFactory(factory.django.DjangoModelFactory):
     class Meta:
         model = Strain
