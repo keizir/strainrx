@@ -547,40 +547,24 @@ class SearchElasticService(BaseElasticService):
             type=es_mappings.TYPES.get('strain')
         )
 
-        if ' ' in query:
-            query = {
-                "_source": ["id", "name", "variety", "strain_slug", "removed_date"],
-                "query": {
-                    "match": {
-                        "name": {
-                            "query": query,
+        query = {
+            "_source": ["id", "name", "variety", "strain_slug", "removed_date"],
+            "suggest": {
+                "name_suggestion": {
+                    "text": query,
+                    "completion": {
+                        "field": "name_suggest",
+                        "size": 25,
+                        "fuzzy": {
                             "fuzziness": 1
                         }
                     }
                 }
             }
+        }
 
-            es_response = self._request(method, url, data=json.dumps(query))
-            results = self._transform_query_results(es_response)
-        else:
-            query = {
-                "_source": ["id", "name", "variety", "strain_slug", "removed_date"],
-                "suggest": {
-                    "name_suggestion": {
-                        "text": query,
-                        "completion": {
-                            "field": "name_suggest",
-                            "size": 25,
-                            "fuzzy": {
-                                "fuzziness": 1
-                            }
-                        }
-                    }
-                }
-            }
-
-            es_response = self._request(method, url, data=json.dumps(query))
-            results = self._transform_suggest_results(es_response)
+        es_response = self._request(method, url, data=json.dumps(query))
+        results = self._transform_suggest_results(es_response)
 
         return results
 
