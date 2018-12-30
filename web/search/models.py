@@ -15,7 +15,7 @@ from django.utils.encoding import python_2_unicode_compatible
 from django.utils.translation import ugettext_lazy as _
 
 from web.common.models import MetaDataAbstract
-from web.search.querysets import UserSearchQuerySet
+from web.search.querysets import UserSearchQuerySet, StrainImageQuerySet
 from web.system.models import ReviewAbstract
 from web.users.models import User
 
@@ -232,6 +232,8 @@ class StrainImage(models.Model):
 
     is_approved = models.BooleanField(default=False)
     is_primary = models.BooleanField(default=False)
+
+    objects = StrainImageQuerySet.as_manager()
 
     def __str__(self):
         i = self.image

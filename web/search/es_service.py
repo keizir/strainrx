@@ -47,8 +47,8 @@ class SearchElasticService(BaseElasticService):
         for s in to_transform:
             source = s.get('_source', {})
             rating = strain_ratings.get(source.get('id'))
-            strain_image = StrainImage.objects.filter(strain=source.get('id'), is_approved=True)\
-                .exclude(Q(image__isnull=True) | Q(image='')).first()
+            strain_image = StrainImage.objects.filter(strain=source.get('id')).get_images().first()
+
             srx_score = int(round(s.get('_score') or 0))
 
             if include_locations:
@@ -774,8 +774,7 @@ class SearchElasticService(BaseElasticService):
             sort = s.get('sort', [None] * 7)[-7:]
             distance, gram, max_gram, eighth, max_eighth, quarter, max_quarter = sort
 
-            strain_image = StrainImage.objects.filter(strain=source.get('id'), is_approved=True)\
-                .exclude(Q(image__isnull=True) | Q(image='')).first()
+            strain_image = StrainImage.objects.filter(strain=source.get('id')).get_images().first()
             processed_results.append({
                 'id': source.get('id'),
                 'name': source.get('name'),
@@ -925,7 +924,7 @@ class SearchElasticService(BaseElasticService):
                         deliveries = []
 
                     if include_image:
-                        strain_image = StrainImage.objects.filter(strain=strain.get('id'), is_approved=True).first()
+                        strain_image = StrainImage.objects.filter(strain=strain.get('id')).get_images().first()
                         strain['image_url'] = strain_image.image.url if strain_image and strain_image.image else None
 
                     strain['deliveries'] = deliveries

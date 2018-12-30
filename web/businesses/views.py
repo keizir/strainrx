@@ -351,7 +351,7 @@ class GrowerInfoView(TemplateView):
             .order_by('name')\
             .prefetch_related(Prefetch(
                 'images',
-                queryset=StrainImage.objects.filter(is_approved=True).only('image').order_by('-is_primary'),
+                queryset=StrainImage.objects.get_images(),
                 to_attr='strain_images'))
         context['menu'] = menu
 

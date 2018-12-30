@@ -11,12 +11,13 @@
 {% block meta_social %}
     <meta property="og:url" content="{{ request.build_absolute_uri }}" />
     <meta property="og:type" content="{{ location.og_type|default:"article" }}" />
-    <meta property="og:title" content="{{ location.og_title|default:business_name }}" />
+    <meta property="og:title" content="{{ location.og_title|default:location.meta_title|default:business_name }}" />
     <meta property="og:description" content="{{ location.og_description|default:meta_desc }}" />
-    <meta property="og:image" content="{{ location.social_image|default:social_image }}" />
+    <meta property="og:image" content="{% if location.social_image %}{{ location.social_image.url }}{% else %}{{ social_image }}{% endif %}" />
 
-    <meta property="fb:app_id" content="{{ location.fb_app_id }}" />
-
+    {% if location.fb_app_id %}
+      <meta property="fb:app_id" content="{{ location.fb_app_id }}" />
+    {% endif %}
     <meta name="twitter:card" content="{{ location.twitter_card|default:"summary_large_image" }}">
     <meta name="twitter:site" content="{{ location.twitter_site|default:"@strainrx" }}">
     <meta name="twitter:author" content="{{ location.twitter_author }}">

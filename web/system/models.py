@@ -89,6 +89,15 @@ class TopPageMetaData(MetaDataAbstract):
         help_text=_('This should be an absolute path, excluding the domain '
                     'name. Example: \'/foo/bar/\'.'))
 
+    MetaDataAbstract._meta.get_field('og_title').default = _('Cannabis Intelligence Platform - StrainRx')
+    MetaDataAbstract._meta.get_field('og_description').default = \
+        _('StrainRx is a tool to identify and locate cannabis strains with optimal effects and benefits, '
+          'based on a user\'s personal preference and need.')
+    MetaDataAbstract._meta.get_field('meta_title').default = _('Strains Web')
+    MetaDataAbstract._meta.get_field('meta_desc').default = \
+        _('StrainRx is the premiere online source for strain intelligence. '
+          'We help cannabis users find the perfect strain that\'s ideally suited for their needs.')
+
     class Meta:
         verbose_name = _('SEO metadata')
         verbose_name_plural = _('SEO metadata')

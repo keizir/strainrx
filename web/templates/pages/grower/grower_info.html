@@ -11,12 +11,12 @@
 {% block meta_social %}
     <meta property="og:url" content="{{ request.build_absolute_uri }}" />
     <meta property="og:type" content="{{ grower.og_type|default:"article" }}" />
-    <meta property="og:title" content="{{ grower.og_title|default:grower.business.name }}" />
+    <meta property="og:title" content="{{ grower.og_title|default:grower.meta_title|default:grower.business.name }}" />
     <meta property="og:description" content="{{ grower.og_description|default:grower.meta_desc }}" />
-    <meta property="og:image" content="{{ grower.social_image|default:logo }}" />
-
-    <meta property="fb:app_id" content="{{ grower.fb_app_id }}" />
-
+    <meta property="og:image" content="{% if grower.social_image %}{{ grower.social_image }}{% else %}{{ logo }}{% endif %}" />
+    {% if grower.fb_app_id %}
+      <meta property="fb:app_id" content="{{ grower.fb_app_id }}" />
+    {% endif %}
     <meta name="twitter:card" content="{{ grower.twitter_card|default:"summary_large_image" }}">
     <meta name="twitter:site" content="{{ grower.twitter_site|default:"@strainrx" }}">
     <meta name="twitter:author" content="{{ grower.twitter_author }}">

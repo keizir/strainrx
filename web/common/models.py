@@ -35,11 +35,8 @@ class MetaDataAbstract(models.Model):
         ('app', _('App')),
     )
 
-    meta_title = models.CharField(_('Page Title'), default='Strains Web', max_length=3072, blank=True)
-    meta_desc = models.CharField(
-        _('Meta Description'), max_length=3072, blank=True,
-        default=_('StrainRx is the premiere online source for strain intelligence. '
-                  'We help cannabis users find the perfect strain that\'s ideally suited for their needs.'))
+    meta_title = models.CharField(_('Page Title'), max_length=3072, blank=True)
+    meta_desc = models.CharField(_('Meta Description'), max_length=3072, blank=True)
     meta_keywords = models.CharField(_('Meta Keywords'), max_length=3072, blank=True)
     social_image = ResizedImageField(max_length=255, blank=True,
                                      help_text='Maximum file size allowed is 10Mb', validators=[validate_image],
@@ -51,12 +48,11 @@ class MetaDataAbstract(models.Model):
         help_text=_('Use Article for generic pages.')
     )
     og_title = models.CharField(
-        _('Resource title property="og:title"'), max_length=255,
-        default=_('Cannabis Intelligence Platform - StrainRx'), blank=True)
+        _('Resource title property="og:title"'), max_length=255, blank=True,
+        help_text=_('Leave the field blank if it should be equal to "Page Title" field value.'))
     og_description = models.CharField(
         _('Resource description property="og:description"'), max_length=255, blank=True,
-        default=_('StrainRx is a tool to identify and locate cannabis strains with optimal effects and benefits, '
-                  'based on a user\'s personal preference and need.'))
+        help_text=_('Leave the field blank if it should be equal to "Meta Description" field value.'))
 
     # Facebook
     fb_app_id = models.CharField(
