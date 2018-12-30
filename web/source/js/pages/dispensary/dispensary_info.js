@@ -766,7 +766,7 @@ var MenuUpdateRequestDialog = function MenuUpdateRequestDialog(user ,location, o
 
 
 var MenuUpdateRequestOkDialog = function MenuUpdateRequestOkDialog(onConfirm) {
-    return Dialog('#menu-update-request-ok-dialog', '#btn-close', {}, onConfirm);
+    return Dialog('#menu-update-request-ok-dialog', '#menu-update-request-ok-dialog #btn-close', {}, onConfirm);
 };
 
 
