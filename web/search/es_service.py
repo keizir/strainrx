@@ -549,6 +549,11 @@ class SearchElasticService(BaseElasticService):
 
         query = {
             "_source": ["id", "name", "variety", "strain_slug", "removed_date"],
+            "sort": [{
+                "strain_slug": {
+                    "order": "asc"
+                }
+            }],
             "suggest": {
                 "name_suggestion": {
                     "text": query,
@@ -631,7 +636,7 @@ class SearchElasticService(BaseElasticService):
                 "bool": {
                     "must": {
                         "regexp": {
-                            "name": '{}.*'.format(lookup_query)
+                            "name.raw": '{}.*'.format(lookup_query)
                         }
                     },
                     "must_not": [

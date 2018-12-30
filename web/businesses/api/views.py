@@ -206,9 +206,9 @@ class BusinessLocationView(APIView):
 
     def post(self, request, business_id, business_location_id):
         existing_location = self.get_object(business_location_id)
-        serializer = BusinessLocationDetailSerializer(existing_location, data=request.data, partial=True)
+        serializer = BusinessLocationSerializer(existing_location, data=request.data, partial=True)
         serializer.is_valid(raise_exception=True)
-        serializer.update(existing_location, serializer.validated_data)
+        serializer.save()
         return Response({}, status=status.HTTP_200_OK)
 
     def put(self, request, business_id, business_location_id):
