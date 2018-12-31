@@ -1,4 +1,5 @@
 import json
+import re
 
 from django.db.models import Q
 from django.template.defaultfilters import slugify
@@ -636,7 +637,7 @@ class SearchElasticService(BaseElasticService):
                 "bool": {
                     "must": {
                         "regexp": {
-                            "name.raw": '{}.*'.format(lookup_query)
+                            "name": '.*{}.*'.format(re.sub('[^a-zA-Z0-9]', '', lookup_query.lower()))
                         }
                     },
                     "must_not": [

@@ -2,7 +2,7 @@
 
 {% load staticfiles i18n %}
 
-{% block title %}{% if grower.meta_title %}{{ grower.meta_title }}{% else %}{{ grower.location_name }} Cultivator in {{ grower.city_fk.full_name }}, {{ grower.street1 }}{% endif %}{% endblock %}
+{% block title %}{% if grower.meta_title %}{{ grower.meta_title }}{% else %}{{ grower.location_name }} Cannabis Cultivator in {{ grower.city_fk.full_name }}, {{ grower.street1 }}{% endif %}{% endblock %}
 
 {% block meta_keywords %}{{ grower.meta_keywords }}{% endblock meta_keywords %}
 
@@ -73,7 +73,7 @@
         </div>
         <hr class="spacer sm">
         <div class="about">
-            {{ grower.about_or_default }}
+            {{ grower.about_or_default|linebreaks }}
         </div>
         {% if grow_details %}
         <div class="section how-we-grow">

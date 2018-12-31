@@ -65,7 +65,7 @@ class Command(BaseCommand):
                     "filter": {
                         "replace_special_chars": {
                           "type": "pattern_replace",
-                          "pattern": "[ :\\-+=\\&\\|\\>\\<\\!\\(\\)\\{\\}\\[\\]\\^\\\\\"\\~\\*\\?\\;\\/\\.\\,\\_]",
+                          "pattern": "[ :\\-+=\\&\\|\\>\\<\\!\\(\\)\\{\\}\\[\\]\\^\\\\\"\\~\\*\\?\\;\\/\\.\\,\\_\\$\\%]",
                           "replacement": ""
                         }
                     },
@@ -73,7 +73,7 @@ class Command(BaseCommand):
                         "name_analyzer": {
                             "type": "custom",
                             "tokenizer": "whitespace",
-                            "filter": ["lowercase"]
+                            "filter": ["lowercase", "replace_special_chars"]
                         },
                         "exact_name_analyzer": {
                             "type": "custom",

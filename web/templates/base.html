@@ -24,8 +24,8 @@
     {% block meta_social %}
       <meta property="og:url" content="{{ request.build_absolute_uri }}" />
       <meta property="og:type" content="{{ page_meta.og_type|default:"website" }}" />
-      <meta property="og:title" content="{{ page_meta.og_title|default:"Cannabis Intelligence Platform - StrainRx" }}" />
-      <meta property="og:description" content="{{ page_meta.og_description|default:"StrainRx is a tool to identify and locate cannabis strains with optimal effects and benefits, based on a user's personal preference and need." }}" />
+      <meta property="og:title" content="{% if page_meta.og_title %}{{ page_meta.og_title }}{% else %}{{ page_meta.meta_title|default:"Cannabis Intelligence Platform - StrainRx" }}{% endif %}" />
+      <meta property="og:description" content="{% if page_meta.og_description %}{{ page_meta.og_description }}{% else %}{{ page_meta.meta_desc|default:"StrainRx is a tool to identify and locate cannabis strains with optimal effects and benefits, based on a user's personal preference and need." }}{% endif %}" />
       <meta property="og:image" content="{% if page_meta.social_image %}{{ page_meta.social_image.url }}{% else %}{{ logo }}{% endif %}" />
 
       {% if page_meta.fb_app_id %}
