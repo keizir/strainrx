@@ -315,6 +315,12 @@ W.pages.business.BusinessDetail = Class.extend({
                         $('input[name="delivery"]').removeProp('checked');
                     }
 
+                    if (location.grow_house) {
+                        $('input[name="grow_house"]').prop('checked', true);
+                    } else {
+                        $('input[name="grow_house"]').removeProp('checked');
+                    }
+
                     if (location.grow_house && !location.delivery && !location.dispensary) {
                         that.ui.$hoursFieldGroup.addClass('hidden');
                     } else {

@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-from web.businesses.models import Business, BusinessLocation, BusinessLocationMenuItem
+from web.businesses.models import Business, BusinessLocation, BusinessLocationMenuItem, phone_number_validator
 
 
 class BusinessSerializer(serializers.ModelSerializer):
@@ -31,27 +31,31 @@ class MenuItemSerializer(serializers.ModelSerializer):
 
 
 class BusinessLocationSerializer(serializers.ModelSerializer):
+    grow_details = serializers.DictField()
+
     class Meta:
         model = BusinessLocation
         fields = ('id', 'location_name', 'manager_name', 'location_email', 'image', 'primary', 'dispensary',
                   'delivery', 'street1', 'city', 'state', 'zip_code', 'phone', 'ext', 'timezone', 'about',
                   'delivery_radius', 'mon_open', 'mon_close', 'tue_open', 'tue_close', 'wed_open', 'wed_close',
                   'thu_open', 'thu_close', 'fri_open', 'fri_close', 'sat_open', 'sat_close', 'sun_open', 'sun_close',
-                  'lat', 'lng', 'location_raw', 'slug_name', 'city_slug', 'image', 'url', 'urls', 'image_url',
-                  'grow_house', 'grow_details')
-
-    mon_open = serializers.TimeField(format='%I:%M %p', input_formats=['%I:%M %p'], allow_null=True)
-    mon_close = serializers.TimeField(format='%I:%M %p', input_formats=['%I:%M %p'], allow_null=True)
-    tue_open = serializers.TimeField(format='%I:%M %p', input_formats=['%I:%M %p'], allow_null=True)
-    tue_close = serializers.TimeField(format='%I:%M %p', input_formats=['%I:%M %p'], allow_null=True)
-    wed_open = serializers.TimeField(format='%I:%M %p', input_formats=['%I:%M %p'], allow_null=True)
-    wed_close = serializers.TimeField(format='%I:%M %p', input_formats=['%I:%M %p'], allow_null=True)
-    thu_open = serializers.TimeField(format='%I:%M %p', input_formats=['%I:%M %p'], allow_null=True)
-    thu_close = serializers.TimeField(format='%I:%M %p', input_formats=['%I:%M %p'], allow_null=True)
-    fri_open = serializers.TimeField(format='%I:%M %p', input_formats=['%I:%M %p'], allow_null=True)
-    fri_close = serializers.TimeField(format='%I:%M %p', input_formats=['%I:%M %p'], allow_null=True)
-    sat_open = serializers.TimeField(format='%I:%M %p', input_formats=['%I:%M %p'], allow_null=True)
-    sat_close = serializers.TimeField(format='%I:%M %p', input_formats=['%I:%M %p'], allow_null=True)
-    sun_open = serializers.TimeField(format='%I:%M %p', input_formats=['%I:%M %p'], allow_null=True)
-    sun_close = serializers.TimeField(format='%I:%M %p', input_formats=['%I:%M %p'], allow_null=True)
-    grow_details = serializers.DictField()
+                  'lat', 'lng', 'location_raw', 'slug_name', 'city_slug', 'url', 'urls', 'image_url',
+                  'grow_house', 'grow_details', 'formatted_address')
+        readonly_fields = ('image_url', 'url', 'urls', 'formatted_address')
+        extra_kwargs = {
+            'phone': {'validators': [phone_number_validator]},
+            'mon_open': {'format': '%I:%M %p', 'input_formats': ['%I:%M %p']},
+            'mon_close': {'format': '%I:%M %p', 'input_formats': ['%I:%M %p']},
+            'tue_open': {'format': '%I:%M %p', 'input_formats': ['%I:%M %p']},
+            'tue_close': {'format': '%I:%M %p', 'input_formats': ['%I:%M %p']},
+            'wed_open': {'format': '%I:%M %p', 'input_formats': ['%I:%M %p']},
+            'wed_close': {'format': '%I:%M %p', 'input_formats': ['%I:%M %p']},
+            'thu_open': {'format': '%I:%M %p', 'input_formats': ['%I:%M %p']},
+            'thu_close': {'format': '%I:%M %p', 'input_formats': ['%I:%M %p']},
+            'fri_open': {'format': '%I:%M %p', 'input_formats': ['%I:%M %p']},
+            'fri_close': {'format': '%I:%M %p', 'input_formats': ['%I:%M %p']},
+            'sat_open': {'format': '%I:%M %p', 'input_formats': ['%I:%M %p']},
+            'sat_close': {'format': '%I:%M %p', 'input_formats': ['%I:%M %p']},
+            'sun_open': {'format': '%I:%M %p', 'input_formats': ['%I:%M %p']},
+            'sun_close': {'format': '%I:%M %p', 'input_formats': ['%I:%M %p']}
+        }

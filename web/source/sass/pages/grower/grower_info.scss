@@ -335,6 +335,10 @@
 
             .about-row {
                 line-height: 1.5em;
+
+                p:not(:first-child) {
+                    margin-top: 1em;
+                }
             }
         }
 

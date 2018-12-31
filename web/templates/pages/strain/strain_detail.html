@@ -15,11 +15,13 @@
 {% block meta_social %}
     <meta property="og:url" content="{{ request.build_absolute_uri }}" />
     <meta property="og:type" content="{{ strain.og_type|default:"article" }}" />
-    <meta property="og:title" content="{% if strain.og_title %}{{ strain.og_title }}{% else %}{{ strain_name }} {{ strain_variety }} strain{% endif %}" />
+    <meta property="og:title" content="{% if strain.og_title|default:strain.meta_title %}{{ strain.og_title|default:strain.meta_title }}{% else %}{{ strain_name }} {{ strain_variety }} strain{% endif %}" />
     <meta property="og:description" content="{{ strain.og_description|default:strain.meta_desc }}" />
-    <meta property="og:image" content="{{ strain.social_image|default:social_image }}" />
+    <meta property="og:image" content="{% if strain.social_image %}{{ strain.social_image.url }}{% else %}{{ social_image }}{% endif %}" />
 
-    <meta property="fb:app_id" content="{{ strain.fb_app_id }}" />
+    {% if strain.fb_app_id %}
+      <meta property="fb:app_id" content="{{ strain.fb_app_id }}" />
+    {% endif %}
 
     <meta name="twitter:card" content="{{ strain.twitter_card|default:"summary_large_image" }}">
     <meta name="twitter:site" content="{{ strain.twitter_site|default:"@strainrx" }}">

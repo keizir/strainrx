@@ -228,6 +228,14 @@ class BusinessLocation(MetaDataAbstract):
     sun_open = models.TimeField(blank=True, null=True)
     sun_close = models.TimeField(blank=True, null=True)
 
+    MetaDataAbstract._meta.get_field('meta_title').help_text = _(
+        'Leave the field blank to display the default title as '
+        '`{ location_name } Dispensary in { city }, { street1 }` for dispensary page and '
+        '`{ location_name } Cultivator in { city }, { street1 }` for cultivator page.')
+    MetaDataAbstract._meta.get_field('meta_desc').help_text = _(
+        'Leave the field blank to display the default description as '
+        '`StrainRx brings you the most up to date menu and the latest deals from { location_name } in { city }`')
+
     objects = GeoManager()
 
     def __init__(self, *args, **kwargs):
