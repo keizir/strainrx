@@ -1,7 +1,6 @@
 import json
 import re
 
-from django.db.models import Q
 from django.template.defaultfilters import slugify
 
 from web.businesses.api.services import get_open_closed, get_location_rating
@@ -727,7 +726,7 @@ class SearchElasticService(BaseElasticService):
                 })
 
         location = current_user.get_location()
-        proximity = current_user.proximity
+        proximity = current_user.proximity or SystemProperty.objects.max_delivery_radius()
         sort_query = []
         for item in list(lookup_query.get('sort', [])) + [
             StrainSearchSerializer.BEST_MATCH, StrainSearchSerializer.NAME, StrainSearchSerializer.LOCATION,
