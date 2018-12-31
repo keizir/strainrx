@@ -48,10 +48,10 @@ class MetaDataAbstract(models.Model):
         help_text=_('Use Article for generic pages.')
     )
     og_title = models.CharField(
-        _('Resource title property="og:title"'), max_length=255, blank=True,
+        _('Resource title property="og:title"'), max_length=3072, blank=True,
         help_text=_('Leave the field blank if it should be equal to "Page Title" field value.'))
     og_description = models.CharField(
-        _('Resource description property="og:description"'), max_length=255, blank=True,
+        _('Resource description property="og:description"'), max_length=3072, blank=True,
         help_text=_('Leave the field blank if it should be equal to "Meta Description" field value.'))
 
     # Facebook
