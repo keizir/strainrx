@@ -596,7 +596,7 @@ class SearchElasticService(BaseElasticService):
         )
 
         location = current_user.get_location()
-        proximity = current_user.proximity
+        proximity = current_user.proximity or SystemProperty.objects.max_delivery_radius()
         sort_query = []
         for item in [
             StrainSearchSerializer.BEST_MATCH, StrainSearchSerializer.NAME, StrainSearchSerializer.LOCATION,
