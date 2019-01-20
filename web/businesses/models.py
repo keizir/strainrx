@@ -262,7 +262,7 @@ class BusinessLocation(MetaDataAbstract):
             'slug_name': self.slug_name,
         }
 
-        if self.dispensary:
+        if self.dispensary or self.delivery:
             urls['dispensary'] = reverse('businesses:dispensary_info', kwargs=kwargs)
 
         if self.grow_house:
