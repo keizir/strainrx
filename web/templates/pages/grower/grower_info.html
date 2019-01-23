@@ -179,7 +179,7 @@
                     </div>
                     <div class="address">
                         <div>{{ grower.street1 }}</div>
-                        <div>{{ grower.city }}, {{ grower.state }}, {{ grower.zip_code }}</div>
+                        <div>{{ grower.city }}, {{ grower.state }}{% if grower.zip_code %}, {{ grower.zip_code }}{% endif %}</div>
                     </div>
                 </div>
             </div>
@@ -320,7 +320,7 @@
                         </div>
                         <div class="address">
                             <div>{{ grower.street1 }}</div>
-                            <div>{{ grower.city }}, {{ grower.state }}, {{ grower.zip_code }}</div>
+                            <div>{{ grower.city }}, {{ grower.state }}{% if grower.zip_code %}, {{ grower.zip_code }}{% endif %}</div>
                         </div>
                     </div>
                 </div>

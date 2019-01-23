@@ -185,15 +185,16 @@ W.pages.dispensary.DispensaryInfo = Class.extend({
         $('.rate-location-form').on('submit', function (e) {
             e.preventDefault();
             var rating = $('.rate-stars').rateYo('rating'),
-                review = $('.rate-review').val();
+                $review = $('.rate-review'),
+                review = $review.val();
 
             if (rating === 0) {
                 $('.error-message').text('Rating is required');
                 return;
             }
 
-            if (review && review.length > 500) {
-                $('.error-message').text('Review max length 500 is exceeded');
+            if (review && review.length > (parseInt($review.attr('maxlength')) || 500)) {
+                $('.error-message').text('Review max length ' + $review.attr('maxlength') || 500 + ' is exceeded');
                 return;
             }
 

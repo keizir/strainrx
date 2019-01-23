@@ -6,8 +6,9 @@
             <fieldset>
                 <div class="form-field-group address-field-group">
                     <div class="form-field">
-                        <label for="address">Address</label>
-                        <input type="text" name="address" id="address" value="${ buildAddressDisplayName(data) }"/>
+                        <label for="address">Address <span class="help-text">(City/State for cultivator)</span></label>
+                        <input type="text" name="address" id="address"
+                               placeholder="Enter a location" value="${ buildAddressDisplayName(data) }"/>
                         <span class="removable remove-location hidden" title="Clear value"></span>
                     </div>
                 </div>

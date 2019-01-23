@@ -184,10 +184,10 @@ class BusinessLocation(MetaDataAbstract):
                                       'outdoor': False},
                              blank=True, null=True)
 
-    street1 = models.CharField(max_length=100)
+    street1 = models.CharField(max_length=100, blank=True)
     city = models.CharField(max_length=100)
     state = models.CharField(max_length=50)
-    zip_code = models.CharField(max_length=10, db_index=True)
+    zip_code = models.CharField(max_length=10, db_index=True, blank=True)
     timezone = models.CharField(max_length=100, null=True, choices=zip(pytz.common_timezones, pytz.common_timezones))
 
     city_slug = models.SlugField(max_length=611, null=True, blank=True,
@@ -312,7 +312,7 @@ class BusinessLocation(MetaDataAbstract):
 
     @property
     def formatted_address(self):
-        return ', '.join((self.street1, self.city, self.zip_code, self.state))
+        return ', '.join(filter(None, (self.street1, self.city, self.zip_code, self.state)))
 
     @property
     def days_since_menu_update(self):
