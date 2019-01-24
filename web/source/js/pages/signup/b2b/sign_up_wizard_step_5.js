@@ -60,9 +60,7 @@ W.pages.b2b.SignUpWizardStep5 = W.common.WizardStep.extend({
         GoogleLocations.initGoogleAutocomplete(
             function (autocomplete, $input) {
                 var $el = $($input), a = GoogleLocations.getAddressFromAutocomplete(autocomplete);
-                if (!a.street1 || !a.city || !a.state || !a.zipcode) {
-                    $('.error-message').text('Address should have a street, city, state and zipcode');
-                } else {
+                if (that.validateAddress(a)) {
                     $el.val(W.common.Format.formatAddress(a));
                     $el.blur();
                     that.stepData = a;
@@ -76,9 +74,7 @@ W.pages.b2b.SignUpWizardStep5 = W.common.WizardStep.extend({
                     $el.val(W.common.Format.formatAddress(a));
                     $el.blur();
 
-                    if (!a.street1 || !a.city || !a.state || !a.zipcode) {
-                        $('.error-message').text('Address should have a street, city, state and zipcode');
-                    } else {
+                    if (that.validateAddress(a)) {
                         that.stepData = a;
                     }
                 }
@@ -110,13 +106,33 @@ W.pages.b2b.SignUpWizardStep5 = W.common.WizardStep.extend({
             return false;
         }
 
-        if (!this.stepData.street1 || !this.stepData.city || !this.stepData.state || !this.stepData.zipcode) {
-            $('.error-message').text('Address should have a street, city, state and zipcode');
+        if (!this.validateAddress()) {
             return false;
         }
 
         if (!W.common.Constants.regex.phone.test(phoneNumber)) {
             $('.error-message').text('Phone number must match the following format: 000-000-0000');
+            return false;
+        }
+
+        return true;
+    },
+
+
+    validateAddress: function(data) {
+        var prevStepData = this.model.data[4];
+        data = data || this.stepData;
+
+        // Grover house can enter only city and state
+        if (prevStepData.growHouse && (!data.city || !data.state)){
+            $('.error-message').text('Address should have a city and state');
+            return false;
+        }
+
+        // For delivery or dispensary check for full address
+        if ((!data.street1 || !data.zipcode || !data.city || !data.state) &&
+          (prevStepData.dispensary || prevStepData.delivery)) {
+            $('.error-message').text('Address should have a street, city, state and zipcode 33');
             return false;
         }
 

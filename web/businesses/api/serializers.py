@@ -19,10 +19,10 @@ class BusinessSignUpSerializer(serializers.Serializer):
     pwd = serializers.CharField()
     pwd2 = serializers.CharField()
 
-    street1 = serializers.CharField()
+    street1 = serializers.CharField(required=False, allow_blank=True)
     city = serializers.CharField()
     state = serializers.CharField()
-    zip_code = serializers.CharField()
+    zip_code = serializers.CharField(required=False, allow_blank=True)
     phone = serializers.CharField()
 
     lat = serializers.FloatField(allow_null=True)

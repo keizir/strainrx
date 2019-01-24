@@ -52,7 +52,7 @@ class MyUserAdmin(UserAdminImpersonateMixin, AuthUserAdmin, ExportActionModelAdm
         ('', {'fields': ('type', 'timezone', 'proximity', 'gender', 'birth_month', 'birth_day', 'birth_year')}),
     ) + AuthUserAdmin.fieldsets
     list_display = (
-        'email', 'first_name', 'last_name', 'type', 'last_login', 'date_joined', 'is_email_verified', 'is_superuser')
+        'email', 'first_name', 'last_name', 'name', 'type', 'last_login', 'date_joined', 'is_email_verified', 'is_superuser')
     search_fields = ['email', 'first_name', 'last_name']
     list_filter = (
         ('date_joined', DateRangeFilter),

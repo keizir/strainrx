@@ -65,13 +65,13 @@ W.pages.business.BusinessLocations = Class.extend({
                     a = that.GoogleLocations.getAddressFromAutocomplete(autocomplete),
                     id = location.id || location.tmp_id;
 
-                if (!a || !a.street1 || !a.city || !a.state || !a.zipcode) {
-                    that.addError(id, 'address__{0}'.format(id), 'Enter an address with street, city, state and zipcode.');
+                if (!a || !a.city || !a.state) {
+                    that.addError(id, 'address__{0}'.format(id), 'Enter an address with city and state.');
                 } else {
                     $el.val(W.common.Format.formatAddress(a));
                     $el.blur();
 
-                    that.locations[id].street1 = a.street1;
+                    that.locations[id].street1 = a.street1 || '';
                     that.locations[id].city = a.city;
                     that.locations[id].state = a.state;
                     that.locations[id].zip_code = a.zipcode;
@@ -368,7 +368,12 @@ W.pages.business.BusinessLocations = Class.extend({
             });
 
             $.each(that.locations, function (i, l) {
-                if (!l.street1 || !l.city || !l.state || !l.zip_code) {
+                that.cleanError(l.id || l.tmp_id, 'address__{0}'.format(l.id || l.tmp_id));
+
+                if (l.grow_house &&  !l.city || !l.state) {
+                    that.addError(l.id || l.tmp_id, 'address__{0}'.format(l.id || l.tmp_id), 'Enter an address with city and state');
+                }
+                else if ((l.dispensary || l.delivery) && (!l.city || !l.state || !l.street1 || !l.zip_code)) {
                     that.addError(l.id || l.tmp_id, 'address__{0}'.format(l.id || l.tmp_id), 'Enter an address with street, city, state and zipcode.');
                 }
             });

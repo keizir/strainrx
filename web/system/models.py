@@ -18,7 +18,7 @@ from .managers import SystemPropertyQuerySet
 
 class ReviewAbstract(models.Model):
     rating = models.FloatField()
-    review = models.CharField(max_length=500, default='', blank=True)
+    review = models.CharField(max_length=1100, default='', blank=True)
     review_approved = models.BooleanField(default=False)
 
     created_date = models.DateTimeField(default=timezone.now)

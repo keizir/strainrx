@@ -51,8 +51,8 @@ class User(AbstractUser):
     birth_year = models.IntegerField(_('Birth Year'), blank=True, null=True)
 
     gender = models.CharField(_('Gender'), choices=GENDER, blank=True, null=True, max_length=10)
-    proximity = models.FloatField(_('Proximity'), null=True)
-    timezone = models.CharField(_('Timezone'), null=True, max_length=100,
+    proximity = models.FloatField(_('Proximity'), null=True, blank=True)
+    timezone = models.CharField(_('Timezone'), null=True, max_length=100, blank=True,
                                 choices=zip(pytz.common_timezones, pytz.common_timezones))
 
     image = models.ImageField(max_length=255, upload_to=upload_image_to, blank=True,
