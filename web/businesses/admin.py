@@ -36,11 +36,19 @@ class BusinessLocationInline(admin.TabularInline):
 class MenuInline(admin.TabularInline):
     extra = 0
     model = BusinessLocationMenuItem
+    raw_id_fields = ('strain',)
+
+    def get_queryset(self, request):
+        return super().get_queryset(request).select_related('strain', 'business_location')
 
 
 class GrownStrainInline(admin.TabularInline):
     extra = 0
     model = BusinessLocationGrownStrainItem
+    raw_id_fields = ('strain',)
+
+    def get_queryset(self, request):
+        return super().get_queryset(request).select_related('strain', 'business_location')
 
 
 def enable_business_search(modeladmin, request, queryset):
@@ -234,6 +242,7 @@ class BusinessLocationAdmin(admin.ModelAdmin):
     ordering = ['location_name']
     actions = [activate_selected_locations, deactivate_selected_locations, verify_email_for_selected_locations]
     inlines = (BusinessLocationMenuUpdateInline, FeaturedBusinessLocationInline, MenuInline, GrownStrainInline)
+    list_select_related = ('business',)
 
     @staticmethod
     def owner_email_verified(obj):
