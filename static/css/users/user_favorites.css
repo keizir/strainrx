@@ -1,0 +1,79 @@
+@media (max-width: 767px) {
+  .user-profile .profile-content {
+    width: 100%; } }
+
+@media (max-width: 480px) {
+  .user-profile .profile-content {
+    width: 95%; } }
+
+.user-profile .profile-content .user-favorites {
+  display: block;
+  position: relative;
+  width: 100%;
+  text-align: left; }
+  .user-profile .profile-content .user-favorites .favorite {
+    display: inline-block;
+    position: relative;
+    width: 30%;
+    margin-bottom: 3em;
+    margin-right: 1%;
+    vertical-align: top; }
+    .user-profile .profile-content .user-favorites .favorite .strain-info-wrapper {
+      display: inline-block;
+      width: 75%;
+      text-align: left;
+      vertical-align: top; }
+      .user-profile .profile-content .user-favorites .favorite .strain-info-wrapper .strain-image {
+        display: inline-block;
+        width: 34%; }
+        .user-profile .profile-content .user-favorites .favorite .strain-info-wrapper .strain-image img {
+          width: 95%; }
+      .user-profile .profile-content .user-favorites .favorite .strain-info-wrapper .strain-info {
+        display: inline-block;
+        width: 60%;
+        vertical-align: top; }
+        .user-profile .profile-content .user-favorites .favorite .strain-info-wrapper .strain-info span {
+          display: block;
+          font-weight: bold;
+          margin-bottom: 0.5em; }
+        .user-profile .profile-content .user-favorites .favorite .strain-info-wrapper .strain-info .strain-rating {
+          padding: 0; }
+        .user-profile .profile-content .user-favorites .favorite .strain-info-wrapper .strain-info .dispensary-type {
+          font-size: 12px;
+          line-height: 1.3em; }
+          .user-profile .profile-content .user-favorites .favorite .strain-info-wrapper .strain-info .dispensary-type .dispensary-detail {
+            margin-top: 5px;
+            line-height: 1.3em; }
+      .user-profile .profile-content .user-favorites .favorite .strain-info-wrapper .dispensary-detail {
+        font-size: 12px; }
+        .user-profile .profile-content .user-favorites .favorite .strain-info-wrapper .dispensary-detail * {
+          display: inline-block; }
+    .user-profile .profile-content .user-favorites .favorite .strain-favorite-wrapper {
+      display: inline-block;
+      width: 10%;
+      text-align: right;
+      font-size: 1.2em;
+      font-weight: bold; }
+      .user-profile .profile-content .user-favorites .favorite .strain-favorite-wrapper .remove-icon {
+        display: block;
+        text-align: center; }
+        .user-profile .profile-content .user-favorites .favorite .strain-favorite-wrapper .remove-icon .text {
+          display: block;
+          font-size: 0.6em;
+          cursor: default; }
+        .user-profile .profile-content .user-favorites .favorite .strain-favorite-wrapper .remove-icon .removable {
+          cursor: pointer; }
+      .user-profile .profile-content .user-favorites .favorite .strain-favorite-wrapper .created-date .date {
+        font-size: 0.6em; }
+  @media (max-width: 767px) {
+    .user-profile .profile-content .user-favorites .favorite {
+      display: inline-block;
+      width: 49%;
+      margin-bottom: 3em;
+      margin-right: 0; } }
+  @media (max-width: 480px) {
+    .user-profile .profile-content .user-favorites .favorite {
+      display: block;
+      width: 100%;
+      margin-bottom: 3em;
+      margin-right: 0; } }

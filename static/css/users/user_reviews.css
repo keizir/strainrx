@@ -1,0 +1,69 @@
+@media (max-width: 767px) {
+  .user-profile .profile-content {
+    width: 100%; } }
+
+@media (max-width: 480px) {
+  .user-profile .profile-content {
+    width: 95%; } }
+
+.user-profile .profile-content .user-reviews {
+  display: block;
+  position: relative;
+  width: 100%; }
+  .user-profile .profile-content .user-reviews .review {
+    display: block;
+    position: relative;
+    width: 100%;
+    margin-bottom: 3em; }
+    .user-profile .profile-content .user-reviews .review .strain-info-wrapper {
+      display: inline-block;
+      width: 38%;
+      text-align: left;
+      vertical-align: top; }
+      .user-profile .profile-content .user-reviews .review .strain-info-wrapper .strain-image {
+        display: inline-block;
+        width: 29%; }
+        .user-profile .profile-content .user-reviews .review .strain-info-wrapper .strain-image img {
+          width: 95%; }
+      .user-profile .profile-content .user-reviews .review .strain-info-wrapper .strain-info {
+        display: inline-block;
+        width: 69%;
+        vertical-align: top; }
+        .user-profile .profile-content .user-reviews .review .strain-info-wrapper .strain-info span {
+          display: block;
+          font-weight: bold;
+          margin-bottom: 0.5em; }
+        .user-profile .profile-content .user-reviews .review .strain-info-wrapper .strain-info .strain-rating {
+          padding: 0; }
+    .user-profile .profile-content .user-reviews .review .strain-review-wrapper {
+      display: inline-block;
+      position: relative;
+      width: 60%;
+      text-align: left;
+      vertical-align: top; }
+      .user-profile .profile-content .user-reviews .review .strain-review-wrapper .your-rating {
+        display: inline-block;
+        width: 49%; }
+        .user-profile .profile-content .user-reviews .review .strain-review-wrapper .your-rating .user-rating {
+          display: inline-block; }
+      .user-profile .profile-content .user-reviews .review .strain-review-wrapper .created-date {
+        display: inline-block;
+        width: 49%;
+        text-align: right; }
+      .user-profile .profile-content .user-reviews .review .strain-review-wrapper .review-text .text {
+        display: block;
+        line-height: 1em;
+        height: auto;
+        max-height: 3em;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        margin-top: 1em; }
+        .user-profile .profile-content .user-reviews .review .strain-review-wrapper .review-text .text .expander {
+          cursor: pointer;
+          color: #6bc331;
+          text-decoration: underline; }
+      .user-profile .profile-content .user-reviews .review .strain-review-wrapper .review-text .full-text {
+        display: block;
+        line-height: 1em;
+        text-overflow: ellipsis;
+        margin-top: 1em; }

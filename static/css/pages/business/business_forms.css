@@ -1,0 +1,49 @@
+.menu-form {
+  min-height: 20em; }
+  .menu-form label {
+    color: #71757a;
+    font-weight: bold; }
+  .menu-form input, .menu-form select {
+    border-radius: 0.5em; }
+  .menu-form .location-field-group {
+    display: block;
+    width: 100%; }
+    .menu-form .location-field-group .form-field {
+      width: 100%;
+      margin: 0; }
+      .menu-form .location-field-group .form-field .locations {
+        display: block;
+        width: 100%; }
+        .menu-form .location-field-group .form-field .locations .label {
+          display: inline-block;
+          width: 15%; }
+        .menu-form .location-field-group .form-field .locations select {
+          display: inline-block;
+          width: 60%;
+          padding: 1em 2.5em 1em 1em;
+          background: none;
+          position: relative;
+          cursor: pointer;
+          z-index: 10; }
+        .menu-form .location-field-group .form-field .locations .pointer {
+          position: absolute;
+          font-size: 2em;
+          color: #10b3dc;
+          left: 72%;
+          background-color: #fff; }
+
+@media (max-width: 768px) {
+  .menu-form .location-field-group .form-field .locations .label {
+    width: 20%; }
+  .menu-form .location-field-group .form-field .locations select {
+    width: 75%; }
+  .menu-form .location-field-group .form-field .locations .pointer {
+    left: 91%; } }
+
+@media (max-width: 479px) {
+  .menu-form .location-field-group .form-field .locations .label {
+    width: 20%; }
+  .menu-form .location-field-group .form-field .locations select {
+    width: 70%; }
+  .menu-form .location-field-group .form-field .locations .pointer {
+    left: 84%; } }

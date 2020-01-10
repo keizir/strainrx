@@ -1,0 +1,13 @@
+.strains-wrapper .main-region {
+  display: -ms-flexbox;
+  display: flex;
+  -ms-flex-direction: column;
+      flex-direction: column;
+  -ms-flex-pack: center;
+      justify-content: center;
+  min-height: 65vh; }
+  .strains-wrapper .main-region p {
+    color: #71757a;
+    margin: -10em auto 2em auto; }
+  .strains-wrapper .main-region a {
+    margin: 0 auto; }

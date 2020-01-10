@@ -1,0 +1,164 @@
+.strains-wrapper {
+  height: 60em; }
+
+h1 {
+  font-size: 2em;
+  font-weight: normal;
+  line-height: 1em; }
+
+.home-row-01 {
+  background: #aaa8a8 url(../../images/weed_dark.jpg) no-repeat top center;
+  background-size: cover;
+  text-align: center;
+  height: 30em;
+  display: block;
+  z-index: 1; }
+  .home-row-01 h1 {
+    margin: 1.5em 0.5em 0.5em; }
+  .home-row-01 p {
+    font-size: 1em;
+    width: 100%;
+    margin: 0 auto 2em auto; }
+  .home-row-01 .home-sub-row-02 {
+    display: block;
+    width: 100%;
+    color: #fff;
+    line-height: 2.5em; }
+    .home-row-01 .home-sub-row-02 .btn-lets-go {
+      width: 20.5em;
+      height: 4em; }
+
+.home-row-02 {
+  position: absolute;
+  top: 34em;
+  height: 26em;
+  width: 100%;
+  background: #508484; }
+  .home-row-02 .search-box {
+    display: block;
+    width: 100%;
+    height: 20em;
+    color: #fff;
+    margin: 0 auto;
+    text-align: center; }
+    .home-row-02 .search-box i {
+      padding: 0.75em 0; }
+    .home-row-02 .search-box p {
+      margin: 1.5em 0; }
+    .home-row-02 .search-box .search-form {
+      display: block;
+      position: relative;
+      width: 20em;
+      margin: 0 auto;
+      height: 12em; }
+      .home-row-02 .search-box .search-form .lookup-submit {
+        width: 14em;
+        margin-top: 2em;
+        border: 1px #fff solid;
+        background-color: #508484;
+        font-size: 1em;
+        font-weight: 500; }
+      .home-row-02 .search-box .search-form input[type="text"] {
+        display: block;
+        width: 100%;
+        height: 3em;
+        padding: 1em;
+        font-size: 0.7em;
+        border: none;
+        border-radius: 0.5em;
+        margin: 1.5em auto 0;
+        color: #8e8e93;
+        line-height: 1.2em; }
+      .home-row-02 .search-box .search-form button:focus,
+      .home-row-02 .search-box .search-form input:focus {
+        outline: none; }
+      .home-row-02 .search-box .search-form .payloads-region {
+        display: none;
+        position: absolute;
+        top: 2.5em;
+        width: 100%;
+        font-size: 0.7em;
+        color: #8e8e93;
+        background-color: #fff;
+        border-bottom-left-radius: 0.5em;
+        border-bottom-right-radius: 0.5em; }
+        .home-row-02 .search-box .search-form .payloads-region .search-payload {
+          display: block;
+          padding: 1em;
+          text-align: left;
+          cursor: pointer; }
+        .home-row-02 .search-box .search-form .payloads-region .search-payload.active,
+        .home-row-02 .search-box .search-form .payloads-region .search-payload:hover {
+          background-color: #bbe6d1;
+          color: #2f3f4c;
+          border-radius: 0.5em;
+          font-weight: bold; }
+
+.verify-email-dialog .message-1 {
+  display: block; }
+
+.verify-email-dialog .message-2 {
+  display: block;
+  margin-top: 20px; }
+  .verify-email-dialog .message-2 a {
+    color: #10b3dc; }
+
+@media (max-width: 479px) {
+  .home-row-02 .search-box i {
+    padding: 0.75em 0 0 0; } }
+
+@media (min-width: 768px) {
+  .strains-wrapper {
+    height: 64em; }
+  h1 {
+    font-size: 3.5em; }
+  .home-row-01 {
+    height: 34em; }
+    .home-row-01 h1 {
+      margin-top: 1em; }
+    .home-row-01 p {
+      font-size: 1.3em;
+      width: 80%; }
+  .home-row-02 {
+    top: 38em; }
+    .home-row-02 h1 {
+      margin: 0; } }
+
+@media (min-width: 1024px) {
+  .strains-wrapper {
+    height: 62em; }
+  .home-row-01 {
+    height: 32em; }
+  .home-row-02 {
+    top: 36em; }
+  .footer-region {
+    padding: 2em 4em;
+    line-height: 2em; } }
+
+@media (min-width: 1200px) {
+  .strains-wrapper {
+    height: 64em; }
+  .home-row-01 {
+    height: 34em; }
+  .home-row-02 {
+    top: 38em; } }
+
+@media (min-width: 1500px) {
+  .strains-wrapper {
+    height: 68em; }
+  .home-row-01 {
+    height: 38em; }
+    .home-row-01 h1 {
+      font-size: 5em; }
+    .home-row-01 p {
+      width: 70%;
+      font-size: 1.7em; }
+  .home-row-02 {
+    top: 42em; } }
+
+@media (min-width: 1920px) {
+  .home-row-01 h1 {
+    font-size: 5.6em; }
+  .home-row-01 p {
+    width: 70%;
+    font-size: 1.7em; } }

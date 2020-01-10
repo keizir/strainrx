@@ -1,0 +1,46 @@
+.btn-sign-out {
+  margin-top: 3em; }
+
+.login-block-wrapper {
+  text-align: center;
+  color: #8e8e93;
+  padding: 4em 1em 6em; }
+  .login-block-wrapper .login fieldset {
+    border: none;
+    margin: 0;
+    padding: 2em 1em 1.5em; }
+  .login-block-wrapper .login .forgot-password-link {
+    display: block;
+    margin-top: 3em; }
+  @media (max-width: 479px) {
+    .login-block-wrapper .login input {
+      width: auto; } }
+  @media (max-width: 479px) {
+    .login-block-wrapper {
+      width: 100%;
+      padding: 5em 0; }
+      .login-block-wrapper .login {
+        display: block;
+        position: relative;
+        width: 100%; }
+        .login-block-wrapper .login fieldset {
+          display: block;
+          position: relative;
+          padding: 2em 0; } }
+
+.pwd-reset-block-wrapper {
+  text-align: center;
+  color: #8e8e93;
+  padding: 4em 1em 6em; }
+  .pwd-reset-block-wrapper .forgot-message span {
+    display: block;
+    margin: 1em auto; }
+  .pwd-reset-block-wrapper .password-reset fieldset {
+    border: none;
+    margin: 0;
+    padding: 2em 1em 1.5em; }
+  .pwd-reset-block-wrapper .password-reset .form-group {
+    margin: 0 auto;
+    width: 30em; }
+  .pwd-reset-block-wrapper .password-reset .form-field {
+    display: block; }

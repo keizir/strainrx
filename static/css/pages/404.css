@@ -1,0 +1,39 @@
+.nav-region {
+  background-color: #2f3f4c; }
+
+.footer-region {
+  background-color: #2f3f4c; }
+  .footer-region a,
+  .footer-region .separator:after,
+  .footer-region .copyright-wrapper,
+  .footer-region .links-wrapper .links {
+    color: #fff; }
+
+.strain-404-container {
+  display: block;
+  position: relative;
+  background: url("../../images/404-background.jpeg") no-repeat top center;
+  background-size: cover;
+  height: 70em;
+  margin: 0; }
+  .strain-404-container .content {
+    display: block;
+    position: absolute;
+    top: 7em;
+    right: 0;
+    width: 25em;
+    color: #008326; }
+    .strain-404-container .content a {
+      color: #008326; }
+    .strain-404-container .content h1 {
+      font-size: 72px;
+      margin: 0 auto 40px; }
+    .strain-404-container .content span {
+      display: block;
+      font-size: 18px;
+      margin-bottom: 1em; }
+    .strain-404-container .content ul {
+      padding-left: 18px; }
+      .strain-404-container .content ul li {
+        margin-bottom: 0.2em;
+        text-decoration: underline; }

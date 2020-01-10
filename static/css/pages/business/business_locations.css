@@ -1,0 +1,200 @@
+.business-account-container .business-account-page-wrapper .business-account-tab-content .locations-form .location {
+  margin-top: 2em; }
+  .business-account-container .business-account-page-wrapper .business-account-tab-content .locations-form .location label {
+    color: #71757a;
+    font-weight: bold; }
+  .business-account-container .business-account-page-wrapper .business-account-tab-content .locations-form .location .grow-methods {
+    display: -ms-flexbox;
+    display: flex;
+    -ms-flex-direction: column;
+        flex-direction: column; }
+    .business-account-container .business-account-page-wrapper .business-account-tab-content .locations-form .location .grow-methods .form-field {
+      display: -ms-flexbox;
+      display: flex;
+      padding: 1em 0;
+      margin-right: 2em; }
+    .business-account-container .business-account-page-wrapper .business-account-tab-content .locations-form .location .grow-methods input {
+      width: auto;
+      margin-left: 1em; }
+    .business-account-container .business-account-page-wrapper .business-account-tab-content .locations-form .location .grow-methods .field-row {
+      display: -ms-flexbox;
+      display: flex; }
+  .business-account-container .business-account-page-wrapper .business-account-tab-content .locations-form .location .business-info-group {
+    display: inline-block;
+    width: 55%; }
+    .business-account-container .business-account-page-wrapper .business-account-tab-content .locations-form .location .business-info-group .form-field {
+      width: 90%; }
+      .business-account-container .business-account-page-wrapper .business-account-tab-content .locations-form .location .business-info-group .form-field input {
+        width: 100%;
+        border-radius: 0.5em;
+        padding: 1em 0.5em; }
+  .business-account-container .business-account-page-wrapper .business-account-tab-content .locations-form .location .business-type-field-group {
+    display: inline-block;
+    position: absolute;
+    width: 20%; }
+    .business-account-container .business-account-page-wrapper .business-account-tab-content .locations-form .location .business-type-field-group h3 {
+      margin-bottom: 1em;
+      color: #71757a; }
+    .business-account-container .business-account-page-wrapper .business-account-tab-content .locations-form .location .business-type-field-group .form-field {
+      width: 100%;
+      margin: 0; }
+      .business-account-container .business-account-page-wrapper .business-account-tab-content .locations-form .location .business-type-field-group .form-field label {
+        display: inline-block;
+        width: 80%; }
+      .business-account-container .business-account-page-wrapper .business-account-tab-content .locations-form .location .business-type-field-group .form-field input {
+        display: inline-block;
+        width: 15%; }
+  .business-account-container .business-account-page-wrapper .business-account-tab-content .locations-form .location .address-field {
+    position: relative; }
+    .business-account-container .business-account-page-wrapper .business-account-tab-content .locations-form .location .address-field .removable {
+      display: inline-block;
+      position: absolute;
+      right: 0.6em;
+      top: 2.5em;
+      cursor: pointer; }
+  .business-account-container .business-account-page-wrapper .business-account-tab-content .locations-form .location .trash-field-group {
+    display: inline-block;
+    position: absolute;
+    left: 75%;
+    width: 3%;
+    color: #10b3dc;
+    cursor: pointer; }
+  .business-account-container .business-account-page-wrapper .business-account-tab-content .locations-form .location .slider-area {
+    display: block;
+    position: relative;
+    width: 70%;
+    height: 5em;
+    margin: 0 auto;
+    color: #71757a; }
+    .business-account-container .business-account-page-wrapper .business-account-tab-content .locations-form .location .slider-area .slider-header {
+      display: block;
+      position: absolute;
+      width: 100%;
+      top: 0; }
+      .business-account-container .business-account-page-wrapper .business-account-tab-content .locations-form .location .slider-area .slider-header .sub-title {
+        display: inline-block;
+        float: left;
+        font-size: 80%; }
+      .business-account-container .business-account-page-wrapper .business-account-tab-content .locations-form .location .slider-area .slider-header .slider-value {
+        display: inline-block;
+        float: right;
+        font-size: 1.5em;
+        font-weight: bold; }
+    .business-account-container .business-account-page-wrapper .business-account-tab-content .locations-form .location .slider-area .slider {
+      top: 2.5em;
+      height: 0.3em;
+      border: none;
+      background: #8e8e93; }
+    .business-account-container .business-account-page-wrapper .business-account-tab-content .locations-form .location .slider-area .ui-slider-range {
+      background: #10b3dc; }
+    .business-account-container .business-account-page-wrapper .business-account-tab-content .locations-form .location .slider-area .ui-slider-handle {
+      height: 2em;
+      width: 2em;
+      border-color: #10b3dc;
+      cursor: pointer;
+      top: -0.68em;
+      background: #10b3dc;
+      outline: none; }
+    .business-account-container .business-account-page-wrapper .business-account-tab-content .locations-form .location .slider-area .slider-footer {
+      display: block;
+      position: absolute;
+      width: 100%;
+      bottom: 0; }
+      .business-account-container .business-account-page-wrapper .business-account-tab-content .locations-form .location .slider-area .slider-footer .min-mile {
+        display: inline-block;
+        float: left;
+        font-size: 80%; }
+      .business-account-container .business-account-page-wrapper .business-account-tab-content .locations-form .location .slider-area .slider-footer .max-mile {
+        display: inline-block;
+        float: right;
+        font-size: 80%; }
+  .business-account-container .business-account-page-wrapper .business-account-tab-content .locations-form .location .location-error {
+    margin: 2em 0;
+    font-weight: bold; }
+  .business-account-container .business-account-page-wrapper .business-account-tab-content .locations-form .location .location-image-wrapper {
+    display: inline-block;
+    position: relative;
+    top: 12.5em;
+    vertical-align: top;
+    width: 14em;
+    padding: 0.5em;
+    border: 1px solid #8e8e93; }
+    .business-account-container .business-account-page-wrapper .business-account-tab-content .locations-form .location .location-image-wrapper img {
+      display: block;
+      width: auto;
+      max-width: 100%;
+      max-height: 14em;
+      margin: 0 auto; }
+    .business-account-container .business-account-page-wrapper .business-account-tab-content .locations-form .location .location-image-wrapper .upload-image {
+      width: 0.1px;
+      height: 0.1px;
+      opacity: 0;
+      overflow: hidden;
+      position: absolute;
+      z-index: -1; }
+    .business-account-container .business-account-page-wrapper .business-account-tab-content .locations-form .location .location-image-wrapper .upload-image + label {
+      display: block;
+      cursor: pointer;
+      color: #8e8e93; }
+    .business-account-container .business-account-page-wrapper .business-account-tab-content .locations-form .location .location-image-wrapper .upload-image:focus + label {
+      outline: 1px solid #10b3dc; }
+    .business-account-container .business-account-page-wrapper .business-account-tab-content .locations-form .location .location-image-wrapper .btn-primary {
+      display: block;
+      width: 100%;
+      margin: 0.5em 0 0;
+      padding: 0.5em 1em;
+      cursor: pointer;
+      text-align: center;
+      color: #fff; }
+
+.business-account-container .business-account-page-wrapper .business-account-tab-content .locations-form .common-error-messages {
+  margin: 2em 0; }
+
+.business-account-container .business-account-page-wrapper .business-account-tab-content .locations-form .btn-add-location {
+  padding: 0.75em 2em; }
+
+@media (max-width: 768px) {
+  .business-account-container .business-account-page-wrapper .business-account-tab-content .locations-form .location .business-info-group {
+    display: inline-block;
+    width: 100%; }
+    .business-account-container .business-account-page-wrapper .business-account-tab-content .locations-form .location .business-info-group .form-field {
+      width: 95%; }
+  .business-account-container .business-account-page-wrapper .business-account-tab-content .locations-form .location .business-type-field-group {
+    position: relative;
+    width: 65%; }
+    .business-account-container .business-account-page-wrapper .business-account-tab-content .locations-form .location .business-type-field-group .form-field {
+      display: inline-block;
+      width: 49%; }
+  .business-account-container .business-account-page-wrapper .business-account-tab-content .locations-form .location .trash-field-group {
+    position: relative;
+    left: 18%;
+    font-size: 2em; }
+  .business-account-container .business-account-page-wrapper .business-account-tab-content .locations-form .location .location-image-wrapper {
+    top: -1em; } }
+
+@media (max-width: 479px) {
+  .business-account-container .business-account-page-wrapper .business-account-tab-content .locations-form .location .business-info-group {
+    display: block;
+    width: 100%; }
+  .business-account-container .business-account-page-wrapper .business-account-tab-content .locations-form .location .business-type-field-group {
+    position: relative;
+    width: 65%; }
+  .business-account-container .business-account-page-wrapper .business-account-tab-content .locations-form .location .trash-field-group {
+    left: 15%; }
+    .business-account-container .business-account-page-wrapper .business-account-tab-content .locations-form .location .trash-field-group .fa-trash-o {
+      font-size: 2em; }
+  .business-account-container .business-account-page-wrapper .business-account-tab-content .locations-form .location .slider-area {
+    width: 100%;
+    margin: 0 auto; }
+  .business-account-container .business-account-page-wrapper .business-account-tab-content .locations-form .location .location-error {
+    margin: 2em 0;
+    font-weight: bold; }
+  .business-account-container .business-account-page-wrapper .business-account-tab-content .locations-form .location .location-image-wrapper {
+    top: -1em; }
+  .business-account-container .business-account-page-wrapper .business-account-tab-content .locations-form .common-error-messages {
+    margin: 2em 0; }
+  .business-account-container .business-account-page-wrapper .business-account-tab-content .locations-form .btn-add-location {
+    padding: 0.75em 2em; } }
+
+.remove-location-dialog {
+  min-height: 110px !important; }

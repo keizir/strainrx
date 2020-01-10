@@ -1,0 +1,60 @@
+.user-profile .profile-content .user-proximity-settings {
+  display: block;
+  position: relative;
+  width: 100%;
+  text-align: left; }
+  .user-profile .profile-content .user-proximity-settings h2 {
+    margin-bottom: 1em; }
+  .user-profile .profile-content .user-proximity-settings .question {
+    display: block;
+    margin: 1em auto 3em;
+    color: #2f3f4c; }
+  .user-profile .profile-content .user-proximity-settings .slider-area {
+    width: 80%; }
+    .user-profile .profile-content .user-proximity-settings .slider-area .ui-slider-handle {
+      width: 100px;
+      height: 50px;
+      top: -20px;
+      border-radius: 0;
+      background-color: #fff;
+      cursor: pointer;
+      line-height: 50px;
+      text-align: center;
+      font-size: 1.2em;
+      font-weight: bold;
+      color: #2f3f4c;
+      outline: none; }
+    .user-profile .profile-content .user-proximity-settings .slider-area .ui-slider-handle:before {
+      content: '<';
+      display: inline-block;
+      position: relative;
+      float: left;
+      left: 2px; }
+    .user-profile .profile-content .user-proximity-settings .slider-area .ui-slider-handle:after {
+      content: 'MI >';
+      display: inline-block;
+      position: relative;
+      float: right;
+      right: 2px; }
+    .user-profile .profile-content .user-proximity-settings .slider-area .ui-slider-handle.ui-state-active {
+      color: #2f3f4c;
+      border: 2px solid #6bc331;
+      width: 103px; }
+    .user-profile .profile-content .user-proximity-settings .slider-area .ui-widget.ui-widget-content {
+      border: none;
+      background-color: #aaa8a8;
+      border-radius: 0; }
+    .user-profile .profile-content .user-proximity-settings .slider-area .ui-slider-range {
+      border: none;
+      background: #6bc331;
+      border-radius: 0; }
+    .user-profile .profile-content .user-proximity-settings .slider-area .proximity-value {
+      padding: 0 0.2em;
+      border-radius: 0;
+      width: 2.5em;
+      border-color: #efefef; }
+  .user-profile .profile-content .user-proximity-settings .notice {
+    display: block;
+    margin: 3em auto;
+    font-size: 80%;
+    color: #2f3f4c; }

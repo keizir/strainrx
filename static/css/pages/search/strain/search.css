@@ -1,0 +1,316 @@
+.strain-search-wrapper {
+  text-align: center;
+  color: #8e8e93; }
+  .strain-search-wrapper input {
+    display: block;
+    margin: 0 auto 1em; }
+  .strain-search-wrapper .btn-primary:disabled {
+    opacity: 0.5;
+    color: #fff; }
+  .strain-search-wrapper .btn-secondary:disabled {
+    opacity: 0.5;
+    color: #10b3dc; }
+  .strain-search-wrapper .btn-reset-search {
+    display: block;
+    margin: 2em auto; }
+  .strain-search-wrapper .btn-go-back {
+    display: block;
+    margin: 2em auto;
+    width: 14em;
+    padding: 0.75em 1em; }
+    .strain-search-wrapper .btn-go-back i {
+      font-size: 1.15em;
+      margin-right: 0.5em; }
+  .strain-search-wrapper .wizard-wrapper {
+    display: block;
+    width: 30em;
+    height: 10em;
+    padding: 2em 0;
+    margin: 0 auto; }
+    .strain-search-wrapper .wizard-wrapper hr {
+      z-index: 1;
+      width: 22em;
+      margin: -4em auto 0 auto; }
+    .strain-search-wrapper .wizard-wrapper .step-wrapper {
+      display: inline-block;
+      width: 7em;
+      height: 5em;
+      text-align: center;
+      vertical-align: top; }
+      .strain-search-wrapper .wizard-wrapper .step-wrapper .title {
+        display: inline-block;
+        padding-top: 1em; }
+  .strain-search-wrapper .step1-form-wrapper {
+    width: 100%; }
+    .strain-search-wrapper .step1-form-wrapper .form-field-group {
+      float: none;
+      text-align: center; }
+  .strain-search-wrapper .arrow-down {
+    position: absolute;
+    width: 0;
+    height: 0;
+    border-left: 6px solid transparent;
+    border-right: 6px solid transparent;
+    border-top: 6px solid #3CCB4D; }
+  .strain-search-wrapper .effects-form {
+    display: inline-block;
+    width: 100%;
+    margin: 0 auto;
+    line-height: 3em;
+    text-align: left; }
+    .strain-search-wrapper .effects-form .form-field {
+      position: relative;
+      margin: 0 0.3em;
+      width: 11.5em;
+      height: 3em; }
+      .strain-search-wrapper .effects-form .form-field .effect-config-box {
+        position: absolute;
+        border: 1px solid #35B244;
+        width: 11.5em;
+        height: 6.5em;
+        background-color: #35B244;
+        z-index: 1; }
+        .strain-search-wrapper .effects-form .form-field .effect-config-box .close-box {
+          font-size: 1.5em;
+          position: absolute;
+          line-height: 0.7em;
+          color: white;
+          top: -1.2em;
+          right: 5%;
+          cursor: pointer; }
+        .strain-search-wrapper .effects-form .form-field .effect-config-box .slider-wrapper .step-label {
+          font-size: 0.8em;
+          display: block;
+          width: 90%;
+          padding: 0.5em;
+          margin: 5% auto 0;
+          line-height: 1em;
+          background: #3CCB4D;
+          color: #fff;
+          text-align: center;
+          cursor: default; }
+        .strain-search-wrapper .effects-form .form-field .effect-config-box .slider-wrapper .slider {
+          display: block;
+          width: 90%;
+          height: 1.2em;
+          margin: 1em auto 0;
+          background-color: #A6CF42;
+          border-color: #A6CF42;
+          border-radius: 0; }
+          .strain-search-wrapper .effects-form .form-field .effect-config-box .slider-wrapper .slider span {
+            background-color: #fff;
+            border-color: #fff;
+            height: 1.2em;
+            width: 1.2em;
+            top: 0.15em;
+            outline: none; }
+          .strain-search-wrapper .effects-form .form-field .effect-config-box .slider-wrapper .slider span:focus {
+            box-shadow: 0 0 2pt 1pt #10b3dc; }
+          .strain-search-wrapper .effects-form .form-field .effect-config-box .slider-wrapper .slider span:hover {
+            box-shadow: 0 0 2pt 1pt #10b3dc; }
+          .strain-search-wrapper .effects-form .form-field .effect-config-box .slider-wrapper .slider label {
+            font-size: 0.8em;
+            position: absolute;
+            width: 16px;
+            margin-left: -8px;
+            text-align: center;
+            color: #fff;
+            margin-top: 0.5em;
+            cursor: pointer; }
+          .strain-search-wrapper .effects-form .form-field .effect-config-box .slider-wrapper .slider label.active {
+            color: #A6CF42; }
+    .strain-search-wrapper .effects-form .benefits .form-field .close-box {
+      top: -1.8em; }
+
+.search-form-wrapper {
+  margin: 2em auto 0;
+  padding-bottom: 6em;
+  display: block;
+  width: 64.2em;
+  text-align: center; }
+  .search-form-wrapper .form {
+    padding-top: 2em; }
+  .search-form-wrapper .form-actions {
+    margin: 5em 0 0;
+    text-align: center; }
+  .search-form-wrapper .additional-actions-wrapper {
+    margin: 1em auto;
+    color: #10b3dc;
+    cursor: default; }
+  .search-form-wrapper .strain-check {
+    width: 10em;
+    height: 6em;
+    text-align: center;
+    padding: 1em 2em;
+    border: 1px solid #aaa8a8;
+    border-radius: 0.5em;
+    margin: 0 0.2em; }
+  .search-form-wrapper .strain-check label {
+    text-align: center; }
+  .search-form-wrapper .strain-check .type {
+    display: block;
+    font-weight: bold;
+    margin-bottom: 0.5em; }
+  .search-form-wrapper .strain-check .type-info {
+    color: #10b3dc;
+    background-size: 1.5em 1.5em;
+    display: inline-block;
+    width: 1.5em;
+    height: 1.5em;
+    position: relative;
+    bottom: 4.9em;
+    left: 3.9em;
+    cursor: pointer; }
+  .search-form-wrapper .strain-check .type-info .fa-2x {
+    font-size: 1.5em; }
+  .search-form-wrapper .benefits .form-field {
+    height: 4em;
+    vertical-align: top;
+    margin-bottom: 0.5em; }
+    .search-form-wrapper .benefits .form-field .strain-effect {
+      height: 4em; }
+  .search-form-wrapper .form-field .strain-effect {
+    display: table;
+    width: 11.5em;
+    padding: 0.4em;
+    border: 1px solid #10b3dc;
+    color: #10b3dc;
+    line-height: 1.3em;
+    text-align: center;
+    cursor: pointer;
+    font-weight: bold;
+    vertical-align: top;
+    -webkit-user-select: none;
+       -moz-user-select: none;
+        -ms-user-select: none;
+            user-select: none; }
+  .search-form-wrapper .form-field .strain-effect .benefit-text {
+    display: table-cell;
+    vertical-align: middle; }
+    .search-form-wrapper .form-field .strain-effect .benefit-text span {
+      display: block;
+      width: 8em;
+      margin: 0 auto; }
+  .search-form-wrapper .form-field .removable {
+    position: relative;
+    float: right;
+    bottom: 1.95em;
+    right: 0.5em;
+    cursor: pointer; }
+  .search-form-wrapper .form-field .removable.selected {
+    display: none; }
+  .search-form-wrapper .form-field .step-3.removable {
+    bottom: 2.75em; }
+  .search-form-wrapper .form-field .importance-value {
+    position: relative;
+    float: left;
+    bottom: 2.7em;
+    left: 0.8em;
+    color: #10b3dc;
+    font-weight: bold;
+    cursor: default; }
+  .search-form-wrapper .form-field .importance-value.selected {
+    color: #fff; }
+  .search-form-wrapper .form-field .step-3.importance-value {
+    bottom: 3.55em; }
+  .search-form-wrapper .form-field .strain-effect.active {
+    border: 2px solid #6bc331;
+    color: #35B244;
+    font-weight: bold; }
+  .search-form-wrapper .form-field .strain-effect.selected {
+    border-color: #35B244;
+    background-color: #35B244;
+    color: #fff; }
+  .search-form-wrapper .form-field .strain-effect.disabled {
+    border: 1px solid #8e8e93;
+    color: #aaa8a8; }
+  .search-form-wrapper fieldset {
+    padding-bottom: 2em; }
+  .search-form-wrapper label {
+    display: inline-block; }
+  .search-form-wrapper label > input + span.check {
+    cursor: pointer; }
+  .search-form-wrapper span.check {
+    display: inline-block;
+    margin: 0; }
+  .search-form-wrapper label > span.check {
+    width: 2em;
+    height: 2em;
+    border: 1px solid #aaa8a8;
+    border-radius: 1em;
+    vertical-align: middle; }
+  .search-form-wrapper label > input {
+    position: absolute;
+    visibility: hidden;
+    width: 2em;
+    height: 2em;
+    padding: 0.35em 0; }
+  .search-form-wrapper label > input:checked + span:before {
+    content: '\2713';
+    display: block;
+    width: 2em;
+    height: 2em;
+    padding: 0.35em 0;
+    color: #10b3dc;
+    text-align: center; }
+
+.just-a-second-dialog .dialog-text {
+  height: 36%;
+  line-height: 1.5em; }
+
+.just-a-second-dialog .additional-section {
+  margin-top: 2em; }
+  .just-a-second-dialog .additional-section input[type="checkbox"] {
+    width: 2em; }
+
+.info-dialog {
+  line-height: 1.5em; }
+
+@media (max-width: 767px) {
+  .strain-search-wrapper .effects-form {
+    width: 70%; } }
+
+@media (max-width: 479px) {
+  .search-form-wrapper {
+    width: 26em; }
+  .strain-search-wrapper .wizard-wrapper {
+    width: 100%; }
+  .strain-search-wrapper .wizard-wrapper .step-wrapper {
+    width: 24%; }
+  .strain-search-wrapper .wizard-wrapper hr {
+    width: 20em; }
+  .strain-search-wrapper .wizard-wrapper .step-wrapper .title {
+    width: 100%; }
+  .search-form-wrapper {
+    width: 100%; }
+  .search-form-wrapper .form-actions {
+    margin: 0; }
+  .search-form-wrapper .strain-check {
+    width: 8em;
+    margin: 1em auto;
+    position: relative; }
+  .search-form-wrapper .strain-check .type-info {
+    bottom: 5.6em;
+    left: 3.4em;
+    font-size: 0.8em; }
+  .search-form-wrapper .strain-check .type-info .fa-2x {
+    font-size: 2em; }
+  .search-form-wrapper .additional-actions-wrapper {
+    margin: 1em 3em; }
+  .strain-search-wrapper .effects-form {
+    width: 100%; }
+  .strain-search-wrapper .effects-form .form-field {
+    display: block;
+    margin: 0.5em auto; }
+  .strain-search-wrapper .effects-form .form-field.step-3 {
+    height: 4em; }
+  .strain-search-wrapper .effects-form .slider span {
+    top: -0.35em; }
+  .search-form-wrapper .form-field .step-3.removable {
+    bottom: 1.2em; }
+  .search-form-wrapper .form-field .importance-value {
+    height: 0;
+    bottom: 2.8em; }
+  .search-form-wrapper .form-field .removable {
+    bottom: 0.5em;
+    margin-top: -1.5em; } }

@@ -1,0 +1,216 @@
+.nav-region {
+  display: block;
+  position: relative;
+  border-radius: 0;
+  height: 5em;
+  z-index: 1000;
+  background-color: #fdfdfd; }
+  .nav-region .mobile-menu {
+    display: none;
+    text-align: right;
+    vertical-align: middle;
+    float: right;
+    width: 3em; }
+  .nav-region a:hover.mobile-menu {
+    cursor: pointer; }
+  .nav-region .nav-region ul {
+    list-style: none; }
+
+.nav-container {
+  display: -ms-flexbox;
+  display: flex;
+  line-height: 5em;
+  height: 5em; }
+  .nav-container .nav-brand-wrapper {
+    display: inline-block;
+    float: left;
+    width: 16em;
+    height: 5em; }
+    .nav-container .nav-brand-wrapper .logo {
+      display: block;
+      width: 16em;
+      height: 5em; }
+      .nav-container .nav-brand-wrapper .logo img {
+        width: 16em;
+        vertical-align: middle; }
+  .nav-container .nav-list-wrapper {
+    display: inline-block;
+    float: right;
+    margin-left: auto;
+    white-space: nowrap;
+    padding-left: 1em; }
+  .nav-container .nav-list-wrapper:hover .nav-list .auth-menu .nav-menu-content {
+    display: block;
+    position: absolute;
+    right: 0;
+    top: 4em;
+    width: 25em; }
+
+.nav-tabs-wrapper {
+  display: -ms-flexbox;
+  display: flex;
+  -ms-flex-align: center;
+      align-items: center;
+  position: relative;
+  height: 100%;
+  line-height: 1em;
+  text-align: center;
+  margin-left: 2em; }
+  .nav-tabs-wrapper .action {
+    display: inline-block; }
+  .nav-tabs-wrapper .separator {
+    color: #fff; }
+
+.nav-list {
+  list-style: none; }
+  .nav-list .nav-list-item {
+    display: inline-block; }
+  .nav-list .nav-list-item.mobile {
+    display: none; }
+  .nav-list .nav-list-item .separator:after {
+    content: "|";
+    padding: 0 0.5em 0 0.5em;
+    color: #10b3dc; }
+  .nav-list .nav-menu-btn-wrapper {
+    right: 1em;
+    white-space: nowrap;
+    display: -ms-flexbox;
+    display: flex;
+    float: right; }
+    .nav-list .nav-menu-btn-wrapper .business-image {
+      display: inline-block;
+      float: left;
+      height: 4em; }
+      .nav-list .nav-menu-btn-wrapper .business-image img {
+        border-style: none;
+        height: 4em;
+        padding: 0.25em; }
+    .nav-list .nav-menu-btn-wrapper .business-nav-menu-btn {
+      display: inline-block;
+      float: right;
+      font-size: 0.8em; }
+      .nav-list .nav-menu-btn-wrapper .business-nav-menu-btn span {
+        padding: 0.3em; }
+      .nav-list .nav-menu-btn-wrapper .business-nav-menu-btn .business-name {
+        display: block;
+        font-size: 1.1em;
+        line-height: 1em;
+        color: #8e8e93;
+        font-weight: bold; }
+      .nav-list .nav-menu-btn-wrapper .business-nav-menu-btn .business-active-since {
+        display: block;
+        line-height: 1em;
+        color: #8e8e93; }
+      .nav-list .nav-menu-btn-wrapper .business-nav-menu-btn .business-verify-location {
+        display: block;
+        line-height: 1em; }
+        .nav-list .nav-menu-btn-wrapper .business-nav-menu-btn .business-verify-location a {
+          text-decoration: underline; }
+  .nav-list .auth-menu {
+    right: 1em; }
+    .nav-list .auth-menu .nav-menu-content {
+      display: none;
+      background: #2f3f4c;
+      color: #fff;
+      width: 18em;
+      right: 1em;
+      text-align: right; }
+      .nav-list .auth-menu .nav-menu-content a {
+        color: #fff; }
+      .nav-list .auth-menu .nav-menu-content .blue-link a {
+        color: #10b3dc; }
+      .nav-list .auth-menu .nav-menu-content .action {
+        display: block;
+        line-height: 2em;
+        padding: 0.5em 1.5em; }
+      .nav-list .auth-menu .nav-menu-content .location {
+        background: #231f20; }
+        .nav-list .auth-menu .nav-menu-content .location span {
+          display: block; }
+        .nav-list .auth-menu .nav-menu-content .location .nav-bar-user-street, .nav-list .auth-menu .nav-menu-content .location .nav-bar-user-location {
+          white-space: normal; }
+        .nav-list .auth-menu .nav-menu-content .location .update-location-href {
+          color: #10b3dc; }
+  .nav-list .nav-menu-btn-wrapper .nav-menu-btn a,
+  .nav-list .nav-menu-btn-wrapper .nav-menu-btn {
+    color: #231f20; }
+    .nav-list .nav-menu-btn-wrapper .nav-menu-btn a i,
+    .nav-list .nav-menu-btn-wrapper .nav-menu-btn i {
+      margin-right: 0.5em; }
+  .nav-list .pointer {
+    cursor: pointer;
+    color: #10b3dc;
+    margin-left: 0.3em;
+    position: relative;
+    top: -0.15em; }
+
+@media (max-width: 479px) {
+  .nav-region {
+    background-color: #2f3f4c; }
+  .mobile-menu {
+    display: inline-block !important; }
+    .mobile-menu i {
+      padding-top: 0.8em; }
+  .nav-list, .nav-list ul, nav:active ul {
+    display: none;
+    position: absolute;
+    background: #fff;
+    top: 2em;
+    width: 50%; }
+  .nav-list .nav-list-item, .nav-list .nav-list-item.mobile {
+    display: block; }
+  .nav-tabs-wrapper {
+    display: none; }
+  .nav-container .nav-list-wrapper:hover .nav-list {
+    display: none; }
+  .nav-container .nav-list-wrapper .nav-list {
+    display: none;
+    position: absolute;
+    left: 0;
+    width: 100%; }
+    .nav-container .nav-list-wrapper .nav-list .auth-menu .nav-menu-content {
+      display: block;
+      width: 100% !important;
+      position: absolute;
+      right: 0;
+      top: 4em; }
+    .nav-container .nav-list-wrapper .nav-list ul {
+      display: block;
+      position: absolute;
+      width: 100%; }
+  .nav-container .nav-list-wrapper .nav-list .separator:after {
+    content: '';
+    padding: 0; }
+  .nav-container .nav-list-wrapper .nav-list .nav-menu-btn {
+    color: #2f3f4c; }
+  .nav-container .nav-list-wrapper .nav-list .nav-menu-btn-wrapper {
+    padding: 0 1em; }
+  .nav-container .nav-list-wrapper .nav-list ul {
+    background: #2f3f4c; }
+    .nav-container .nav-list-wrapper .nav-list ul li {
+      text-align: right;
+      width: 100%;
+      padding: 0.5em 2em;
+      margin: 0; }
+    .nav-container .nav-list-wrapper .nav-list ul li a {
+      color: #fff; }
+  .nav-container .nav-list-wrapper .nav-list .auth-menu {
+    display: block;
+    position: absolute;
+    left: 0;
+    top: 2em;
+    width: 100%;
+    background: #2f3f4c;
+    text-align: right; }
+    .nav-container .nav-list-wrapper .nav-list .auth-menu a {
+      color: #fff; }
+    .nav-container .nav-list-wrapper .nav-list .auth-menu .blue-link a {
+      color: #10b3dc; } }
+
+@media (max-width: 1023px) {
+  .nav-list .nav-menu-btn-wrapper .business-nav-menu-btn {
+    display: none; } }
+
+@media (max-width: 767px) {
+  .nav-tabs-wrapper {
+    display: none; } }

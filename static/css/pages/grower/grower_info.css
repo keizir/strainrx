@@ -1,0 +1,283 @@
+.container.grower-detail {
+  margin-top: 1em;
+  color: #71757a; }
+  .container.grower-detail .section h2 {
+    padding: 0 1em; }
+  .container.grower-detail .section .title {
+    display: -ms-flexbox;
+    display: flex; }
+  .container.grower-detail .spacer {
+    border: 0;
+    border-bottom: 0.25em #A6CF42 solid;
+    margin-bottom: 1em; }
+  .container.grower-detail .spacer.sm {
+    width: 3.5em; }
+  .container.grower-detail .spacer.lg {
+    margin-top: 0.75em;
+    -ms-flex: 1;
+        flex: 1; }
+  .container.grower-detail .filters {
+    display: -ms-flexbox;
+    display: flex; }
+  .container.grower-detail .filter {
+    -ms-flex: 1;
+        flex: 1;
+    font-size: 1.2em;
+    cursor: pointer; }
+  .container.grower-detail .filter:last-of-type {
+    -ms-flex: 0;
+        flex: 0; }
+  .container.grower-detail .filter u {
+    text-decoration: none;
+    padding-bottom: 0.5em; }
+  .container.grower-detail .filter.active u {
+    border-bottom: 3px #A6CF42 solid; }
+  .container.grower-detail .strain {
+    margin-bottom: 1em;
+    position: relative; }
+    .container.grower-detail .strain .details {
+      margin-top: 0.5em; }
+      .container.grower-detail .strain .details .icons {
+        position: absolute;
+        top: 0;
+        right: 0; }
+        .container.grower-detail .strain .details .icons .is_cup_winner, .container.grower-detail .strain .details .icons .is_clean {
+          display: inline-block;
+          border-radius: 100px;
+          line-height: 0;
+          margin: 0.3em 0.3em 0.3em 0; }
+          .container.grower-detail .strain .details .icons .is_cup_winner img, .container.grower-detail .strain .details .icons .is_clean img {
+            width: 2.1em; }
+        .container.grower-detail .strain .details .icons .is_clean {
+          margin-right: 0; }
+      .container.grower-detail .strain .details .has_high_cbd {
+        background-color: #a6cf42;
+        border-radius: 10px;
+        color: white;
+        padding: 0.2em 0.6em;
+        font-size: 0.8em;
+        display: inline-block; }
+        .container.grower-detail .strain .details .has_high_cbd:first-letter {
+          text-transform: none; }
+    .container.grower-detail .strain .details a {
+      font-size: 1.2em; }
+    .container.grower-detail .strain .details div:first-letter {
+      text-transform: capitalize; }
+  .container.grower-detail .strain-placeholder {
+    padding-top: 2em;
+    font-size: 2em;
+    text-align: center;
+    color: #aaa8a8; }
+  .container.grower-detail .how-we-grow .content {
+    display: -ms-flexbox;
+    display: flex;
+    -ms-flex-direction: column;
+        flex-direction: column; }
+  .container.grower-detail .how-we-grow img {
+    width: 5em;
+    min-width: 5em;
+    height: 100%;
+    min-height: 5em; }
+  .container.grower-detail .how-we-grow .method {
+    display: -ms-flexbox;
+    display: flex;
+    margin-bottom: 2em; }
+  .container.grower-detail .how-we-grow .method:last-of-type {
+    margin: 0; }
+  .container.grower-detail .how-we-grow .method-name {
+    display: -ms-flexbox;
+    display: flex;
+    -ms-flex-pack: center;
+        justify-content: center;
+    -ms-flex-align: center;
+        align-items: center;
+    font-size: 1.1em;
+    margin-left: 1em; }
+  .container.grower-detail .contact .contact-detail {
+    display: -ms-flexbox;
+    display: flex;
+    margin-bottom: 2em; }
+  .container.grower-detail .contact .icon {
+    border: 1px #71757a solid;
+    min-width: 3em;
+    min-height: 3em;
+    max-width: 3em;
+    max-height: 3em;
+    margin-right: 2em;
+    display: -ms-flexbox;
+    display: flex;
+    -ms-flex-align: center;
+        align-items: center;
+    -ms-flex-pack: center;
+        justify-content: center; }
+  .container.grower-detail .contact i {
+    font-size: 1.5em; }
+  .container.grower-detail .contact .phone, .container.grower-detail .contact .email, .container.grower-detail .contact .address {
+    font-size: 1.25em; }
+  .container.grower-detail .contact .phone, .container.grower-detail .contact .email {
+    display: -ms-flexbox;
+    display: flex;
+    -ms-flex-align: center;
+        align-items: center;
+    -ms-flex-pack: center;
+        justify-content: center; }
+  .container.grower-detail .contact .address div {
+    display: -ms-flexbox;
+    display: flex;
+    -ms-flex-align: center;
+        align-items: center;
+    -ms-flex-pack: left;
+        justify-content: left; }
+  .container.grower-detail .partner {
+    border: #71757a 1px solid;
+    padding: 1em;
+    margin-bottom: 1em; }
+    .container.grower-detail .partner .line {
+      display: -ms-flexbox;
+      display: flex;
+      margin-bottom: 0.5em; }
+    .container.grower-detail .partner .line:last-of-type {
+      margin-bottom: 0; }
+    .container.grower-detail .partner .icon i {
+      width: 2em; }
+  .container.grower-detail .section.partners .content {
+    max-height: 21em;
+    font-size: 1.2em;
+    overflow-y: auto; }
+  .container.grower-detail .section.partners .content::-webkit-scrollbar-track {
+    -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3); }
+  .container.grower-detail .section.partners .content::-webkit-scrollbar {
+    width: 6px; }
+  .container.grower-detail .section.partners .content::-webkit-scrollbar-thumb {
+    -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
+    background-color: #A6CF42; }
+  .container.grower-detail .partner:last-of-type {
+    margin-bottom: 0; }
+  .container.grower-detail .mobile .location-image {
+    margin-top: 1em; }
+    .container.grower-detail .mobile .location-image img {
+      width: 100%; }
+  .container.grower-detail .mobile .location-name h1 {
+    margin: 0.5em 0; }
+  .container.grower-detail .mobile .verified {
+    margin-bottom: 1em; }
+  .container.grower-detail .mobile .about {
+    line-height: 1.5em;
+    margin-bottom: 1em; }
+  .container.grower-detail .mobile .filters {
+    border-bottom: 1px #71757a solid;
+    padding-bottom: calc(0.5em + 3px);
+    margin: 1em 0 2em; }
+  .container.grower-detail .mobile .section {
+    margin: 2em 0 3em 0; }
+    .container.grower-detail .mobile .section .title {
+      margin-bottom: 1em; }
+  .container.grower-detail .mobile .strains .content {
+    max-height: 50vh;
+    min-height: 25em;
+    overflow-y: auto; }
+  .container.grower-detail .mobile .strains .content::-webkit-scrollbar-track {
+    -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3); }
+  .container.grower-detail .mobile .strains .content::-webkit-scrollbar {
+    width: 6px; }
+  .container.grower-detail .mobile .strains .content::-webkit-scrollbar-thumb {
+    -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
+    background-color: #A6CF42; }
+  .container.grower-detail .mobile .strains .image img {
+    width: 100%; }
+  .container.grower-detail .desktop {
+    display: none; }
+    .container.grower-detail .desktop .header-row {
+      display: -ms-flexbox;
+      display: flex;
+      margin: 2em 0; }
+      .container.grower-detail .desktop .header-row img {
+        max-width: 100%; }
+      .container.grower-detail .desktop .header-row .image {
+        -ms-flex: 1;
+            flex: 1;
+        margin-right: 2em; }
+      .container.grower-detail .desktop .header-row .info {
+        -ms-flex: 2;
+            flex: 2; }
+      .container.grower-detail .desktop .header-row .name-row {
+        display: -ms-flexbox;
+        display: flex;
+        min-height: 3em; }
+        .container.grower-detail .desktop .header-row .name-row .name {
+          -ms-flex: 1;
+              flex: 1; }
+          .container.grower-detail .desktop .header-row .name-row .name h1 {
+            margin: 0; }
+        .container.grower-detail .desktop .header-row .name-row .verified {
+          margin-left: 2em; }
+      .container.grower-detail .desktop .header-row .spacer {
+        margin: 0 0 2em 2em;
+        width: 3em;
+        border-bottom: 3px solid #A6CF42; }
+      .container.grower-detail .desktop .header-row .about-row {
+        line-height: 1.5em; }
+        .container.grower-detail .desktop .header-row .about-row p:not(:first-child) {
+          margin-top: 1em; }
+    .container.grower-detail .desktop .strains-row .name-and-filters {
+      display: -ms-flexbox;
+      display: flex;
+      margin: 3em 0 2em 0; }
+      .container.grower-detail .desktop .strains-row .name-and-filters h1 {
+        -ms-flex: 1;
+            flex: 1;
+        margin: 0; }
+    .container.grower-detail .desktop .strains-row .filters {
+      display: -ms-flexbox;
+      display: flex;
+      -ms-flex-pack: center;
+          justify-content: center;
+      -ms-flex-align: center;
+          align-items: center; }
+    .container.grower-detail .desktop .strains-row .filter {
+      white-space: nowrap;
+      padding-right: 1em; }
+    .container.grower-detail .desktop .strains-row .filter:last-of-type {
+      padding-right: 0; }
+    .container.grower-detail .desktop .strains-row .content {
+      min-height: 15.5em; }
+    .container.grower-detail .desktop .strains-row img {
+      width: 100%; }
+    .container.grower-detail .desktop .strains-row .grower-strain-image {
+      max-height: 13.6em;
+      max-width: 21.5em;
+      width: auto; }
+    .container.grower-detail .desktop .strains-row .strain {
+      display: inline-block;
+      margin-bottom: 2em;
+      margin-right: 1em; }
+      .container.grower-detail .desktop .strains-row .strain a {
+        line-height: 1em; }
+    .container.grower-detail .desktop .strains-row .strain.rightmost {
+      margin-right: 0; }
+    .container.grower-detail .desktop .section {
+      margin-right: 1em;
+      -ms-flex: 1;
+          flex: 1; }
+    .container.grower-detail .desktop .section .title {
+      margin-bottom: 2em; }
+    .container.grower-detail .desktop .details-row {
+      display: -ms-flexbox;
+      display: flex;
+      margin: 1em 0 3em 0; }
+    .container.grower-detail .desktop .how-we-grow .method {
+      margin: 0 0 1em 0; }
+  @media (min-width: 768px) {
+    .container.grower-detail .mobile {
+      display: none; }
+    .container.grower-detail .desktop {
+      display: initial; } }
+  @media (max-width: 1023px) {
+    .container.grower-detail .details-row .spacer {
+      display: none; }
+    .container.grower-detail .desktop .section .title h2 {
+      padding: 0; } }
+  @media (max-width: 479px) {
+    .container.grower-detail .strain .details .icons .is_cup_winner img,
+    .container.grower-detail .strain .details .icons .is_clean img {
+      width: auto; } }

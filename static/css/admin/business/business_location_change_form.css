@@ -1,0 +1,8 @@
+.disabled {
+  position: relative;
+  background-color: #efefef;
+  pointer-events: none;
+  cursor: default; }
+
+#id_location_field {
+  width: 30em; }

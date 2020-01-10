@@ -1,0 +1,1180 @@
+.heart-active {
+  color: #ff4646; }
+
+.strain-detail-wrapper {
+  display: block;
+  width: 100%;
+  margin: 2em auto 0;
+  color: #8e8e93; }
+  .strain-detail-wrapper .fa-2x {
+    font-size: 1.5em; }
+  .strain-detail-wrapper .row {
+    position: relative; }
+  .strain-detail-wrapper .detail-section {
+    display: block;
+    width: 90%;
+    margin: 0 auto 3em; }
+    .strain-detail-wrapper .detail-section .back-to-search-wrapper {
+      margin-bottom: 1em;
+      padding-top: 2em; }
+      .strain-detail-wrapper .detail-section .back-to-search-wrapper i {
+        margin-right: 0.5em; }
+    .strain-detail-wrapper .detail-section .second-row {
+      margin-top: 2em; }
+    .strain-detail-wrapper .detail-section .second-row .photo-controls {
+      display: inline-block;
+      text-align: left;
+      width: 45%; }
+    .strain-detail-wrapper .detail-section .second-row .location-controls {
+      display: inline-block;
+      text-align: right;
+      width: 54%; }
+      .strain-detail-wrapper .detail-section .second-row .location-controls .filter-menu .active-link {
+        cursor: pointer;
+        background-color: #10b3dc;
+        border-radius: 0.5em;
+        color: #fff;
+        padding: 0.8em 1em;
+        border: none;
+        display: inline; }
+      .strain-detail-wrapper .detail-section .second-row .location-controls .filter-menu .locations-area {
+        position: absolute;
+        right: 0;
+        background: #fff;
+        width: 35em;
+        border: 1px solid #8e8e93;
+        color: #231f20;
+        z-index: 5;
+        overflow-x: auto; }
+        .strain-detail-wrapper .detail-section .second-row .location-controls .filter-menu .locations-area .col-1, .strain-detail-wrapper .detail-section .second-row .location-controls .filter-menu .locations-area .col-2, .strain-detail-wrapper .detail-section .second-row .location-controls .filter-menu .locations-area .col-3, .strain-detail-wrapper .detail-section .second-row .location-controls .filter-menu .locations-area .col-4 {
+          padding-right: 0.5em; }
+        .strain-detail-wrapper .detail-section .second-row .location-controls .filter-menu .locations-area .message {
+          margin: 1em;
+          text-align: center;
+          font-size: 1.5em; }
+        .strain-detail-wrapper .detail-section .second-row .location-controls .filter-menu .locations-area .locations-area-header {
+          display: -ms-flexbox;
+          display: flex;
+          padding: 1em;
+          font-weight: bold;
+          text-align: center;
+          min-width: 275px; }
+          .strain-detail-wrapper .detail-section .second-row .location-controls .filter-menu .locations-area .locations-area-header .column {
+            display: -ms-flexbox;
+            display: flex;
+            text-align: left;
+            font-weight: bold; }
+            .strain-detail-wrapper .detail-section .second-row .location-controls .filter-menu .locations-area .locations-area-header .column .col-name {
+              display: inline-block;
+              overflow: hidden;
+              text-overflow: ellipsis; }
+            .strain-detail-wrapper .detail-section .second-row .location-controls .filter-menu .locations-area .locations-area-header .column i {
+              display: inline-block;
+              color: #10b3dc;
+              cursor: pointer;
+              margin-left: 0.5em; }
+          .strain-detail-wrapper .detail-section .second-row .location-controls .filter-menu .locations-area .locations-area-header .col-1 {
+            width: 38%; }
+          .strain-detail-wrapper .detail-section .second-row .location-controls .filter-menu .locations-area .locations-area-header .col-2 {
+            width: 22%; }
+          .strain-detail-wrapper .detail-section .second-row .location-controls .filter-menu .locations-area .locations-area-header .col-3 {
+            width: 18%;
+            -ms-flex-pack: end;
+                justify-content: end; }
+          .strain-detail-wrapper .detail-section .second-row .location-controls .filter-menu .locations-area .locations-area-header .col-4 {
+            width: 17%;
+            -ms-flex-pack: end;
+                justify-content: end; }
+          .strain-detail-wrapper .detail-section .second-row .location-controls .filter-menu .locations-area .locations-area-header .price-expander {
+            cursor: pointer; }
+          .strain-detail-wrapper .detail-section .second-row .location-controls .filter-menu .locations-area .locations-area-header .prices-wrapper {
+            position: absolute;
+            right: 1em;
+            top: 16%;
+            background: #fff;
+            border: 1px solid #231f20;
+            padding: 10px; }
+            .strain-detail-wrapper .detail-section .second-row .location-controls .filter-menu .locations-area .locations-area-header .prices-wrapper .price {
+              display: block;
+              cursor: pointer; }
+            .strain-detail-wrapper .detail-section .second-row .location-controls .filter-menu .locations-area .locations-area-header .prices-wrapper .price:hover {
+              color: #10b3dc; }
+        .strain-detail-wrapper .detail-section .second-row .location-controls .filter-menu .locations-area .locations-area-body {
+          display: block;
+          line-height: 2.5em;
+          text-align: center;
+          min-width: 275px; }
+          .strain-detail-wrapper .detail-section .second-row .location-controls .filter-menu .locations-area .locations-area-body .dispensary {
+            padding: 0 1em 1em 1em;
+            display: -ms-flexbox;
+            display: flex; }
+            .strain-detail-wrapper .detail-section .second-row .location-controls .filter-menu .locations-area .locations-area-body .dispensary .col-1 {
+              width: 38%;
+              color: #10b3dc;
+              text-align: left;
+              display: -ms-flexbox;
+              display: flex; }
+              .strain-detail-wrapper .detail-section .second-row .location-controls .filter-menu .locations-area .locations-area-body .dispensary .col-1 .name {
+                display: inline-block;
+                float: left;
+                width: 78%;
+                line-height: 1.2em; }
+              .strain-detail-wrapper .detail-section .second-row .location-controls .filter-menu .locations-area .locations-area-body .dispensary .col-1 .icon {
+                display: inline-block;
+                float: right;
+                margin-right: 10px;
+                color: #231f20; }
+            .strain-detail-wrapper .detail-section .second-row .location-controls .filter-menu .locations-area .locations-area-body .dispensary .col-2 {
+              width: 22% !important;
+              text-align: left;
+              padding: 0; }
+            .strain-detail-wrapper .detail-section .second-row .location-controls .filter-menu .locations-area .locations-area-body .dispensary .col-3 {
+              width: 17%;
+              text-align: right; }
+            .strain-detail-wrapper .detail-section .second-row .location-controls .filter-menu .locations-area .locations-area-body .dispensary .col-4 {
+              width: 17%;
+              text-align: right; }
+            .strain-detail-wrapper .detail-section .second-row .location-controls .filter-menu .locations-area .locations-area-body .dispensary .price-values .price-value {
+              display: none; }
+            .strain-detail-wrapper .detail-section .second-row .location-controls .filter-menu .locations-area .locations-area-body .dispensary .price-values .price-value.active {
+              display: block; }
+    .strain-detail-wrapper .detail-section .second-row .location-controls.disabled .active-link {
+      background-color: #aaa8a8; }
+    .strain-detail-wrapper .detail-section .section-header {
+      display: block;
+      font-size: 1.4em;
+      margin-bottom: 10px; }
+    .strain-detail-wrapper .detail-section .section-header span {
+      display: block; }
+    .strain-detail-wrapper .detail-section .section-header span.disagree-link {
+      display: block;
+      text-align: right;
+      font-size: 0.7em;
+      font-weight: bold;
+      padding-right: 0.5%; }
+    .strain-detail-wrapper .detail-section .strain-data.with-recommendation .strain-data-left {
+      max-width: 100%;
+      min-width: 100%; }
+    .strain-detail-wrapper .detail-section .strain-data {
+      display: inline-block;
+      width: 100%; }
+      .strain-detail-wrapper .detail-section .strain-data .strain-variety {
+        position: relative;
+        height: 3em;
+        top: 0.4em; }
+      .strain-detail-wrapper .detail-section .strain-data .strain-variety-name {
+        position: absolute;
+        top: 0.3em;
+        left: 3.7em;
+        font-size: 0.8em; }
+      .strain-detail-wrapper .detail-section .strain-data .strain-variety-name:first-letter {
+        text-transform: capitalize; }
+      .strain-detail-wrapper .detail-section .strain-data .strain-name {
+        color: #A6CF42;
+        display: inline;
+        font-size: 2em;
+        margin: 0;
+        font-weight: normal; }
+      .strain-detail-wrapper .detail-section .strain-data .strain-like-wrapper {
+        display: inline-block;
+        vertical-align: bottom;
+        width: 2em;
+        height: 2em;
+        text-align: center; }
+      .strain-detail-wrapper .detail-section .strain-data .strain-winner {
+        width: 20%; }
+        .strain-detail-wrapper .detail-section .strain-data .strain-winner .cup-winner, .strain-detail-wrapper .detail-section .strain-data .strain-winner .clean {
+          display: inline-block;
+          vertical-align: top;
+          text-align: center; }
+          .strain-detail-wrapper .detail-section .strain-data .strain-winner .cup-winner img, .strain-detail-wrapper .detail-section .strain-data .strain-winner .clean img {
+            height: 4em;
+            margin-top: 1.2em; }
+        .strain-detail-wrapper .detail-section .strain-data .strain-winner .clean {
+          height: 4.8em;
+          margin-left: 0.2em; }
+      .strain-detail-wrapper .detail-section .strain-data .strain-data-detail {
+        display: -ms-flexbox;
+        display: flex;
+        -ms-flex-align: center;
+            align-items: center; }
+        .strain-detail-wrapper .detail-section .strain-data .strain-data-detail .strain-data-left {
+          display: inline-block;
+          max-width: calc(56% - 1em);
+          min-width: calc(25% - 1em);
+          margin-right: 3em; }
+        .strain-detail-wrapper .detail-section .strain-data .strain-data-detail .recommendation-btn {
+          display: -ms-inline-flexbox;
+          display: inline-flex;
+          border-radius: 5px;
+          background-color: #7BB344;
+          padding: 1em;
+          color: #fff;
+          max-width: 20em;
+          margin-top: 3px; }
+          .strain-detail-wrapper .detail-section .strain-data .strain-data-detail .recommendation-btn .recommendation-link {
+            text-decoration: none;
+            color: #fff; }
+        .strain-detail-wrapper .detail-section .strain-data .strain-data-detail .recommendation-btn u {
+          color: #fff;
+          text-decoration: underline; }
+        .strain-detail-wrapper .detail-section .strain-data .strain-data-detail .recommendation-btn-strain-name {
+          color: #231f20; }
+        .strain-detail-wrapper .detail-section .strain-data .strain-data-detail .recommendation-btn-content {
+          display: inline; }
+        .strain-detail-wrapper .detail-section .strain-data .strain-data-detail .recommendation-btn-line {
+          display: inline-block; }
+        .strain-detail-wrapper .detail-section .strain-data .strain-data-detail .recommendation-btn-icon {
+          font-size: 2em;
+          margin-right: 0.5em; }
+      .strain-detail-wrapper .detail-section .strain-data .strain-like {
+        cursor: pointer; }
+      .strain-detail-wrapper .detail-section .strain-data .rating-row {
+        display: block;
+        margin-top: 0.5em; }
+      .strain-detail-wrapper .detail-section .strain-data .rating-row span {
+        display: inline-block; }
+      .strain-detail-wrapper .detail-section .strain-data .breadcrumbs {
+        margin: 0.5em auto; }
+    .strain-detail-wrapper .detail-section .social-icons {
+      display: inline-block;
+      position: absolute;
+      top: -20px;
+      right: 15px;
+      text-align: right;
+      cursor: default; }
+      .strain-detail-wrapper .detail-section .social-icons a {
+        color: #8e8e93; }
+      .strain-detail-wrapper .detail-section .social-icons a:hover {
+        color: #10b3dc; }
+    .strain-detail-wrapper .detail-section .strain-about span {
+      display: block;
+      width: 100%;
+      word-wrap: break-word;
+      white-space: normal;
+      text-align: justify; }
+    .strain-detail-wrapper .detail-section .strain-about span.about {
+      line-height: 1.8em; }
+    .strain-detail-wrapper .detail-section .strain-effects .effects-region {
+      display: block; }
+    .strain-detail-wrapper .detail-section .effects-wrapper .effect-wrapper {
+      display: block;
+      height: 2em;
+      margin-bottom: 0.8em; }
+    .strain-detail-wrapper .detail-section .effects-wrapper .effect-name {
+      display: inline-block;
+      width: 10%;
+      position: relative;
+      vertical-align: top;
+      line-height: 1em; }
+      .strain-detail-wrapper .detail-section .effects-wrapper .effect-name span {
+        display: table-cell;
+        position: relative;
+        vertical-align: middle;
+        height: 2em; }
+    .strain-detail-wrapper .detail-section .effects-wrapper .effect-name.missing-name {
+      color: #ff4646; }
+    .strain-detail-wrapper .detail-section .effects-wrapper .effect.missing-effect .user-fill {
+      background: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAQAAAAECAYAAACp8Z5+AAAAIklEQVQYV2NkQAK3rS3/M8L4II7q0eOMYAEYB8RmROaABACxvQ5TLDlcxgAAAABJRU5ErkJggg==) repeat; }
+    .strain-detail-wrapper .detail-section .effects-wrapper .effect {
+      display: inline-block;
+      position: relative;
+      width: 89%;
+      height: 2em;
+      background-color: #f4f4f4; }
+      .strain-detail-wrapper .detail-section .effects-wrapper .effect .fill {
+        display: inline-block;
+        height: 2em;
+        background-color: #bbe6d1; }
+      .strain-detail-wrapper .detail-section .effects-wrapper .effect .user-fill {
+        display: block;
+        position: absolute;
+        left: 0;
+        top: 0;
+        height: 2em;
+        background: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAQAAAAECAYAAACp8Z5+AAAAIklEQVQYV2NkQAK3rS3/M8L4II7q0eOMYAEYB8RmROaABACxvQ5TLDlcxgAAAABJRU5ErkJggg==) repeat;
+        z-index: 1; }
+        .strain-detail-wrapper .detail-section .effects-wrapper .effect .user-fill.user-fill-background {
+          background: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAQAAAAECAYAAACp8Z5+AAAAH0lEQVQYV2NkQAX/GZH4/xkYGBhhAmAOSBJEwDkgAQCCrgQEjpMcPgAAAABJRU5ErkJggg==) repeat; }
+      .strain-detail-wrapper .detail-section .effects-wrapper .effect .tear {
+        display: inline-block;
+        position: relative;
+        bottom: 6px;
+        width: 30px;
+        height: 30px;
+        float: right;
+        margin-right: -14px;
+        border-radius: 0 50% 50% 50%;
+        border: 3px solid #2f3f4c;
+        background-color: #2f3f4c;
+        transform: rotate(225deg); }
+        .strain-detail-wrapper .detail-section .effects-wrapper .effect .tear .tear-value {
+          display: block;
+          position: absolute;
+          top: 4px;
+          left: 4px;
+          width: 16px;
+          height: 16px;
+          margin: 0;
+          transform: rotate(135deg);
+          background-color: #f4f4f4;
+          border-radius: 50%;
+          text-align: center;
+          color: #2f3f4c;
+          font-size: 14px;
+          font-weight: bold; }
+    .strain-detail-wrapper .detail-section .side-effects-region .effects-wrapper .effect .user-fill {
+      background: none; }
+    .strain-detail-wrapper .detail-section .side-effects-region .effects-wrapper .effect .strain-fill {
+      background: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAQAAAAECAYAAACp8Z5+AAAAIklEQVQYV2NkQAK3rS3/M8L4II7q0eOMYAEYB8RmROaABACxvQ5TLDlcxgAAAABJRU5ErkJggg==) repeat; }
+  .strain-detail-wrapper .match-score-wrapper {
+    display: none;
+    margin-top: 2em; }
+    .strain-detail-wrapper .match-score-wrapper.top {
+      display: block;
+      position: absolute;
+      right: 0;
+      top: -2.5em;
+      text-align: center; }
+      .strain-detail-wrapper .match-score-wrapper.top .score-value {
+        font-size: 4em; }
+    .strain-detail-wrapper .match-score-wrapper .title {
+      display: block;
+      font-size: 1.5em; }
+    .strain-detail-wrapper .match-score-wrapper .score-value {
+      font-size: 5em; }
+    .strain-detail-wrapper .match-score-wrapper .percent-sign {
+      font-size: 2.4em;
+      vertical-align: top;
+      position: relative;
+      top: 10px;
+      z-index: 1; }
+  .strain-detail-wrapper .info-image-section {
+    position: relative;
+    height: 26em; }
+    .strain-detail-wrapper .info-image-section .strain-photo-wrapper {
+      display: inline-block;
+      width: 58%;
+      height: 100%;
+      vertical-align: top;
+      margin: 1em auto;
+      text-align: left; }
+      .strain-detail-wrapper .info-image-section .strain-photo-wrapper .main-image {
+        display: inline-block;
+        width: 73%;
+        height: 25em;
+        vertical-align: top; }
+        .strain-detail-wrapper .info-image-section .strain-photo-wrapper .main-image img {
+          max-width: 100%;
+          max-height: 100%;
+          margin: 0 auto;
+          display: block; }
+      .strain-detail-wrapper .info-image-section .strain-photo-wrapper .image-carousel {
+        display: inline-block;
+        position: relative;
+        width: 25%;
+        height: 23em;
+        text-align: center;
+        vertical-align: top; }
+        .strain-detail-wrapper .info-image-section .strain-photo-wrapper .image-carousel .arrow-up, .strain-detail-wrapper .info-image-section .strain-photo-wrapper .image-carousel .arrow-down, .strain-detail-wrapper .info-image-section .strain-photo-wrapper .image-carousel .arrow-left, .strain-detail-wrapper .info-image-section .strain-photo-wrapper .image-carousel .arrow-right {
+          width: 1em;
+          margin: 0 auto;
+          cursor: pointer; }
+          .strain-detail-wrapper .info-image-section .strain-photo-wrapper .image-carousel .arrow-up img, .strain-detail-wrapper .info-image-section .strain-photo-wrapper .image-carousel .arrow-down img, .strain-detail-wrapper .info-image-section .strain-photo-wrapper .image-carousel .arrow-left img, .strain-detail-wrapper .info-image-section .strain-photo-wrapper .image-carousel .arrow-right img {
+            width: 100%; }
+        .strain-detail-wrapper .info-image-section .strain-photo-wrapper .image-carousel .arrow-left, .strain-detail-wrapper .info-image-section .strain-photo-wrapper .image-carousel .arrow-right {
+          display: none;
+          position: absolute;
+          top: 2em; }
+        .strain-detail-wrapper .info-image-section .strain-photo-wrapper .image-carousel .arrow-right {
+          right: -1px; }
+        .strain-detail-wrapper .info-image-section .strain-photo-wrapper .image-carousel .carousel-images-wrapper {
+          overflow: hidden;
+          height: 22.4em; }
+          .strain-detail-wrapper .info-image-section .strain-photo-wrapper .image-carousel .carousel-images-wrapper .img-wrapper {
+            display: block;
+            position: relative;
+            max-width: 100%;
+            max-height: 5em;
+            width: 6.5em;
+            height: 4em;
+            margin: 0.4em auto;
+            text-align: center;
+            cursor: pointer; }
+            .strain-detail-wrapper .info-image-section .strain-photo-wrapper .image-carousel .carousel-images-wrapper .img-wrapper img {
+              position: relative;
+              max-width: 100%;
+              max-height: 100%;
+              height: 5em;
+              z-index: 1; }
+            .strain-detail-wrapper .info-image-section .strain-photo-wrapper .image-carousel .carousel-images-wrapper .img-wrapper .cover {
+              position: absolute;
+              top: 0;
+              width: 100%;
+              height: 100%;
+              background-color: #71757a;
+              opacity: 0.6;
+              z-index: 2; }
+            .strain-detail-wrapper .info-image-section .strain-photo-wrapper .image-carousel .carousel-images-wrapper .img-wrapper .cover.active {
+              background-color: transparent;
+              box-shadow: 0 0 10px #231f20; }
+        .strain-detail-wrapper .info-image-section .strain-photo-wrapper .image-carousel .carousel-images-wrapper::-webkit-scrollbar {
+          display: none; }
+    .strain-detail-wrapper .info-image-section .strain-info-wrapper {
+      display: inline-block;
+      width: 42%;
+      text-align: center;
+      float: right;
+      margin: 1.5em auto; }
+      .strain-detail-wrapper .info-image-section .strain-info-wrapper .popularity-wrapper {
+        border: 1px solid #231f20;
+        color: #231f20;
+        width: 100%;
+        padding: 1em;
+        text-transform: capitalize; }
+        .strain-detail-wrapper .info-image-section .strain-info-wrapper .popularity-wrapper .title {
+          font-size: 1.2em;
+          border-bottom: 0.2em solid #231f20;
+          padding: 0.7em 0; }
+        .strain-detail-wrapper .info-image-section .strain-info-wrapper .popularity-wrapper .primary-cannabinoids {
+          display: -ms-flexbox;
+          display: flex;
+          -ms-flex-direction: row;
+              flex-direction: row;
+          -ms-flex-pack: justify;
+              justify-content: space-between;
+          border-bottom: 0.2em solid #231f20;
+          padding: 0.8em 0;
+          width: 100%; }
+          .strain-detail-wrapper .info-image-section .strain-info-wrapper .popularity-wrapper .primary-cannabinoids .content {
+            font-size: 0.9em; }
+        .strain-detail-wrapper .info-image-section .strain-info-wrapper .popularity-wrapper .secondary-cannabinoids-section {
+          display: -ms-flexbox;
+          display: flex;
+          -ms-flex-wrap: wrap;
+              flex-wrap: wrap;
+          border-bottom: 0.25em solid #231f20;
+          padding-bottom: 0.5em; }
+          .strain-detail-wrapper .info-image-section .strain-info-wrapper .popularity-wrapper .secondary-cannabinoids-section .secondary-cannabinoids-title {
+            display: -ms-flexbox;
+            display: flex;
+            -ms-flex-direction: row;
+                flex-direction: row;
+            -ms-flex-wrap: nowrap;
+                flex-wrap: nowrap;
+            width: 100%;
+            text-align: left; }
+            .strain-detail-wrapper .info-image-section .strain-info-wrapper .popularity-wrapper .secondary-cannabinoids-section .secondary-cannabinoids-title .title {
+              font-size: 0.9em;
+              padding: 1em 0;
+              -ms-flex-wrap: nowrap;
+                  flex-wrap: nowrap;
+              -ms-flex-item-align: end;
+                  align-self: flex-end; }
+            .strain-detail-wrapper .info-image-section .strain-info-wrapper .popularity-wrapper .secondary-cannabinoids-section .secondary-cannabinoids-title .title:first-child {
+              width: 33%; }
+            .strain-detail-wrapper .info-image-section .strain-info-wrapper .popularity-wrapper .secondary-cannabinoids-section .secondary-cannabinoids-title .title:last-child {
+              margin-left: 5%;
+              width: 61%; }
+          .strain-detail-wrapper .info-image-section .strain-info-wrapper .popularity-wrapper .secondary-cannabinoids-section .secondary-cannabinoids, .strain-detail-wrapper .info-image-section .strain-info-wrapper .popularity-wrapper .secondary-cannabinoids-section .terpenes {
+            display: -ms-flexbox;
+            display: flex;
+            -ms-flex-direction: column;
+                flex-direction: column;
+            -ms-flex-pack: start;
+                justify-content: start;
+            text-align: left;
+            font-size: 0.9em; }
+            @media only screen and (min-width: 1500px) {
+              .strain-detail-wrapper .info-image-section .strain-info-wrapper .popularity-wrapper .secondary-cannabinoids-section .secondary-cannabinoids, .strain-detail-wrapper .info-image-section .strain-info-wrapper .popularity-wrapper .secondary-cannabinoids-section .terpenes {
+                font-size: 0.9em; } }
+            @media only screen and (min-width: 1200px) {
+              .strain-detail-wrapper .info-image-section .strain-info-wrapper .popularity-wrapper .secondary-cannabinoids-section .secondary-cannabinoids, .strain-detail-wrapper .info-image-section .strain-info-wrapper .popularity-wrapper .secondary-cannabinoids-section .terpenes {
+                font-size: 0.8em; } }
+            @media only screen and (min-width: 1024px) {
+              .strain-detail-wrapper .info-image-section .strain-info-wrapper .popularity-wrapper .secondary-cannabinoids-section .secondary-cannabinoids, .strain-detail-wrapper .info-image-section .strain-info-wrapper .popularity-wrapper .secondary-cannabinoids-section .terpenes {
+                font-size: 0.7em; } }
+            .strain-detail-wrapper .info-image-section .strain-info-wrapper .popularity-wrapper .secondary-cannabinoids-section .secondary-cannabinoids .content, .strain-detail-wrapper .info-image-section .strain-info-wrapper .popularity-wrapper .secondary-cannabinoids-section .terpenes .content {
+              margin-top: 0.5em;
+              border-top: 1px solid #231f20; }
+              .strain-detail-wrapper .info-image-section .strain-info-wrapper .popularity-wrapper .secondary-cannabinoids-section .secondary-cannabinoids .content .item, .strain-detail-wrapper .info-image-section .strain-info-wrapper .popularity-wrapper .secondary-cannabinoids-section .terpenes .content .item {
+                display: -ms-flexbox;
+                display: flex;
+                -ms-flex-pack: justify;
+                    justify-content: space-between;
+                padding: 0.2em 0;
+                border-bottom: 1px solid #231f20; }
+          .strain-detail-wrapper .info-image-section .strain-info-wrapper .popularity-wrapper .secondary-cannabinoids-section .secondary-cannabinoids {
+            width: 33%; }
+          .strain-detail-wrapper .info-image-section .strain-info-wrapper .popularity-wrapper .secondary-cannabinoids-section .terpenes {
+            margin-left: 5%;
+            width: 61%; }
+            .strain-detail-wrapper .info-image-section .strain-info-wrapper .popularity-wrapper .secondary-cannabinoids-section .terpenes .content {
+              display: -ms-flexbox;
+              display: flex;
+              -ms-flex-direction: row;
+                  flex-direction: row;
+              -ms-flex-wrap: wrap;
+                  flex-wrap: wrap; }
+              .strain-detail-wrapper .info-image-section .strain-info-wrapper .popularity-wrapper .secondary-cannabinoids-section .terpenes .content .item {
+                width: 50%; }
+                .strain-detail-wrapper .info-image-section .strain-info-wrapper .popularity-wrapper .secondary-cannabinoids-section .terpenes .content .item:nth-child(2n) {
+                  padding-left: 0.5em; }
+  .strain-detail-wrapper .strain-header-section {
+    margin-bottom: 0; }
+  .strain-detail-wrapper .strain-similar .also-like-strains-wrapper {
+    overflow: auto;
+    width: 100%; }
+    .strain-detail-wrapper .strain-similar .also-like-strains-wrapper .similar-strains-wrapper {
+      display: -ms-flexbox;
+      display: flex;
+      width: auto; }
+      .strain-detail-wrapper .strain-similar .also-like-strains-wrapper .similar-strains-wrapper .similar-wrapper {
+        display: inline-block;
+        padding: 0.5em;
+        margin-right: 0.5em;
+        border: 1px solid #aaa8a8;
+        margin-bottom: 0.25em;
+        width: 11em; }
+        .strain-detail-wrapper .strain-similar .also-like-strains-wrapper .similar-strains-wrapper .similar-wrapper .name {
+          font-weight: bold;
+          font-size: 0.9em; }
+          .strain-detail-wrapper .strain-similar .also-like-strains-wrapper .similar-strains-wrapper .similar-wrapper .name .image {
+            margin-bottom: 0.5em;
+            width: 100%; }
+            .strain-detail-wrapper .strain-similar .also-like-strains-wrapper .similar-strains-wrapper .similar-wrapper .name .image img {
+              display: block;
+              height: 100%;
+              max-height: 7em;
+              max-width: 10em;
+              width: auto;
+              margin: 0 auto; }
+        .strain-detail-wrapper .strain-similar .also-like-strains-wrapper .similar-strains-wrapper .similar-wrapper .variety {
+          color: #8e8e93;
+          font-size: 0.8em;
+          margin-top: 0.5em; }
+  .strain-detail-wrapper .strain-reviews .section-header span {
+    display: inline-block; }
+  .strain-detail-wrapper .strain-reviews .all-reviews-link-wrapper a {
+    font-size: 0.7em;
+    color: #6bc331;
+    text-decoration: underline;
+    margin-left: 1em; }
+  .strain-detail-wrapper .strain-reviews .review-wrapper {
+    display: block;
+    position: relative;
+    width: 100%;
+    margin-bottom: 2em; }
+    .strain-detail-wrapper .strain-reviews .review-wrapper .user-info {
+      display: inline-block;
+      position: relative;
+      width: 8%;
+      text-align: left; }
+      .strain-detail-wrapper .strain-reviews .review-wrapper .user-info .user-image {
+        display: inline-block;
+        width: 4em;
+        height: 4em;
+        margin: 0 auto;
+        border: 1px solid #aaa8a8;
+        border-radius: 4em; }
+        .strain-detail-wrapper .strain-reviews .review-wrapper .user-info .user-image .image {
+          display: block;
+          width: 4em;
+          height: 4em;
+          background-size: cover;
+          border-radius: 50%;
+          margin: -0.05em; }
+        .strain-detail-wrapper .strain-reviews .review-wrapper .user-info .user-image .default-image {
+          display: block;
+          height: 2em;
+          width: 2em;
+          background-color: #71757a;
+          color: #efefef;
+          border-radius: 1em;
+          margin: -0.02em 0 0 -0.01em;
+          font-size: 2em; }
+          .strain-detail-wrapper .strain-reviews .review-wrapper .user-info .user-image .default-image span {
+            display: block;
+            width: 60%;
+            line-height: 2em;
+            text-align: center;
+            margin: 0 auto; }
+    .strain-detail-wrapper .strain-reviews .review-wrapper .review {
+      display: inline-block;
+      width: 90%;
+      vertical-align: top; }
+      .strain-detail-wrapper .strain-reviews .review-wrapper .review .review-header .user-name {
+        font-weight: bold; }
+      .strain-detail-wrapper .strain-reviews .review-wrapper .review .review-header .rating {
+        display: inline-block; }
+      .strain-detail-wrapper .strain-reviews .review-wrapper .review .review-header .created-date {
+        font-weight: bold;
+        text-decoration: underline;
+        float: right; }
+      .strain-detail-wrapper .strain-reviews .review-wrapper .review .review-text {
+        margin-top: 0.5em; }
+        .strain-detail-wrapper .strain-reviews .review-wrapper .review .review-text .display {
+          display: block;
+          height: auto;
+          line-height: 1.3em;
+          overflow: hidden; }
+          .strain-detail-wrapper .strain-reviews .review-wrapper .review .review-text .display .expander {
+            cursor: pointer;
+            color: #6bc331;
+            text-decoration: underline; }
+  .strain-detail-wrapper .strain-lineage-section {
+    display: inline-block;
+    width: 49.5%;
+    vertical-align: top; }
+    .strain-detail-wrapper .strain-lineage-section a {
+      color: #7ecca6; }
+    .strain-detail-wrapper .strain-lineage-section .lineage-region {
+      display: -ms-flexbox;
+      display: flex; }
+      .strain-detail-wrapper .strain-lineage-section .lineage-region .lineage-column {
+        height: 10em;
+        width: 10em;
+        display: -ms-flexbox;
+        display: flex;
+        -ms-flex-flow: column;
+            flex-flow: column;
+        padding-right: 0.5em; }
+      .strain-detail-wrapper .strain-lineage-section .lineage-region .lineage-column.tall a {
+        height: 100%; }
+      .strain-detail-wrapper .strain-lineage-section .lineage-region a {
+        height: 50%; }
+      .strain-detail-wrapper .strain-lineage-section .lineage-region .lineage-column:not(.tall) a:nth-of-type(1) {
+        padding-bottom: 0.25em; }
+      .strain-detail-wrapper .strain-lineage-section .lineage-region .lineage-column:not(.tall) a:nth-of-type(2) {
+        padding-top: 0.25em; }
+      .strain-detail-wrapper .strain-lineage-section .lineage-region .lineage-wrapper {
+        border: 3px solid #7ecca6;
+        height: 100%;
+        display: -ms-flexbox;
+        display: flex;
+        -ms-flex-flow: column;
+            flex-flow: column;
+        -ms-flex-align: center;
+            align-items: center;
+        -ms-flex-pack: center;
+            justify-content: center; }
+      .strain-detail-wrapper .strain-lineage-section .lineage-region .lineage-wrapper.tall {
+        height: 100%; }
+      .strain-detail-wrapper .strain-lineage-section .lineage-region .lineage-wrapper .abbreviation {
+        display: block;
+        font-size: 2em;
+        font-weight: bold; }
+      .strain-detail-wrapper .strain-lineage-section .lineage-region .lineage-wrapper .name {
+        display: block;
+        font-size: 0.8em; }
+  .strain-detail-wrapper .strain-flavors-section {
+    display: inline-block;
+    width: 49.5%;
+    vertical-align: top; }
+  .strain-detail-wrapper .strain-flavors-section .flavor-wrapper, .strain-detail-wrapper .strain-flavors-section .growing-wrapper, .strain-detail-wrapper .strain-growing-section .flavor-wrapper, .strain-detail-wrapper .strain-growing-section .growing-wrapper {
+    display: inline-block;
+    width: 32%;
+    height: 10em;
+    border: 1px solid #aaa8a8;
+    margin-right: -1px;
+    text-align: center; }
+  .strain-detail-wrapper .strain-flavors-section .flavor-wrapper .flavor, .strain-detail-wrapper .strain-growing-section .flavor-wrapper .flavor {
+    margin-top: 2em; }
+  .strain-detail-wrapper .strain-flavors-section .flavor-wrapper .flavor-name, .strain-detail-wrapper .strain-growing-section .flavor-wrapper .flavor-name {
+    margin-top: 1em;
+    display: block; }
+  .strain-detail-wrapper .strain-flavors-section .flavor-wrapper img, .strain-detail-wrapper .strain-growing-section .flavor-wrapper img {
+    height: 4.5em;
+    width: 4.5em; }
+  .strain-detail-wrapper .strain-growing-section .text-left {
+    text-align: left; }
+  .strain-detail-wrapper .strain-growing-section .growing-wrapper {
+    height: 8em;
+    min-width: 10em;
+    width: auto;
+    padding: 0.5em; }
+    .strain-detail-wrapper .strain-growing-section .growing-wrapper img {
+      width: 3.7em; }
+    .strain-detail-wrapper .strain-growing-section .growing-wrapper .flavor-name {
+      font-size: 0.8em; }
+    .strain-detail-wrapper .strain-growing-section .growing-wrapper .flavor {
+      padding: 0.5em; }
+
+.upload-image-dialog {
+  width: 22em !important; }
+  .upload-image-dialog form {
+    display: block;
+    width: 100%;
+    height: 95%;
+    text-align: center; }
+    .upload-image-dialog form input {
+      width: 10.5em;
+      margin: 1em 0; }
+    .upload-image-dialog form .photo-camera-wrapper {
+      display: block;
+      width: 100%;
+      height: 25%;
+      margin: 1em 0;
+      color: #231f20; }
+    .upload-image-dialog form .preview-image-wrapper {
+      display: block;
+      height: auto;
+      width: 20em; }
+      .upload-image-dialog form .preview-image-wrapper img {
+        width: auto;
+        max-width: 14em;
+        margin: 0 auto 1em;
+        max-height: 14em; }
+    .upload-image-dialog form .form-actions {
+      margin-top: 2em; }
+    .upload-image-dialog form .upload-image {
+      width: 0.1px;
+      height: 0.1px;
+      opacity: 0;
+      overflow: hidden;
+      position: absolute;
+      z-index: -1; }
+    .upload-image-dialog form .upload-image + label {
+      display: block;
+      width: 10em;
+      margin: 0 auto;
+      padding: 1em 2em;
+      cursor: pointer;
+      border: 1px solid #8e8e93;
+      color: #8e8e93; }
+    .upload-image-dialog form .upload-image:focus + label {
+      outline: 1px solid #10b3dc; }
+    .upload-image-dialog form .submitted-message {
+      margin: 1em 0; }
+      .upload-image-dialog form .submitted-message .message-1 {
+        display: block; }
+      .upload-image-dialog form .submitted-message .message-2 {
+        display: block;
+        font-size: 80%;
+        color: #ff4646; }
+
+.strain-review-dialog {
+  color: #71757a;
+  min-height: 260px !important; }
+  .strain-review-dialog .dialog-header {
+    padding: 0 1em 0.5em;
+    line-height: 2em; }
+    .strain-review-dialog .dialog-header .sub-title {
+      display: inline-block;
+      font-size: 1.3em;
+      vertical-align: middle; }
+    .strain-review-dialog .dialog-header .add-effect-button-wrapper {
+      display: inline-block;
+      position: absolute;
+      right: 2em;
+      width: 25%;
+      text-align: right; }
+      .strain-review-dialog .dialog-header .add-effect-button-wrapper .btn-secondary {
+        padding: 0.4em 1em;
+        width: 75%;
+        outline: none; }
+      .strain-review-dialog .dialog-header .add-effect-button-wrapper .effects-payload-top-border {
+        position: relative;
+        top: -0.6em;
+        right: 0.15em;
+        height: 1px;
+        width: 25.5%;
+        background-color: #10b3dc;
+        z-index: 4; }
+      .strain-review-dialog .dialog-header .add-effect-button-wrapper .effects-payload {
+        display: block;
+        position: absolute;
+        top: 1.8em;
+        right: 0.15em;
+        width: 100%;
+        height: 11em;
+        padding: 1.3em 0;
+        overflow: scroll;
+        text-align: left;
+        background-color: #fff;
+        border: 1px solid #10b3dc;
+        border-top: none;
+        z-index: 2; }
+        .strain-review-dialog .dialog-header .add-effect-button-wrapper .effects-payload .payload-effect {
+          padding-left: 1.5em;
+          cursor: pointer; }
+        .strain-review-dialog .dialog-header .add-effect-button-wrapper .effects-payload .payload-effect:hover {
+          background-color: #92e1f4;
+          color: #fff; }
+        .strain-review-dialog .dialog-header .add-effect-button-wrapper .effects-payload .payload-effect.active {
+          background-color: #92e1f4;
+          color: #fff; }
+  .strain-review-dialog .dialog-content .review-effect-wrapper {
+    display: block;
+    position: relative;
+    width: 100%;
+    height: 3em;
+    padding: 0 1em; }
+    .strain-review-dialog .dialog-content .review-effect-wrapper .effect-name {
+      display: inline-block;
+      width: 15%;
+      vertical-align: middle;
+      line-height: 1.3em; }
+    .strain-review-dialog .dialog-content .review-effect-wrapper .effect-slider {
+      display: inline-block;
+      width: 78%;
+      vertical-align: middle; }
+      .strain-review-dialog .dialog-content .review-effect-wrapper .effect-slider .strain-review-effect-slider {
+        display: -ms-flexbox;
+        display: flex;
+        width: 100%; }
+        .strain-review-dialog .dialog-content .review-effect-wrapper .effect-slider .strain-review-effect-slider span {
+          display: inline-block;
+          margin: 0;
+          padding: 0;
+          width: 0;
+          height: 2em; }
+        .strain-review-dialog .dialog-content .review-effect-wrapper .effect-slider .strain-review-effect-slider .action {
+          width: 5%;
+          height: 1em;
+          background-color: #10b3dc;
+          cursor: pointer;
+          text-align: center;
+          color: #fff;
+          font-size: 2em; }
+        .strain-review-dialog .dialog-content .review-effect-wrapper .effect-slider .strain-review-effect-slider .action.action-minus {
+          line-height: 0.9em; }
+        .strain-review-dialog .dialog-content .review-effect-wrapper .effect-slider .strain-review-effect-slider .action.action-minus::before {
+          content: '-'; }
+        .strain-review-dialog .dialog-content .review-effect-wrapper .effect-slider .strain-review-effect-slider .action.action-plus {
+          line-height: 1em; }
+        .strain-review-dialog .dialog-content .review-effect-wrapper .effect-slider .strain-review-effect-slider .action.action-plus::before {
+          content: '+'; }
+        .strain-review-dialog .dialog-content .review-effect-wrapper .effect-slider .strain-review-effect-slider .value {
+          width: 17.5%;
+          background-color: #f4f4f4;
+          border-right: 1px solid #aaa8a8; }
+          .strain-review-dialog .dialog-content .review-effect-wrapper .effect-slider .strain-review-effect-slider .value :last-child {
+            border-right: none; }
+        .strain-review-dialog .dialog-content .review-effect-wrapper .effect-slider .strain-review-effect-slider .value.active {
+          background-color: #92e1f4; }
+    .strain-review-dialog .dialog-content .review-effect-wrapper .remove-effect {
+      display: inline-block;
+      position: relative;
+      top: 0.5em;
+      left: 2%;
+      width: 3.3%;
+      color: #10b3dc;
+      cursor: pointer; }
+
+.mentions-input-box .mentions > div > strong {
+  font-weight: normal;
+  background: none; }
+
+.mentions-input-box :-ms-input-placeholder {
+  /* Chrome, Firefox, Opera, Safari 10.1+ */
+  color: #aaa8a8;
+  opacity: 1;
+  /* Firefox */ }
+
+.mentions-input-box ::placeholder {
+  /* Chrome, Firefox, Opera, Safari 10.1+ */
+  color: #aaa8a8;
+  opacity: 1;
+  /* Firefox */ }
+
+.mentions-input-box :-ms-input-placeholder {
+  /* Internet Explorer 10-11 */
+  color: #aaa8a8; }
+
+.mentions-input-box ::-ms-input-placeholder {
+  /* Microsoft Edge */
+  color: #aaa8a8; }
+
+@media (min-width: 1500px) {
+  .strain-detail-wrapper .info-image-section .strain-photo-wrapper .main-image {
+    width: 73%; } }
+
+@media (min-width: 1024px) {
+  .strain-detail-wrapper .detail-section .second-row .photo-controls {
+    width: 50%; }
+  .strain-detail-wrapper .detail-section .second-row .location-controls {
+    width: 49%; }
+  .strain-detail-wrapper .detail-section .strain-data .strain-winner.small {
+    display: none; } }
+
+@media (max-width: 1023px) {
+  .strain-detail-wrapper .detail-section .strain-data .match-score-wrapper.top {
+    display: none; }
+  .strain-detail-wrapper .info-image-section .strain-info-wrapper {
+    width: 100%; }
+    .strain-detail-wrapper .info-image-section .strain-info-wrapper .match-score-wrapper {
+      display: block; }
+    .strain-detail-wrapper .info-image-section .strain-info-wrapper .popularity-wrapper .secondary-cannabinoids-section .secondary-cannabinoids,
+    .strain-detail-wrapper .info-image-section .strain-info-wrapper .popularity-wrapper .secondary-cannabinoids-section .terpenes {
+      margin: 0;
+      width: 100%; }
+  .strain-detail-wrapper .detail-section .strain-data .strain-data-detail .strain-data-left {
+    min-width: 56%; }
+  .strain-detail-wrapper .detail-section .strain-data .strain-data-detail .recommendation-btn {
+    max-width: 20em; }
+  .strain-detail-wrapper .detail-section .strain-data .strain-winner {
+    display: none; }
+    .strain-detail-wrapper .detail-section .strain-data .strain-winner.small {
+      display: block;
+      width: 100%; }
+      .strain-detail-wrapper .detail-section .strain-data .strain-winner.small .cup-winner img, .strain-detail-wrapper .detail-section .strain-data .strain-winner.small .clean img {
+        height: 5em; } }
+
+@media (max-width: 768px) {
+  .strain-detail-wrapper .detail-section .strain-info-wrapper .popularity-wrapper .title {
+    font-size: 1em; }
+  .strain-detail-wrapper .detail-section .strain-info-wrapper .popularity-wrapper h1 {
+    margin: 0 auto;
+    font-size: 6em;
+    width: 1em;
+    border-bottom: 1px solid #aaa8a8;
+    padding-bottom: 10px; }
+  .strain-detail-wrapper .detail-section .strain-info-wrapper .match-score-wrapper .score-value {
+    font-size: 3.5em; }
+  .strain-detail-wrapper .detail-section .strain-info-wrapper .match-score-wrapper .percent-sign {
+    font-size: 1.8em;
+    vertical-align: top;
+    position: relative;
+    top: 10px; }
+  .strain-detail-wrapper .detail-section .effects-wrapper .effect-wrapper {
+    height: 3.5em; }
+  .strain-detail-wrapper .detail-section .effects-wrapper .effect-name {
+    display: block;
+    width: 100%;
+    margin-bottom: 5px; }
+  .strain-detail-wrapper .detail-section .effects-wrapper .effect {
+    display: block;
+    width: 100%; }
+  .strain-detail-wrapper .detail-section .strain-reviews .review-wrapper .user-info {
+    width: 20%; }
+  .strain-detail-wrapper .detail-section .strain-reviews .review-wrapper .review {
+    width: 70%; }
+  .strain-detail-wrapper .detail-section .strain-photo-wrapper {
+    width: 70%; }
+  .strain-detail-wrapper .detail-section .strain-info-wrapper {
+    width: 100%; }
+  .strain-detail-wrapper .detail-section .social-icons {
+    right: auto;
+    font-size: 1.2em;
+    top: -1em; }
+  .strain-detail-wrapper .detail-section .strain-data {
+    margin-top: 1em; }
+    .strain-detail-wrapper .detail-section .strain-data .strain-variety-name {
+      top: 1.3em; }
+    .strain-detail-wrapper .detail-section .strain-data .recommendation-btn-icon {
+      display: none; } }
+
+@media (max-width: 479px) {
+  .nav-region {
+    background-color: #2f3f4c; }
+  .strain-detail-wrapper .info-image-section {
+    height: auto; }
+  .strain-detail-wrapper .detail-section {
+    width: 95%; }
+    .strain-detail-wrapper .detail-section .strain-data .strain-variety-name {
+      top: 1.3em; }
+    .strain-detail-wrapper .detail-section .strain-data .strain-like {
+      position: absolute;
+      top: 0;
+      right: 6%;
+      font-size: 3em; }
+    .strain-detail-wrapper .detail-section .strain-data .strain-data-detail .strain-data-left {
+      max-width: none; }
+    .strain-detail-wrapper .detail-section .second-row {
+      margin: 2em 0;
+      display: -ms-flexbox;
+      display: flex;
+      -ms-flex-pack: justify;
+          justify-content: space-between;
+      -ms-flex-wrap: nowrap;
+          flex-wrap: nowrap;
+      -ms-flex-align: end;
+          align-items: flex-end; }
+    .strain-detail-wrapper .detail-section .second-row .photo-controls {
+      display: block;
+      text-align: left;
+      width: 100%;
+      -ms-flex: 1 4 auto;
+          flex: 1 4 auto; }
+    .strain-detail-wrapper .detail-section .second-row .location-controls {
+      display: block;
+      text-align: left;
+      width: 100%;
+      -ms-flex: 1 2 auto;
+          flex: 1 2 auto; }
+    .strain-detail-wrapper .detail-section .strain-photo-wrapper {
+      display: block;
+      width: 100%;
+      vertical-align: top; }
+      .strain-detail-wrapper .detail-section .strain-photo-wrapper .main-image {
+        display: inline-block;
+        width: 100%;
+        height: 16em; }
+      .strain-detail-wrapper .detail-section .strain-photo-wrapper .image-carousel {
+        display: block;
+        width: 100%;
+        height: 10em; }
+        .strain-detail-wrapper .detail-section .strain-photo-wrapper .image-carousel .arrow-up, .strain-detail-wrapper .detail-section .strain-photo-wrapper .image-carousel .arrow-down {
+          display: none; }
+        .strain-detail-wrapper .detail-section .strain-photo-wrapper .image-carousel .arrow-left, .strain-detail-wrapper .detail-section .strain-photo-wrapper .image-carousel .arrow-right {
+          display: block; }
+        .strain-detail-wrapper .detail-section .strain-photo-wrapper .image-carousel .carousel-images-wrapper {
+          overflow: hidden;
+          display: block;
+          width: auto;
+          white-space: nowrap;
+          height: 100%;
+          margin-left: 15px;
+          margin-right: 14px; }
+          .strain-detail-wrapper .detail-section .strain-photo-wrapper .image-carousel .carousel-images-wrapper .img-wrapper {
+            display: inline-block; }
+    .strain-detail-wrapper .detail-section .strain-info-wrapper {
+      display: block;
+      width: 100%;
+      text-align: center;
+      float: none; }
+      .strain-detail-wrapper .detail-section .strain-info-wrapper .popularity-wrapper {
+        display: inline-block;
+        margin: 0 auto;
+        vertical-align: top;
+        width: 100%;
+        text-align: center; }
+      .strain-detail-wrapper .detail-section .strain-info-wrapper .match-score-wrapper {
+        display: inline-block;
+        margin: 1em auto 0;
+        vertical-align: top;
+        width: 45%;
+        text-align: center; }
+        .strain-detail-wrapper .detail-section .strain-info-wrapper .match-score-wrapper .score-value {
+          font-size: 5em; }
+    .strain-detail-wrapper .detail-section .section-header {
+      position: relative; }
+      .strain-detail-wrapper .detail-section .section-header .disagree-link {
+        position: absolute;
+        top: 0.2em;
+        right: 0; }
+    .strain-detail-wrapper .detail-section .effects-wrapper .effect-wrapper {
+      height: 3.5em; }
+      .strain-detail-wrapper .detail-section .effects-wrapper .effect-wrapper .effect-name {
+        display: block;
+        width: 100%;
+        margin-bottom: 0; }
+      .strain-detail-wrapper .detail-section .effects-wrapper .effect-wrapper .effect {
+        display: block;
+        width: 100%; }
+    .strain-detail-wrapper .detail-section .strain-lineage-section {
+      display: block;
+      width: 100%; }
+    .strain-detail-wrapper .detail-section .strain-reviews .review-wrapper .user-info {
+      width: 20%; }
+    .strain-detail-wrapper .detail-section .strain-reviews .review-wrapper .review {
+      width: 70%; }
+    .strain-detail-wrapper .detail-section .strain-flavors-section {
+      display: block;
+      width: 100%;
+      margin-top: 2em; }
+    .strain-detail-wrapper .detail-section .strain-growing-section .growing-wrapper {
+      min-width: 29%; }
+  .strain-detail-wrapper .detail-section .second-row .location-controls .filter-menu .menu-expander {
+    margin-left: 0.5em; }
+  .strain-detail-wrapper .detail-section .second-row .location-controls .filter-menu .menu-expander i {
+    color: #10b3dc;
+    cursor: pointer; }
+  .strain-detail-wrapper .detail-section .second-row .location-controls .filter-menu .col-1 {
+    display: inline-block;
+    width: 26%;
+    color: #10b3dc;
+    text-align: left;
+    margin-left: 5px;
+    vertical-align: middle; }
+  .strain-detail-wrapper .detail-section .second-row .location-controls .filter-menu .col-2 {
+    display: inline-block;
+    width: 15%;
+    vertical-align: middle; }
+  .strain-detail-wrapper .detail-section .second-row .location-controls .filter-menu .col-3 {
+    display: inline-block;
+    width: 13%;
+    vertical-align: middle; }
+  .strain-detail-wrapper .detail-section .second-row .location-controls .filter-menu .col-4 {
+    display: inline-block;
+    width: 14%;
+    vertical-align: middle; }
+  .strain-detail-wrapper .detail-section .second-row .location-controls .filter-menu .col-5 {
+    display: inline-block;
+    width: 12%;
+    vertical-align: middle; }
+  .strain-detail-wrapper .detail-section .second-row .location-controls .filter-menu .locations {
+    position: absolute;
+    right: 1%;
+    background: #fff;
+    width: 98%;
+    padding: 8px;
+    color: #231f20; }
+    .strain-detail-wrapper .detail-section .second-row .location-controls .filter-menu .locations .locations-area {
+      left: 0;
+      width: 100%; }
+  .strain-detail-wrapper .detail-section .second-row .location-controls .filter-menu .location-header {
+    display: block;
+    line-height: 2em;
+    font-weight: bold;
+    text-align: center; }
+  .strain-detail-wrapper .detail-section .second-row .location-controls .filter-menu .dispensary {
+    display: block;
+    line-height: 2em;
+    text-align: center; }
+  .strain-detail-wrapper .detail-section .second-row .location-controls .filter-menu .location-marker {
+    cursor: pointer;
+    margin-right: 10px; }
+  .strain-detail-wrapper .detail-section .second-row .location-controls .filter-menu .location-marker:hover {
+    color: #10b3dc; }
+  .strain-detail-wrapper .detail-section .second-row .location-controls .filter-menu .truck-marker {
+    cursor: pointer; }
+  .strain-detail-wrapper .detail-section .second-row .location-controls .filter-menu .truck-marker:hover {
+    color: #10b3dc; }
+  .strain-similar .also-like-strains-wrapper .similar-strains-wrapper {
+    text-align: center; }
+    .strain-similar .also-like-strains-wrapper .similar-strains-wrapper .similar-wrapper {
+      display: block;
+      margin: 0 auto; }
+  .strain-review-dialog .dialog-header .sub-title {
+    font-size: 1em; }
+  .strain-review-dialog .dialog-header .add-effect-button-wrapper {
+    position: absolute;
+    right: 1em;
+    width: 40%; }
+    .strain-review-dialog .dialog-header .add-effect-button-wrapper .effects-payload {
+      top: 1.5em; }
+    .strain-review-dialog .dialog-header .add-effect-button-wrapper .btn-secondary {
+      padding: 0.2em 0.5em; }
+  .strain-review-dialog .dialog-content .review-effect-wrapper {
+    height: 5em; }
+    .strain-review-dialog .dialog-content .review-effect-wrapper .effect-name {
+      display: block;
+      width: 100%; }
+    .strain-review-dialog .dialog-content .review-effect-wrapper .effect-slider {
+      display: inline-block;
+      width: 90%;
+      vertical-align: middle; }
+      .strain-review-dialog .dialog-content .review-effect-wrapper .effect-slider .strain-review-effect-slider .action {
+        width: 10%; }
+      .strain-review-dialog .dialog-content .review-effect-wrapper .effect-slider .strain-review-effect-slider .action.action-minus {
+        line-height: 0.9em; }
+      .strain-review-dialog .dialog-content .review-effect-wrapper .effect-slider .strain-review-effect-slider .action.action-plus {
+        line-height: 1em; }
+      .strain-review-dialog .dialog-content .review-effect-wrapper .effect-slider .strain-review-effect-slider .value {
+        width: 17.5%;
+        background-color: #f4f4f4;
+        border-right: 1px solid #aaa8a8; }
+        .strain-review-dialog .dialog-content .review-effect-wrapper .effect-slider .strain-review-effect-slider .value :last-child {
+          border-right: none; }
+      .strain-review-dialog .dialog-content .review-effect-wrapper .effect-slider .strain-review-effect-slider .value.active {
+        background-color: #92e1f4; }
+    .strain-review-dialog .dialog-content .review-effect-wrapper .remove-effect {
+      display: inline-block;
+      position: relative;
+      top: 0.5em;
+      left: 2%;
+      width: 3.3%;
+      color: #10b3dc;
+      cursor: pointer; } }

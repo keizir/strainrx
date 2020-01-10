@@ -1,0 +1,81 @@
+.business-partnerships h2 {
+  color: #71757a;
+  margin: 1em 0 0 0; }
+
+.business-partnerships .menu-form {
+  min-height: 5em; }
+
+.business-partnerships .form .form-field input {
+  width: 100%;
+  max-width: 30em; }
+
+.business-partnerships #add-partnership-field {
+  margin: 0; }
+
+.business-partnerships .add-dispensary {
+  display: -ms-flexbox;
+  display: flex; }
+  .business-partnerships .add-dispensary .form-field.dispensary-name-field {
+    -ms-flex: 1;
+        flex: 1; }
+
+.business-partnerships .payloads-region {
+  line-height: 2em; }
+
+.business-partnerships .search-payload {
+  padding: 1em 0.5em; }
+
+.business-partnerships .placeholder {
+  min-height: 20em;
+  text-align: center;
+  padding: 2em; }
+
+.business-partnerships .partner {
+  display: -ms-flexbox;
+  display: flex;
+  -ms-flex-direction: column;
+      flex-direction: column;
+  margin-bottom: 2em; }
+  .business-partnerships .partner .name-row {
+    display: -ms-flexbox;
+    display: flex; }
+  .business-partnerships .partner .name {
+    -ms-flex: 1;
+        flex: 1;
+    margin-bottom: 0.5em;
+    font-size: 1.2em; }
+  .business-partnerships .partner .delete-partner {
+    color: #db3b39;
+    font-size: 1.2em;
+    cursor: pointer; }
+  .business-partnerships .partner .content {
+    display: -ms-flexbox;
+    display: flex; }
+  .business-partnerships .partner .image {
+    -ms-flex: 1;
+        flex: 1; }
+    .business-partnerships .partner .image img {
+      width: 100%; }
+  .business-partnerships .partner .details {
+    display: -ms-flexbox;
+    display: flex;
+    -ms-flex-direction: column;
+        flex-direction: column;
+    -ms-flex: 4;
+        flex: 4;
+    margin-left: 1em;
+    color: #71757a; }
+    .business-partnerships .partner .details .icon {
+      margin-right: 1em; }
+    .business-partnerships .partner .details .line-wrapper {
+      -ms-flex: 1;
+          flex: 1;
+      display: -ms-flexbox;
+      display: flex;
+      -ms-flex-direction: column;
+          flex-direction: column;
+      -ms-flex-pack: center;
+          justify-content: center; }
+    .business-partnerships .partner .details .line {
+      display: -ms-flexbox;
+      display: flex; }
